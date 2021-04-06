@@ -191,6 +191,44 @@
         </where>
     </foreach>
 </update>
+<!-- 批量修改警员枪械成绩 -->
+    <update id="trainFirearmAchievementUpdateBatch" parameterType="com.bayee.political.domain.TrainFirearmAchievement">
+    <foreach collection="list" item="hytemplate" index="index" open="" close="" separator=";">
+        UPDATE train_firearm_achievement
+        <set>
+      <if test="hytemplate.registrationDate != null" >
+        registration_date = #{hytemplate.registrationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hytemplate.achievementDate != null" >
+        achievement_date = #{hytemplate.achievementDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hytemplate.achievement != null" >
+        achievement = #{hytemplate.achievement},
+      </if>
+       <if test="hytemplate.achievementFirst != null" >
+        achievement_first = #{hytemplate.achievementFirst,jdbcType=INTEGER},
+      </if>
+       <if test="hytemplate.achievementSecond != null" >
+        achievement_second = #{hytemplate.achievementSecond,jdbcType=DOUBLE},
+      </if>
+       <if test="hytemplate.shootTime != null" >
+        shoot_time = #{hytemplate.shootTime},
+      </if>
+      <if test="hytemplate.achievementGrade != null" >
+        achievement_grade = #{hytemplate.achievementGrade,jdbcType=INTEGER},
+      </if>
+       <if test="hytemplate.achievementStr != null" >
+        achievement_str = #{hytemplate.achievementStr,jdbcType=VARCHAR},
+      </if>
+      <if test="hytemplate.updateDate != null" >
+        update_date = #{hytemplate.updateDate,jdbcType=TIMESTAMP},
+      </if>
+     </set>
+        <where>
+            id = #{hytemplate.id,jdbcType=INTEGER}
+        </where>
+    </foreach>
+</update>
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainFirearmAchievement" >
     update train_firearm_achievement
     set police_id = #{policeId,jdbcType=VARCHAR},

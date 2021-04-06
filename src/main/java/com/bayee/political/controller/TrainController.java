@@ -7042,11 +7042,11 @@ public class TrainController extends BaseController {
 	}
 
 	// 枪械新增并导入成绩
-	@RequestMapping(value = "/import/train/firearm", method = RequestMethod.POST)
+	@RequestMapping(value = "/import/train/physical", method = RequestMethod.POST)
 	public ResponseEntity<?> importAddTrainFirearm(@Param("name") String name, @Param("place") String place,
 			@Param("registrationStartDate") String registrationStartDate, @Param("trainContent") String trainContent,
 			@Param("file") MultipartFile file, HttpServletRequest request) {
-		registrationStartDate = "2021-03-25 11:54";
+		registrationStartDate = "2021-04-06 17:54";
 		TrainFirearm trainFirearm = new TrainFirearm();
 		trainFirearm.setType(2);
 		trainFirearm.setName("测试" + sdf.format(new Date()));
@@ -7056,13 +7056,14 @@ public class TrainController extends BaseController {
 		trainFirearm.setTrainStartDate(DateUtil.parseDateTime(registrationStartDate + ":00"));
 		trainFirearm.setTrainEndDate(DateUtil.parseDateTime(registrationStartDate + ":00"));
 		trainFirearm.setTrainFirearmType(2);
-		trainFirearm.setScorerPoliceId("052805");
+		trainFirearm.setScorerPoliceId("117409");
 		trainFirearm.setSignUpStatus(3);
 		trainFirearm.setStatus(3);
 		trainFirearm.setCoverImg("train-content-img/nth-sj.jpg");
 		trainFirearm.setTrainContent("枪械训练");
 		trainFirearm.setTrainImg("train-content-img/nth-sj.jpg");
 		trainFirearm.setIsSubmit(1);
+		trainFirearm.setSubmitDate(new Date());
 		trainFirearm.setIsAll(2);
 		trainFirearm.setCreationDate(new Date());
 		trainFirearm.setIsLimit(0);
@@ -7085,7 +7086,81 @@ public class TrainController extends BaseController {
 		}
 		// 枪械报名批量新增
 		trainService.trainFirearmAchievementCreatBatch(addSignList);
+		List<List<String>> readExcel = null;
+		try {
+			readExcel = GetExcel.ReadExcel(file);
+		} catch (Exception e) {
 
+			e.printStackTrace();
+		}
+		try {
+			List<TrainFirearmAchievement> finalList = new ArrayList<TrainFirearmAchievement>();
+			for (List<String> excel : readExcel) {
+				String policeId = null;
+				if (!StringUtils.isEmpty(excel.get(1))) {
+					policeId = excel.get(1).toString().replaceAll("\\s*", "").substring(0, 6);
+				}
+				double score1 = 0.0;
+				if (!StringUtils.isEmpty(excel.get(2))) {
+					score1 = Double.valueOf(excel.get(2).toString().replaceAll("\\s*", ""));
+				}
+				if (StringUtils.isEmpty(excel.get(1)) == false
+						&& StringUtils.isEmpty(excel.get(2).toString().replaceAll("\\s*", "")) == false) {
+					score1 = Double.valueOf(excel.get(2).toString().replaceAll("\\s*", ""));
+					// 枪械项目报名详情
+					TrainFirearmAchievement fItem = trainService.trainFirearmAchievementItem(null, trainFirearm.getId(),
+							policeId);
+					if (fItem != null) {
+						fItem.setAchievement(score1);
+						fItem.setAchievementStr(score1 + "环");
+						fItem.setUpdateDate(new Date());
+						fItem.setAchievementDate(new Date());
+						// 根据项目id/组别查询算分规则
+						TrainProjectRule ruleItem = trainService.trainProjectPoliceRuleItem(2, null);
+						if (ruleItem.getSymbol() == 1) {// 1>= 2> 3<= 4< 5=
+							if (score1 >= ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 2) {
+							if (score1 > ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 3) {
+							if (score1 <= ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 4) {
+							if (score1 < ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 5) {
+							if (score1 == ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						}
+						finalList.add(fItem);
+					}
+				}
+			}
+			// 批量修改警员枪械成绩
+			trainService.trainFirearmAchievementUpdateBatch(finalList);
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("结束: " + DateUtils.formatDate(new Date(), "HH:mm:ss"));
+//			System.out.println("第" + index + "行报错");
 		DataListReturn dataListReturn = new DataListReturn();
 		dataListReturn.setCode(StatusCode.getSuccesscode());
 		dataListReturn.setMessage("success");
@@ -7093,67 +7168,4 @@ public class TrainController extends BaseController {
 		dataListReturn.setResult(null);
 		return new ResponseEntity<DataListReturn>(dataListReturn, HttpStatus.OK);
 	}
-
-//	@ResponseBody
-//	@RequestMapping(value = "/train/firearm/sign/up/creat", method = RequestMethod.POST)
-//	public DataListReturn trainFirearmSignUpCreat(@RequestParam(value = "id", required = false) Integer id,
-//			@RequestParam(value = "policeId", required = false) String policeId) throws IOException, ParseException {
-//		DataListReturn dlr = new DataListReturn();
-//		TrainFirearmAchievement item = new TrainFirearmAchievement();
-//		// 枪械项目报名详情
-//		TrainFirearmAchievement fItem = trainService.trainFirearmAchievementItem(null, id, policeId);
-//		if (fItem == null) {
-//			// 枪械详情查询
-//			TrainFirearm tItem = trainService.trainFirearmItem(id);
-////			List<String> list = Arrays.asList(tItem.getInvolvementPoliceIds().split(","));
-//			long startTimeLong = tItem.getRegistrationStartDate().getTime();
-//			long endTimeLong = tItem.getRegistrationEndDate().getTime();
-//			long currentTime = new Date().getTime();
-//			if (currentTime < startTimeLong) {
-//				dlr.setStatus(false);
-//				dlr.setMessage("报名未开始");
-//				dlr.setResult(0);
-//				dlr.setCode(StatusCode.getFailcode());
-//				return dlr;
-//			} else if (currentTime > endTimeLong) {
-//				dlr.setStatus(false);
-//				dlr.setMessage("报名已截止");
-//				dlr.setResult(0);
-//				dlr.setCode(StatusCode.getFailcode());
-//				return dlr;
-//			}
-//			item.setTrainFirearmId(id);
-//			item.setPoliceId(policeId);
-//			item.setRegistrationDate(new Date());
-//			item.setIsSign(1);
-//			item.setIsSubmit(0);
-//			item.setTrainProjectType(tItem.getTrainFirearmType());
-//			item.setCreationDate(new Date());
-//			String qrName = "physical-" + UUID.randomUUID().toString() + ".jpg";
-//			item.setQrCode(trainQRCode + qrName);
-//			// 生成二维码
-//			new QRCode(root + trainQRCodeIcon).encodeQRCode("2," + id + "," + policeId, 500, 500,
-//					root + trainQRCode + qrName);
-//			int count = trainService.trainFirearmAchievementCreat(item);
-//			if (count > 0) {
-//				dlr.setStatus(true);
-//				dlr.setMessage("报名成功");
-//				dlr.setResult(item);
-//				dlr.setCode(StatusCode.getSuccesscode());
-//				return dlr;
-//			} else {
-//				dlr.setStatus(false);
-//				dlr.setMessage("报名失败");
-//				dlr.setResult(0);
-//				dlr.setCode(StatusCode.getFailcode());
-//				return dlr;
-//			}
-//		} else {
-//			dlr.setStatus(false);
-//			dlr.setMessage("您已报名该训练");
-//			dlr.setResult(0);
-//			dlr.setCode(StatusCode.getFailcode());
-//			return dlr;
-//		}
-//	}
 }

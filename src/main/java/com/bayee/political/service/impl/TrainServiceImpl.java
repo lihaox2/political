@@ -1746,4 +1746,11 @@ public class TrainServiceImpl implements TrainService {
 
 	}
 
+	// 批量修改警员枪械成绩
+	@Override
+	public void trainFirearmAchievementUpdateBatch(List<TrainFirearmAchievement> finalList) {
+		trainFirearmAchievementMapper.trainFirearmAchievementUpdateBatch(finalList);
+
+	}
+
 }

@@ -1663,4 +1663,7 @@ public interface TrainService {
 
 	// 枪械报名批量新增
 	void trainFirearmAchievementCreatBatch(List<TrainFirearmAchievement> creatList);
+
+	// 批量修改警员枪械成绩
+	void trainFirearmAchievementUpdateBatch(List<TrainFirearmAchievement> finalList);
 }

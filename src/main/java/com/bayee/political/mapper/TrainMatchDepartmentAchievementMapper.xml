@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainMatchDepartmentAchievementMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainMatchDepartmentAchievement" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="train_match_id" property="trainMatchId" jdbcType="INTEGER" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="achievement_date" property="achievementDate" jdbcType="TIMESTAMP" />
+    <result column="achievement" property="achievement" jdbcType="DOUBLE" />
+    <result column="achievement_grade" property="achievementGrade" jdbcType="VARCHAR" />
+    <result column="is_sign" property="isSign" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+   <resultMap id="TrainRankMap" type="com.bayee.political.domain.TrainRank" >
+    <result column="rankId" property="rankId" jdbcType="INTEGER" />
+    <result column="head_image" property="headImage" jdbcType="VARCHAR" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="achievement" property="achievement" jdbcType="DOUBLE" />
+    <result column="is_submit" property="isSubmit" jdbcType="INTEGER" />
+  </resultMap>
+   <resultMap id="TrainRecordPoliceMap" type="com.bayee.political.domain.TrainRecordPolice" >
+    <result column="enterNum" property="enterNum" jdbcType="INTEGER" />
+    <result column="totalEnterNum" property="totalEnterNum" jdbcType="INTEGER" />
+    <result column="proportion" property="proportion" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, train_match_id, department_id, achievement_date, achievement, achievement_grade, 
+    is_sign, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_match_department_achievement
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from train_match_department_achievement
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 赛事部门成绩新增 -->
+  <insert id="matchDepartmentAchievementCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.TrainMatchDepartmentAchievement" useGeneratedKeys="true">
+    insert into train_match_department_achievement (train_match_id, department_id, 
+      achievement_date, achievement, achievement_grade, 
+      is_sign, creation_date, update_date
+      )
+    values (#{trainMatchId,jdbcType=INTEGER}, #{departmentId,jdbcType=INTEGER}, 
+      #{achievementDate,jdbcType=TIMESTAMP}, #{achievement,jdbcType=DOUBLE}, #{achievementGrade,jdbcType=VARCHAR}, 
+      #{isSign,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 赛事部门成绩修改 -->
+  <update id="matchDepartmentAchievementUpdate" parameterType="com.bayee.political.domain.TrainMatchDepartmentAchievement" >
+    update train_match_department_achievement
+    <set >
+      <if test="trainMatchId != null" >
+        train_match_id = #{trainMatchId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="achievementDate != null" >
+        achievement_date = #{achievementDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="achievement != null" >
+        achievement = #{achievement,jdbcType=DOUBLE},
+      </if>
+      <if test="achievementGrade != null" >
+        achievement_grade = #{achievementGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="isSign != null" >
+        is_sign = #{isSign,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainMatchDepartmentAchievement" >
+    update train_match_department_achievement
+    set train_match_id = #{trainMatchId,jdbcType=INTEGER},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      achievement_date = #{achievementDate,jdbcType=TIMESTAMP},
+      achievement = #{achievement,jdbcType=DOUBLE},
+      achievement_grade = #{achievementGrade,jdbcType=VARCHAR},
+      is_sign = #{isSign,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <!-- 赛事详情查询 -->
+ <select id="trainMatchDepartmentAchievementItem" parameterType="com.bayee.political.domain.TrainMatchDepartmentAchievement" resultMap="BaseResultMap">
+select * from train_match_department_achievement where 1=1
+      <if test="id != null and id !=''">
+        and id = #{id,jdbcType=INTEGER}
+      </if> 
+      <if test="trainMatchId != null and trainMatchId !=''">
+        and train_match_id=#{trainMatchId,jdbcType=INTEGER}
+      </if>
+       <if test="departmentId != null and departmentId !=''">
+        and department_id = #{departmentId,jdbcType=INTEGER}
+      </if>
+      order by id desc limit 1
+</select>
+  <!-- 赛事部门成绩查询 -->
+ <select id="matchRecordDepartmentScoreList" parameterType="com.bayee.political.domain.TrainRank" resultMap="TrainRankMap">
+select a.*,a.department_id as rankId,b.name as departmentName from train_match_department_achievement a
+left join department b on b.id=a.department_id
+where a.train_match_id=#{trainMatchId,jdbcType=INTEGER}
+order by a.department_id
+</select>
+<!-- 已签到部门统计 -->
+<select id="matchRecordDepartmentItem" parameterType="com.bayee.political.domain.TrainRecordPolice" resultMap="TrainRecordPoliceMap">
+select ifnull(a.anum,0) as totalEnterNum,ifnull(b.bnum,0) as enterNum,
+round(ifnull(b.bnum/a.anum,0)*100,2) as proportion from 
+(select count(*) as anum from train_match_department_achievement where train_match_id=#{trainMatchId,jdbcType=INTEGER}) as a
+join
+(select count(distinct department_id) as bnum from train_match_achievement 
+where train_match_id=#{trainMatchId,jdbcType=INTEGER} and is_sign=2) as b
+</select>
+</mapper>

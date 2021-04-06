@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainMatchTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainMatchType" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name,sort
+  </sql>
+  <select id="selectTrainMatchTypeById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_match_type
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteTrainMatchType" parameterType="java.lang.Integer" >
+    delete from train_match_type
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="addTrainMatchType" parameterType="com.bayee.political.domain.TrainMatchType" >
+    insert into train_match_type (id, name,sort,creation_date)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},#{sort,jdbcType=INTEGER},#{creationDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateTrainMatchType" parameterType="com.bayee.political.domain.TrainMatchType" >
+    update train_match_type
+    <set >
+     <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainMatchType" >
+    update train_match_type
+    set name = #{name,jdbcType=VARCHAR},
+    sort = #{sort,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 赛事类型查询 -->
+  <select id="getTrainMatchTypeList" resultMap="BaseResultMap">
+  	select * from train_match_type 
+	where 1 = 1 
+	<if test="keyword!=null and keyword!=''">
+	and name like "%"#{keyword}"%" 
+	</if>
+	order by id desc 
+	limit #{pageSize},10 
+  </select>
+  
+	<select id="getTrainMatchTypeCount" resultType="java.lang.Integer">
+  	select count(*) as count from train_match_type 
+	where 1 = 1 
+	<if test="keyword!=null and keyword!=''">
+	and name like "%"#{keyword}"%" 
+	</if>
+  </select>
+    <!-- 个人赛事类型查询-->
+  <select id="matchPersonalTypeList" parameterType="com.bayee.political.domain.TrainMatchType" resultMap="BaseResultMap" >
+select distinct c.id,c.name from train_match_achievement a
+left join train_match b on b.id=a.train_match_id
+left join train_match_type c on c.id=b.match_type_id
+where a.police_id=#{policeId} 
+order by c.id
+  </select>
+</mapper>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainConstitutionMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainConstitution" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="cover_img" property="coverImg" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="view" property="view" jdbcType="INTEGER" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+    <result column="is_recommend" property="isRecommend" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, cover_img, name, view, file_path, is_recommend, status, creation_date, update_date
+  </sql>
+  <select id="getTrainConstitutionOnely" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_constitution
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteTrainConstitution" parameterType="java.lang.Integer" >
+    delete from train_constitution
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="addTrainConstitution" parameterType="com.bayee.political.domain.TrainConstitution" >
+    insert into train_constitution (id, cover_img, name, 
+      view, file_path, is_recommend, 
+      status, creation_date, update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{coverImg,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{view,jdbcType=INTEGER}, #{filePath,jdbcType=VARCHAR}, #{isRecommend,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateTrainConstitution" parameterType="com.bayee.political.domain.TrainConstitution" >
+    update train_constitution
+    <set >
+      <if test="coverImg != null" >
+        cover_img = #{coverImg,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="view != null" >
+        view = #{view,jdbcType=INTEGER},
+      </if>
+      <if test="filePath != null" >
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="isRecommend != null" >
+        is_recommend = #{isRecommend,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainConstitution" >
+    update train_constitution
+    set cover_img = #{coverImg,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      view = #{view,jdbcType=INTEGER},
+      file_path = #{filePath,jdbcType=VARCHAR},
+      is_recommend = #{isRecommend,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 训练章程查询 -->
+  <select id="getTrainConstitutionList" resultMap="BaseResultMap">
+  select * from train_constitution 
+  where 1 = 1 
+  <if test="status!=null">
+  and status = #{status} 
+  </if>
+  <if test="isRecommend!=null">
+  and is_recommend = #{isRecommend}
+  </if>
+  <if test="keyWords!=null and keyWords!=''">
+  and name like "%"#{keyWords}"%"
+  </if>
+    <if test="sort==null">
+  order by id desc 
+  </if>
+  <if test="sort==1">
+  order by view desc 
+  </if>
+  <if test="sort==2">
+  order by view  
+  </if>
+  <if test="pageSize!=null">
+  limit #{pageSize},10 
+  </if>
+  </select>
+  
+    <select id="getTrainConstitutionCount" resultType="java.lang.Integer">
+  select count(*) from train_constitution 
+    where 1 = 1 
+  <if test="status!=null">
+  and status = #{status} 
+  </if>
+  <if test="isRecommend!=null">
+  and is_recommend = #{isRecommend}
+  </if>
+  <if test="keyWords!=null and keyWords!=''">
+  and name = #{keyWords}
+  </if>
+  </select>
+  
+    <!-- 训练章程设置推荐或上下架 -->
+  <update id="constitutionIsRecommendOrStatus">
+  	update train_constitution 
+  	<set>
+  		<if test="status!=null">
+  			status = #{status}
+  		</if>
+  		<if test="isRecommend!=null">
+  			is_recommend = #{isRecommend} 
+  		</if>
+  	</set>
+  	 where id = #{id} 
+  </update>
+  
+</mapper>

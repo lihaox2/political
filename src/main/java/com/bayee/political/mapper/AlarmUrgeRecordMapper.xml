@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.AlarmUrgeRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.AlarmUrgeRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="entry_id" property="entryId" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="urge_notice" property="urgeNotice" jdbcType="VARCHAR" />
+    <result column="urge_content" property="urgeContent" jdbcType="VARCHAR" />
+    <result column="read_status" property="readStatus" jdbcType="INTEGER" />
+    <result column="urge_read_status" property="urgeReadStatus" jdbcType="INTEGER" />
+    <result column="urge_police_id" property="urgePoliceId" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="AlarmTimeNameMap" type="com.bayee.political.domain.AlarmTimeName" >
+    <result column="name" property="name" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, entry_id, police_id, urge_notice,urge_content, read_status, urge_read_status, urge_police_id, 
+    creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from alarm_urge_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from alarm_urge_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 局领导催还护照记录新增 -->
+  <insert id="alarmUrgeRecordCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.AlarmUrgeRecord" useGeneratedKeys="true">
+    insert into alarm_urge_record (entry_id, police_id, 
+      urge_notice,urge_content, read_status, urge_read_status, 
+      urge_police_id, creation_date, update_date
+      )
+    values (#{entryId,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
+      #{urgeNotice,jdbcType=VARCHAR}, #{urgeContent,jdbcType=VARCHAR},
+      #{readStatus,jdbcType=INTEGER}, #{urgeReadStatus,jdbcType=INTEGER}, 
+      #{urgePoliceId,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 局领导催还护照记录修改 -->
+  <update id="alarmUrgeRecordUpdate" parameterType="com.bayee.political.domain.AlarmUrgeRecord" >
+    update alarm_urge_record
+    <set >
+      <if test="entryId != null" >
+        entry_id = #{entryId,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeNotice != null" >
+        urge_notice = #{urgeNotice,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeContent != null" >
+        urge_content = #{urgeContent,jdbcType=VARCHAR},
+      </if>
+      <if test="readStatus != null" >
+        read_status = #{readStatus,jdbcType=INTEGER},
+      </if>
+      <if test="urgeReadStatus != null" >
+        urge_read_status = #{urgeReadStatus,jdbcType=INTEGER},
+      </if>
+      <if test="urgePoliceId != null" >
+        urge_police_id = #{urgePoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.AlarmUrgeRecord" >
+    update alarm_urge_record
+    set entry_id = #{entryId,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      urge_notice = #{urgeNotice,jdbcType=VARCHAR},
+      urge_content = #{urgeContent,jdbcType=VARCHAR},
+      read_status = #{readStatus,jdbcType=INTEGER},
+      urge_read_status = #{urgeReadStatus,jdbcType=INTEGER},
+      urge_police_id = #{urgePoliceId,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 局领导催还护照记录详情查询 -->
+  <select id="alarmUrgeRecordItem" parameterType="com.bayee.political.domain.AlarmUrgeRecord" resultMap="BaseResultMap">
+select a.*,TIMESTAMPDIFF(MINUTE, a.creation_date,SYSDATE()) as timeChange,
+b.name as urgeName,b.head_image as urgeHeadImage,
+c.name as urgeDepartmentName,d.position_name as urgePositionName from alarm_urge_record a
+left join user b on b.police_id=a.urge_police_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+where 1=1 
+<if test="id != null and id !=''">
+	and a.id = #{id,jdbcType=INTEGER}
+</if>
+<if test="entryId != null and entryId !=''">
+	and a.entry_id = #{entryId,jdbcType=INTEGER}
+</if>
+<if test="policeId != null and policeId !=''">
+	and a.police_id = #{policeId,jdbcType=INTEGER}
+</if>
+<if test="urgePoliceId != null and urgePoliceId !=''">
+	and a.urge_police_id = #{urgePoliceId,jdbcType=VARCHAR}
+</if> limit 1
+</select>
+  <!-- 个人护照催还通知最新查询 -->
+  <select id="alarmPersonalPassportReturnNewestList" parameterType="com.bayee.political.domain.AlarmUrgeRecord" resultMap="BaseResultMap">
+select a.*,TIMESTAMPDIFF(MINUTE, a.creation_date,SYSDATE()) as timeChange,
+b.name as urgeName,b.head_image as urgeHeadImage,
+c.name as urgeDepartmentName,d.position_name as urgePositionName from alarm_urge_record a
+left join user b on b.police_id=a.urge_police_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+where a.police_id = #{policeId,jdbcType=INTEGER} and a.read_status = #{readStatus,jdbcType=INTEGER}
+order by a.id desc limit 1
+</select>
+  <!-- 个人护照催还通知总数统计 -->
+  <select id="alarmPersonalPassportReturnCount" parameterType="com.bayee.political.domain.AlarmUrgeRecord" resultType="Integer">
+select count(*) from(select a.*,TIMESTAMPDIFF(MINUTE, a.creation_date,SYSDATE()) as timeChange,
+DATE_FORMAT(a.creation_date,'%Y年%m月%d日') as strStartTime,
+b.name as urgeName,b.head_image as urgeHeadImage,
+c.name as urgeDepartmentName,d.position_name as urgePositionName from alarm_urge_record a
+left join user b on b.police_id=a.urge_police_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+where a.police_id = #{policeId,jdbcType=INTEGER} 
+<if test="readStatus == 1">
+	and a.read_status = 1
+</if>
+<if test="readStatus == 0">
+	and a.read_status = 0
+</if>) as t
+</select>
+  <!-- 个人护照催还通知分页查询 -->
+  <select id="alarmPersonalPassportReturnList" parameterType="com.bayee.political.domain.AlarmUrgeRecord" resultMap="BaseResultMap">
+select a.*,TIMESTAMPDIFF(MINUTE, a.creation_date,SYSDATE()) as timeChange,
+DATE_FORMAT(a.creation_date,'%Y年%m月%d日') as strStartTime,
+b.name as urgeName,b.head_image as urgeHeadImage,
+c.name as urgeDepartmentName,d.position_name as urgePositionName from alarm_urge_record a
+left join user b on b.police_id=a.urge_police_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+where a.police_id = #{policeId,jdbcType=INTEGER} 
+<if test="readStatus == 1">
+	and a.read_status = 1
+</if>
+<if test="readStatus == 0">
+	and a.read_status = 0
+</if>
+order by a.id desc limit #{pageNum},#{pageSize}
+</select>
+  <!-- 个人护照催还通知时间查询 -->
+  <select id="alarmPassportDateList" parameterType="com.bayee.political.domain.AlarmTimeName" resultMap="AlarmTimeNameMap">
+select distinct strStartTime as name from(
+select a.*,TIMESTAMPDIFF(MINUTE, a.creation_date,SYSDATE()) as timeChange,
+DATE_FORMAT(a.creation_date,'%Y年%m月%d日') as strStartTime,
+b.name as urgeName,b.head_image as urgeHeadImage,
+c.name as urgeDepartmentName,d.position_name as urgePositionName from alarm_urge_record a
+left join user b on b.police_id=a.urge_police_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+where a.police_id = #{policeId,jdbcType=INTEGER} 
+<if test="readStatus == 1">
+	and a.read_status = 1
+</if>
+<if test="readStatus == 0">
+	and a.read_status = 0
+</if>
+order by a.id desc limit #{pageNum},#{pageSize}) as t
+order by strStartTime desc
+</select>
+</mapper>

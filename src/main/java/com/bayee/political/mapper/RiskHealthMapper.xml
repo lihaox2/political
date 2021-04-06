@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskHealthMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskHealth" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="year" property="year" jdbcType="VARCHAR" />
+    <result column="height" property="height" jdbcType="DOUBLE" />
+    <result column="weight" property="weight" jdbcType="DOUBLE" />
+    <result column="index_num" property="indexNum" jdbcType="DOUBLE" />
+    <result column="bmi" property="bmi" jdbcType="DOUBLE" />
+    <result column="bmi_id" property="bmiId" jdbcType="INTEGER" />
+    <result column="blood" property="blood" jdbcType="VARCHAR" />
+    <result column="overweight_num" property="overweightNum" jdbcType="DOUBLE" />
+    <result column="hyperlipidemia_num" property="hyperlipidemiaNum" jdbcType="DOUBLE" />
+    <result column="hypertension_num" property="hypertensionNum" jdbcType="DOUBLE" />
+    <result column="hyperglycemia_num" property="hyperglycemiaNum" jdbcType="DOUBLE" />
+    <result column="hyperuricemia_num" property="hyperuricemiaNum" jdbcType="DOUBLE" />
+    <result column="prostate_num" property="prostateNum" jdbcType="DOUBLE" />
+    <result column="major_diseases_num" property="majorDiseasesNum" jdbcType="DOUBLE" />
+    <result column="major_diseases_describe" property="majorDiseasesDescribe" jdbcType="VARCHAR" />
+    <result column="heart_num" property="heartNum" jdbcType="DOUBLE" />
+    <result column="heart_describe" property="heartDescribe" jdbcType="VARCHAR" />
+    <result column="tumor_antigen_num" property="tumorAntigenNum" jdbcType="DOUBLE" />
+    <result column="tumor_antigen_describe" property="tumorAntigenDescribe" jdbcType="VARCHAR" />
+    <result column="orthopaedics_num" property="orthopaedicsNum" jdbcType="DOUBLE" />
+    <result column="orthopaedics_describe" property="orthopaedicsDescribe" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, year, height, weight,index_num, bmi, bmi_id, blood, overweight_num, hyperlipidemia_num, 
+    hypertension_num, hyperglycemia_num, hyperuricemia_num, prostate_num, major_diseases_num, 
+    heart_num, tumor_antigen_num, orthopaedics_num, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from risk_health
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_health
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 警员健康风险指数新增 -->
+  <insert id="riskHealthCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.RiskHealth" useGeneratedKeys="true">
+    insert into risk_health (police_id, year, 
+      height, weight,index_num, bmi, bmi_id, 
+      blood, overweight_num, hyperlipidemia_num, 
+      hypertension_num, hyperglycemia_num, hyperuricemia_num, 
+      prostate_num, major_diseases_num, heart_num, 
+      tumor_antigen_num, orthopaedics_num, creation_date, 
+      update_date)
+    values (#{policeId,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, 
+      #{height,jdbcType=DOUBLE}, #{weight,jdbcType=DOUBLE}, #{indexNum,jdbcType=DOUBLE},
+      #{bmi,jdbcType=DOUBLE}, #{bmiId,jdbcType=INTEGER}, 
+      #{blood,jdbcType=VARCHAR}, #{overweightNum,jdbcType=DOUBLE}, #{hyperlipidemiaNum,jdbcType=DOUBLE}, 
+      #{hypertensionNum,jdbcType=DOUBLE}, #{hyperglycemiaNum,jdbcType=DOUBLE}, #{hyperuricemiaNum,jdbcType=DOUBLE}, 
+      #{prostateNum,jdbcType=DOUBLE}, #{majorDiseasesNum,jdbcType=DOUBLE}, #{heartNum,jdbcType=DOUBLE}, 
+      #{tumorAntigenNum,jdbcType=DOUBLE}, #{orthopaedicsNum,jdbcType=DOUBLE}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 警员健康风险指数修改 -->
+  <update id="riskHealthUpdate" parameterType="com.bayee.political.domain.RiskHealth" >
+    update risk_health
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null" >
+        height = #{height,jdbcType=DOUBLE},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=DOUBLE},
+      </if>
+      <if test="indexNum != null" >
+        index_num = #{indexNum,jdbcType=DOUBLE},
+      </if>
+      <if test="bmi != null" >
+        bmi = #{bmi,jdbcType=DOUBLE},
+      </if>
+      <if test="bmiId != null" >
+        bmi_id = #{bmiId,jdbcType=INTEGER},
+      </if>
+      <if test="blood != null" >
+        blood = #{blood,jdbcType=VARCHAR},
+      </if>
+      <if test="overweightNum != null" >
+        overweight_num = #{overweightNum,jdbcType=DOUBLE},
+      </if>
+      <if test="hyperlipidemiaNum != null" >
+        hyperlipidemia_num = #{hyperlipidemiaNum,jdbcType=DOUBLE},
+      </if>
+      <if test="hypertensionNum != null" >
+        hypertension_num = #{hypertensionNum,jdbcType=DOUBLE},
+      </if>
+      <if test="hyperglycemiaNum != null" >
+        hyperglycemia_num = #{hyperglycemiaNum,jdbcType=DOUBLE},
+      </if>
+      <if test="hyperuricemiaNum != null" >
+        hyperuricemia_num = #{hyperuricemiaNum,jdbcType=DOUBLE},
+      </if>
+      <if test="prostateNum != null" >
+        prostate_num = #{prostateNum,jdbcType=DOUBLE},
+      </if>
+      <if test="majorDiseasesNum != null" >
+        major_diseases_num = #{majorDiseasesNum,jdbcType=DOUBLE},
+      </if>
+      <if test="heartNum != null" >
+        heart_num = #{heartNum,jdbcType=DOUBLE},
+      </if>
+      <if test="tumorAntigenNum != null" >
+        tumor_antigen_num = #{tumorAntigenNum,jdbcType=DOUBLE},
+      </if>
+      <if test="orthopaedicsNum != null" >
+        orthopaedics_num = #{orthopaedicsNum,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskHealth" >
+    update risk_health
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      year = #{year,jdbcType=VARCHAR},
+      height = #{height,jdbcType=DOUBLE},
+      weight = #{weight,jdbcType=DOUBLE},
+      bmi = #{bmi,jdbcType=DOUBLE},
+      bmi_id = #{bmiId,jdbcType=INTEGER},
+      blood = #{blood,jdbcType=VARCHAR},
+      overweight_num = #{overweightNum,jdbcType=DOUBLE},
+      hyperlipidemia_num = #{hyperlipidemiaNum,jdbcType=DOUBLE},
+      hypertension_num = #{hypertensionNum,jdbcType=DOUBLE},
+      hyperglycemia_num = #{hyperglycemiaNum,jdbcType=DOUBLE},
+      hyperuricemia_num = #{hyperuricemiaNum,jdbcType=DOUBLE},
+      prostate_num = #{prostateNum,jdbcType=DOUBLE},
+      major_diseases_num = #{majorDiseasesNum,jdbcType=DOUBLE},
+      heart_num = #{heartNum,jdbcType=DOUBLE},
+      tumor_antigen_num = #{tumorAntigenNum,jdbcType=DOUBLE},
+      orthopaedics_num = #{orthopaedicsNum,jdbcType=DOUBLE},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 警员健康风险指数查询 -->
+<select id="riskHealthIndexItem" parameterType="com.bayee.political.domain.RiskHealth" resultMap="BaseResultMap">
+select a.*,b.name as bmiName,c.major_diseases_describe,
+c.heart_describe,c.tumor_antigen_describe,c.orthopaedics_describe
+from risk_health a
+left join risk_health_bmi_standard b on b.id=a.bmi_id
+left join risk_health_record c on c.year=a.year and c.police_id=a.police_id
+where a.police_id=#{policeId,jdbcType=VARCHAR} and a.year=#{dateTime}
+order by a.id desc limit 1
+</select>
+</mapper>

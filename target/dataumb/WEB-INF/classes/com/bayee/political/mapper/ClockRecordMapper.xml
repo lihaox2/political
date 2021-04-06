@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.ClockRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.ClockRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="check_type" property="checkType" jdbcType="VARCHAR" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+    <result column="plan_id" property="planId" jdbcType="VARCHAR" />
+    <result column="record_id" property="recordId" jdbcType="VARCHAR" />
+    <result column="work_date" property="workDate" jdbcType="TIMESTAMP" />
+    <result column="time_result" property="timeResult" jdbcType="VARCHAR" />
+    <result column="location_result" property="locationResult" jdbcType="VARCHAR" />
+    <result column="approve_id" property="approveId" jdbcType="VARCHAR" />
+    <result column="procInst_id" property="procinstId" jdbcType="VARCHAR" />
+    <result column="base_check_time" property="baseCheckTime" jdbcType="TIMESTAMP" />
+    <result column="user_check_time" property="userCheckTime" jdbcType="TIMESTAMP" />
+    <result column="source_type" property="sourceType" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="leaveCharts" type="com.bayee.political.domain.LeaveChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="num" property="num" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, check_type, group_id, plan_id, record_id, work_date, time_result, location_result, 
+    approve_id, procInst_id, base_check_time, user_check_time, source_type, creation_date, 
+    update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from clock_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from clock_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 钉钉打卡记录保存 -->
+  <insert id="clockRecordCreate" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.ClockRecord" useGeneratedKeys="true">
+    insert into clock_record (user_id, check_type, 
+      group_id, plan_id, record_id, 
+      work_date, time_result, location_result, 
+      approve_id, procInst_id, base_check_time, 
+      user_check_time, source_type, creation_date, 
+      update_date)
+    values (#{userId,jdbcType=VARCHAR}, #{checkType,jdbcType=VARCHAR}, 
+      #{groupId,jdbcType=VARCHAR}, #{planId,jdbcType=VARCHAR}, #{recordId,jdbcType=VARCHAR}, 
+      #{workDate,jdbcType=TIMESTAMP}, #{timeResult,jdbcType=VARCHAR}, #{locationResult,jdbcType=VARCHAR}, 
+      #{approveId,jdbcType=VARCHAR}, #{procinstId,jdbcType=VARCHAR}, #{baseCheckTime,jdbcType=TIMESTAMP}, 
+      #{userCheckTime,jdbcType=TIMESTAMP}, #{sourceType,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.ClockRecord" >
+    update clock_record
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkType != null" >
+        check_type = #{checkType,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="planId != null" >
+        plan_id = #{planId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordId != null" >
+        record_id = #{recordId,jdbcType=VARCHAR},
+      </if>
+      <if test="workDate != null" >
+        work_date = #{workDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeResult != null" >
+        time_result = #{timeResult,jdbcType=VARCHAR},
+      </if>
+      <if test="locationResult != null" >
+        location_result = #{locationResult,jdbcType=VARCHAR},
+      </if>
+      <if test="approveId != null" >
+        approve_id = #{approveId,jdbcType=VARCHAR},
+      </if>
+      <if test="procinstId != null" >
+        procInst_id = #{procinstId,jdbcType=VARCHAR},
+      </if>
+      <if test="baseCheckTime != null" >
+        base_check_time = #{baseCheckTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userCheckTime != null" >
+        user_check_time = #{userCheckTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sourceType != null" >
+        source_type = #{sourceType,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.ClockRecord" >
+    update clock_record
+    set user_id = #{userId,jdbcType=VARCHAR},
+      check_type = #{checkType,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=VARCHAR},
+      plan_id = #{planId,jdbcType=VARCHAR},
+      record_id = #{recordId,jdbcType=VARCHAR},
+      work_date = #{workDate,jdbcType=TIMESTAMP},
+      time_result = #{timeResult,jdbcType=VARCHAR},
+      location_result = #{locationResult,jdbcType=VARCHAR},
+      approve_id = #{approveId,jdbcType=VARCHAR},
+      procInst_id = #{procinstId,jdbcType=VARCHAR},
+      base_check_time = #{baseCheckTime,jdbcType=TIMESTAMP},
+      user_check_time = #{userCheckTime,jdbcType=TIMESTAMP},
+      source_type = #{sourceType,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 个人加班排名Top10 -->
+     <select id="leavePersonalOvertimeRankList" parameterType="com.bayee.political.domain.ClockRecord" resultMap="BaseResultMap" >
+select a.police_id,a.name,a.department_id,sum(b.timeChange) as timeChange from user a right join
+(select *,round(TIMESTAMPDIFF(MINUTE, base_check_time, user_check_time)/60,2) as timeChange from clock_record 
+where check_type='OffDuty' and base_check_time is not null and user_check_time>=base_check_time
+and creation_date &gt;= #{startTime} and creation_date&lt;=#{endTime}) b on b.user_id=a.dd_user_id
+GROUP BY a.police_id,a.name,a.department_id order by sum(b.timeChange) desc limit 10
+  </select>
+    <!-- 部门加班情况排名 -->
+     <select id="leaveDepOvertimeRankList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select a.department_id as id,sum(b.timeChange) as num,c.name from user a right join
+(select *,round(TIMESTAMPDIFF(MINUTE, base_check_time, user_check_time)/60,2) as timeChange from clock_record 
+where check_type='OffDuty' and base_check_time is not null and user_check_time>=base_check_time
+and creation_date &gt;= #{startTime} and creation_date&lt;=#{endTime}) b on b.user_id=a.dd_user_id
+left join department c on c.id=a.department_id
+GROUP BY a.department_id order by sum(b.timeChange) desc
+  </select>
+<!-- 加班折线图查询（api） -->
+<select id="leaveOvertimeList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select a.id,a.name,ifnull(sum(b.timeChange),0) as num from month a
+left join(select a.*,round(TIMESTAMPDIFF(MINUTE, a.base_check_time, a.user_check_time)/60,2) as timeChange,
+CAST(DATE_FORMAT(a.user_check_time,'%m') AS SIGNED) as months,b.department_id from clock_record a 
+left join user b on b.dd_user_id=a.user_id
+where a.check_type='OffDuty' and a.base_check_time is not null and a.user_check_time>=a.base_check_time
+and DATE_FORMAT(a.creation_date,'%Y') = DATE_FORMAT(CURDATE(),'%Y')
+    <if test="departmentId != null and departmentId != '' ">
+		and b.department_id = #{departmentId}
+	</if>) as b on b.months=a.id
+GROUP BY a.id,a.name order by a.id
+  </select>
+  <!-- 值班折线图查询（api） -->
+<select id="leaveDutyList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select a.id,a.name,ifnull(sum(b.timeChange),0) as num from month a
+left join(select a.*,round(TIMESTAMPDIFF(MINUTE, a.base_check_time, a.user_check_time)/60,2) as timeChange,
+CAST(DATE_FORMAT(a.user_check_time,'%m') AS SIGNED) as months,b.department_id from clock_record a 
+left join user b on b.dd_user_id=a.user_id
+where a.check_type='OffDuty' and a.base_check_time is not null and a.user_check_time>=a.base_check_time
+and DATE_FORMAT(a.creation_date,'%Y') = DATE_FORMAT(CURDATE(),'%Y')
+    <if test="departmentId != null and departmentId != '' ">
+		and b.department_id = #{departmentId}
+	</if>) as b on b.months=a.id
+GROUP BY a.id,a.name order by a.id
+  </select>
+</mapper>

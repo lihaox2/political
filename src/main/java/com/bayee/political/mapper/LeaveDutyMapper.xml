@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeaveDutyMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeaveDuty" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="position_id" property="positionId" jdbcType="INTEGER" />
+    <result column="year" property="year" jdbcType="VARCHAR" />
+    <result column="month" property="month" jdbcType="VARCHAR" />
+    <result column="total_duty_time" property="totalDutyTime" jdbcType="DOUBLE" />
+    <result column="residual_duty_time" property="residualDutyTime" jdbcType="DOUBLE" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, name, department_id, position_id, year,month, total_duty_time, residual_duty_time, 
+    creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leave_duty
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from leave_duty
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 警员值班时长新增 -->
+  <insert id="leaveDutyCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.LeaveDuty" useGeneratedKeys="true">
+    insert into leave_duty (police_id, name, 
+      department_id, position_id, year, month,
+      total_duty_time, residual_duty_time, creation_date, 
+      update_date)
+    values (#{policeId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{departmentId,jdbcType=INTEGER}, #{positionId,jdbcType=INTEGER}, #{year,jdbcType=VARCHAR},#{month,jdbcType=VARCHAR}, 
+      #{totalDutyTime,jdbcType=DOUBLE}, #{residualDutyTime,jdbcType=DOUBLE}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 警员值班时长修改 -->
+  <update id="leaveDutyUpdate" parameterType="com.bayee.political.domain.LeaveDuty" >
+    update leave_duty
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null" >
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null" >
+        month = #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="totalDutyTime != null" >
+        total_duty_time = #{totalDutyTime,jdbcType=DOUBLE},
+      </if>
+      <if test="residualDutyTime != null" >
+        residual_duty_time = #{residualDutyTime,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where police_id = #{policeId,jdbcType=VARCHAR} and year = #{year,jdbcType=VARCHAR} and month = #{month,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.LeaveDuty" >
+    update leave_duty
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      position_id = #{positionId,jdbcType=INTEGER},
+      year = #{year,jdbcType=VARCHAR},
+      month = #{month,jdbcType=VARCHAR},
+      total_duty_time = #{totalDutyTime,jdbcType=DOUBLE},
+      residual_duty_time = #{residualDutyTime,jdbcType=DOUBLE},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+     <!-- 警员值班时长详情查询 -->
+    <select id="leaveDutyItem" parameterType="com.bayee.political.domain.LeaveDuty" resultMap="BaseResultMap" >
+select * from leave_duty where 1=1 
+     <if test="id != null and id !=''">
+        and id = #{id}
+      </if>
+       <if test="policeId != null and policeId !=''">
+        and police_id = #{policeId}
+      </if>
+       <if test="year != null and year !=''">
+        and year = #{year}
+      </if>
+      <if test="month != null and month !=''">
+        and month = #{month}
+      </if>
+  </select>
+</mapper>

@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainPhysicalAchievementMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainPhysicalAchievement" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="registration_date" property="registrationDate" jdbcType="TIMESTAMP" />
+    <result column="achievement_date" property="achievementDate" jdbcType="TIMESTAMP" />
+    <result column="sign_date" property="signDate" jdbcType="TIMESTAMP" />
+    <result column="train_physical_id" property="trainPhysicalId" jdbcType="INTEGER" />
+    <result column="train_group_id" property="trainGroupId" jdbcType="INTEGER" />
+    <result column="qr_code" property="qrCode" jdbcType="VARCHAR" />
+    <result column="achievement_grade" property="achievementGrade" jdbcType="INTEGER" />
+    <result column="is_sign" property="isSign" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="police_weight" property="policeWeight" jdbcType="DOUBLE" />
+    <result column="police_height" property="policeHeight" jdbcType="DOUBLE" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+  </resultMap>
+   <resultMap id="TrainRecordScoreMap" type="com.bayee.political.domain.TrainRecordScore" >
+    <result column="train_physical_id" property="trainPhysicalId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="proportion" property="proportion" jdbcType="DOUBLE" />
+  </resultMap>
+  <resultMap id="FillTimeMap" type="com.bayee.political.domain.ReportDataFillTime" >
+    <result column="startTime" property="startTime" />
+    <result column="endTime" property="endTime" />
+  </resultMap>
+  <resultMap id="TrainRankMap" type="com.bayee.political.domain.TrainRank" >
+    <result column="rankId" property="rankId" jdbcType="INTEGER" />
+    <result column="head_image" property="headImage" jdbcType="VARCHAR" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="achievement" property="achievement" jdbcType="DOUBLE" />
+    <result column="achievement_first" property="achievementFirst" jdbcType="INTEGER" />
+    <result column="achievement_second" property="achievementSecond" jdbcType="DOUBLE" />
+    <result column="achievement_str" property="achievementStr" jdbcType="VARCHAR" />
+    <result column="is_submit" property="isSubmit" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, registration_date, achievement_date, train_physical_id, train_group_id, 
+    qr_code,is_sign, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_physical_achievement
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from train_physical_achievement
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 综合体能项目报名新增 -->
+  <insert id="trainPhysicalAchievementCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" useGeneratedKeys="true">
+    insert into train_physical_achievement (police_id, registration_date, 
+      achievement_date,sign_date, train_physical_id, train_group_id, 
+      qr_code,achievement_grade,is_sign, creation_date, update_date
+      )
+    values (#{policeId,jdbcType=VARCHAR}, #{registrationDate,jdbcType=TIMESTAMP}, 
+      #{achievementDate,jdbcType=TIMESTAMP}, #{signDate,jdbcType=TIMESTAMP}, 
+      #{trainPhysicalId,jdbcType=INTEGER}, #{trainGroupId,jdbcType=INTEGER}, 
+      #{qrCode,jdbcType=VARCHAR},#{achievementGrade,jdbcType=INTEGER},#{isSign,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 训练报名批量新增 -->
+  <insert id="trainPhysicalAchievementCreatBatch" keyProperty="id" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" useGeneratedKeys="true">
+    insert into train_physical_achievement (police_id, registration_date, 
+      achievement_date,sign_date, train_physical_id, train_group_id, 
+      qr_code,achievement_grade,is_sign, creation_date, update_date)
+      values 
+         <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.policeId,jdbcType=VARCHAR},#{item.registrationDate,jdbcType=TIMESTAMP},
+            #{item.achievementDate,jdbcType=TIMESTAMP},#{item.signDate,jdbcType=TIMESTAMP},
+            #{item.trainPhysicalId,jdbcType=INTEGER}, #{item.trainGroupId,jdbcType=INTEGER}, 
+            #{item.qrCode,jdbcType=VARCHAR},#{item.achievementGrade,jdbcType=INTEGER},
+            #{item.isSign,jdbcType=INTEGER}, 
+            #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+  <!-- 综合体能项目报名修改 -->
+  <update id="trainPhysicalAchievementUpdate" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" >
+    update train_physical_achievement
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationDate != null" >
+        registration_date = #{registrationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="achievementDate != null" >
+        achievement_date = #{achievementDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signDate != null" >
+        sign_date = #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainPhysicalId != null" >
+        train_physical_id = #{trainPhysicalId,jdbcType=INTEGER},
+      </if>
+      <if test="trainGroupId != null" >
+        train_group_id = #{trainGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="qrCode != null" >
+        qr_code = #{qrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="achievementGrade != null" >
+        achievement_grade = #{achievementGrade,jdbcType=INTEGER},
+      </if>
+      <if test="isSign != null" >
+        is_sign = #{isSign,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 训练报名批量修改 -->
+    <update id="trainPhysicalAchievementUpdateBatch" parameterType="com.bayee.political.domain.TrainPhysicalAchievement">
+    <foreach collection="list" item="hytemplate" index="index" open="" close="" separator=";">
+        UPDATE train_physical_achievement
+        <set>
+      <if test="hytemplate.achievementDate != null" >
+        achievement_date = #{hytemplate.achievementDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hytemplate.achievementGrade != null" >
+        achievement_grade = #{hytemplate.achievementGrade,jdbcType=INTEGER},
+      </if>
+      <if test="hytemplate.updateDate != null" >
+        update_date = #{hytemplate.updateDate,jdbcType=TIMESTAMP},
+      </if>
+     </set>
+        <where>
+            id = #{hytemplate.id,jdbcType=INTEGER}
+        </where>
+    </foreach>
+</update>
+  <!-- 根据physical_id及police_id修改 -->
+    <update id="trainPhysicalAchievementUpdateByCondition" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" >
+    update train_physical_achievement
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationDate != null" >
+        registration_date = #{registrationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="achievementDate != null" >
+        achievement_date = #{achievementDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signDate != null" >
+        sign_date = #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainPhysicalId != null" >
+        train_physical_id = #{trainPhysicalId,jdbcType=INTEGER},
+      </if>
+      <if test="trainGroupId != null" >
+        train_group_id = #{trainGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="qrCode != null" >
+        qr_code = #{qrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="achievementGrade != null" >
+        achievement_grade = #{achievementGrade,jdbcType=INTEGER},
+      </if>
+      <if test="isSign != null" >
+        is_sign = #{isSign,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where train_physical_id = #{trainPhysicalId} and police_id = #{policeId} 
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" >
+    update train_physical_achievement
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      registration_date = #{registrationDate,jdbcType=TIMESTAMP},
+      achievement_date = #{achievementDate,jdbcType=TIMESTAMP},
+      sign_date = #{signDate,jdbcType=TIMESTAMP},
+      train_physical_id = #{trainPhysicalId,jdbcType=INTEGER},
+      train_group_id = #{trainGroupId,jdbcType=INTEGER}, 
+      qr_code = #{qrCode,jdbcType=VARCHAR},
+      achievement_grade = #{achievementGrade,jdbcType=INTEGER},
+      is_sign = #{isSign,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <!-- 单项综合体能项目报名人数统计 -->
+   <select id="singleTrainPhysicalAchievementCount" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" resultType="Integer">
+select count(*) from train_physical_achievement where train_physical_id=#{trainPhysicalId,jdbcType=INTEGER}
+</select>
+ <!-- 单项综合体能项目报名详情 -->
+   <select id="trainPhysicalAchievementItem" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" resultMap="BaseResultMap">
+select a.*,b.head_image as headImage,b.name,d.name as trainPhysicalName,d.train_end_date as trainEndDate,d.train_start_date as trainStartDate,
+c.name as groupName,e.projectName from train_physical_achievement a
+left join user b on b.police_id=a.police_id
+left join train_group c on c.id=a.train_group_id
+left join train_physical d on d.id=a.train_physical_id
+left join (select a.id as group_id, GROUP_CONCAT(a.projectName) as projectName from(
+select a.*,b.train_project,c.name as projectName from(
+select a.*,b.name as groupName,b.id from
+(select police_id,name,gender,year(now())- year(substring(id_card,7,8)) as age from user) a
+left join train_group b on b.sex=a.gender and a.age&gt;=b.min_age and age&lt;=b.max_age
+where a.police_id=#{policeId,jdbcType=VARCHAR}) a
+left join train_physical_project_record b on b.train_group_id=a.id
+left join train_project c on FIND_IN_SET(c.id,b.train_project)>0
+where b.train_physical_id=#{trainPhysicalId,jdbcType=INTEGER}) a GROUP BY a.id) e on e.group_id=a.train_group_id
+where 1=1 
+     <if test="id != null and id !=''">
+        and a.id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="trainPhysicalId != null and trainPhysicalId !=''">
+        and a.train_physical_id=#{trainPhysicalId,jdbcType=INTEGER}
+      </if>
+       <if test="policeId != null and policeId !=''">
+        and a.police_id = #{policeId,jdbcType=VARCHAR}
+      </if>
+</select>
+ <!-- 需要录分的训练查询 -->
+   <select id="trainPhysicalNoScoreList" parameterType="com.bayee.political.domain.TrainRecordScore" resultMap="TrainRecordScoreMap">
+<!-- select a.type,a.train_physical_id,a.name,b.proportion,'1' as objectId from(
+select distinct train_physical_id,name,type from(
+select a.*,b.train_group_id,d.name,d.type from train_physical_achievement_details a
+left join train_physical_achievement b on b.id=a.train_physical_achievement_id
+left join train_physical d on d.id=a.train_physical_id
+where d.scorer_police_id=#{policeId,jdbcType=VARCHAR} and d.is_submit=0 and d.status!=1
+and a.achievement is null and a.achievement_grade is null
+and d.creation_date is not null) as a)a
+left join
+(select round(ifnull((1-bnum/anum),0)*100,2) as proportion,a.train_physical_id from (
+select count(distinct project_id) as anum, train_physical_id from(
+select a.*,b.train_group_id from train_physical_achievement_details a
+left join train_physical_achievement b on b.id=a.train_physical_achievement_id
+left join train_physical d on d.id=a.train_physical_id
+where d.scorer_police_id=#{policeId,jdbcType=VARCHAR} and d.is_submit=0 and d.status!=1 and d.creation_date is not null) as t
+group by train_physical_id) as a
+left join
+(select count(distinct project_id) as bnum, train_physical_id from(
+select a.*,b.train_group_id from train_physical_achievement_details a
+left join train_physical_achievement b on b.id=a.train_physical_achievement_id
+left join train_physical d on d.id=a.train_physical_id
+where d.scorer_police_id=#{policeId,jdbcType=VARCHAR}  and d.is_submit=0 and d.status!=1
+and a.achievement is null and a.achievement_grade is null
+and d.creation_date is not null) as t
+group by train_physical_id) as b on b.train_physical_id=a.train_physical_id) as b
+on b.train_physical_id=a.train_physical_id
+UNION ALL
+select a.type,a.id as train_physical_id,a.name,b.proportion,'2' as objectId from train_firearm a
+right join
+(select round((1-ifnull(b.bnum,0)/a.anum)*100,2) as proportion,a.train_firearm_id from 
+(select count(DISTINCT(name)) as anum,train_firearm_id from(
+select a.*,b.name from train_firearm_achievement a
+left join train_firearm b on b.id=a.train_firearm_id
+where b.scorer_police_id=#{policeId,jdbcType=VARCHAR} and b.is_submit=0 and b.status!=1) as c
+GROUP BY train_firearm_id) a 
+left join
+(select count(DISTINCT(name)) as bnum,train_firearm_id from(
+select a.*,b.name from train_firearm_achievement a
+left join train_firearm b on b.id=a.train_firearm_id
+where a.achievement is null and a.achievement_grade is null
+and b.scorer_police_id=#{policeId,jdbcType=VARCHAR} and b.is_submit=0 and b.status!=1) as c
+GROUP BY train_firearm_id) b on b.train_firearm_id=a.train_firearm_id
+where b.bnum is not null) as b on b.train_firearm_id=a.id
+order by train_physical_id desc -->
+select * from(
+select a.id as train_physical_id,a.name,a.type,'1' as objectId,
+round(ifnull(d.dnum/c.cnum,0)*100,2) as proportion,a.creation_date,b.bnum from train_physical a
+left join
+(select count(*) as bnum,train_physical_id from train_physical_achievement 
+GROUP BY train_physical_id) b on b.train_physical_id=a.id
+left join
+(select count(*) as cnum,train_physical_id from train_physical_achievement_details 
+GROUP BY train_physical_id) c on c.train_physical_id=a.id
+left join
+(select count(*) as dnum,train_physical_id from train_physical_achievement_details 
+where achievement is not null and achievement_grade is not null
+GROUP BY train_physical_id) d on d.train_physical_id=a.id
+where a.scorer_police_id=#{policeId,jdbcType=VARCHAR} and a.is_submit=0 and a.status!=1
+and b.bnum is not null
+UNION ALL
+select a.id as train_physical_id,a.name,a.type,'2' as objectId,
+round(ifnull(c.cnum/b.bnum,0)*100,2) as proportion,a.creation_date,b.bnum from train_firearm a
+left join
+(select count(*) as bnum,train_firearm_id from train_firearm_achievement 
+GROUP BY train_firearm_id) b on b.train_firearm_id=a.id
+left join
+(select count(*) as cnum,train_firearm_id from train_firearm_achievement 
+where achievement is not null and achievement_grade is not null
+GROUP BY train_firearm_id) c on c.train_firearm_id=a.id
+where a.scorer_police_id=#{policeId,jdbcType=VARCHAR} and a.is_submit=0 and a.status!=1
+and b.bnum is not null) as a ORDER BY creation_date desc
+</select>
+ <!-- 已完成录分的训练查询 -->
+   <select id="trainPhysicalOverScoreList" parameterType="com.bayee.political.domain.TrainRecordScore" resultMap="TrainRecordScoreMap">
+select * from(	
+select '1' as objectId,type,id as trainPhysicalId,name,'已录入' as statusName,
+train_start_date as trainStartDate,train_end_date as trainEndDate,
+submit_date as creationDate from train_physical
+where scorer_police_id=#{policeId,jdbcType=VARCHAR} and is_submit=1
+UNION ALL
+select '2' as objectId,type,id as trainPhysicalId,name,'已录入' as statusName,
+train_start_date as trainStartDate,train_end_date as trainEndDate,
+submit_date as creationDate from train_firearm
+where scorer_police_id=#{policeId,jdbcType=VARCHAR} and is_submit=1) as a
+order by creationDate desc
+</select>
+ <!-- 查询任意5次训练活动各项成绩均合格 -->
+   <select id="trainArbitrarilyFivePassCount" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" resultType="Integer">
+select ifnull(a.anum+b.bnum,0) as num from 
+(select count(*) as anum from train_physical_achievement 
+where police_id=#{policeId,jdbcType=VARCHAR} and achievement_grade=2) a
+join
+(select count(*) as bnum from train_firearm_achievement 
+where police_id=#{policeId,jdbcType=VARCHAR} and achievement_grade&gt;=2) b
+</select>
+ <!-- 查询连续5次训练活动各项成绩均合格 -->
+   <select id="trainContinuityFivePassCount" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" resultType="Integer">
+select count(*) from(
+select id,achievement_grade,creation_date from train_physical_achievement where police_id=#{policeId,jdbcType=VARCHAR}
+UNION ALL
+select id,achievement_grade,creation_date from train_firearm_achievement where police_id=#{policeId,jdbcType=VARCHAR}
+order by creation_date desc limit 5) as t
+where achievement_grade&gt;=2
+</select>
+<!-- 连续3个月参加训练，可获得该奖章 -->
+   <select id="trainContinuityThreeMonthPassCount" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" resultType="Integer">
+select count(*) from(
+select a.year_month as name,ifnull(b.num,0) as num from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(*) as num,DATE_FORMAT(creation_date,'%Y-%m') as name from(
+select id,achievement_grade,creation_date from train_physical_achievement where police_id=017107 and is_sign=2
+UNION ALL
+select id,achievement_grade,creation_date from train_firearm_achievement where police_id=017107 and is_sign=2) as t
+GROUP BY DATE_FORMAT(creation_date,'%Y-%m')) b on b.name=a.year_month
+order by a.year_month) as a where num&gt;0
+</select>
+<!-- 体能训练成绩查询 -->
+<select id="getTrainPhysicalAchievement" resultMap="BaseResultMap" >
+	select a.*, b.name, c.name as department_name,d.type from train_physical_achievement a 
+left join user b on a.police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join train_physical d on a.train_physical_id = d.id 
+where a.train_physical_id = #{trainPhysicalId} 
+<if test="trainGroupId!=null and trainGroupId!=''">
+and a.train_group_id = #{trainGroupId} 
+</if>
+<if test="departmentId!=null and departmentId!=''">
+and c.id = #{departmentId}
+</if>
+<if test="keyword!=null and keyword!=''">
+and (a.police_id like "%"#{keyword}"%" or b.name like "%"#{keyword}"%") 
+</if>
+order by id desc 
+<if test="pageSize!=null">
+limit #{pageSize},10
+</if>
+</select>
+
+<select id="getTrainPhysicalAchievementCount" resultType="java.lang.Integer" >
+	select count(*) as count from train_physical_achievement a 
+left join user b on a.police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join train_physical d on a.train_physical_id = d.id 
+where a.train_physical_id = #{trainPhysicalId} 
+<if test="trainGroupId!=null and trainGroupId!=''">
+and a.train_group_id = #{trainGroupId} 
+</if>
+<if test="departmentId!=null and departmentId!=''">
+and c.id = #{departmentId}
+</if>
+<if test="keyword!=null and keyword!=''">
+and (a.police_id like "%"#{keyword}"%" or b.name like "%"#{keyword}"%") 
+</if>
+</select>
+
+<!-- 查询综合体能训练成绩根据id -->
+<select id="getTrainPhysicalAchievementById" resultMap="BaseResultMap">
+	select a.*,b.name, c.type, b.police_height,b.police_weight from train_physical_achievement a 
+	left join user b on a.police_id = b.police_id 
+	left join train_physical c on a.train_physical_id = c.id 
+	where a.id = #{id} 
+</select>
+
+<!-- 综合体能报名人数 -->
+<select id="signUpNum" resultType="java.lang.Integer">
+select count(distinct(police_id)) as count from train_physical_achievement 
+where train_physical_id = #{trainPhysicalId} 
+</select>
+
+<!-- 综合体能签到人数 -->
+<select id="signInNum" resultType="java.lang.Integer">
+select count(distinct(police_id)) as count from train_physical_achievement 
+where train_physical_id = #{trainPhysicalId} 
+and is_sign = 2 
+</select>
+
+<!-- 综合体能合格人数 -->
+<select id="qualifiedNum" resultType="java.lang.Integer">
+select count(distinct(police_id)) as count from train_physical_achievement 
+where train_physical_id = #{trainPhysicalId} 
+and is_sign = 2 
+and achievement_grade = 2 
+</select>
+
+<!-- 综合体能单位报名数 -->
+<select id="companyNum" resultType="java.lang.Integer">
+select count(distinct(b.department_id)) as count from train_physical_achievement a 
+left join user b on a.police_id = b.police_id 
+where a.train_physical_id = #{trainPhysicalId}  
+</select>
+ <!-- 领队报名人员查询 -->
+   <select id="trainApplicantsLeaderList" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" resultMap="BaseResultMap">
+select a.*,b.name,b.head_image as headImage from ${tableName} a
+left join user b on b.police_id=a.police_id
+where ${tableId}=#{trainPhysicalId} and b.department_id=#{departmentId}
+</select>
+ <!-- 成绩起始时间查询 -->
+   <select id="trainMatchTimeItem" parameterType="com.bayee.political.domain.ReportDataFillTime" resultMap="FillTimeMap">
+select DATE_FORMAT(MAX(creation_date),'%Y-%m') as endTime,
+DATE_FORMAT(MIN(creation_date),'%Y-%m') as startTime from ${tableName}
+</select>
+<!-- 根据训练id查询报名人员list -->
+   <select id="updateGradeList" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" resultMap="BaseResultMap">
+select * from train_physical_achievement where train_physical_id=#{trainPhysicalId}
+</select>
+</mapper>

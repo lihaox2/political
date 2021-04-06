@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bayee.political.mapper.EvaluateTemplateMapper">
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.EvaluateTemplate">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="template_name" jdbcType="VARCHAR" property="templateName" />
+    <result column="template_type" jdbcType="INTEGER" property="templateType" />
+    <result column="target_id" jdbcType="INTEGER" property="targetId" />
+    <result column="target_name" jdbcType="VARCHAR" property="targetName" />
+    <result column="rank_id" jdbcType="INTEGER" property="rankId" />
+    <result column="rank_name" jdbcType="VARCHAR" property="rankName" />
+    <result column="department_id" jdbcType="INTEGER" property="departmentId" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+    <result property="parentId" jdbcType="INTEGER" column="parent_id"/>
+    <result property="type" jdbcType="INTEGER" column="type"/>
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    
+    <collection property="authority" ofType="com.bayee.political.domain.EvaluateAuthority">
+    	<id column="id" jdbcType="INTEGER" property="id" />
+	    <result column="name" jdbcType="VARCHAR" property="name" />
+	    <result column="participant_id" jdbcType="INTEGER" property="participantId" />
+	    <result column="participant_name" jdbcType="VARCHAR" property="participantName" />
+	    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    </collection>
+    
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, template_name, template_type, target_id, rank_id, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from evaluate_template
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 评价模板删除(后台) -->
+  <delete id="evaluateTemplateDelete" parameterType="java.lang.Integer">
+    delete from evaluate_template
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 评价模板新增(后台) -->
+  <insert id="evaluateTemplateCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.EvaluateTemplate" useGeneratedKeys="true">
+    insert into evaluate_template (authority_id, template_name, template_type,target_id, 
+      rank_id, creation_date, update_date
+      )
+    values (#{authority.id,jdbcType=INTEGER}, #{templateName,jdbcType=VARCHAR}, #{templateType,jdbcType=INTEGER}, #{targetId,jdbcType=INTEGER}, 
+      #{rankId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 评价模板修改(后台) -->
+  <update id="evaluateTemplateUpdate" parameterType="com.bayee.political.domain.EvaluateTemplate">
+    update evaluate_template
+    <set>
+      <if test="templateName != null">
+        template_name = #{templateName,jdbcType=VARCHAR},
+      </if>
+       <if test="templateType != null">
+        template_type = #{templateType,jdbcType=INTEGER},
+      </if>
+      <if test="targetId != null">
+        target_id = #{targetId,jdbcType=INTEGER},
+      </if>
+      <if test="rankId != null">
+        rank_id = #{rankId,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null">
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.EvaluateTemplate">
+    update evaluate_template
+    set template_name = #{templateName,jdbcType=VARCHAR},
+      target_id = #{targetId,jdbcType=INTEGER},
+      rank_id = #{rankId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <!--评价模板查询(后台) -->
+  <select id="evaluateTemplateList" parameterType="com.bayee.political.domain.EvaluateTemplate" resultMap="BaseResultMap">
+select * from evaluate_template where 1=1 order by id
+</select>
+ <!--查询模板中的机关单位(api) -->
+  <select id="templateDepList" parameterType="com.bayee.political.domain.EvaluateTemplate" resultMap="BaseResultMap">
+select a.*,b.id as department_id,b.name as department_name,b.parent_id from 
+(select a.*,b.type from evaluate_template a
+left join evaluate_target b on b.id=a.target_id
+where a.id=#{id,jdbcType=INTEGER}) a
+left join department b on b.parent_id=a.type
+</select>
+
+ <!--评价模板列表查询(后台) -->
+  <select id="evaluationTemplateList" parameterType="com.bayee.political.domain.EvaluateTemplate" resultMap="BaseResultMap">
+SELECT a.*,b.target_name,c.rank_name,d.* FROM evaluate_template a
+LEFT JOIN evaluate_target b ON b.id=a.target_id
+LEFT JOIN evaluate_rank c ON c.id=a.rank_id
+LEFT JOIN evaluate_authority d ON d.`id` = a.`authority_id`
+WHERE 1=1
+     <if test="templateType != null and templateType !=''">
+        and a.template_type = #{templateType}
+      </if>
+      <if test="keywords != null and keywords !=''">
+        and a.template_name like '%${keywords}%'
+      </if>
+order by a.id desc
+limit #{pageSize},10
+</select>
+<!--评价模板列表数量统计(后台) -->
+  <select id="evaluationTemplateListCount" parameterType="com.bayee.political.domain.EvaluateTemplate" resultType="java.lang.Integer">
+select count(*) from(select a.*,b.target_name,c.rank_name from evaluate_template a
+left join evaluate_target b on b.id=a.target_id
+left join evaluate_rank c on c.id=a.rank_id
+where 1=1
+     <if test="templateType != null and templateType !=''">
+        and a.template_type = #{templateType}
+      </if>
+      <if test="keywords != null and keywords !=''">
+        and a.template_name like '%${keywords}%'
+      </if>) as t
+</select>
+<!--评价模板详情查询(后台) -->
+  <select id="evaluateTemplateItem" parameterType="com.bayee.political.domain.EvaluateTemplate" resultMap="BaseResultMap">
+select a.*,b.target_name,c.rank_name from evaluate_template a
+left join evaluate_target b on b.id=a.target_id
+left join evaluate_rank c on c.id=a.rank_id
+where a.id = #{id}
+</select>
+<!--判断模板类型(后台) -->
+  <select id="templateType" parameterType="com.bayee.political.domain.EvaluateTemplate" resultMap="BaseResultMap">
+select a.*,b.target_id,b.rank_id from evaluate_task a
+left join evaluate_template b on b.id=a.template_id 
+where a.id = #{id}
+</select>
+<!-- 判断当前等次是否被模板引用(后台) -->
+  <select id="existRankList" parameterType="com.bayee.political.domain.EvaluateTemplate" resultMap="BaseResultMap">
+select * from evaluate_template where rank_id = #{rankId}
+</select>
+</mapper>

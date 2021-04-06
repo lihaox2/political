@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeaveCompensatoryReadRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeaveCompensatoryReadRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="record_id" property="recordId" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="position_id" property="positionId" jdbcType="INTEGER" />
+    <result column="approved_id" property="approvedId" jdbcType="VARCHAR" />
+    <result column="approved_read_status" property="approvedReadStatus" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, record_id, police_id, department_id, position_id, approved_id, approved_read_status, 
+    creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leave_compensatory_read_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from leave_compensatory_read_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 局领导调休提醒记录新增 -->
+  <insert id="leaveCompensatoryReadRecordCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.LeaveCompensatoryReadRecord" useGeneratedKeys="true">
+    insert into leave_compensatory_read_record (record_id, police_id, 
+      department_id, position_id, approved_id, 
+      approved_read_status, creation_date, update_date
+      )
+    values (#{recordId,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
+      #{departmentId,jdbcType=INTEGER}, #{positionId,jdbcType=INTEGER}, #{approvedId,jdbcType=VARCHAR}, 
+      #{approvedReadStatus,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 局领导调休提醒记录修改 -->
+  <update id="leaveCompensatoryReadRecordUpdate" parameterType="com.bayee.political.domain.LeaveCompensatoryReadRecord" >
+    update leave_compensatory_read_record
+    <set >
+      <if test="recordId != null" >
+        record_id = #{recordId,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null" >
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="approvedId != null" >
+        approved_id = #{approvedId,jdbcType=VARCHAR},
+      </if>
+      <if test="approvedReadStatus != null" >
+        approved_read_status = #{approvedReadStatus,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.LeaveCompensatoryReadRecord" >
+    update leave_compensatory_read_record
+    set record_id = #{recordId,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      position_id = #{positionId,jdbcType=INTEGER},
+      approved_id = #{approvedId,jdbcType=VARCHAR},
+      approved_read_status = #{approvedReadStatus,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+     <!-- 局领导最新调休提醒查询 -->
+    <select id="leaveLeaderCompensatoryRecordNewestList" parameterType="com.bayee.political.domain.LeaveCompensatoryReadRecord" resultMap="BaseResultMap" >
+select a.*,b.approved_result as approvedResult,b.start_time as startTime,b.end_time as endTime,b.is_rest as isRest,
+c.name as policeName,c.head_image as headImage,d.name as departmentName,
+e.position_name as positionName,TIMESTAMPDIFF(MINUTE,a.creation_date,SYSDATE()) as timeChange from leave_compensatory_read_record a
+left join leave_compensatory_record b on b.id=a.record_id
+left join user c on c.police_id=a.police_id
+left join department d on d.id=a.department_id
+left join police_position e on e.id=a.position_id
+where a.approved_id=#{policeId} and a.approved_read_status=0 order by a.id desc limit 1
+  </select>
+  <!-- 局领导调休提醒分页查询 -->
+    <select id="leaveLeaderCompensatoryRecordList" parameterType="com.bayee.political.domain.LeaveCompensatoryReadRecord" resultMap="BaseResultMap" >
+select a.*,b.approved_result as approvedResult,b.start_time as startTime,b.end_time as endTime,b.is_rest as isRest,
+c.name as policeName,c.head_image as headImage,d.name as departmentName,
+e.position_name as positionName,TIMESTAMPDIFF(MINUTE,a.creation_date,SYSDATE()) as timeChange from leave_compensatory_read_record a
+left join leave_compensatory_record b on b.id=a.record_id
+left join user c on c.police_id=a.police_id
+left join department d on d.id=a.department_id
+left join police_position e on e.id=a.position_id
+where a.approved_id=#{policeId} 
+    <if test="approvedReadStatus == 0">
+		and a.approved_read_status = 0
+	</if>
+	<if test="approvedReadStatus == 1">
+		and a.approved_read_status = 1
+	</if>
+order by a.id desc limit #{pageNum},#{pageSize}
+  </select>
+    <!-- 局领导调休提醒记录总数统计 -->
+  <select id="leaveLeaderCompensatoryRecordCount" parameterType="com.bayee.political.domain.LeaveCompensatoryReadRecord" resultType="java.lang.Integer">
+select count(*) from(select a.*,b.approved_result as approvedResult,b.is_rest as isRest,
+c.name as policeName,c.head_image as headImage,d.name as departmentName,
+e.position_name as positionName,TIMESTAMPDIFF(MINUTE,a.creation_date,SYSDATE()) as timeChange from leave_compensatory_read_record a
+left join leave_compensatory_record b on b.id=a.record_id
+left join user c on c.police_id=a.police_id
+left join department d on d.id=a.department_id
+left join police_position e on e.id=a.position_id
+where a.approved_id=#{policeId} 
+    <if test="approvedReadStatus == 0">
+		and a.approved_read_status = 0
+	</if>
+	<if test="approvedReadStatus == 1">
+		and a.approved_read_status = 1
+	</if>
+	order by a.id desc) as t
+</select>
+</mapper>

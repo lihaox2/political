@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskHealthRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskHealthRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="year" property="year" jdbcType="VARCHAR" />
+    <result column="height" property="height" jdbcType="DOUBLE" />
+    <result column="weight" property="weight" jdbcType="DOUBLE" />
+    <result column="bmi" property="bmi" jdbcType="DOUBLE" />
+    <result column="bmi_id" property="bmiId" jdbcType="INTEGER" />
+    <result column="blood" property="blood" jdbcType="VARCHAR" />
+    <result column="is_overweight" property="isOverweight" jdbcType="INTEGER" />
+    <result column="is_hyperlipidemia" property="isHyperlipidemia" jdbcType="INTEGER" />
+    <result column="is_hypertension" property="isHypertension" jdbcType="INTEGER" />
+    <result column="is_hyperglycemia" property="isHyperglycemia" jdbcType="INTEGER" />
+    <result column="is_hyperuricemia" property="isHyperuricemia" jdbcType="INTEGER" />
+    <result column="is_prostate" property="isProstate" jdbcType="INTEGER" />
+    <result column="is_major_diseases" property="isMajorDiseases" jdbcType="INTEGER" />
+    <result column="major_diseases_describe" property="majorDiseasesDescribe" jdbcType="VARCHAR" />
+    <result column="is_heart" property="isHeart" jdbcType="INTEGER" />
+    <result column="heart_describe" property="heartDescribe" jdbcType="VARCHAR" />
+    <result column="is_tumor_antigen" property="isTumorAntigen" jdbcType="INTEGER" />
+    <result column="tumor_antigen_describe" property="tumorAntigenDescribe" jdbcType="VARCHAR" />
+    <result column="is_orthopaedics" property="isOrthopaedics" jdbcType="INTEGER" />
+    <result column="orthopaedics_describe" property="orthopaedicsDescribe" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, year, height, weight, bmi, bmi_id, blood, is_overweight, is_hyperlipidemia, 
+    is_hypertension, is_hyperglycemia, is_hyperuricemia, is_prostate, is_major_diseases, 
+    major_diseases_describe, is_heart, heart_describe, is_tumor_antigen, tumor_antigen_describe, 
+    is_orthopaedics, orthopaedics_describe, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from risk_health_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_health_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskHealthRecord" >
+    insert into risk_health_record (id, police_id, year, 
+      height, weight, bmi, bmi_id, 
+      blood, is_overweight, is_hyperlipidemia, 
+      is_hypertension, is_hyperglycemia, is_hyperuricemia, 
+      is_prostate, is_major_diseases, major_diseases_describe, 
+      is_heart, heart_describe, is_tumor_antigen, 
+      tumor_antigen_describe, is_orthopaedics, orthopaedics_describe, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, 
+      #{height,jdbcType=DOUBLE}, #{weight,jdbcType=DOUBLE}, #{bmi,jdbcType=DOUBLE}, #{bmiId,jdbcType=INTEGER}, 
+      #{blood,jdbcType=VARCHAR}, #{isOverweight,jdbcType=INTEGER}, #{isHyperlipidemia,jdbcType=INTEGER}, 
+      #{isHypertension,jdbcType=INTEGER}, #{isHyperglycemia,jdbcType=INTEGER}, #{isHyperuricemia,jdbcType=INTEGER}, 
+      #{isProstate,jdbcType=INTEGER}, #{isMajorDiseases,jdbcType=INTEGER}, #{majorDiseasesDescribe,jdbcType=VARCHAR}, 
+      #{isHeart,jdbcType=INTEGER}, #{heartDescribe,jdbcType=VARCHAR}, #{isTumorAntigen,jdbcType=INTEGER}, 
+      #{tumorAntigenDescribe,jdbcType=VARCHAR}, #{isOrthopaedics,jdbcType=INTEGER}, #{orthopaedicsDescribe,jdbcType=VARCHAR}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskHealthRecord" >
+    insert into risk_health_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="year != null" >
+        year,
+      </if>
+      <if test="height != null" >
+        height,
+      </if>
+      <if test="weight != null" >
+        weight,
+      </if>
+      <if test="bmi != null" >
+        bmi,
+      </if>
+      <if test="bmiId != null" >
+        bmi_id,
+      </if>
+      <if test="blood != null" >
+        blood,
+      </if>
+      <if test="isOverweight != null" >
+        is_overweight,
+      </if>
+      <if test="isHyperlipidemia != null" >
+        is_hyperlipidemia,
+      </if>
+      <if test="isHypertension != null" >
+        is_hypertension,
+      </if>
+      <if test="isHyperglycemia != null" >
+        is_hyperglycemia,
+      </if>
+      <if test="isHyperuricemia != null" >
+        is_hyperuricemia,
+      </if>
+      <if test="isProstate != null" >
+        is_prostate,
+      </if>
+      <if test="isMajorDiseases != null" >
+        is_major_diseases,
+      </if>
+      <if test="majorDiseasesDescribe != null" >
+        major_diseases_describe,
+      </if>
+      <if test="isHeart != null" >
+        is_heart,
+      </if>
+      <if test="heartDescribe != null" >
+        heart_describe,
+      </if>
+      <if test="isTumorAntigen != null" >
+        is_tumor_antigen,
+      </if>
+      <if test="tumorAntigenDescribe != null" >
+        tumor_antigen_describe,
+      </if>
+      <if test="isOrthopaedics != null" >
+        is_orthopaedics,
+      </if>
+      <if test="orthopaedicsDescribe != null" >
+        orthopaedics_describe,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null" >
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null" >
+        #{height,jdbcType=DOUBLE},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=DOUBLE},
+      </if>
+      <if test="bmi != null" >
+        #{bmi,jdbcType=DOUBLE},
+      </if>
+      <if test="bmiId != null" >
+        #{bmiId,jdbcType=INTEGER},
+      </if>
+      <if test="blood != null" >
+        #{blood,jdbcType=VARCHAR},
+      </if>
+      <if test="isOverweight != null" >
+        #{isOverweight,jdbcType=INTEGER},
+      </if>
+      <if test="isHyperlipidemia != null" >
+        #{isHyperlipidemia,jdbcType=INTEGER},
+      </if>
+      <if test="isHypertension != null" >
+        #{isHypertension,jdbcType=INTEGER},
+      </if>
+      <if test="isHyperglycemia != null" >
+        #{isHyperglycemia,jdbcType=INTEGER},
+      </if>
+      <if test="isHyperuricemia != null" >
+        #{isHyperuricemia,jdbcType=INTEGER},
+      </if>
+      <if test="isProstate != null" >
+        #{isProstate,jdbcType=INTEGER},
+      </if>
+      <if test="isMajorDiseases != null" >
+        #{isMajorDiseases,jdbcType=INTEGER},
+      </if>
+      <if test="majorDiseasesDescribe != null" >
+        #{majorDiseasesDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="isHeart != null" >
+        #{isHeart,jdbcType=INTEGER},
+      </if>
+      <if test="heartDescribe != null" >
+        #{heartDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="isTumorAntigen != null" >
+        #{isTumorAntigen,jdbcType=INTEGER},
+      </if>
+      <if test="tumorAntigenDescribe != null" >
+        #{tumorAntigenDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="isOrthopaedics != null" >
+        #{isOrthopaedics,jdbcType=INTEGER},
+      </if>
+      <if test="orthopaedicsDescribe != null" >
+        #{orthopaedicsDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskHealthRecord" >
+    update risk_health_record
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null" >
+        height = #{height,jdbcType=DOUBLE},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=DOUBLE},
+      </if>
+      <if test="bmi != null" >
+        bmi = #{bmi,jdbcType=DOUBLE},
+      </if>
+      <if test="bmiId != null" >
+        bmi_id = #{bmiId,jdbcType=INTEGER},
+      </if>
+      <if test="blood != null" >
+        blood = #{blood,jdbcType=VARCHAR},
+      </if>
+      <if test="isOverweight != null" >
+        is_overweight = #{isOverweight,jdbcType=INTEGER},
+      </if>
+      <if test="isHyperlipidemia != null" >
+        is_hyperlipidemia = #{isHyperlipidemia,jdbcType=INTEGER},
+      </if>
+      <if test="isHypertension != null" >
+        is_hypertension = #{isHypertension,jdbcType=INTEGER},
+      </if>
+      <if test="isHyperglycemia != null" >
+        is_hyperglycemia = #{isHyperglycemia,jdbcType=INTEGER},
+      </if>
+      <if test="isHyperuricemia != null" >
+        is_hyperuricemia = #{isHyperuricemia,jdbcType=INTEGER},
+      </if>
+      <if test="isProstate != null" >
+        is_prostate = #{isProstate,jdbcType=INTEGER},
+      </if>
+      <if test="isMajorDiseases != null" >
+        is_major_diseases = #{isMajorDiseases,jdbcType=INTEGER},
+      </if>
+      <if test="majorDiseasesDescribe != null" >
+        major_diseases_describe = #{majorDiseasesDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="isHeart != null" >
+        is_heart = #{isHeart,jdbcType=INTEGER},
+      </if>
+      <if test="heartDescribe != null" >
+        heart_describe = #{heartDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="isTumorAntigen != null" >
+        is_tumor_antigen = #{isTumorAntigen,jdbcType=INTEGER},
+      </if>
+      <if test="tumorAntigenDescribe != null" >
+        tumor_antigen_describe = #{tumorAntigenDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="isOrthopaedics != null" >
+        is_orthopaedics = #{isOrthopaedics,jdbcType=INTEGER},
+      </if>
+      <if test="orthopaedicsDescribe != null" >
+        orthopaedics_describe = #{orthopaedicsDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskHealthRecord" >
+    update risk_health_record
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      year = #{year,jdbcType=VARCHAR},
+      height = #{height,jdbcType=DOUBLE},
+      weight = #{weight,jdbcType=DOUBLE},
+      bmi = #{bmi,jdbcType=DOUBLE},
+      bmi_id = #{bmiId,jdbcType=INTEGER},
+      blood = #{blood,jdbcType=VARCHAR},
+      is_overweight = #{isOverweight,jdbcType=INTEGER},
+      is_hyperlipidemia = #{isHyperlipidemia,jdbcType=INTEGER},
+      is_hypertension = #{isHypertension,jdbcType=INTEGER},
+      is_hyperglycemia = #{isHyperglycemia,jdbcType=INTEGER},
+      is_hyperuricemia = #{isHyperuricemia,jdbcType=INTEGER},
+      is_prostate = #{isProstate,jdbcType=INTEGER},
+      is_major_diseases = #{isMajorDiseases,jdbcType=INTEGER},
+      major_diseases_describe = #{majorDiseasesDescribe,jdbcType=VARCHAR},
+      is_heart = #{isHeart,jdbcType=INTEGER},
+      heart_describe = #{heartDescribe,jdbcType=VARCHAR},
+      is_tumor_antigen = #{isTumorAntigen,jdbcType=INTEGER},
+      tumor_antigen_describe = #{tumorAntigenDescribe,jdbcType=VARCHAR},
+      is_orthopaedics = #{isOrthopaedics,jdbcType=INTEGER},
+      orthopaedics_describe = #{orthopaedicsDescribe,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

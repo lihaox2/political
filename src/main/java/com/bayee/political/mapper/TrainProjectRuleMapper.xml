@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainProjectRuleMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainProjectRule" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="INTEGER" />
+    <result column="symbol" property="symbol" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="qualified_physical" property="qualifiedPhysical" jdbcType="DOUBLE" />
+    <result column="qualified_firearm_a" property="qualifiedFirearmA" jdbcType="DOUBLE" />
+    <result column="limit_time" property="limitTime" jdbcType="DOUBLE" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="project_ids" property="projectIds" jdbcType="VARCHAR" />
+    <result column="train_project_type" property="trainProjectType" jdbcType="INTEGER" />
+    
+    <result column="project_type" property="projectType" jdbcType="INTEGER" />
+    <result column="project_isu" property="projectIsu" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, project_id, group_id, qualified_physical, qualified_firearm_a, limit_time, 
+    creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_project_rule
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteTrainProjectRule" parameterType="java.lang.Integer" >
+    delete from train_project_rule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="addTrainProjectRule" parameterType="com.bayee.political.domain.TrainProjectRule"
+   keyColumn="id" keyProperty="id" useGeneratedKeys="true" >
+    insert into train_project_rule (id, name, project_id, 
+      group_id, qualified_physical, qualified_firearm_a, 
+      limit_time, symbol,  creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{projectId,jdbcType=INTEGER}, 
+      #{groupId,jdbcType=INTEGER}, #{qualifiedPhysical,jdbcType=DOUBLE}, #{qualifiedFirearmA,jdbcType=DOUBLE}, 
+      #{limitTime,jdbcType=DOUBLE},#{symbol,jdbcType=INTEGER},
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateTrainProjectRule" parameterType="com.bayee.political.domain.TrainProjectRule" >
+    update train_project_rule
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="qualifiedPhysical != null" >
+        qualified_physical = #{qualifiedPhysical,jdbcType=DOUBLE},
+      </if>
+      <if test="qualifiedFirearmA != null" >
+        qualified_firearm_a = #{qualifiedFirearmA,jdbcType=DOUBLE},
+      </if>
+      <if test="limitTime != null" >
+        limit_time = #{limitTime,jdbcType=DOUBLE},
+      </if>
+      <if test="symbol != null" >
+        symbol = #{symbol,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainProjectRule" >
+    update train_project_rule
+    set name = #{name,jdbcType=VARCHAR},
+      project_id = #{projectId,jdbcType=INTEGER},
+      group_id = #{groupId,jdbcType=INTEGER},
+      qualified_physical = #{qualifiedPhysical,jdbcType=DOUBLE},
+      qualified_firearm_a = #{qualifiedFirearmA,jdbcType=DOUBLE},
+      limit_time = #{limitTime,jdbcType=DOUBLE},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 项目规则管理 -->
+  <select id="getTrainProjectRuleList" resultMap="BaseResultMap">
+  select a.*, b.name as project_name, ifnull(c.name,'-') as group_name from train_project_rule a 
+left join train_project b on a.project_id = b.id 
+left join train_group c on a.group_id = c.id
+where 1 = 1 
+<if test="keyWords!=null and keyWords!=''">
+and (a.name like "%"#{keyWords}"%" or b.name like "%"#{keyWords}"%")
+</if>
+order by id desc 
+limit #{pageSize},10
+  </select>
+  
+  <select id="getTrainProjectRuleCount" resultType="java.lang.Integer">
+    select count(*) as count from train_project_rule a 
+left join train_project b on a.project_id = b.id 
+left join train_group c on a.group_id = c.id
+where 1 = 1 
+<if test="keyWords!=null and keyWords!=''">
+and (a.name like "%"#{keyWords}"%" or b.name like "%"#{keyWords}"%")
+</if>
+  </select>
+  
+  <!-- 查询组别对应的项目 -->
+  <select id="getGroAndPro" resultMap="BaseResultMap">
+  select c.id as group_id,GROUP_CONCAT(b.id SEPARATOR',') as project_ids,
+c.`name` as group_name,GROUP_CONCAT(b.`name` SEPARATOR',') as project_name from train_project_rule a 
+left join train_project b on a.project_id = b.id 
+left join train_group c on a.group_id = c.id 
+where not ISNULL(a.group_id)
+group by a.group_id 
+  </select>
+  
+  <!-- 获得所有射击类型 -->
+  <select id="getTrainFirearmType" resultMap="BaseResultMap">
+  select a.project_id,b.`name` as project_name from train_project_rule a 
+left join train_project b on a.project_id = b.id 
+where b.type = 2 
+  </select>
+     <!-- 根据项目id/组别查询算分规则 -->
+  <select id="trainProjectPoliceRuleItem" parameterType="com.bayee.political.domain.TrainProjectRule" resultMap="BaseResultMap" >
+select * from train_project_rule where 1=1 
+        <if test="projectId != null and projectId !=''">
+			and project_id = #{projectId,jdbcType=INTEGER}
+		</if>
+		<if test="groupId != null and groupId !=''">
+			and group_id = #{groupId,jdbcType=INTEGER}
+		</if>
+  </select>
+  
+  <!-- 根据射击类型名称获得射击类型(射击项目中的射击类型) -->
+  <select id="getTrainFirearmTypeByName" resultMap="BaseResultMap" >
+  	  select a.*, b.id as train_project_type, b.`name` as project_name from train_project_rule a 
+left join train_project b on a.project_id = b.id 
+where b.type = 2 and b.`name` = #{name} 
+  </select>
+  
+  <!-- 项目规则详情 -->
+  <select id="getTrainProjectRuleById" resultMap="BaseResultMap">
+    select a.*, b.name as project_name, ifnull(c.name,'-') as group_name,b.type as project_type,b.is_u as project_isu 
+    from train_project_rule a 
+	left join train_project b on a.project_id = b.id 
+	left join train_group c on a.group_id = c.id
+	where a.id = #{id} 
+  </select>
+  
+  <select id="getAchievement" resultType="java.lang.Double">
+  select qualified_physical,b.sort from train_project_rule a 
+left join train_project b on a.project_id = b.id 
+where a.project_id = #{projectId} and a.group_id = #{groupId} 
+  </select>
+  
+  <!-- 根据综合体能训练成绩id及群组id查询合格成绩及该项目的升降序 -->
+  <select id="getQualifiedAchievement" resultMap="BaseResultMap">
+  select b.qualified_physical,c.sort from train_physical_achievement_details a 
+left join train_project_rule b on a.project_id = b.project_id 
+left join train_project c on a.project_id = c.id
+where a.id = #{id} and b.group_id = #{goupId} 
+  </select>
+  
+  <select id="getTrainProjectRuleByProjectId" resultMap="BaseResultMap" >
+  select * from train_project_rule where project_id = #{projectId}
+  </select>
+  
+</mapper>

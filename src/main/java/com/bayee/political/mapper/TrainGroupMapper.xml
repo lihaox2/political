@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainGroup" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="min_age" property="minAge" jdbcType="INTEGER" />
+    <result column="max_age" property="maxAge" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+   <resultMap id="trainGroupPolice" type="com.bayee.political.domain.TrainGroupPolice" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="groupName" property="groupName" jdbcType="VARCHAR" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, sex, min_age, max_age, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_group
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteGroup" parameterType="java.lang.Integer" >
+    delete from train_group
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="addTrainGroup" parameterType="com.bayee.political.domain.TrainGroup" >
+    insert into train_group (id, name, sex, 
+      min_age, max_age, creation_date, 
+      update_date)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, 
+      #{minAge,jdbcType=INTEGER}, #{maxAge,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateTrainGroup" parameterType="com.bayee.political.domain.TrainGroup" >
+    update train_group
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="minAge != null" >
+        min_age = #{minAge,jdbcType=INTEGER},
+      </if>
+      <if test="maxAge != null" >
+        max_age = #{maxAge,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainGroup" >
+    update train_group
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      min_age = #{minAge,jdbcType=INTEGER},
+      max_age = #{maxAge,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 查询组别列表 -->
+   <select id="trainGroupList" parameterType="com.bayee.political.domain.TrainGroup" resultMap="BaseResultMap">
+select * from train_group  where 1=1 
+     <if test="id != null and id !=''">
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+order by id
+</select>
+  <!-- 查询组别详情 -->
+   <select id="trainGroupItem" parameterType="com.bayee.political.domain.TrainGroup" resultMap="BaseResultMap">
+select * from train_group where id = #{id,jdbcType=INTEGER}
+</select>
+  <!-- 查询组别民警 -->
+   <select id="trainGroupPoliceList" parameterType="com.bayee.political.domain.TrainGroupPolice" resultMap="trainGroupPolice">
+select a.*,CONCAT(b.name,'(',b.min_age,'-',b.max_age,')') as groupName,b.id from
+(select police_id,name,gender,year(now())- year(substring(id_card,7,8)) as age from user) a
+left join train_group b on b.sex=a.gender and a.age&gt;=b.min_age and age&lt;=b.max_age
+where 1=1 
+      <if test="policeId != null and policeId !=''">
+        and a.police_id = #{policeId}
+      </if>
+      order by b.id
+</select>
+
+  <select id="getTrainGroupByIds" resultType="java.lang.String">
+    select GROUP_CONCAT(name SEPARATOR',') as group_names from train_group
+     where FIND_IN_SET(id, #{ids})
+  </select>
+  
+  <!-- 组别查询 -->
+  <select id="getTrainGroupList" resultMap="BaseResultMap">
+  select * from train_group
+where 1 = 1 
+<if test="sex!=null">
+and sex = #{sex} 
+</if>
+<if test="minAge!=null">
+and min_age &gt;= #{minAge} 
+</if>
+<if test="maxAge!=null">
+and max_age &lt;= #{maxAge} 
+</if>
+<if test="keyWords!=null and keyWords!=''">
+and name like "%"#{keyWords}"%"
+</if>
+order by id desc 
+<if test="pageSize!=null">
+limit #{pageSize},10
+</if>
+  </select>
+  
+  <!-- 组别查询 -->
+<select id="getTrainGroupCount" resultType="java.lang.Integer">
+  select count(*) as count from train_group
+where 1 = 1 
+<if test="sex!=null">
+and sex = #{sex} 
+</if>
+<if test="minAge!=null">
+and min_age &gt;= #{minAge} 
+</if>
+<if test="maxAge!=null">
+and max_age &lt;= #{maxAge} 
+</if>
+<if test="keyWords!=null and keyWords!=''">
+and name like "%"#{keyWords}"%"
+</if>
+  </select>
+  
+  <!-- 查询所有组别id及name -->
+  <select id="getTrainGroupNameId" resultMap="BaseResultMap">
+  	select id,name from train_group 
+  </select>
+  
+  <!-- 查询组别是否被引用 -->
+  <select id="groupQuote" resultType="java.lang.Integer">
+  select count(*) as count from train_project_rule where group_id = #{id} 
+  </select>
+  
+</mapper>

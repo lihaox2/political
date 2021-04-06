@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskTrainMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskTrain" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="index_num" property="indexNum" jdbcType="DOUBLE" />
+    <result column="physical_num" property="physicalNum" jdbcType="INTEGER" />
+    <result column="physical_pass_num" property="physicalPassNum" jdbcType="INTEGER" />
+    <result column="physical_fail_num" property="physicalFailNum" jdbcType="INTEGER" />
+    <result column="physical_standard_status" property="physicalStandardStatus" jdbcType="INTEGER" />
+    <result column="firearm_num" property="firearmNum" jdbcType="INTEGER" />
+    <result column="firearm_pass_num" property="firearmPassNum" jdbcType="INTEGER" />
+    <result column="firearm_fail_num" property="firearmFailNum" jdbcType="INTEGER" />
+    <result column="firearm_standard_status" property="firearmStandardStatus" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ScreenChartMap" type="com.bayee.political.domain.ScreenChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="value" property="value" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, index_num, physical_num, physical_pass_num, physical_fail_num, physical_standard_status, 
+    firearm_num, firearm_pass_num, firearm_fail_num, firearm_standard_status, creation_date, 
+    update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from risk_train
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_train
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskTrain" >
+    insert into risk_train (id, police_id, index_num, 
+      physical_num, physical_pass_num, physical_fail_num, 
+      physical_standard_status, firearm_num, firearm_pass_num, 
+      firearm_fail_num, firearm_standard_status, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
+      #{physicalNum,jdbcType=INTEGER}, #{physicalPassNum,jdbcType=INTEGER}, #{physicalFailNum,jdbcType=INTEGER}, 
+      #{physicalStandardStatus,jdbcType=INTEGER}, #{firearmNum,jdbcType=INTEGER}, #{firearmPassNum,jdbcType=INTEGER}, 
+      #{firearmFailNum,jdbcType=INTEGER}, #{firearmStandardStatus,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskTrain" >
+    insert into risk_train
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="indexNum != null" >
+        index_num,
+      </if>
+      <if test="physicalNum != null" >
+        physical_num,
+      </if>
+      <if test="physicalPassNum != null" >
+        physical_pass_num,
+      </if>
+      <if test="physicalFailNum != null" >
+        physical_fail_num,
+      </if>
+      <if test="physicalStandardStatus != null" >
+        physical_standard_status,
+      </if>
+      <if test="firearmNum != null" >
+        firearm_num,
+      </if>
+      <if test="firearmPassNum != null" >
+        firearm_pass_num,
+      </if>
+      <if test="firearmFailNum != null" >
+        firearm_fail_num,
+      </if>
+      <if test="firearmStandardStatus != null" >
+        firearm_standard_status,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNum != null" >
+        #{indexNum,jdbcType=DOUBLE},
+      </if>
+      <if test="physicalNum != null" >
+        #{physicalNum,jdbcType=INTEGER},
+      </if>
+      <if test="physicalPassNum != null" >
+        #{physicalPassNum,jdbcType=INTEGER},
+      </if>
+      <if test="physicalFailNum != null" >
+        #{physicalFailNum,jdbcType=INTEGER},
+      </if>
+      <if test="physicalStandardStatus != null" >
+        #{physicalStandardStatus,jdbcType=INTEGER},
+      </if>
+      <if test="firearmNum != null" >
+        #{firearmNum,jdbcType=INTEGER},
+      </if>
+      <if test="firearmPassNum != null" >
+        #{firearmPassNum,jdbcType=INTEGER},
+      </if>
+      <if test="firearmFailNum != null" >
+        #{firearmFailNum,jdbcType=INTEGER},
+      </if>
+      <if test="firearmStandardStatus != null" >
+        #{firearmStandardStatus,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskTrain" >
+    update risk_train
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNum != null" >
+        index_num = #{indexNum,jdbcType=DOUBLE},
+      </if>
+      <if test="physicalNum != null" >
+        physical_num = #{physicalNum,jdbcType=INTEGER},
+      </if>
+      <if test="physicalPassNum != null" >
+        physical_pass_num = #{physicalPassNum,jdbcType=INTEGER},
+      </if>
+      <if test="physicalFailNum != null" >
+        physical_fail_num = #{physicalFailNum,jdbcType=INTEGER},
+      </if>
+      <if test="physicalStandardStatus != null" >
+        physical_standard_status = #{physicalStandardStatus,jdbcType=INTEGER},
+      </if>
+      <if test="firearmNum != null" >
+        firearm_num = #{firearmNum,jdbcType=INTEGER},
+      </if>
+      <if test="firearmPassNum != null" >
+        firearm_pass_num = #{firearmPassNum,jdbcType=INTEGER},
+      </if>
+      <if test="firearmFailNum != null" >
+        firearm_fail_num = #{firearmFailNum,jdbcType=INTEGER},
+      </if>
+      <if test="firearmStandardStatus != null" >
+        firearm_standard_status = #{firearmStandardStatus,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskTrain" >
+    update risk_train
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      index_num = #{indexNum,jdbcType=DOUBLE},
+      physical_num = #{physicalNum,jdbcType=INTEGER},
+      physical_pass_num = #{physicalPassNum,jdbcType=INTEGER},
+      physical_fail_num = #{physicalFailNum,jdbcType=INTEGER},
+      physical_standard_status = #{physicalStandardStatus,jdbcType=INTEGER},
+      firearm_num = #{firearmNum,jdbcType=INTEGER},
+      firearm_pass_num = #{firearmPassNum,jdbcType=INTEGER},
+      firearm_fail_num = #{firearmFailNum,jdbcType=INTEGER},
+      firearm_standard_status = #{firearmStandardStatus,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <!-- 警员警务技能指数查询 -->
+<select id="riskTrainIndexItem" parameterType="com.bayee.political.domain.RiskTrain" resultMap="BaseResultMap">
+select * from risk_train 
+where police_id=#{policeId,jdbcType=VARCHAR} and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+order by id desc limit 1
+</select>
+  <!-- 警员综合训练不合格趋势图 -->
+<select id="riskTrainFailChart" parameterType="com.bayee.political.domain.ScreenChart" resultMap="ScreenChartMap">
+select ifnull(b.value,0) as value,CONCAT(c.id,'月') as name
+from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` ) a
+left join(select sum(${fieldName}) as value,DATE_FORMAT(creation_date, '%Y-%m') as name from risk_train
+where police_id=#{policeId,jdbcType=VARCHAR} GROUP BY DATE_FORMAT(creation_date, '%Y-%m')) b on b.name=a.year_month
+left join month c on c.num_name=right(a.year_month,2) 
+order by a.year_month
+</select>
+</mapper>

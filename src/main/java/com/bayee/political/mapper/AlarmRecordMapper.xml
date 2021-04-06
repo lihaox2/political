@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.AlarmRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.AlarmRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="alarm_config_type" property="alarmConfigType" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="police_month_id" property="policeMonthId" jdbcType="INTEGER" />
+    <result column="police_month_name" property="policeMonthName" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="DOUBLE" />
+    <result column="frequency" property="frequency" jdbcType="INTEGER" />
+    <result column="first_alarm_time" property="firstAlarmTime" jdbcType="TIMESTAMP" />
+    <result column="finish_alarm_time" property="finishAlarmTime" jdbcType="TIMESTAMP" />
+    <result column="alarm_num" property="alarmNum" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+   <resultMap id="AlarmTimeNameMap" type="com.bayee.political.domain.AlarmRecordTimeName" >
+    <result column="name" property="name" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type,alarm_config_type, police_id, department_id, 
+    police_month_id, score, frequency,first_alarm_time, finish_alarm_time, 
+    alarm_num,creation_date, update_date
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from alarm_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 预警记录新增 -->
+  <insert id="alarmRecordCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.AlarmRecord" useGeneratedKeys="true">
+    insert into alarm_record (alarm_config_type,type, police_id, 
+      department_id, police_month_id, score, frequency,
+      first_alarm_time, finish_alarm_time, alarm_num,creation_date, 
+      update_date)
+    values (#{alarmConfigType,jdbcType=INTEGER},#{type,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
+      #{departmentId,jdbcType=INTEGER}, #{policeMonthId,jdbcType=INTEGER}, #{score,jdbcType=DOUBLE}, 
+      #{frequency,jdbcType=INTEGER},now(), now(),#{alarmNum,jdbcType=INTEGER}, now(), now())
+  </insert>
+  <!-- 预警记录修改 -->
+  <update id="alarmRecordUpdate" parameterType="com.bayee.political.domain.AlarmRecord" >
+    update alarm_record
+    <set >
+    <if test="alarmConfigType != null" >
+        alarm_config_type = #{alarmConfigType,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="policeMonthId != null" >
+        police_month_id = #{policeMonthId,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="frequency != null" >
+        frequency = #{frequency,jdbcType=INTEGER},
+      </if>
+      <if test="firstAlarmTime != null" >
+        first_alarm_time = #{firstAlarmTime,jdbcType=TIMESTAMP},
+      </if>
+      finish_alarm_time = now(),
+       <if test="alarmNum != null" >
+        alarm_num = #{alarmNum,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      update_date = now(),
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.AlarmRecord" >
+    update alarm_record
+    set alarm_config_type = #{alarmConfigType,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      police_month_id = #{policeMonthId,jdbcType=INTEGER},
+      score = #{score,jdbcType=DOUBLE},
+      frequency = #{frequency,jdbcType=INTEGER},
+      first_alarm_time = #{firstAlarmTime,jdbcType=TIMESTAMP},
+      finish_alarm_time = #{finishAlarmTime,jdbcType=TIMESTAMP},
+      alarm_num = #{alarmNum,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 预警详情查询-->
+  <select id="alarmPoliceRecordItem" parameterType="com.bayee.political.domain.AlarmRecord" resultMap="BaseResultMap">
+select * from alarm_record where 1=1
+     <if test="id != null and id !=''">
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="policeId != null and policeId !=''">
+        and police_id = #{policeId,jdbcType=VARCHAR}
+      </if>
+      <if test="alarmConfigType != null and alarmConfigType !=''">
+        and alarm_config_type = #{alarmConfigType,jdbcType=INTEGER}
+      </if>
+     <if test="type != null and type !=''">
+        and type = #{type,jdbcType=INTEGER}
+      </if>
+</select>
+  <!-- 根据policeId查询本月是否存在预警记录 -->
+  <select id="getAlarmRecord" resultMap="BaseResultMap">
+  select * from alarm_record 
+where 1 = 1 
+and police_id = #{policeId} 
+and type = #{type} 
+and alarm_config_type = #{configTimeType}
+<if test="configTimeType==1">
+and date_format(first_alarm_time,'%Y-%m')=date_format(now(),'%Y-%m')
+</if>
+<if test="configTimeType==2">
+and date_format(first_alarm_time,'%Y')=date_format(now(),'%Y')
+</if>
+  </select>
+  <!-- 局领导最新预警查询-->
+  <select id="alarmLeaderNewestList" parameterType="com.bayee.political.domain.AlarmRecord" resultMap="BaseResultMap">
+select b.*,c.head_image as headImage,c.name,d.name as departmentName  
+from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=b.department_id
+where a.module_id=1 and a.checker_id=#{policeId} 
+order by b.finish_alarm_time desc limit 2
+</select>
+<!-- 局领导预警列表查询-->
+  <select id="alarmBuckleList" parameterType="com.bayee.political.domain.AlarmRecord" resultMap="BaseResultMap">
+select * from(
+select b.*,c.head_image as headImage,c.name,d.name as departmentName, 
+DATE_FORMAT(b.finish_alarm_time,'%Y-%m') as strTime,
+(case when DATE_FORMAT(b.finish_alarm_time,'%Y-%m')=DATE_FORMAT(CURDATE(),'%Y-%m') then '本月'
+when DATE_FORMAT(b.finish_alarm_time,'%Y')=DATE_FORMAT(CURDATE(),'%Y') then CONCAT(DATE_FORMAT(b.finish_alarm_time,'%m'),'月')
+when DATE_FORMAT(finish_alarm_time,'%Y')!=DATE_FORMAT(CURDATE(),'%Y') then DATE_FORMAT(b.finish_alarm_time,'%Y-%m') end) as names
+from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=b.department_id
+where a.module_id=1 and a.checker_id=#{policeId} 
+UNION ALL
+select b.*,c.head_image as headImage,c.name,d.name as departmentName, 
+DATE_FORMAT(b.finish_alarm_time,'%Y-%m-%d') as strTime,'今日' as names
+from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=b.department_id
+where a.module_id=1 and a.checker_id=#{policeId} 
+and DATE_FORMAT(b.finish_alarm_time,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d')) as t
+where 1=1 
+     <if test="type != null and type !=''">
+        and type = #{type}
+      </if>
+order by strTime desc,id desc limit #{pageNum},#{pageSize}
+</select>
+<!-- 局领导预警列表数量统计-->
+  <select id="alarmBuckleListCount" parameterType="com.bayee.political.domain.AlarmRecord" resultType="Integer">
+select count(*) from(
+select b.*,c.head_image as headImage,c.name,d.name as departmentName, 
+DATE_FORMAT(b.finish_alarm_time,'%Y-%m') as strTime,e.status
+from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=b.department_id
+left join (select alarm_record_id,max(creation_date),status,police_id,host_id from alarm_talk
+where alarm_record_id is not null
+GROUP BY alarm_record_id) e on e.host_id=a.checker_id and e.alarm_record_id=b.id
+where a.module_id=1 and a.checker_id=#{policeId} 
+UNION ALL
+select b.*,c.head_image as headImage,c.name,d.name as departmentName, 
+DATE_FORMAT(b.finish_alarm_time,'%Y-%m-%d') as strTime,e.status
+from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=b.department_id
+left join (select alarm_record_id,max(creation_date),status,police_id,host_id from alarm_talk
+where alarm_record_id is not null
+GROUP BY alarm_record_id) e on e.host_id=a.checker_id and e.alarm_record_id=b.id
+where a.module_id=1 and a.checker_id=#{policeId} 
+and DATE_FORMAT(b.finish_alarm_time,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d')) as t
+where 1=1 
+     <if test="type != null and type !=''">
+        and type = #{type}
+      </if>
+</select>
+<!-- 局领导预警列表时间查询-->
+  <select id="alarmRecordDatePageList" parameterType="com.bayee.political.domain.AlarmRecordTimeName" resultMap="AlarmTimeNameMap">
+select distinct strTime as name from (select * from(
+select b.*,c.head_image as headImage,c.name,d.name as departmentName, 
+DATE_FORMAT(b.finish_alarm_time,'%Y-%m') as strTime
+from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=b.department_id
+where a.module_id=1 and a.checker_id=#{policeId} 
+UNION ALL
+select b.*,c.head_image as headImage,c.name,d.name as departmentName, 
+DATE_FORMAT(b.finish_alarm_time,'%Y-%m-%d') as strTime
+from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=b.department_id
+where a.module_id=1 and a.checker_id=#{policeId} 
+and DATE_FORMAT(b.finish_alarm_time,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d')) as t
+where 1=1 
+     <if test="type != null and type !=''">
+        and type = #{type}
+      </if>
+order by strTime desc,id desc limit #{pageNum},#{pageSize}) as a
+order by strTime desc
+</select>
+
+<!-- 局领导加分预警列表查询 -->
+  <select id="alarmAddList" parameterType="com.bayee.political.domain.AlarmRecord" resultMap="BaseResultMap">
+select b.*,c.head_image as headImage,c.name,d.name as departmentName  
+from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=b.department_id
+where a.module_id=1 and a.checker_id=#{policeId} and b.score&gt;0 
+and DATE_FORMAT(b.finish_alarm_time,'%Y-%m')=#{dateTime} 
+order by b.score desc
+</select>
+<!-- 最近一年总预警数统计 -->
+  <select id="personalAlarmTotalNum" parameterType="com.bayee.political.domain.AlarmRecord" resultType="java.lang.Integer">
+select sum(ifnull(b.num,0)) as num from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) as a
+	left join 
+(select count(*) as num,DATE_FORMAT(finish_alarm_time, '%Y-%m') as dateTime 
+from alarm_record where police_id=#{scoredPoliceId} GROUP BY DATE_FORMAT(finish_alarm_time, '%Y-%m')) 
+b on b.dateTime=a.year_month
+</select>
+</mapper>

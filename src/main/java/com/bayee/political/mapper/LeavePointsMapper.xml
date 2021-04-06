@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeavePointsMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeavePoints" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="position_id" property="positionId" jdbcType="INTEGER" />
+    <result column="year" property="year" jdbcType="VARCHAR" />
+    <result column="half_year" property="halfYear" jdbcType="INTEGER" />
+    <result column="total_points" property="totalPoints" jdbcType="DOUBLE" />
+    <result column="residual_points" property="residualPoints" jdbcType="DOUBLE" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="calculationCharts" type="com.bayee.political.domain.CalculationChart" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+  </resultMap>
+    <resultMap id="LeaveLeaderAlarmMap" type="com.bayee.political.domain.LeaveLeaderAlarm" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="head_image" property="headImage" jdbcType="VARCHAR" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="departmentName" property="departmentName" jdbcType="VARCHAR" />
+    <result column="position_id" property="positionId" jdbcType="INTEGER" />
+    <result column="position_name" property="positionName" jdbcType="VARCHAR" />
+    <result column="residual_points" property="residualPoints" jdbcType="DOUBLE" />
+    <result column="dateTime" property="dateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, name, department_id, position_id, year, half_year, total_points, residual_points, 
+    creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leave_points
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from leave_points
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 警员积分新增 -->
+  <insert id="leavePointsCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.LeavePoints" useGeneratedKeys="true">
+    insert into leave_points (police_id, name, 
+      department_id, position_id, year, 
+      half_year, total_points, residual_points, 
+      creation_date, update_date)
+    values (#{policeId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{departmentId,jdbcType=INTEGER}, #{positionId,jdbcType=INTEGER}, #{year,jdbcType=VARCHAR}, 
+      #{halfYear,jdbcType=INTEGER}, #{totalPoints,jdbcType=DOUBLE}, #{residualPoints,jdbcType=DOUBLE},
+      <if test="creationDate==null">
+      	now(),
+      </if>
+      <if test="creationDate!=null">
+      	${creationDate},
+      </if>
+      <if test="updateDate==null">
+      	now()
+      </if>
+      <if test="updateDate!=null">
+      	${updateDate}
+      </if>
+      )
+  </insert>
+  <!-- 警员积分修改 -->
+  <update id="leavePointsUpdate" parameterType="com.bayee.political.domain.LeavePoints" >
+    update leave_points
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null" >
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="halfYear != null" >
+        half_year = #{halfYear,jdbcType=INTEGER},
+      </if>
+      <if test="totalPoints != null" >
+        total_points = #{totalPoints,jdbcType=DOUBLE},
+      </if>
+      <if test="residualPoints != null" >
+        residual_points = #{residualPoints,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 警员根据policeId,year,halfYear修改积分 -->
+    <update id="leavePointsResidualUpdate" parameterType="com.bayee.political.domain.LeavePoints" >
+    update leave_points
+    <set >
+      <if test="residualPoints != null" >
+        residual_points = #{residualPoints,jdbcType=DOUBLE},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where police_id = #{policeId,jdbcType=VARCHAR} and year = #{year,jdbcType=VARCHAR} and half_year = #{halfYear,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.LeavePoints" >
+    update leave_points
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      position_id = #{positionId,jdbcType=INTEGER},
+      year = #{year,jdbcType=VARCHAR},
+      half_year = #{halfYear,jdbcType=INTEGER},
+      total_points = #{totalPoints,jdbcType=DOUBLE},
+      residual_points = #{residualPoints,jdbcType=DOUBLE},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 警员积分详情查询 -->
+    <select id="leavePointsItem" parameterType="com.bayee.political.domain.LeavePoints" resultMap="BaseResultMap" >
+select * from leave_points where 1=1 
+     <if test="id != null and id !=''">
+        and id = #{id}
+      </if>
+       <if test="policeId != null and policeId !=''">
+        and police_id = #{policeId}
+      </if>
+       <if test="year != null and year !=''">
+        and year = #{year}
+      </if>
+      <if test="halfYear != null and halfYear !=''">
+        and half_year = #{halfYear}
+      </if>
+  </select>
+  
+  <!-- 批量新增记分 -->
+  <insert id="addMoreleavePoints">
+  insert into leave_points 
+  (police_id, name, department_id, position_id, year, half_year, total_points, residual_points, 
+  creation_date, update_date) values 
+    <foreach collection="leavePointsList" item="list" separator=",">
+    (
+    #{list.policeId}, #{list.name}, #{list.departmentId}, #{list.positionId}, #{list.year}, 
+    #{list.halfYear}, #{list.totalPoints}, #{list.residualPoints},now(),now()
+    )
+    </foreach>
+  </insert>
+      <!-- 各单位积分未兑换人数查询 -->
+  <select id="leaveDepPointsExchangeChart" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select a.num,b.abridge_name as name from 
+(select count(*) as num,department_id from leave_points 
+where year=#{year} and half_year=#{halfYear}
+and total_points=residual_points and total_points>0
+GROUP BY department_id) as a 
+right join department b on b.id=a.department_id
+order by a.num desc,b.id limit 10
+</select>
+      <!-- 办案积分预警(3条)查询 -->
+  <select id="leaveLeaderPointsAlarmNewestList" parameterType="com.bayee.political.domain.LeaveLeaderAlarm" resultMap="LeaveLeaderAlarmMap" >
+select b.*,c.head_image,d.name as departmentName,e.position_name from leave_power a
+left join(select a.*,FLOOR((a.residual_points-b.avgNum)/c.integral_value) * day as num,
+c.integral_value,c.day from leave_points a
+join(select ifnull(round(AVG(total_points),2),0) avgNum from leave_points where year=#{year} and half_year=#{halfYear}) b
+join leave_integral_exchange_rule c
+where a.year=#{year} and a.half_year=#{halfYear} 
+and (a.residual_points-b.avgNum)>c.integral_value) as b on find_in_set(b.police_id,a.police_object_ids) > 0 
+left join user c on c.police_id=b.police_id
+left join department d on d.id=b.department_id
+left join police_position e on e.id=b.position_id
+where a.checker_id=#{policeId} and a.module_id=2 order by b.num desc limit 3
+</select>
+      <!-- 办案积分预警总数统计 -->
+  <select id="leaveLeaderPointsAlarmNewestCount" parameterType="com.bayee.political.domain.LeaveLeaderAlarm" resultType="Integer" >
+select count(*) from (select b.*,c.head_image,d.name as departmentName,e.position_name from leave_power a
+left join(select a.*,FLOOR((a.residual_points-b.avgNum)/c.integral_value) * day as num,
+c.integral_value,c.day from leave_points a
+join(select ifnull(round(AVG(total_points),2),0) avgNum from leave_points where year=#{year} and half_year=#{halfYear}) b
+join leave_integral_exchange_rule c
+where a.year=#{year} and a.half_year=#{halfYear} 
+and (a.residual_points-b.avgNum)>c.integral_value) as b on find_in_set(b.police_id,a.police_object_ids) > 0 
+left join user c on c.police_id=b.police_id
+left join department d on d.id=b.department_id
+left join police_position e on e.id=b.position_id
+where a.checker_id=#{policeId} and a.module_id=2) as t
+</select>
+      <!-- 办案积分预警分页查询 -->
+  <select id="leaveLeaderPointsAlarmList" parameterType="com.bayee.political.domain.LeaveLeaderAlarm" resultMap="LeaveLeaderAlarmMap" >
+select b.*,c.head_image,d.name as departmentName,e.position_name from leave_power a
+left join(select a.*, FLOOR((a.residual_points-b.avgNum)/c.integral_value) * day as num,
+c.integral_value,c.day from leave_points a
+join(select ifnull(round(AVG(total_points),2),0) avgNum from leave_points where year=#{year} and half_year=#{halfYear}) b
+join leave_integral_exchange_rule c
+where a.year=#{year} and a.half_year=#{halfYear} 
+and (a.residual_points-b.avgNum)>c.integral_value) as b on find_in_set(b.police_id,a.police_object_ids) > 0 
+left join user c on c.police_id=b.police_id
+left join department d on d.id=b.department_id
+left join police_position e on e.id=b.position_id
+where a.checker_id=#{policeId} and a.module_id=2 order by b.num desc limit #{pageNum},#{pageSize}
+</select>
+</mapper>

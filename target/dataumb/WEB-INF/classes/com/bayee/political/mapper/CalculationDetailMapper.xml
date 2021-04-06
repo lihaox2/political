@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.CalculationDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.CalculationDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_type" property="policeType" jdbcType="INTEGER" />
+    <result column="police_station_id" property="policeStationId" jdbcType="INTEGER" />
+    <result column="case_id" property="caseId" jdbcType="INTEGER" />
+    <result column="case_num" property="caseNum" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_type, police_station_id, case_id, case_num, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from calculation_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from calculation_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 测算详情案件数据新增(api) -->
+  <insert id="calculationDetailCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.CalculationDetail" useGeneratedKeys="true">
+    insert into calculation_detail (police_type, police_station_id, 
+      case_id, case_num, creation_date, 
+      update_date)
+    values (#{policeType,jdbcType=INTEGER}, #{policeStationId,jdbcType=INTEGER}, 
+      #{caseId,jdbcType=INTEGER}, #{caseNum,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 测算详情案件数据修改(api) -->
+  <update id="calculationDetailUpdate" parameterType="com.bayee.political.domain.CalculationDetail" >
+    update calculation_detail
+    <set >
+      <if test="policeType != null" >
+        police_type = #{policeType,jdbcType=INTEGER},
+      </if>
+      <if test="policeStationId != null" >
+        police_station_id = #{policeStationId,jdbcType=INTEGER},
+      </if>
+      <if test="caseId != null" >
+        case_id = #{caseId,jdbcType=INTEGER},
+      </if>
+      <if test="caseNum != null" >
+        case_num = #{caseNum,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where police_station_id = #{policeStationId} and case_id = #{caseId}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.CalculationDetail" >
+    update calculation_detail
+    set police_type = #{policeType,jdbcType=INTEGER},
+      police_station_id = #{policeStationId,jdbcType=INTEGER},
+      case_id = #{caseId,jdbcType=INTEGER},
+      case_num = #{caseNum,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <!-- 各派出所案件数量查询(api) -->
+  <select id="calculationDetailApiList" parameterType="com.bayee.political.domain.CalculationDetail" resultMap="BaseResultMap" >
+select a.*,b.police_station_name as policeStationName from calculation_detail a
+left join police_station b on b.id=a.police_station_id
+where a.case_id=#{caseId} and a.police_type = #{policeType} 
+order by a.police_station_id
+  </select>
+  <!-- 各派出所案件数据查询(后台) -->
+  <select id="calDetailsList" parameterType="com.bayee.political.domain.CalculationDetail" resultMap="BaseResultMap" >
+<!-- select a.*,b.police_station_name as policeStationName from calculation_detail a
+left join police_station b on b.id=a.police_station_id
+where a.case_id=#{caseId} order by a.police_station_id -->
+select * from calculation_detail
+where case_id=#{caseId}
+ <if test="policeStationId != null and policeStationId !=''">
+        and police_station_id=#{policeStationId}
+      </if> order by id
+  </select>
+    <!-- 各派出所案件数据查询(后台) -->
+  <select id="calculationDetailItem" parameterType="com.bayee.political.domain.CalculationDetail" resultMap="BaseResultMap" >
+select * from calculation_detail
+where 1=1
+      <if test="id != null and id !=''">
+        and id = #{id}
+      </if> 
+      <if test="caseId != null and caseId !=''">
+        and case_id=#{caseId}
+      </if> 
+      <if test="policeStationId != null and policeStationId !=''">
+        and police_station_id=#{policeStationId}
+      </if> 
+  </select>
+</mapper>

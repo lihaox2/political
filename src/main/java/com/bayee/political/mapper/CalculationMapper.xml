@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.CalculationMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.Calculation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_type" property="policeType" jdbcType="INTEGER" />
+    <result column="police_station_id" property="policeStationId" jdbcType="INTEGER" />
+    <result column="police_station_name" property="policeStationName" jdbcType="VARCHAR" />
+    <result column="station_post_id" property="stationPostId" jdbcType="INTEGER" />
+    <result column="actual_police_num" property="actualPoliceNum" jdbcType="INTEGER" />
+    <result column="get_police_num" property="getPoliceNum" jdbcType="INTEGER" />
+    <result column="differ_police_num" property="differPoliceNum" jdbcType="INTEGER" />
+    <result column="is_lack" property="isLack" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="columnChart" type="com.bayee.political.domain.ColumnChart" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_station_name" property="name" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="calculationCharts" type="com.bayee.political.domain.CalculationChart" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="allocateMap" type="com.bayee.political.domain.CalculationResourceAllocate" >
+    <result column="police_type" property="policeType" />
+    <result column="exceedDepId" property="exceedDepId" />
+    <result column="exceedDepName" property="exceedDepName" />
+    <result column="exceedNumStr" property="exceedNumStr" />
+    <result column="lackDepId" property="lackDepId" />
+    <result column="lackDepName" property="lackDepName" />
+    <result column="lackNumStr" property="lackNumStr" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_type, police_station_id, station_post_id, actual_police_num, 
+    get_police_num, differ_police_num, is_lack, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from calculation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from calculation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="calculationCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.Calculation" useGeneratedKeys="true">
+    insert into calculation (police_type, police_station_id, 
+      station_post_id,
+      actual_police_num, get_police_num, differ_police_num, 
+      is_lack, creation_date, update_date
+      )
+    values (#{policeType,jdbcType=INTEGER}, #{policeStationId,jdbcType=INTEGER}, 
+      #{stationPostId,jdbcType=INTEGER},
+      #{actualPoliceNum,jdbcType=INTEGER}, #{getPoliceNum,jdbcType=INTEGER}, #{differPoliceNum,jdbcType=INTEGER}, 
+      #{isLack,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 根据id修改警力测算数据 -->
+    <update id="calculationIdUpdate" parameterType="com.bayee.political.domain.Calculation" >
+    update calculation
+    <set >
+      <if test="policeType != null" >
+        police_type = #{policeType,jdbcType=INTEGER},
+      </if>
+      <if test="policeStationId != null" >
+        police_station_id = #{policeStationId,jdbcType=INTEGER},
+      </if>
+      <if test="stationPostId != null" >
+        station_post_id = #{stationPostId,jdbcType=INTEGER},
+      </if>
+      <if test="actualPoliceNum != null" >
+        actual_police_num = #{actualPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="getPoliceNum != null" >
+        get_police_num = #{getPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="differPoliceNum != null" >
+        differ_police_num = #{differPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="isLack != null" >
+        is_lack = #{isLack,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="calculationUpdate" parameterType="com.bayee.political.domain.Calculation" >
+    update calculation
+    <set >
+      <if test="policeType != null" >
+        police_type = #{policeType,jdbcType=INTEGER},
+      </if>
+      <if test="policeStationId != null" >
+        police_station_id = #{policeStationId,jdbcType=INTEGER},
+      </if>
+      <if test="stationPostId != null" >
+        station_post_id = #{stationPostId,jdbcType=INTEGER},
+      </if>
+      <if test="actualPoliceNum != null" >
+        actual_police_num = #{actualPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="getPoliceNum != null" >
+        get_police_num = #{getPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="differPoliceNum != null" >
+        differ_police_num = #{differPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="isLack != null" >
+        is_lack = #{isLack,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where case_id = #{caseId,jdbcType=INTEGER} and police_station_id = #{policeStationId,jdbcType=INTEGER}
+  </update>
+  <!-- 根据派出所id和岗位id修改(api) -->
+  <update id="calculationStatisticsUpdate" parameterType="com.bayee.political.domain.Calculation" >
+    update calculation
+    <set >
+      <if test="policeType != null" >
+        police_type = #{policeType,jdbcType=INTEGER},
+      </if>
+      <if test="actualPoliceNum != null" >
+        actual_police_num = #{actualPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="getPoliceNum != null" >
+        get_police_num = #{getPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="differPoliceNum != null" >
+        differ_police_num = #{differPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="isLack != null" >
+        is_lack = #{isLack,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where police_type = #{policeType} and police_station_id = #{policeStationId} and station_post_id = #{stationPostId}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.Calculation" >
+    update calculation
+    set police_type = #{policeType,jdbcType=INTEGER},
+      police_station_id = #{policeStationId,jdbcType=INTEGER},
+      station_post_id = #{stationPostId,jdbcType=INTEGER},
+      actual_police_num = #{actualPoliceNum,jdbcType=INTEGER},
+      get_police_num = #{getPoliceNum,jdbcType=INTEGER},
+      differ_police_num = #{differPoliceNum,jdbcType=INTEGER},
+      is_lack = #{isLack,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 警力测算饼图统计 -->
+  <select id="policeStatisticsList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+<!-- select a.police_num as num,a.police_post_id as id,b.post_name as name from calculation_police_post a
+left join police_station_post b on b.id=a.police_post_id 
+where 1=1  
+     <if test="policeType != null and policeType !=''">
+        and a.police_type=#{policeType}
+      </if>
+      <if test="postType != null and postType !=''">
+        and b.post_type=#{postType}
+      </if>
+      and b.post_name is not null
+UNION 
+select sum(police_num) as num,'12' as id,'共计' as name from calculation_police_post 
+where 1=1 
+    <if test="policeType != null and policeType !=''">
+        and police_type=#{policeType}
+      </if> 
+      and police_post_id &gt; 0 -->
+select * from(select sum(a.actual_police_num)as num, 
+a.station_post_id as id,b.post_name as name from calculation a
+left join police_station_post b on b.id=a.station_post_id 
+where a.police_type=#{policeType} GROUP BY a.station_post_id
+UNION ALL
+select sum(num) as num,12 as id,'共计' as name from (select sum(a.actual_police_num)as num, 
+a.station_post_id as id,b.post_name as name from calculation a
+left join police_station_post b on b.id=a.station_post_id 
+where a.police_type=#{policeType} GROUP BY a.station_post_id) c) a
+order by id asc
+  </select>
+  <!-- 警力岗位人数计算 -->
+  <select id="policepieStatisticsList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select sum(a.actual_police_num) as num, a.station_post_id as id,post_name as name from calculation a
+left join police_station_post b on b.id=a.station_post_id
+where a.police_type=#{policeType} GROUP BY a.station_post_id
+order by a.station_post_id
+  </select>
+    <!-- 各派出所实际警力统计(api) -->
+  <select id="actualStatisticsApiList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+<!-- select ifnull(sum(a.actual_police_num),0) as num,a.police_station_id as id,
+SUBSTRING_INDEX(b.police_station_name,'派出所',1) as name from calculation a
+left join police_station b on b.id=a.police_station_id
+where 1=1 
+<if test="policeType != null and policeType !=''">
+        and a.police_type=#{policeType}
+      </if>
+GROUP BY a.police_station_id -->
+
+select ifnull(a.police_num,0) as num,a.police_station_id as id,
+SUBSTRING_INDEX(b.police_station_name,'派出所',1) as name from calculation_police_station a
+left join police_station b on b.id=a.police_station_id
+where 1=1 
+     <if test="policeType != null and policeType !=''">
+        and a.police_type=#{policeType}
+      </if>
+      order by a.police_station_id
+  </select>
+  <!-- 各派出所所需警力查询(api) -->
+  <select id="getStatisticsApiList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select ifnull(sum(a.get_police_num),0) as num,a.police_station_id as id,
+SUBSTRING_INDEX(b.police_station_name,'派出所',1) as name from calculation a
+left join police_station b on b.id=a.police_station_id
+where 1=1 
+<if test="policeType != null and policeType !=''">
+        and a.police_type=#{policeType}
+      </if>
+GROUP BY a.police_station_id
+order by a.police_station_id
+  </select>
+  <!-- 根据案件id查询 -->
+  <select id="calculationList" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select a.police_station_name,a.id as police_station_id, b.case_num from police_station a
+left join (select * from calculation where 1=1 and case_id=#{caseId} 
+    <if test="policeType != null and policeType !=''">
+        and police_type=#{policeType}
+      </if>) b on b.police_station_id=a.id 
+order by a.id
+  </select>
+  <!-- 测算结果查询 -->
+  <select id="calculationOverList" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+SELECT id, police_type, police_station_id, station_post_id, actual_police_num, 
+get_police_num, differ_police_num, 
+(case when differ_police_num = 0 then '1'
+when differ_police_num > 0 then '2'
+else 0 end) as is_lack, 
+creation_date, update_date 
+FROM calculation where police_station_id=#{policeStationId,jdbcType=INTEGER} 
+and station_post_id=#{stationPostId,jdbcType=INTEGER}
+  </select>
+  
+<select id="calculationOverListSum" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+	select id, police_type,police_num as actual_police_num, police_post_id as station_post_id, creation_date, update_date, '0' as differ_police_num, '0' as  get_police_num, '0' as is_lack, '0' as police_station_id from calculation_police_post 
+where police_type = #{policeType} 
+</select>
+
+<select id="calculationOverListSumY" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select id, police_type,police_num as actual_police_num, police_station_id as station_post_id, creation_date, update_date, '0' as differ_police_num, '0' as  get_police_num, '0' as is_lack, '0' as police_station_id from calculation_police_station 
+where police_type = #{policeType} 
+</select>
+  
+   <!-- 查询打击岗警力数据计算列表(api) -->
+  <select id="strikeList" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select a.police_station_id,b.police_type,b.police_post_id as station_post_id,
+ROUND(a.num*b.police_num,0) as get_police_num,
+c.actual_police_num,(c.actual_police_num-ROUND(a.num*b.police_num,0)) as differ_police_num,
+(case when c.actual_police_num=ROUND(a.num*b.police_num,0) then 1 else 0 end) as is_lack from(select a.police_station_id,sum((case when a.case_id=1 then round((0.5*a.case_num/b.total_num),4) 
+when a.case_id=2 then round((0.2*a.case_num/b.total_num),4)
+when a.case_id=3 then  round((0.3*a.case_num/b.total_num),4) end)) as num
+from calculation_detail a 
+left join (select case_id,sum(case_num) as total_num from calculation_detail GROUP BY case_id)
+b on b.case_id=a.case_id where a.case_id &lt;4
+GROUP BY a.police_station_id) as a 
+join (select police_num,police_post_id,police_type 
+from calculation_police_post where police_post_id=#{stationPostId} and police_type=#{policeType}) as b
+left join calculation c on c.police_station_id=a.police_station_id and c.station_post_id=b.police_post_id
+<!-- where a.police_station_id=#{policeStationId,jdbcType=INTEGER}  -->
+  </select>
+  <!-- 查询基础岗警力数据计算列表(api) -->
+  <select id="baseList" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select a.police_station_id,c.station_post_id,c.police_type, c.actual_police_num,
+ROUND(a.total_num*b.police_num,0) as get_police_num,
+(c.actual_police_num-ROUND(a.total_num*b.police_num,0)) as differ_police_num,
+(case when c.actual_police_num=ROUND(a.total_num*b.police_num,0) then 1 else 0 end) as is_lack
+from(select a.police_station_id, sum(a.total_num ) as total_num from
+(select a.police_station_id,a.case_id,
+(case when a.case_id=4 then round((0.36*a.case_num/b.total_num),4)
+when a.case_id=5 then round((0.1*a.case_num/b.total_num),4)
+when a.case_id=6 then round((0.2*a.case_num/b.total_num),4)
+when a.case_id=7 then round((0.17*a.case_num/b.total_num),4)
+when a.case_id=8 then round((0.17*a.case_num/b.total_num),4) end) as total_num
+from calculation_detail a 
+left join (select case_id,sum(case_num) as total_num from calculation_detail 
+where case_id &gt;= 4 and case_id &lt;=8
+ GROUP BY case_id)
+b on b.case_id=a.case_id where a.case_id &gt;= 4 and a.case_id &lt;=8
+GROUP BY a.police_station_id,a.case_id) as a
+left join police_station c on c.id=a.police_station_id
+GROUP BY a.police_station_id) as a
+join (select police_num,police_post_id,police_type 
+from calculation_police_post where police_post_id=#{stationPostId} and police_type=#{policeType}) b
+left join calculation c on c.police_station_id=a.police_station_id 
+where c.station_post_id=#{stationPostId} <!-- and a.police_station_id=#{policeStationId,jdbcType=INTEGER}  -->
+  </select>
+    <!-- 查询综合岗警力数据计算列表(api) -->
+  <select id="overAllList" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+  select a.police_station_id,d.station_post_id,d.police_type,d.actual_police_num,
+ROUND((a.total_num+b.num)*c.police_num,0) as get_police_num,
+(d.actual_police_num-ROUND((a.total_num+b.num)*c.police_num,0)) as differ_police_num,
+(case when d.actual_police_num=ROUND((a.total_num+b.num)*c.police_num,0) then 1 else 0 end) as is_lack from
+(select a.police_station_id, sum(a.total_num)*0.5 as total_num from
+(select a.police_station_id,a.case_id,
+(case when a.case_id=4 then round((0.36*a.case_num/b.total_num),4)
+when a.case_id=5 then round((0.1*a.case_num/b.total_num),4)
+when a.case_id=6 then round((0.2*a.case_num/b.total_num),4)
+when a.case_id=7 then round((0.17*a.case_num/b.total_num),4)
+when a.case_id=8 then round((0.17*a.case_num/b.total_num),4) end) as total_num
+from calculation_detail a 
+left join (select case_id,sum(case_num) as total_num from calculation_detail where case_id&gt;=4 and case_id&lt;=8
+ GROUP BY case_id)
+b on b.case_id=a.case_id where a.case_id&gt;=4 and a.case_id &lt;= 8
+GROUP BY a.police_station_id,a.case_id) as a
+left join police_station c on c.id=a.police_station_id
+GROUP BY a.police_station_id) as a
+left join
+(select a.police_station_id,sum((case when a.case_id=1 then round((0.5*a.case_num/b.total_num),4) 
+when a.case_id=2 then round((0.2*a.case_num/b.total_num),4)
+when a.case_id=3 then  round((0.3*a.case_num/b.total_num),4) end))*0.5 as num
+from calculation_detail a 
+left join (select case_id,sum(case_num) as total_num from calculation_detail GROUP BY case_id)
+b on b.case_id=a.case_id where a.case_id &lt;4
+GROUP BY a.police_station_id) as b on b.police_station_id=a.police_station_id
+join (select police_num,police_post_id,police_type from calculation_police_post 
+where police_post_id=#{stationPostId} and police_type=#{policeType}) c
+left join calculation d on d.police_station_id=a.police_station_id 
+where d.station_post_id=#{stationPostId} and d.police_type=#{policeType} and a.police_station_id=#{policeStationId,jdbcType=INTEGER} 
+  </select>
+      <!-- 最后更新时间查询(api) -->
+  <select id="lastTimeApiItem" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select * from calculation where police_type=#{policeType} order by update_date desc limit 1
+  </select>
+   <!-- 查询综合勤务室辅警数据计算列表(api) -->
+  <select id="serviceRoomList" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select a.police_station_id,a.station_post_id,a.police_type, a.actual_police_num,
+(case when b.case_num/365>=25 then '19' else '12' end) as get_police_num,
+(a.actual_police_num-(case when b.case_num/365>=25 then '19' else '12' end)) as differ_police_num,
+is_lack from 
+(select * from calculation where police_type=#{policeType} and station_post_id=#{stationPostId}) a
+left join calculation_detail b on b.police_station_id=a.police_station_id
+where b.case_id=4 <!-- and b.police_station_id=#{policeStationId,jdbcType=INTEGER}  -->
+  </select>
+     <!-- 查询法制室辅警数据计算列表(api) -->
+  <select id="legalRoomList" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select a.police_station_id,a.station_post_id,a.police_type, a.actual_police_num,
+(case when b.case_num/365 &gt; 30 then '3' 
+      when b.case_num/365 &lt; 20 then '2' else '1' end) as get_police_num,
+(a.actual_police_num-(case when b.case_num/365 &gt; 30 then '3' 
+      when b.case_num/365 &lt; 20 then '2' else '1' end)) as differ_police_num,
+is_lack from 
+(select * from calculation where police_type=#{policeType} and station_post_id=#{stationPostId}) a
+left join calculation_detail b on b.police_station_id=a.police_station_id
+where b.case_id=4 <!-- and b.police_station_id=#{policeStationId,jdbcType=INTEGER}  -->
+  </select>
+     <!-- 查询户籍室辅警数据计算列表(api) -->
+  <select id="registerRoomList" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select a.police_station_id,a.station_post_id,a.police_type,a.actual_police_num,
+round(b.total_num*c.cnum,0) as get_police_num,
+(a.actual_police_num-round(b.total_num*c.cnum,0)) as differ_police_num,is_lack
+from calculation a left join
+(select a.police_station_id,sum((case when a.case_id=7 then (a.case_num/b.total_num)*0.3
+when a.case_id=8 then (a.case_num/b.total_num)*0.3
+when a.case_id=9 then (a.case_num/b.total_num)*0.4 end)) as total_num from calculation_detail a
+left join (select sum(case_num) as total_num,case_id
+from calculation_detail where case_id&gt;=7 and case_id&lt;=9 GROUP BY case_id) 
+b on b.case_id=a.case_id where a.case_id&gt;=7 and a.case_id&lt;=9
+GROUP BY a.police_station_id) b on b.police_station_id=a.police_station_id
+join (select police_num as cnum from calculation_police_post where police_post_id=#{stationPostId}) c
+where a.police_type=#{policeType} and a.station_post_id=#{stationPostId} <!-- and a.police_station_id=#{policeStationId,jdbcType=INTEGER}  -->
+  </select>
+     <!-- 查询其他辅警警力辅警数据计算列表(api) -->
+  <select id="otherList" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select a.police_station_id,c.station_post_id,c.police_type, c.actual_police_num,
+round((a.pnum*b.num),0) as get_police_num,
+ (c.actual_police_num-round((a.pnum*b.num),0)) as differ_police_num,is_lack from
+(select a.police_station_id,(a.dnum/b.cnum) as pnum from
+(select sum(get_police_num) as dnum,police_station_id from calculation where police_type=1
+GROUP BY police_station_id) a join
+(select sum(get_police_num) as cnum from calculation where police_type=1) b) a
+join 
+(select (a.totatl_num-b.num1-c.num2-d.num3-e.num4-f.num5)as num from
+(select sum(police_num) as totatl_num from calculation_police_post where police_type=2 and police_post_id&gt;0) a
+join 
+(select sum(police_num) as num1 from calculation_police_post where police_type=2 and police_post_id=6) b
+join 
+(select sum(police_num) as num2 from calculation_police_post where police_type=2 and police_post_id=7) c
+join 
+(select sum(police_num) as num3 from calculation_police_post where police_type=2 and police_post_id=8) d
+join 
+(select sum(police_num) as num4 from calculation_police_post where police_type=2 and police_post_id=9) e
+join 
+(select sum(police_num) as num5 from calculation_police_post where police_type=2 and police_post_id=10) f) b
+left join calculation c on c.police_station_id=a.police_station_id
+where c.station_post_id=#{stationPostId} and c.police_type=#{policeType} <!-- and a.police_station_id=#{policeStationId,jdbcType=INTEGER}  -->
+  </select>
+   <!-- 各派出所岗位人员数据查询(后台) -->
+  <select id="calculationPageList" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select a.*,b.police_station_name from calculation a
+left join police_station b on b.id=a.police_station_id
+where a.police_type=#{policeType} and a.station_post_id=#{stationPostId}
+order by a.id
+  </select>
+   <select id="calculationItem" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select * from calculation where 1=1 
+      <if test="id != null and id !=''">
+        and id=#{id}
+      </if>
+      <if test="policeType != null and policeType !=''">
+        and police_type=#{policeType}
+      </if>
+      <if test="policeStationId != null and policeStationId !=''">
+        and police_station_id=#{policeStationId}
+      </if>
+      <if test="stationPostId != null and stationPostId !=''">
+        and station_post_id=#{stationPostId}
+      </if>
+  </select>
+    <!-- 最新警力预警查询 -->
+  <select id="calculationAlarmNewest" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select a.police_station_id,a.police_type,a.police_num as actual_police_num,b.get_police_num,
+abs(a.police_num-b.get_police_num) as differ_police_num,
+(case when (a.police_num-b.get_police_num)&gt;0 then '超出'
+when (a.police_num-b.get_police_num)&lt;0 then '紧缺'else '正好' end) as lackStr,c.name as policeStationName,
+(case when b.update_date&gt;=a.update_date then b.update_date else a.update_date end) as update_date
+from calculation_police_station a
+left join 
+(select sum(get_police_num) as get_police_num,max(update_date) as update_date,
+police_station_id,police_type from calculation where 1=1 
+<if test="policeType != null and policeType !=''">
+        and police_type=#{policeType}
+      </if>
+GROUP BY police_station_id,police_type) b on b.police_station_id=a.police_station_id and b.police_type=a.police_type
+left join department c on c.id=a.police_station_id 
+where 1=1
+     <if test="policeType != null and policeType !=''">
+        and a.police_type=#{policeType}
+      </if>
+       and (a.police_num-b.get_police_num)!=0
+order by (a.police_num-b.get_police_num) asc
+  </select>
+      <!-- 资源调配建议 -->
+  <select id="calculationResourceAllocateAdviseList" parameterType="com.bayee.political.domain.CalculationResourceAllocate" resultMap="allocateMap" >
+select a.police_type,a.police_station_id as exceedDepId,a.name as exceedDepName,
+CONCAT('超出',a.differ_police_num) as exceedNumStr,b.police_station_id as lackDepId,
+b.name as lackDepName,CONCAT('紧缺',b.differ_police_num) as lackNumStr
+from 
+(select a.police_station_id,a.police_type,a.police_num as actual_police_num,b.get_police_num,
+(a.police_num-b.get_police_num) as differ_police_num,c.name,
+(case when (a.police_num-b.get_police_num)&gt;0 then '超出'
+when (a.police_num-b.get_police_num)&lt;0 then '紧缺'else '正好' end) as lackStr,
+(case when b.update_date&gt;=a.update_date then b.update_date else a.update_date end) as update_date
+from calculation_police_station a
+left join 
+(select sum(get_police_num) as get_police_num,max(update_date) as update_date,
+police_station_id,police_type from calculation
+GROUP BY police_station_id,police_type) b on b.police_station_id=a.police_station_id 
+and b.police_type=a.police_type
+left join department c on c.id=a.police_station_id
+where (a.police_num-b.get_police_num)&gt;0) a
+left join 
+(select a.police_station_id,a.police_type,a.police_num as actual_police_num,b.get_police_num,
+abs(a.police_num-b.get_police_num) as differ_police_num,c.name,
+(case when (a.police_num-b.get_police_num)&gt;0 then '超出'
+when (a.police_num-b.get_police_num)&lt;0 then '紧缺'else '正好' end) as lackStr,
+(case when b.update_date&gt;=a.update_date then b.update_date else a.update_date end) as update_date
+from calculation_police_station a
+left join 
+(select sum(get_police_num) as get_police_num,max(update_date) as update_date,
+police_station_id,police_type from calculation
+GROUP BY police_station_id,police_type) b on b.police_station_id=a.police_station_id 
+and b.police_type=a.police_type
+left join department c on c.id=a.police_station_id
+where (a.police_num-b.get_police_num)&lt;0) b on b.police_type=a.police_type
+where 1=1 
+     <if test="policeType != null and policeType !=''">
+        and a.police_type=#{policeType}
+      </if>
+order by a.police_type asc,a.differ_police_num desc
+  </select>
+  
+  <!-- 根据policeType及policeStationId获得所需警力数量的总数 -->
+  <select id="getSumByCondition" resultType="java.lang.Integer">
+  select sum(get_police_num) as sum from calculation where police_type = #{policeType} and police_station_id = #{policeStationId} 
+  </select>
+    <!-- 今日警力查询 -->
+  <select id="todayCalculationList" parameterType="com.bayee.political.domain.Calculation" resultMap="BaseResultMap" >
+select a.police_station_id,a.police_num as actual_police_num,b.get_police_num,
+ifnull(a.police_num-b.get_police_num,0) as differ_police_num,
+(case when a.police_num-b.get_police_num>0 then 2
+when a.police_num-b.get_police_num=0 then 1 else 0 end) as is_lack,
+c.police_station_name as policeStationName
+from calculation_police_station a 
+left join
+(select sum(get_police_num) as get_police_num,police_station_id from calculation
+where police_type=#{policeType} GROUP BY police_station_id) b on b.police_station_id=a.police_station_id
+left join police_station c on c.id=a.police_station_id
+where a.police_type=#{policeType} order by a.police_station_id
+  </select>
+    <!-- 各派出所岗位比例 -->
+  <select id="screenPoliceStationPostList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select sum(a.actual_police_num)as num, 
+a.station_post_id as id,b.post_name as name from calculation a
+left join police_station_post b on b.id=a.station_post_id 
+where a.police_type=1 GROUP BY a.station_post_id
+order by id asc
+  </select>
+      <!--各派出所警力分布 -->
+  <select id="screenPoliceStationForcesList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select a.id,a.police_station_name as name,ifnull(b.num,0) as num  from police_station a
+left join 
+(select sum(actual_police_num) as num,police_station_id from calculation 
+where station_post_id=#{stationPostId} GROUP BY police_station_id) b on b.police_station_id=a.id
+ORDER BY a.id
+  </select>
+</mapper>

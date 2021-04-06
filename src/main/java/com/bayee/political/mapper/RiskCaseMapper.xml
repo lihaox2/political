@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskCaseMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskCase" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="index_num" property="indexNum" jdbcType="DOUBLE" />
+    <result column="ability_num" property="abilityNum" jdbcType="DOUBLE" />
+    <result column="law_enforcement_num" property="lawEnforcementNum" jdbcType="DOUBLE" />
+    <result column="test_num" property="testNum" jdbcType="DOUBLE" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+   <resultMap id="ScreenDoubeChartMap" type="com.bayee.political.domain.ScreenDoubeChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="value" property="value" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, index_num, ability_num, law_enforcement_num, test_num, creation_date, 
+    update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from risk_case
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_case
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskCase" >
+    insert into risk_case (id, police_id, index_num, 
+      ability_num, law_enforcement_num, test_num, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
+      #{abilityNum,jdbcType=DOUBLE}, #{lawEnforcementNum,jdbcType=DOUBLE}, #{testNum,jdbcType=DOUBLE}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskCase" >
+    insert into risk_case
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="indexNum != null" >
+        index_num,
+      </if>
+      <if test="abilityNum != null" >
+        ability_num,
+      </if>
+      <if test="lawEnforcementNum != null" >
+        law_enforcement_num,
+      </if>
+      <if test="testNum != null" >
+        test_num,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNum != null" >
+        #{indexNum,jdbcType=DOUBLE},
+      </if>
+      <if test="abilityNum != null" >
+        #{abilityNum,jdbcType=DOUBLE},
+      </if>
+      <if test="lawEnforcementNum != null" >
+        #{lawEnforcementNum,jdbcType=DOUBLE},
+      </if>
+      <if test="testNum != null" >
+        #{testNum,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskCase" >
+    update risk_case
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNum != null" >
+        index_num = #{indexNum,jdbcType=DOUBLE},
+      </if>
+      <if test="abilityNum != null" >
+        ability_num = #{abilityNum,jdbcType=DOUBLE},
+      </if>
+      <if test="lawEnforcementNum != null" >
+        law_enforcement_num = #{lawEnforcementNum,jdbcType=DOUBLE},
+      </if>
+      <if test="testNum != null" >
+        test_num = #{testNum,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskCase" >
+    update risk_case
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      index_num = #{indexNum,jdbcType=DOUBLE},
+      ability_num = #{abilityNum,jdbcType=DOUBLE},
+      law_enforcement_num = #{lawEnforcementNum,jdbcType=DOUBLE},
+      test_num = #{testNum,jdbcType=DOUBLE},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+       <!-- 警员执法办案风险指数查询 -->
+<select id="riskCaseIndexItem" parameterType="com.bayee.political.domain.RiskCase" resultMap="BaseResultMap">
+select * from risk_case 
+where police_id=#{policeId,jdbcType=VARCHAR} and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+order by id desc limit 1
+</select>
+<!-- 执法办案风险指数图例 -->
+<select id="riskCaseIndexChart" parameterType="com.bayee.political.domain.ScreenDoubeChart" resultMap="ScreenDoubeChartMap">
+select ifnull(b.value,0) as value,CONCAT(c.id,'月') as name
+from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` ) a
+left join(select sum(index_num) as value,DATE_FORMAT(creation_date, '%Y-%m') as name from risk_case
+where police_id=#{policeId,jdbcType=VARCHAR} GROUP BY DATE_FORMAT(creation_date, '%Y-%m')) b on b.name=a.year_month
+left join month c on c.num_name=right(a.year_month,2) 
+order by a.year_month
+</select>
+</mapper>

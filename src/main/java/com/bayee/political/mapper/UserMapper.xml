@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bayee.political.mapper.UserMapper">
+	<resultMap id="userResult" type="com.bayee.political.domain.User">
+	<id column="id" property="id" />
+    <result column="head_image" property="headImage" />
+    <result column="police_id" property="policeId" />
+    <result column="name" property="name" />
+    <result column="phone" property="phone" />
+    <result column="gender" property="gender" />
+    <result column="id_card" property="idCard" />
+    <result column="birthday" property="birthday" />
+    <result column="department_id" property="departmentId" />
+    <result column="department_name" property="departmentName" />
+    <result column="department_type" property="departmentType" />
+    <result column="position_id" property="positionId" />
+    <result column="position_name" property="positionName" />
+    <result column="is_unit_leader" property="isUnitLeader" />
+    <result column="is_cadre" property="isCadre" />
+    <result column="password" property="password" />
+    <result column="dd_user_id" property="ddUserId" />
+    <result column="police_type" property="policeType" />
+    <result column="station_post_id" property="stationPostId" />
+    <result column="participant_id" property="participantId" />
+    <result column="role_id" property="roleId" />
+    <result column="group_id" property="groupId" />
+    <result column="last_login_time" property="lastLoginTime" />
+    <result column="login_times" property="loginTimes" />
+    <result column="is_active" property="isActive" />
+    <result column="is_disable" property="isDisable" />
+    <result column="is_block" property="isBlock" />
+    <result column="alarm_department_ids" property="alarmDepartmentIds" />
+    <result column="scorer" property="scorer" />
+    <result column="police_label" property="policeLabel" />
+    <result column="police_height" property="policeHeight" />
+    <result column="police_weight" property="policeWeight" />
+    <result column="credit_points" property="creditPoints" />
+    <result column="nation" property="nation" />
+    <result column="native_place" property="nativePlace" />
+    <result column="birth_place" property="birthPlace" />
+    <result column="blood_type" property="bloodType" />
+    <result column="work_company" property="workCompany" />
+    <result column="working_start_date" property="workingStartDate" />
+    <result column="employment_date" property="employmentDate" />
+    <result column="political_status" property="politicalStatus" />
+    <result column="joining_party_time" property="joiningPartyTime" />
+    <result column="resident_id" property="residentId" />
+    <result column="police_rank" property="policeRank" />
+    <result column="degree" property="degree" />
+    <result column="major" property="major" />
+    <result column="title" property="title" />
+    <result column="train_scorer" property="trainScorer" />
+    <result column="creation_date" property="creationDate" />
+    <result column="update_date" property="updateDate" />
+	</resultMap>
+
+	<select id="findByDDUserId" resultMap="userResult">
+		select * from user where
+		dd_user_id = #{ddUserId}
+	</select>
+
+	<select id="findAll" resultMap="userResult">
+		select * from user
+	</select>
+
+	<select id="countTotal" resultType="int">
+		select count(*) from user
+	</select>
+
+	<select id="findUserByName" resultMap="userResult">
+		select * from user where
+		name = #{name}
+	</select>
+	
+	<select id="findByResidentId" resultMap="userResult">
+		select * from user where
+		resident_id = #{residentId}
+	</select>
+
+	<select id="authenticate" resultMap="userResult">
+		select * from user where
+		phone = #{phone} and password = #{password}
+	</select>
+
+	<insert id="save" useGeneratedKeys="true" keyProperty="id">
+		insert into user (dd_user_id,name,department_id,phone, credit_points)
+		values (#{ddUserId},#{name},#{departmentId},#{phone}, #{creditPoints})
+	</insert>
+	<!-- 人员数据新增 -->
+	<insert id="userCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.User" useGeneratedKeys="true">
+    insert into user (id, head_image, police_id, 
+      name, phone, gender, 
+      id_card, birthday, department_id, department_type,
+      position_id, is_unit_leader, is_cadre, 
+      password, dd_user_id, police_type, 
+      station_post_id,participant_id, role_id, group_id, 
+      last_login_time,login_times,is_active,
+      is_disable,is_block, alarm_department_ids, scorer, 
+      police_label,police_height,police_weight,
+      credit_points, nation, 
+      native_place, birth_place, blood_type, 
+      work_company, working_start_date, employment_date, 
+      political_status, joining_party_time, resident_id, 
+      police_rank, degree, major, 
+      title,train_scorer, creation_date, update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{headImage,jdbcType=VARCHAR}, #{policeId,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, 
+      #{idCard,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{departmentId,jdbcType=INTEGER},#{departmentType,jdbcType=INTEGER},  
+      #{positionId,jdbcType=INTEGER}, #{isUnitLeader,jdbcType=INTEGER}, #{isCadre,jdbcType=INTEGER}, 
+      #{password,jdbcType=VARCHAR}, #{ddUserId,jdbcType=VARCHAR}, #{policeType,jdbcType=INTEGER}, 
+      #{stationPostId,jdbcType=INTEGER}, #{participantId,jdbcType=INTEGER},
+      #{roleId,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, 
+      #{lastLoginTime,jdbcType=TIMESTAMP},#{loginTimes,jdbcType=INTEGER},#{isActive,jdbcType=INTEGER},
+      #{isDisable,jdbcType=INTEGER}, #{isBlock,jdbcType=INTEGER},
+      #{alarmDepartmentIds,jdbcType=VARCHAR}, 
+      #{scorer,jdbcType=INTEGER}, #{policeLabel,jdbcType=INTEGER},
+      #{policeHeight,jdbcType=DOUBLE},#{policeWeight,jdbcType=DOUBLE},
+      #{creditPoints,jdbcType=DECIMAL}, #{nation,jdbcType=VARCHAR}, 
+      #{nativePlace,jdbcType=VARCHAR}, #{birthPlace,jdbcType=VARCHAR}, #{bloodType,jdbcType=VARCHAR}, 
+      #{workCompany,jdbcType=VARCHAR}, #{workingStartDate,jdbcType=TIMESTAMP}, #{employmentDate,jdbcType=TIMESTAMP}, 
+      #{politicalStatus,jdbcType=VARCHAR}, #{joiningPartyTime,jdbcType=TIMESTAMP}, #{residentId,jdbcType=VARCHAR}, 
+      #{policeRank,jdbcType=VARCHAR}, #{degree,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{trainScorer,jdbcType=INTEGER},
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 人员数据修改 -->
+  <update id="userUpdate" parameterType="com.bayee.political.domain.User" >
+    update user
+    <set >
+      <if test="headImage != null" >
+        head_image = #{headImage,jdbcType=VARCHAR},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentType != null" >
+        department_type = #{departmentType,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null" >
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="isUnitLeader != null" >
+        is_unit_leader = #{isUnitLeader,jdbcType=INTEGER},
+      </if>
+      <if test="isCadre != null" >
+        is_cadre = #{isCadre,jdbcType=INTEGER},
+      </if>
+      <if test="alarmDepartmentIds != null" >
+        alarm_department_ids = #{alarmDepartmentIds,jdbcType=VARCHAR},
+      </if>
+      <if test="scorer != null" >
+        scorer = #{scorer,jdbcType=INTEGER},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="ddUserId != null" >
+        dd_user_id = #{ddUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="policeType != null" >
+        police_type = #{policeType,jdbcType=INTEGER},
+      </if>
+      <if test="stationPostId != null" >
+        station_post_id = #{stationPostId,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="participantId != null" >
+        participant_id = #{participantId,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="lastLoginTime != null" >
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginTimes != null" >
+        login_times = #{loginTimes,jdbcType=INTEGER},
+      </if>
+      <if test="isActive != null" >
+        is_active = #{isActive,jdbcType=INTEGER},
+      </if>
+       <if test="isDisable != null" >
+        is_disable = #{isDisable,jdbcType=INTEGER},
+      </if>
+      <if test="isBlock != null" >
+        is_block = #{isBlock,jdbcType=INTEGER},
+      </if>
+      <if test="policeLabel != null" >
+        police_label = #{policeLabel,jdbcType=INTEGER},
+      </if>
+       <if test="policeHeight != null" >
+        police_height = #{policeHeight,jdbcType=DOUBLE},
+      </if>
+       <if test="policeWeight != null" >
+        police_weight = #{policeWeight,jdbcType=DOUBLE},
+      </if>
+      <if test="creditPoints != null" >
+        credit_points = #{creditPoints,jdbcType=DECIMAL},
+      </if>
+      <if test="nation != null" >
+        nation = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null" >
+        native_place = #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="birthPlace != null" >
+        birth_place = #{birthPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="bloodType != null" >
+        blood_type = #{bloodType,jdbcType=VARCHAR},
+      </if>
+      <if test="workCompany != null" >
+        work_company = #{workCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="workingStartDate != null" >
+        working_start_date = #{workingStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="employmentDate != null" >
+        employment_date = #{employmentDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="politicalStatus != null" >
+        political_status = #{politicalStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="joiningPartyTime != null" >
+        joining_party_time = #{joiningPartyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="residentId != null" >
+        resident_id = #{residentId,jdbcType=VARCHAR},
+      </if>
+      <if test="policeRank != null" >
+        police_rank = #{policeRank,jdbcType=VARCHAR},
+      </if>
+      <if test="degree != null" >
+        degree = #{degree,jdbcType=VARCHAR},
+      </if>
+      <if test="major != null" >
+        major = #{major,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+       <if test="trainScorer != null" >
+        train_scorer = #{trainScorer,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据警员人员数据修改 -->
+  <update id="userPoliceUpdate" parameterType="com.bayee.political.domain.User" >
+    update user
+    <set >
+       <if test="policeHeight != null" >
+        police_height = #{policeHeight,jdbcType=DOUBLE},
+      </if>
+       <if test="policeWeight != null" >
+        police_weight = #{policeWeight,jdbcType=DOUBLE},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where police_id = #{policeId,jdbcType=VARCHAR}
+  </update>
+	<update id="update">
+    update user
+    set head_image = #{headImage},
+      police_id = #{policeId},
+      name = #{name},
+      phone = #{phone},
+      gender = #{gender},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      birthday = #{birthday},
+      department_id = #{departmentId},
+      position_id = #{positionId},
+      is_unit_leader = #{isUnitLeader},
+      is_cadre = #{isCadre},
+      password = #{password},
+      dd_user_id = #{ddUserId},
+      police_type = #{policeType},
+      station_post_id = #{stationPostId},
+      role_id = #{roleId},
+      group_id = #{groupId},
+      last_login_time = #{lastLoginTime},
+      is_disable = #{isDisable},
+      is_block = #{isBlock},
+      login_times = #{loginTimes},
+      is_active = #{isActive},
+      credit_points = #{creditPoints},
+      nation = #{nation},
+      native_place = #{nativePlace},
+      birth_place = #{birthPlace},
+      blood_type = #{bloodType},
+      work_company = #{workCompany},
+      working_start_date = #{workingStartDate},
+      employment_date = #{employmentDate},
+      political_status = #{politicalStatus},
+      joining_party_time = #{joiningPartyTime},
+      resident_id = #{residentId},
+      police_rank = #{policeRank},
+      degree = #{degree},
+      major = #{major},
+      title = #{title},
+      train_scorer = #{trainScorer,jdbcType=INTEGER},
+      creation_date = #{creationDate},
+      update_date = #{updateDate}
+    where id = #{id}
+	</update>
+
+	<update id="updatePhone">
+		update user
+		set phone = #{phone}
+		where id = #{id}
+	</update>
+	<delete id="userDelete" parameterType="java.lang.Integer" >
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 训练人员列表查询 -->
+  <select id="userTrainList" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+   select * from user where department_id!=47 order by id 
+  </select>
+  <!-- 人员详情查询 -->
+  <select id="userItem" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+   select a.*,b.name as department_name,c.position_name from user a
+left join department b on b.id=a.department_id
+left join police_position c on c.id=a.position_id
+where a.id=#{id}
+  </select>
+  <!-- 人员详情查询 -->
+  <select id="policeItem" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+   select a.*,b.name as department_name,c.position_name from user a
+left join department b on b.id=a.department_id
+left join police_position c on c.id=a.position_id
+where 1=1 
+      <if test="policeId != null and policeId !=''">
+        and a.police_id=#{policeId} 
+      </if>
+      <if test="password != null and password !=''">
+        and a.password = #{password}
+      </if>
+      <if test="ddUserId != null and ddUserId !=''">
+        and a.dd_user_id = #{ddUserId}
+      </if>
+      limit 1
+  </select>
+  <!-- 系统登录 -->
+  <select id="login" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+   select * from user where password=#{password} and (phone=#{phone} or police_id=#{policeId})
+  </select>
+  <!-- 注册、修改密码验证 -->
+  <select id="userCheck" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+   select * from user where 1=1
+      <if test="policeId != null and policeId !=''">
+        and police_id=#{policeId} 
+      </if>
+      <if test="name != null and name !=''">
+        and name = #{name}
+      </if>
+      <if test="idCard != null and idCard !=''">
+        and id_card = #{idCard}
+      </if>
+  </select>
+  <!-- 人员列表查询 -->
+  <select id="userList" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+select a.*,b.name as department_name,c.position_name from user a
+left join department b on b.id=a.department_id
+left join police_position c on c.id=a.position_id
+where 1=1 
+     <if test="departmentId != null and departmentId !=''">
+        and a.department_id = #{departmentId}
+      </if>
+      <if test="positionId != null and positionId !=''">
+        and a.position_id = #{positionId}
+      </if>
+      <if test="isUnitLeader != null and isUnitLeader !=''">
+        and a.is_unit_leader = #{isUnitLeader}
+      </if>
+      <if test="isCadre != null and isCadre !=''">
+        and a.is_cadre = #{isCadre}
+      </if>
+      <if test="keywords != null and keywords !=''">
+        and (a.police_id like '%${keywords}%' or a.name like '%${keywords}%' or a.phone like '%${keywords}%' or a.id_card like '%${keywords}%')
+      </if>
+order by id desc limit #{pageSize},10
+  </select>
+  <!-- 人员列表数量统计 -->
+  <select id="userListCount" parameterType="com.bayee.political.domain.User" resultType="java.lang.Integer">
+select count(*) from(select a.*,b.name as department_name,c.position_name from user a
+left join department b on b.id=a.department_id
+left join police_position c on c.id=a.position_id
+where 1=1 
+     <if test="departmentId != null and departmentId !=''">
+        and a.department_id = #{departmentId}
+      </if>
+      <if test="positionId != null and positionId !=''">
+        and a.position_id = #{positionId}
+      </if>
+      <if test="isUnitLeader != null and isUnitLeader !=''">
+        and a.is_unit_leader = #{isUnitLeader}
+      </if>
+      <if test="isCadre != null and isCadre !=''">
+        and a.is_cadre = #{isCadre}
+      </if>
+      <if test="keywords != null and keywords !=''">
+        and (a.police_id like '%${keywords}%' or a.name like '%${keywords}%' or a.phone like '%${keywords}%' or a.id_card like '%${keywords}%')
+      </if>) as t
+  </select>
+  <!-- 人员全部查询 -->
+  <select id="userAllList" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+select a.*,b.name as department_name,c.position_name from user a
+left join department b on b.id=a.department_id
+left join police_position c on c.id=a.position_id where dd_user_id is not null
+order by id
+  </select>
+  <!-- 根据groupId查询用户数量 -->
+    <select id="userListCountSum" parameterType="com.bayee.political.domain.User" resultType="java.lang.Integer">
+select count(*) from(select a.*,b.name as department_name,c.position_name from user a
+left join department b on b.id=a.department_id
+left join police_position c on c.id=a.position_id
+where a.`group_id` = #{groupId} 
+     <if test="departmentId != null and departmentId !=''">
+        and a.department_id = #{departmentId}
+      </if>
+      <if test="positionId != null and positionId !=''">
+        and a.position_id = #{positionId}
+      </if>
+      <if test="isUnitLeader != null and isUnitLeader !=''">
+        and a.is_unit_leader = #{isUnitLeader}
+      </if>
+      <if test="isCadre != null and isCadre !=''">
+        and a.is_cadre = #{isCadre}
+      </if>
+      <if test="keywords != null and keywords !=''">
+        and (a.police_id like '%${keywords}%' or a.name like '%${keywords}%' or a.phone like '%${keywords}%' or a.id_card like '%${keywords}%')
+      </if>) as t
+  </select>
+  
+  <!-- 查询参与人相关评价任务(api) -->
+  <select id="userTaskList" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+select a.police_id,t.department_id,t.department_name from(select a.*,b.parent_id,b.name as department_name from user a 
+left join department b on b.id=a.department_id
+where a.department_id=#{departmentId} or (b.parent_id=#{parentId} and a.is_unit_leader=#{isUnitLeader})) a 
+join (select a.*,b.id as department_id,b.name as department_name,b.parent_id from 
+(select a.*,b.type from evaluate_template a
+left join evaluate_target b on b.id=a.target_id
+where a.id=#{templateId}) a
+left join department b on b.parent_id=a.type) t order by a.id
+  </select>
+  
+  <select id="queryAccountById" resultMap="userResult">
+  	
+  </select>
+  
+  <select id="getUserByGroupId" resultMap="userResult">
+  	select a.*,b.name as department_name,c.position_name from user a
+left join department b on b.id=a.department_id
+left join police_position c on c.id=a.position_id
+where a.`group_id` = #{groupId} 
+     <if test="departmentId != null and departmentId !=''">
+        and a.department_id = #{departmentId}
+      </if>
+      <if test="positionId != null and positionId !=''">
+        and a.position_id = #{positionId}
+      </if>
+      <if test="isUnitLeader != null and isUnitLeader !=''">
+        and a.is_unit_leader = #{isUnitLeader}
+      </if>
+      <if test="isCadre != null and isCadre !=''">
+        and a.is_cadre = #{isCadre}
+      </if>
+      <if test="keywords != null and keywords !=''">
+        and (a.police_id like '%${keywords}%' or a.name like '%${keywords}%' or a.phone like '%${keywords}%' or a.id_card like '%${keywords}%')
+      </if>
+order by id desc limit #{currentPage},10
+  </select>
+  <!-- 警号，身份证号码，手机号唯一性验证 -->
+  <select id="accountOnly" resultMap="userResult">
+  	select * from user where 1=1
+     <if test="policeId != null and policeId !=''">
+        and police_id = #{policeId}
+      </if>
+     <if test="phone != null and phone !=''">
+        and phone = #{phone}
+      </if>
+      <if test="idCard != null and idCard !=''">
+        and id_card = #{idCard}
+      </if>
+  </select>
+    <!-- 查询当前群组是否被引用 -->
+  <select id="groupPolicesList" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+select * from user where group_id=#{groupId}
+  </select>
+  
+  <!-- 根据名字模糊查 -->
+  <select id="likeName" resultMap="userResult">
+  select * from user where name like concat('%',#{name},'%')
+  </select>
+  
+  <!-- 根据policeId集合查询警员数据 -->
+  <select id="getUsersByPoliceId" resultMap="userResult">
+  select * from user where police_id in 
+  <foreach collection="policeIds" item="policeId" index="index" open="(" close=")" separator=",">
+  #{policeId}
+  </foreach>
+  </select>
+  
+  <!-- 根据单位查询该单位中层干部及局领导 -->
+  <select id="getUsersByDepUnitCard" resultMap="userResult">
+  select name,police_id from user where 1 = 1 and (is_unit_leader = 1 or is_cadre = 1) and department_id = #{departmentId} 
+  </select>
+  
+  <!-- 根据单位查询该单除了选中的约谈人以外的警员 -->
+  <select id="getUsersByNotDepUnitCard" resultMap="userResult">
+  select a.name,a.police_id,a.department_id,b.name as department_name from user a 
+  left join department b on a.department_id = b.id 
+  where a.department_id = #{departmentId} and a.police_id != #{policeId} 
+  </select>
+  
+  <!-- 根据部门id查询用户表管理该部门的人员 -->
+  <select id="getUsersByDepartmentId" resultMap="userResult">
+  select police_id,name from user where FIND_IN_SET(#{departmentId},alarm_department_ids);
+  </select>
+  
+  <!-- 查询所有警员/仅名字和警号 -->
+  <select id="allUser" resultMap="userResult">
+  	select name,police_id from user where 1 = 1
+  	<if test="departmentId!=null">
+  	and department_id = #{departmentId}
+  	</if>
+  	and police_id != '000001' 
+  </select>
+  
+  <!-- 根据多个policeId字符串查询对应的警员姓名字符串 -->
+  <select id="getUserNameByPoliceIds" resultType="java.lang.String">
+  select GROUP_CONCAT(name SEPARATOR',') as names from user where find_in_set(police_id,#{PoliceIds})
+  </select>
+    <!-- 录分训练计划中综合体能项目查询 -->
+  <select id="trainRecordPoliceHeightList" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+select b.* from train_physical_achievement_details a
+left join user b on b.police_id=a.police_id
+where a.project_id=#{projectId} and a.train_physical_id=#{trainPhysicalId} 
+  </select>
+  
+  <!-- 录入身高体重根据警号 -->
+  <update id="addHeightWeight">
+  update user set police_height =#{height} ,police_weight =#{weight} where police_id = #{policeId}
+  </update>
+  
+  <!-- 根据部门id获得部门下所有警员的警号 -->
+  <select id="getPoliceIdByDepartmentId" resultType="java.lang.String">
+  select GROUP_CONCAT(police_id SEPARATOR',') as police_ids from user where department_id = #{departmentId} 
+  </select>
+  
+  <!-- 根据部门id查询该部门下的警员 -->
+  <select id="getPoliceByDepartmentId" resultMap="userResult">
+  select * from user where department_id = #{departmentId} 
+  </select>
+  
+  <select id="getAllLeaders" resultMap="userResult">
+  select * from user where department_id = (select id from department where parent_id = 1)
+  </select>
+  
+  <select id="getResponsibleDepartment" resultType="java.lang.String">
+   select alarm_department_ids from user where police_id = #{policeId} 
+  </select>
+    <!-- 警力在线民警总数 -->
+  <select id="policeForceOnlineCount" parameterType="com.bayee.political.domain.User" resultType="java.lang.Integer">
+select count(*) from user where department_id!=47
+  </select>
+    <!-- 用户列表数量统计 -->
+  <select id="userProcessCount" parameterType="com.bayee.political.domain.User" resultType="java.lang.Integer">
+select count(*) from user
+where 1=1 and department_id!=47
+     <if test="departmentId != null and departmentId !=''">
+        and department_id = #{departmentId}
+      </if>
+      <if test="positionId != null and positionId !=''">
+        and position_id = #{positionId}
+      </if>
+      <if test="isUnitLeader != null and isUnitLeader !=''">
+        and is_unit_leader = #{isUnitLeader}
+      </if>
+      <if test="isCadre != null and isCadre !=''">
+        and is_cadre = #{isCadre}
+      </if>
+  </select>
+</mapper>

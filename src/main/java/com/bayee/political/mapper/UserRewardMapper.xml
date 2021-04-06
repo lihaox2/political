@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.bayee.political.mapper.UserRewardMapper">
+	<resultMap id="userEvaluationResult" type="com.bayee.political.domain.UserReward">
+	  <id property="id" column="id" />
+	  <result property="ddUserId" column="dd_user_id"/>
+	  <result property="userId" column="user_id"/>
+	  <result property="policeId" column="police_id"/>
+	  
+	  <result property="rewardType" column="reward_type"/>
+	  <result property="rewardTitle" column="reward_title"/>
+	  <result property="rewardDate" column="reward_date"/>
+	  <result property="approvalGroup" column="approval_group"/>
+	  <result property="approvalFileNum" column="approval_file_num"/>
+	  
+	  <result property="creationDate" column="creation_date"/>
+	</resultMap>
+	
+	<insert id="save" useGeneratedKeys="true"
+	    keyProperty="id">
+	   INSERT INTO  user_reward
+		(
+		user_id,
+		dd_user_id,
+		police_id,
+		reward_type,
+		reward_title,
+		reward_date,
+		approval_group,
+		approval_file_num
+		VALUES
+		(
+		#{userId},
+		#{ddUserId},
+		#{policeId},
+		#{rewardType},
+		#{rewardTitle},
+		#{rewardDate},
+		#{approvalGroup},
+		#{approvalFileNum}
+		)
+	</insert>
+	
+</mapper>

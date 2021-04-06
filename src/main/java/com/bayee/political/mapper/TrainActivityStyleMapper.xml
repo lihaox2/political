@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainActivityStyleMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainActivityStyle" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="objectId" property="objectId" jdbcType="INTEGER" />
+    <result column="objectName" property="objectName" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="view" property="view" jdbcType="INTEGER" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+    <result column="head_img" property="headImg" jdbcType="VARCHAR" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="policeName" property="policeName" jdbcType="VARCHAR" />
+    <result column="departmentName" property="departmentName" jdbcType="VARCHAR" />
+    <result column="cover_img" property="coverImg" jdbcType="VARCHAR" />
+    <result column="like_num" property="likeNum" jdbcType="INTEGER" />
+    <result column="is_recommend" property="isRecommend" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, cover_img, like_num, is_recommend, status, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_activity_style
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteTrainActivityStyle" parameterType="java.lang.Integer" >
+    delete from train_activity_style
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="addTrainActivityStyle" parameterType="com.bayee.political.domain.TrainActivityStyle" >
+    insert into train_activity_style (id, name, cover_img,view,
+      like_num, is_recommend, status, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{coverImg,jdbcType=VARCHAR}, 
+      #{view,jdbcType=INTEGER},
+      #{likeNum,jdbcType=INTEGER}, #{isRecommend,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateTrainActivityStyle" parameterType="com.bayee.political.domain.TrainActivityStyle" >
+    update train_activity_style
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="coverImg != null" >
+        cover_img = #{coverImg,jdbcType=VARCHAR},
+      </if>
+      <if test="view != null" >
+        view = #{view,jdbcType=INTEGER},
+      </if>
+      <if test="likeNum != null" >
+        like_num = #{likeNum,jdbcType=INTEGER},
+      </if>
+      <if test="isRecommend != null" >
+        is_recommend = #{isRecommend,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainActivityStyle" >
+    update train_activity_style
+    set name = #{name,jdbcType=VARCHAR},
+      cover_img = #{coverImg,jdbcType=VARCHAR},
+      view = #{view,jdbcType=INTEGER},
+      like_num = #{likeNum,jdbcType=INTEGER},
+      is_recommend = #{isRecommend,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 活动风采 -->
+  <select id="getTrainActivityStyleList" resultMap="BaseResultMap">
+  select * from train_activity_style 
+    where 1 = 1 
+  <if test="status!=null">
+  and status = #{status} 
+  </if>
+  <if test="isRecommend!=null">
+  and is_recommend = #{isRecommend}
+  </if>
+  <if test="keyWords!=null and keyWords!=''">
+  and name like "%"#{keyWords}"%"
+  </if>
+  <if test="sort==null">
+  order by id desc 
+  </if>
+  <if test="sort==1">
+  order by like_num desc 
+  </if>
+  <if test="sort==2">
+  order by like_num  
+  </if>
+  <if test="pageSize!=null">
+  limit #{pageSize},10 
+  </if>
+  </select>
+  
+  <select id="getTrainActivityStyleCount" resultType="java.lang.Integer">
+  select count(*) from train_activity_style 
+    where 1 = 1 
+  <if test="status!=null">
+  and status = #{status} 
+  </if>
+  <if test="isRecommend!=null">
+  and is_recommend = #{isRecommend}
+  </if>
+  <if test="keyWords!=null and keyWords!=''">
+  and name = #{keyWords}
+  </if>
+  </select>
+  
+  <!-- 根据id获得活动风采 -->
+  <select id="getTrainActivityStyleOnely" resultMap="BaseResultMap">
+    select * from train_activity_style 
+    where id = #{id}  
+  </select>
+  
+  <!-- 设置推荐或上下架 -->
+  <update id="isRecommendOrStatus">
+  	update train_activity_style 
+  	<set>
+  		<if test="status!=null">
+  			status = #{status}
+  		</if>
+  		<if test="isRecommend!=null">
+  			is_recommend = #{isRecommend} 
+  		</if>
+  	</set>
+  	 where id = #{id} 
+  </update>
+    <!-- 推荐查询 -->
+<select id="recommendList" parameterType="com.bayee.political.domain.TrainActivityStyle" resultMap="BaseResultMap">
+select * from(
+select id, name, cover_img, like_num, is_recommend, status, creation_date, update_date,
+'1' as objectId,'活动风采' as objectName,view,null as filePath,null as headImg,
+null as policeId,null as policeName,null as departmentName
+from train_activity_style where is_recommend=2
+UNION ALL
+select a.id, a.name, null as cover_img,a.like_num,a.is_recommend,a.status,a.creation_date, a.update_date,
+'2' as objectId,'训练标兵' as objectName,view,null as filePath,b.head_image as headImg,
+a.police_id,b.name as policeName,c.name as departmentName
+from train_pacesetter a 
+left join user b on b.police_id=a.police_id
+left join department c on c.id=b.department_id
+where a.is_recommend=2
+UNION ALL
+select id, name,cover_img, null as like_num,is_recommend,status, creation_date, update_date,
+'3' as objectId,'训练章程' as objectName,view, file_path,null as headImg,
+null as policeId,null as policeName,null as departmentName
+from train_constitution where is_recommend=2) as t
+order by creation_date desc limit ${limitNum}
+</select>
+    <!-- 活动风采查询 -->
+<select id="activityStyleList" parameterType="com.bayee.political.domain.TrainActivityStyle" resultMap="BaseResultMap">
+select id, name, cover_img, like_num, is_recommend, status, creation_date, update_date,
+'1' as objectId,'活动风采' as objectName,view,null as filePath,null as headImg,
+null as policeId,null as policeName,null as departmentName
+from train_activity_style where is_recommend=2 order by creation_date desc
+</select>
+    <!-- 训练标兵查询 -->
+<select id="pacesetterList" parameterType="com.bayee.political.domain.TrainActivityStyle" resultMap="BaseResultMap">
+select a.id, a.name, null as cover_img,a.like_num,a.is_recommend,a.status,a.creation_date, a.update_date,
+'2' as objectId,'训练标兵' as objectName,view,null as filePath,b.head_image as headImg,
+a.police_id,b.name as policeName,c.name as departmentName
+from train_pacesetter a 
+left join user b on b.police_id=a.police_id
+left join department c on c.id=b.department_id
+where a.is_recommend=2 order by creation_date desc
+</select>
+    <!-- 训练章程查询 -->
+<select id="constitutionList" parameterType="com.bayee.political.domain.TrainActivityStyle" resultMap="BaseResultMap">
+select id, name,cover_img, null as like_num,is_recommend,status, creation_date, update_date,
+'3' as objectId,'训练章程' as objectName,view, file_path,null as headImg,
+null as policeId,null as policeName,null as departmentName
+from train_constitution where is_recommend=2 order by creation_date desc
+</select>
+    <!-- 活动风采详情查询 -->
+<select id="activityStyleItem" parameterType="com.bayee.political.domain.TrainActivityStyle" resultMap="BaseResultMap">
+select id, name, cover_img, like_num, is_recommend, status, creation_date, update_date,
+'1' as objectId,'活动风采' as objectName,view,null as filePath,null as headImg,
+null as policeId,null as policeName,null as departmentName
+from train_activity_style where id=#{id} and is_recommend=2
+</select>
+    <!-- 训练标兵详情查询 -->
+<select id="pacesetterItem" parameterType="com.bayee.political.domain.TrainActivityStyle" resultMap="BaseResultMap">
+select a.id, a.name, null as cover_img,a.like_num,a.is_recommend,a.status,a.creation_date, a.update_date,
+'2' as objectId,'训练标兵' as objectName,view,null as filePath,b.head_image as headImg,
+a.police_id,b.name as policeName,c.name as departmentName
+from train_pacesetter a 
+left join user b on b.police_id=a.police_id
+left join department c on c.id=b.department_id
+where a.id=#{id} and a.is_recommend=2
+</select>
+    <!-- 训练章程详情查询 -->
+<select id="constitutionItem" parameterType="com.bayee.political.domain.TrainActivityStyle" resultMap="BaseResultMap">
+select id, name,cover_img, null as like_num,is_recommend,status, creation_date, update_date,
+'3' as objectId,'训练章程' as objectName,view, file_path,null as headImg,
+null as policeId,null as policeName,null as departmentName
+from train_constitution where id=#{id} and is_recommend=2
+</select>
+</mapper>

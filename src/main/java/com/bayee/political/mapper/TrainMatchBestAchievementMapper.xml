@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainMatchBestAchievementMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainMatchBestAchievement" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="train_match_id" property="trainMatchId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="train_start_date" property="trainStartDate" jdbcType="TIMESTAMP" />
+    <result column="train_end_date" property="trainEndDate" jdbcType="TIMESTAMP" />
+    <result column="achievement_str" property="achievementStr" jdbcType="VARCHAR" />
+    <result column="rank_id" property="rankId" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, train_match_id, type, police_id, department_id, train_start_date, train_end_date, 
+    achievement_str, rank_id, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_match_best_achievement
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from train_match_best_achievement
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 个人赛事最好成绩新增 -->
+  <insert id="matchBestAchievementCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.TrainMatchBestAchievement" useGeneratedKeys="true">
+    insert into train_match_best_achievement (train_match_id, type, 
+      police_id, department_id, train_start_date, 
+      train_end_date, achievement_str, rank_id, 
+      creation_date, update_date)
+    values (#{trainMatchId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, 
+      #{policeId,jdbcType=VARCHAR}, #{departmentId,jdbcType=INTEGER}, #{trainStartDate,jdbcType=TIMESTAMP}, 
+      #{trainEndDate,jdbcType=TIMESTAMP}, #{achievementStr,jdbcType=VARCHAR}, #{rankId,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 个人赛事最好成绩修改 -->
+  <update id="matchBestAchievementUpdate" parameterType="com.bayee.political.domain.TrainMatchBestAchievement" >
+    update train_match_best_achievement
+    <set >
+      <if test="trainMatchId != null" >
+        train_match_id = #{trainMatchId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="trainStartDate != null" >
+        train_start_date = #{trainStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainEndDate != null" >
+        train_end_date = #{trainEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="achievementStr != null" >
+        achievement_str = #{achievementStr,jdbcType=VARCHAR},
+      </if>
+      <if test="rankId != null" >
+        rank_id = #{rankId,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainMatchBestAchievement" >
+    update train_match_best_achievement
+    set train_match_id = #{trainMatchId,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      train_start_date = #{trainStartDate,jdbcType=TIMESTAMP},
+      train_end_date = #{trainEndDate,jdbcType=TIMESTAMP},
+      achievement_str = #{achievementStr,jdbcType=VARCHAR},
+      rank_id = #{rankId,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 个人赛事最好成绩详情查询 -->
+   <select id="matchBestAchievementItem" parameterType="com.bayee.political.domain.TrainMatchBestAchievement" resultMap="BaseResultMap">
+select * from train_match_best_achievement where 1=1
+      <if test="id != null and id !=''">
+        and id = #{id,jdbcType=INTEGER}
+      </if> 
+      <if test="trainMatchId != null and trainMatchId !=''">
+        and train_match_id=#{trainMatchId,jdbcType=INTEGER}
+      </if>
+      <if test="type != null and type !=''">
+        and type = #{type,jdbcType=INTEGER}
+      </if>
+       <if test="policeId != null and policeId !=''">
+        and police_id = #{policeId,jdbcType=VARCHAR}
+      </if>
+       <if test="departmentId != null and departmentId !=''">
+        and department_id = #{departmentId,jdbcType=INTEGER}
+      </if>
+</select>
+</mapper>

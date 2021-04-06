@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.AlarmEntryAndExitRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.AlarmEntryAndExitRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="leave_place" property="leavePlace" jdbcType="VARCHAR" />
+    <result column="destination" property="destination" jdbcType="VARCHAR" />
+    <result column="departure_time" property="departureTime" jdbcType="TIMESTAMP" />
+    <result column="return_time" property="returnTime" jdbcType="TIMESTAMP" />
+    <result column="urge_num" property="urgeNum" jdbcType="INTEGER" />
+    <result column="urge_police_id" property="urgePoliceId" jdbcType="VARCHAR" />
+    <result column="is_return" property="isReturn" jdbcType="INTEGER" />
+    <result column="passport_return_time" property="passportReturnTime" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="alarmLeaderStatistics" type="com.bayee.political.domain.AlarmLeaderStatistics" >
+    <result column="totalNum" property="totalNum" jdbcType="INTEGER" />
+    <result column="proportion" property="proportion" jdbcType="DOUBLE" />
+    <result column="receiveNum" property="receiveNum" jdbcType="INTEGER" />
+    <result column="overNum" property="overNum" jdbcType="INTEGER" />
+  </resultMap>
+    <resultMap id="leaveCharts" type="com.bayee.political.domain.LeaveChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="num" property="num" />
+  </resultMap>
+   <resultMap id="alarmEntryTimeName" type="com.bayee.political.domain.AlarmEntryTimeName" >
+    <result column="name" property="name" />
+  </resultMap>
+  <resultMap id="calculationChart" type="com.bayee.political.domain.CalculationChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="num" property="num" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, leave_place, destination, departure_time, return_time, urge_num, urge_police_id, 
+    is_return,passport_return_time, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from alarm_entry_and_exit_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from alarm_entry_and_exit_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 出入境预警新增 -->
+  <insert id="alarmEntryAndExitRecordCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.AlarmEntryAndExitRecord" useGeneratedKeys="true">
+    insert into alarm_entry_and_exit_record (police_id, leave_place, 
+      destination, departure_time, return_time, 
+      urge_num, urge_police_id, is_return,passport_return_time, 
+      creation_date, update_date)
+    values (#{policeId,jdbcType=VARCHAR}, #{leavePlace,jdbcType=VARCHAR}, 
+      #{destination,jdbcType=VARCHAR}, #{departureTime,jdbcType=TIMESTAMP}, #{returnTime,jdbcType=TIMESTAMP}, 
+      #{urgeNum,jdbcType=INTEGER}, #{urgePoliceId,jdbcType=VARCHAR}, #{isReturn,jdbcType=INTEGER},
+      #{passportReturnTime,jdbcType=TIMESTAMP},
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 出入境预警新增  -->
+  <update id="alarmEntryAndExitRecordUpdate" parameterType="com.bayee.political.domain.AlarmEntryAndExitRecord" >
+    update alarm_entry_and_exit_record
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="leavePlace != null" >
+        leave_place = #{leavePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="destination != null" >
+        destination = #{destination,jdbcType=VARCHAR},
+      </if>
+      <if test="departureTime != null" >
+        departure_time = #{departureTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="returnTime != null" >
+        return_time = #{returnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urgeNum != null" >
+        urge_num = #{urgeNum,jdbcType=INTEGER},
+      </if>
+      <if test="urgePoliceId != null" >
+        urge_police_id = #{urgePoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="isReturn != null" >
+        is_return = #{isReturn,jdbcType=INTEGER},
+      </if>
+       <if test="passportReturnTime != null" >
+        passport_return_time = #{passportReturnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.AlarmEntryAndExitRecord" >
+    update alarm_entry_and_exit_record
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      leave_place = #{leavePlace,jdbcType=VARCHAR},
+      destination = #{destination,jdbcType=VARCHAR},
+      departure_time = #{departureTime,jdbcType=TIMESTAMP},
+      return_time = #{returnTime,jdbcType=TIMESTAMP},
+      urge_num = #{urgeNum,jdbcType=INTEGER},
+      urge_police_id = #{urgePoliceId,jdbcType=VARCHAR},
+      is_return = #{isReturn,jdbcType=INTEGER},
+      passport_return_time = #{passportReturnTime,jdbcType=TIMESTAMP},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 局领导出入境预警统计 -->
+  <select id="alarmEntryAndExitStatistics" parameterType="com.bayee.political.domain.AlarmLeaderStatistics" resultMap="alarmLeaderStatistics">
+select ifnull(a.totalNum,0) as totalNum,
+round(ifnull((a.totalNum-b.totalNum)/a.totalNum,0)*100,2) as proportion
+from (select count(*) as totalNum from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.checker_id=#{policeId} and a.module_id=1 and b.police_id is not null
+and DATE_FORMAT(b.creation_date,'%Y')=date_format(curdate(),'%Y')) a
+join
+(select count(*) as totalNum from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.checker_id=#{policeId} and a.module_id=1 and b.police_id is not null
+and DATE_FORMAT(b.creation_date,'%Y%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y%m')) b
+</select>
+  <!-- 局领导出入境预警累计统计 -->
+  <select id="alarmLeaderEntryRecordItem" parameterType="com.bayee.political.domain.AlarmLeaderStatistics" resultMap="alarmLeaderStatistics">
+select ifnull(a.totalNum,0) as totalNum,
+ifnull(b.overNum,0) as overNum
+from (select count(*) as totalNum from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.checker_id=#{policeId} and a.module_id=1 and b.police_id is not null) a
+join
+(select count(*) as overNum from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.checker_id=#{policeId} and a.module_id=1 and b.police_id is not null
+and DATE_FORMAT(b.creation_date,'%Y%m')=date_format(curdate(),'%Y%m')) b
+</select>
+  <!-- 局领导最新出入境预警查询 -->
+ <select id="alarmLeaderEntryNewestList" parameterType="com.bayee.political.domain.AlarmEntryAndExitRecord" resultMap="BaseResultMap">
+select b.*,TIMESTAMPDIFF(MINUTE,b.creation_date,SYSDATE()) as timeChange,c.name,c.head_image as headImage,d.name as departmentName,
+e.position_name as positionName from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=c.department_id
+left join police_position e on e.id=c.position_id
+where a.checker_id=#{policeId} and a.module_id=1
+and DATE_FORMAT(b.creation_date,'%Y%m')=date_format(curdate(),'%Y%m')
+and b.is_return=0
+order by b.creation_date desc limit 2
+</select>
+  <!-- 局领导出入境预警分页查询 -->
+ <select id="alarmLeaderEntryRecordPageList" parameterType="com.bayee.political.domain.AlarmEntryAndExitRecord" resultMap="BaseResultMap">
+select * from(
+select b.*,TIMESTAMPDIFF(MINUTE,b.creation_date,SYSDATE()) as timeChange,c.name,
+c.head_image as headImage,d.name as departmentName,e.position_name as positionName,
+DATE_FORMAT(b.creation_date,'%Y-%m') as strTime
+from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=c.department_id
+left join police_position e on e.id=c.position_id
+where a.checker_id=#{policeId} and a.module_id=1 and b.police_id is not null
+UNION ALL
+select b.*,TIMESTAMPDIFF(MINUTE,b.creation_date,SYSDATE()) as timeChange,
+c.name,c.head_image as headImage,d.name as departmentName,e.position_name as positionName,
+DATE_FORMAT(b.creation_date,'%Y-%m-%d') as strTime
+from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=c.department_id
+left join police_position e on e.id=c.position_id
+where a.checker_id=#{policeId} and a.module_id=1 and b.police_id is not null
+and DATE_FORMAT(b.creation_date,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d')) as t
+order by strTime desc,id desc limit #{pageNum},#{pageSize}
+</select>
+  <!-- 局领导出入境预警数量统计 -->
+ <select id="alarmLeaderEntryRecordPageCount" parameterType="com.bayee.political.domain.AlarmEntryAndExitRecord" resultType="Integer">
+select count(*) from(
+select b.*,TIMESTAMPDIFF(MINUTE,b.creation_date,SYSDATE()) as timeChange,c.name,
+c.head_image as headImage,d.name as departmentName,e.position_name as positionName,
+DATE_FORMAT(b.creation_date,'%Y-%m') as strTime
+from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=c.department_id
+left join police_position e on e.id=c.position_id
+where a.checker_id=#{policeId} and a.module_id=1 and b.police_id is not null
+UNION ALL
+select b.*,TIMESTAMPDIFF(MINUTE,b.creation_date,SYSDATE()) as timeChange,
+c.name,c.head_image as headImage,d.name as departmentName,e.position_name as positionName,
+DATE_FORMAT(b.creation_date,'%Y-%m-%d') as strTime
+from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=c.department_id
+left join police_position e on e.id=c.position_id
+where a.checker_id=#{policeId} and a.module_id=1 and b.police_id is not null
+and DATE_FORMAT(b.creation_date,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d')) as t
+</select>
+  <!-- 局领导出入境时间查询 -->
+ <select id="alarmEntryDatePageList" parameterType="com.bayee.political.domain.AlarmEntryTimeName" resultMap="alarmEntryTimeName">
+select distinct strTime as name from(select * from(
+select b.*,TIMESTAMPDIFF(MINUTE,b.creation_date,SYSDATE()) as timeChange,c.name,
+c.head_image as headImage,d.name as departmentName,e.position_name as positionName,
+DATE_FORMAT(b.creation_date,'%Y-%m') as strTime
+from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=c.department_id
+left join police_position e on e.id=c.position_id
+where a.checker_id=#{policeId} and a.module_id=1 and b.police_id is not null
+UNION ALL
+select b.*,TIMESTAMPDIFF(MINUTE,b.creation_date,SYSDATE()) as timeChange,
+c.name,c.head_image as headImage,d.name as departmentName,e.position_name as positionName,
+DATE_FORMAT(b.creation_date,'%Y-%m-%d') as strTime
+from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+left join department d on d.id=c.department_id
+left join police_position e on e.id=c.position_id
+where a.checker_id=#{policeId} and a.module_id=1 and b.police_id is not null
+and DATE_FORMAT(b.creation_date,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d')) as t
+order by strTime desc,id desc) as a
+order by strTime desc
+</select>
+  <!-- 局领导出入境预警详情查询 -->
+ <select id="alarmLeaderEntryItem" parameterType="com.bayee.political.domain.AlarmEntryAndExitRecord" resultMap="BaseResultMap">
+SELECT a.*,TIMESTAMPDIFF(MINUTE,a.return_time,SYSDATE()) as timeChange,
+c.name,c.head_image as headImage,d.name as departmentName,
+e.position_name as positionName FROM alarm_entry_and_exit_record a
+left join user c on c.police_id=a.police_id
+left join department d on d.id=c.department_id
+left join police_position e on e.id=c.position_id
+where a.id=#{id}
+</select>
+<!--局领导考核预警趋势图 -->
+  <select id="alarmLeaderEntryExitChart" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationChart">
+select ifnull(b.num,0) as num,a.police_month as name from alarm_police_month a
+left join(select count(*) as num,
+REPLACE(LTRIM(REPLACE(DATE_FORMAT(b.creation_date,'%m'),'0',' ')),' ','0') as months 
+from leave_power a
+left join alarm_entry_and_exit_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId} and b.police_id is not null
+and DATE_FORMAT(b.creation_date,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY months) b on b.months=a.id
+where a.id&lt;=REPLACE(LTRIM(REPLACE(DATE_FORMAT(CURDATE(),'%m'),'0',' ')),' ','0')
+order by a.id
+</select>
+</mapper>

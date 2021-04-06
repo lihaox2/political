@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+<base href="/"/>
+<meta charset="utf-8"></meta>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" th:href="@{/resources/css/bootstrap.css}"/>
+<link rel="stylesheet" th:href="@{/resources/vendor/font-awesome/css/all.css}"/>
+<link rel="stylesheet" th:href="@{/resources/css/jquery-ui.css}"/>
+<link rel="stylesheet" th:href="@{/resources/css/jquery.datetimepicker.min.css}"/>
+<link rel="stylesheet" th:href="@{/resources/vendor/linearicons/style.css}"/>
+<link rel="stylesheet" th:href="@{/resources/css/jquery.multiselect.css}"/>
+<!--link rel="stylesheet" th:href="@{/resources/vendor/chartist/css/chartist-custom.css}"/-->
+<!-- MAIN CSS -->
+<link rel="stylesheet" th:href="@{/resources/css/main.css}"/>
+<!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
+<link rel="stylesheet" th:href="@{/resources/css/demo.css}"/>
+<!-- zeroModal -->
+<link rel="stylesheet" th:href="@{/resources/css/zeroModal.css}"/>
+<!-- DATE CSS -->
+<link rel="stylesheet" th:href="@{/resources/css/jquery.sPage.css}"/>
+<!-- switch CSS -->
+<link rel="stylesheet" th:href="@{/resources/css/bootstrap-switch.css}"/>
+<!-- select2 CSS -->
+<link rel="stylesheet" th:href="@{/resources/css/select2.css}"/>
+<!-- tree CSS -->
+<link rel="stylesheet" th:href="@{/resources/css/iconfont.css}"/>
+<!-- DATE popup -->
+<link rel="stylesheet" th:href="@{/resources/css/popup.css}"/>
+<!-- searchableSelect CSS -->
+<link rel="stylesheet" th:href="@{/resources/css/jquery.searchableSelect.css}"/>
+<!-- GOOGLE FONTS -->
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet"/>
+<!-- ICONS -->
+<link rel="apple-touch-icon" sizes="76x76" th:href="@{/resources/images/apple-icon.png}"/>
+<link rel="icon" type="image/png" sizes="96x96" th:href="@{/resources/images/favicon.png}"/>
+<!-- Javascript -->
+<!--script th:src="@{/resources/vendor/jquery/jquery.min.js}"></script-->
+<script th:src="@{/resources/js/jquery-1.12.4.js}"></script>
+<script th:src="@{/resources/js/jquery-ui.js}"></script>
+<script th:src="@{/resources/js/jquery-taginput.js}"></script>
+<script th:src="@{/resources/js/jquery.datetimepicker.full.min.js}"></script>
+<script th:src="@{/resources/js/jquery.multiselect.js}"></script>
+<!--script th:src="@{/resources/vendor/bootstrap/js/bootstrap.min.js}"></script-->
+<script th:src="@{/resources/js/bootstrap.3.3.6.min.js}"></script>
+<script th:src="@{/resources/vendor/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+<!--script th:src="@{/resources/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js}"></script-->
+<!--script th:src="@{/resources/vendor/chartist/js/chartist.min.js}"></script-->
+<script th:src="@{/resources/vendor/highcharts/highcharts.js}"></script>
+<script th:src="@{/resources/vendor/highcharts/highcharts-more.js}"></script>
+<script th:src="@{/resources/vendor/highcharts/exporting.js}"></script>
+<script th:src="@{/resources/js/klorofil-common.js}"></script>
+<script th:src="@{/resources/js/sortable-image-editor.js}"></script>
+<script th:src="@{/resources/js/app.js}"></script>
+<script th:src="@{/resources/js/popup.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/zeroModal.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/zeroModal.min.js}"></script>
+<script th:src="@{/resources/js/jquery.sPage.js}"></script>
+<script th:src="@{/resources/js/bootstrap-switch.js}"></script>
+<script th:src="@{/resources/js/index.js}"></script>
+<script th:src="@{/resources/js/swiper-2.1.min.js}"></script>
+<script th:src="@{/resources/js/area.js}"></script>
+<script th:src="@{/resources/js/location.js}"></script>
+<script th:src="@{/resources/js/select2.js}"></script>
+<script th:src="@{/resources/js/select2_locale_zh-CN.js}"></script>
+<script th:src="@{/resources/js/leg-tree.js}"></script>
+<script th:src="@{/resources/js/load-tree.js}"></script>
+<script th:src="@{/resources/js/jquery.searchableSelect.js}"></script>
+</head>
+<body id="haima">
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<!--nav th:replace="fregments/navbar"></nav-->	
+		<!-- END NAVBAR -->
+		
+		<!-- LEFT SIDEBAR -->
+		<div th:replace="fregments/sidebar-nav"></div>
+		<!-- END LEFT SIDEBAR -->
+		
+		<div layout:fragment="main"></div>
+		<div class="mask" style="display:none"></div>
+		<div class="clearfix"></div>
+	</div>
+	<script th:inline="javascript">
+		    $(document).ready(function(){
+		        // Add minus icon for collapse element which is open by default
+		        $(".collapse.in").each(function(){
+		        	$(this).siblings(".sidebar-header").find(".glyphicon").addClass("rotate");
+		        });
+		        
+		        // Toggle plus minus icon on show hide of collapse element
+		        $(".collapse").on('show.bs.collapse', function(){
+		        	$(this).parent().find(".glyphicon").addClass("rotate");
+		        }).on('hide.bs.collapse', function(){
+		        	$(this).parent().find(".glyphicon").removeClass("rotate");
+		        });
+		        
+		        $(".mask").click(function(){
+		        	$("#detailPanel").hide("slide", { direction: "right" }, 500);
+		        	$(this).fadeToggle('slow');
+		        })
+		    });
+		</script>
+</body>
+</html>

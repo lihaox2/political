@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.CalculationProjectMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.CalculationProject" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="case_name" property="caseName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, case_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from calculation_project
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from calculation_project
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.CalculationProject" >
+    insert into calculation_project (id, case_name)
+    values (#{id,jdbcType=INTEGER}, #{caseName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.CalculationProject" >
+    insert into calculation_project
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="caseName != null" >
+        case_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="caseName != null" >
+        #{caseName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.CalculationProject" >
+    update calculation_project
+    <set >
+      <if test="caseName != null" >
+        case_name = #{caseName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.CalculationProject" >
+    update calculation_project
+    set case_name = #{caseName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 案件类型 -->
+  <select id="projectList" parameterType="com.bayee.political.domain.CalculationProject" resultMap="BaseResultMap" >
+   select * from calculation_project
+  </select>
+  <!-- 民警案件类型查询（后台）-->
+  <select id="policeProjectList" parameterType="com.bayee.political.domain.CalculationProject" resultMap="BaseResultMap" >
+   select * from calculation_project where 1=1 and id!=9
+      <if test="policeStationId != null and policeStationId !=''">
+        and police_station_id=#{policeStationId}
+      </if> 
+      order by id
+  </select>
+  <!-- 辅警案件类型查询（后台） -->
+  <select id="auxiliaryPoliceProjectList" parameterType="com.bayee.political.domain.CalculationProject" resultMap="BaseResultMap" >
+   select * from calculation_project where 1=1 
+       <if test="policeStationId != null and policeStationId !=''">
+        and police_station_id=#{policeStationId}
+      </if>
+      and (id=4 or id=7 or id=8 or id=9) order by id
+  </select>
+</mapper>

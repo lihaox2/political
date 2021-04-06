@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainMedalManageMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainMedalManage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="grey_image" property="greyImage" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="issue_num" property="issueNum" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, image,grey_image, type, issue_num, remark, creation_date, update_date
+  </sql>
+  <select id="getTrainMedalOnely" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_medal_manage
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteTrainMedal" parameterType="java.lang.Integer" >
+    delete from train_medal_manage
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.TrainMedalManage" >
+    insert into train_medal_manage (id, name, image,grey_image, 
+      type, issue_num, remark, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR},
+      #{greyImage,jdbcType=VARCHAR},  
+      #{type,jdbcType=INTEGER}, #{issueNum,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateTrainMedal" parameterType="com.bayee.political.domain.TrainMedalManage" >
+    update train_medal_manage
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null" >
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="greyImage != null" >
+        grey_image = #{greyImage,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="issueNum != null" >
+        issue_num = #{issueNum,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainMedalManage" >
+    update train_medal_manage
+    set name = #{name,jdbcType=VARCHAR},
+      image = #{image,jdbcType=VARCHAR},
+      grey_image = #{greyImage,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      issue_num = #{issueNum,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 查询奖章 -->
+  <select id="getTrainMedalList" resultMap="BaseResultMap">
+  select * from train_medal_manage 
+where 1 = 1 
+<if test="type!=null">
+and type = #{type} 
+</if>
+<if test="keyWords!=null and keyWords!=''">
+and name like "%"#{keyWords}"%" 
+</if>
+<if test="sort==null">
+order by id desc 
+</if>
+<if test="sort==1">
+order by issue_num desc 
+</if>
+<if test="sort==2">
+order by issue_num  
+</if>
+<if test="pageSize!=null">
+limit #{pageSize},10
+</if>
+  </select>
+  
+  <select id="getTrainMedalCount" resultType="java.lang.Integer">
+    select count(*) as count from train_medal_manage 
+where 1 = 1 
+<if test="type!=null">
+and type = #{type} 
+</if>
+<if test="keyWords!=null and keyWords!=''">
+and name like "%"#{keyWords}"%"
+</if>
+  </select>
+    <!-- 个人获得训练奖章/赛事奖章查询 -->
+<select id="trainGetMedalPersonalList" parameterType="com.bayee.political.domain.TrainMedalManage" resultMap="BaseResultMap">
+ <!-- select a.*,(case when b.police_id is null then '0' else 1 end) as isBright from train_medal_manage a
+ left join(select DISTINCT medal_id,police_id from train_get_medal where police_id=#{policeId,jdbcType=VARCHAR}) b on b.medal_id=a.id
+ where 1=1 
+  <if test="type != null and type !=''">
+        and  a.type = #{type,jdbcType=INTEGER}
+      </if>
+ order by a.id -->
+ select a.*,(case when b.police_id is null then '0' else 1 end) as isBright,
+ifnull(c.getNum,0) as getNum from train_medal_manage a
+ left join(select DISTINCT medal_id,police_id from train_get_medal where police_id=#{policeId,jdbcType=VARCHAR}) b on b.medal_id=a.id
+ left join (select count(*) as getNum,medal_id from train_get_medal where police_id=#{policeId,jdbcType=VARCHAR}
+ GROUP BY medal_id) c on c.medal_id=a.id
+ where 1=1  
+     <if test="type != null and type !=''">
+        and a.type = #{type,jdbcType=INTEGER}
+      </if>
+ order by a.id
+</select>
+    <!--  个人训练奖章/赛事奖章详情查询 -->
+<select id="trainGetMedalPersonalItem" parameterType="com.bayee.political.domain.TrainMedalManage" resultMap="BaseResultMap">
+ select a.id,a.name, a.image,a.grey_image, a.type,  ifnull(e.enum,0) as issue_num, a.remark, a.creation_date, a.update_date,
+ (case when b.police_id is null then '0' else 1 end) as isBright,
+ ifnull(c.cnum,0) as totalNum, ifnull(d.dnum,0) as getNum,f.get_date as getDate from train_medal_manage a
+ left join(select DISTINCT medal_id,police_id from train_get_medal where police_id=#{policeId,jdbcType=VARCHAR}) b on b.medal_id=a.id
+ join(select count(*) as cnum from (
+ select distinct medal_id,police_id from train_get_medal where medal_id=#{medalManageId}) as t) c
+ join(select count(*) as dnum from train_get_medal where police_id=#{policeId,jdbcType=VARCHAR} and medal_id=#{medalManageId}) d
+ left join(select count(*) as enum,medal_id as id from(select distinct medal_id,police_id from train_get_medal) as t
+where medal_id=#{medalManageId} GROUP BY medal_id ) e on e.id=a.id
+ left join(select * from train_get_medal where police_id=#{policeId,jdbcType=VARCHAR} and medal_id=#{medalManageId}
+ order by creation_date desc limit 1) f on f.medal_id=a.id
+ where a.type=#{type} and a.id=#{medalManageId}
+</select>
+    <!-- 个人奖章墙查询 -->
+<select id="trainMedalPersonalWallList" parameterType="com.bayee.political.domain.TrainMedalManage" resultMap="BaseResultMap">
+select b.id,b.name, b.image,b.grey_image, b.type, a.num as issue_num, b.remark, b.creation_date, b.update_date from(
+select count(*) as num,medal_id from train_get_medal where police_id=#{policeId,jdbcType=VARCHAR}
+GROUP BY medal_id) a
+left join train_medal_manage b on b.id=a.medal_id
+where 1=1 
+<if test="type != null and type !=''">
+        and  b.type = #{type,jdbcType=INTEGER}
+      </if>
+order by id
+</select>
+    <!-- 查询奖章数量 -->
+<select id="getMedalNumList" parameterType="com.bayee.political.domain.TrainMedalManage" resultMap="BaseResultMap">
+select count(*) as issueNum,medal_id as id from train_get_medal
+GROUP BY medal_id
+</select>
+   <!-- 查询剩余奖牌id -->
+<select id="surplusMedalList" parameterType="com.bayee.political.domain.TrainMedalManage" resultMap="BaseResultMap">
+select * from train_medal_manage where type = #{type,jdbcType=INTEGER} and id!=#{medalManageId,jdbcType=INTEGER} order by id
+</select>
+</mapper>

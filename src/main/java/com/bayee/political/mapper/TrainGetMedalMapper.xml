@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainGetMedalMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainGetMedal" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="medal_id" property="medalId" jdbcType="INTEGER" />
+    <result column="object_id" property="objectId" jdbcType="INTEGER" />
+    <result column="train_id" property="trainId" jdbcType="INTEGER" />
+    <result column="get_date" property="getDate" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+    <resultMap id="TrainMedalPersonMap" type="com.bayee.political.domain.TrainMedalPerson" >
+    <result column="head_image" property="headImage" jdbcType="VARCHAR" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="medalNum" property="medalNum" jdbcType="INTEGER" />
+    <result column="exceedRate" property="exceedRate" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, medal_id, get_date, creation_date, update_date
+  </sql>
+  <!-- 警员奖章删除 -->
+  <delete id="trainGetMedalDelete" parameterType="java.lang.Integer" >
+    delete from train_get_medal
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 警员奖章新增 -->
+  <insert id="trainGetMedalCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.TrainGetMedal" useGeneratedKeys="true">
+    insert into train_get_medal (police_id, medal_id,object_id, train_id,
+      get_date, creation_date, update_date
+      )
+    values (#{policeId,jdbcType=VARCHAR}, #{medalId,jdbcType=INTEGER}, 
+      #{objectId,jdbcType=INTEGER},#{trainId,jdbcType=INTEGER},
+      #{getDate,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 警员奖章修改 -->
+  <update id="trainGetMedalUpdate" parameterType="com.bayee.political.domain.TrainGetMedal" >
+    update train_get_medal
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="medalId != null" >
+        medal_id = #{medalId,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null" >
+        object_id = #{objectId,jdbcType=INTEGER},
+      </if>
+      <if test="trainId != null" >
+        train_id = #{trainId,jdbcType=INTEGER},
+      </if>
+      <if test="getDate != null" >
+        get_date = #{getDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 个人奖章详情查询 -->
+<select id="medalPersonalItem" parameterType="com.bayee.political.domain.TrainMedalPerson" resultMap="TrainMedalPersonMap">
+select round(ifnull(b.bnum/a.anum,0)*100,2) as exceedRate,c.* from 
+(select count(*) as anum from user where department_id!=47) a
+join
+(select count(*) as bnum from (select count(*) as anum from train_get_medal where police_id=#{policeId,jdbcType=VARCHAR}) a
+join(
+select a.police_id,b.bnum from user a 
+left join(select count(*) as bnum,police_id from train_get_medal 
+where police_id!=#{policeId,jdbcType=VARCHAR}
+GROUP BY police_id) b on b.police_id=a.police_id
+ where a.department_id!=47 and a.police_id!=#{policeId,jdbcType=VARCHAR}) as b 
+ where a.anum>ifnull(b.bnum,0)) b
+join
+(select count(*) as medalNum,a.police_id,b.name,b.head_image from train_get_medal a 
+left join user b on b.police_id=a.police_id
+where a.police_id=#{policeId,jdbcType=VARCHAR}) c
+</select>
+  <!-- 警员奖章详情记录查询 -->
+<select id="trainGetMedalPoliceItem" parameterType="com.bayee.political.domain.TrainGetMedal" resultMap="BaseResultMap">
+select * from train_get_medal where 1=1
+    <if test="id != null and id !=''">
+	    and id =#{id,jdbcType=INTEGER}
+	</if>
+	<if test="policeId != null and policeId !=''">
+	    and police_id = #{policeId,jdbcType=VARCHAR}
+	</if>
+	<if test="medalManageId != null and medalManageId !=''">
+	    and medal_id = #{medalManageId,jdbcType=INTEGER}
+	</if>
+</select>
+</mapper>

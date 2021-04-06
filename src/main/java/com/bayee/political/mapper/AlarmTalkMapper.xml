@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.AlarmTalkMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.AlarmTalk" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="alarm_record_id" property="alarmRecordId" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="alarm_type" property="alarmType" jdbcType="INTEGER" />
+    <result column="talk_type" property="talkType" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="police_name" property="policeName" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="feedback" property="feedback" jdbcType="VARCHAR" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="host_id" property="hostId" jdbcType="VARCHAR" />
+    <result column="host_name" property="hostName" jdbcType="VARCHAR" />
+    <result column="position_name" property="positionName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="is_receive" property="isReceive" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="TalkStatistics" type="com.bayee.political.domain.AlarmTalkStatistics" >
+    <result column="completionRate" property="completionRate" jdbcType="VARCHAR" />
+    <result column="unfinishedRate" property="unfinishedRate" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="TalkPoliceNum" type="com.bayee.political.domain.AlarmTalkPoliceNum" >
+    <result column="totalNum" property="totalNum" jdbcType="INTEGER" />
+    <result column="addNum" property="addNum" jdbcType="INTEGER" />
+    <result column="buckleNum" property="buckleNum" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="alarmLeaderStatistics" type="com.bayee.political.domain.AlarmLeaderStatistics" >
+    <result column="totalNum" property="totalNum" jdbcType="INTEGER" />
+    <result column="proportion" property="proportion" jdbcType="DOUBLE" />
+    <result column="receiveNum" property="receiveNum" jdbcType="INTEGER" />
+    <result column="overNum" property="overNum" jdbcType="INTEGER" />
+  </resultMap>
+   <resultMap id="calculationChart" type="com.bayee.political.domain.CalculationChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="num" property="num" />
+  </resultMap>
+   <resultMap id="timeName" type="com.bayee.political.domain.TimeName" >
+    <result column="name" property="name" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,alarm_record_id, title,alarm_type, talk_type, police_id, department_id, start_time, end_time, content,message,
+    feedback,reason, host_id, 
+    status,is_receive, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from alarm_talk
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from alarm_talk
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 约谈记录新增 -->
+  <insert id="alarmTalkCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.AlarmTalk" useGeneratedKeys="true">
+    insert into alarm_talk (alarm_record_id,title,alarm_type, talk_type, 
+      police_id, department_id, start_time, 
+      end_time, content,message,feedback, reason,host_id, 
+      status,is_receive, creation_date, update_date
+      )
+    values (#{alarmRecordId,jdbcType=INTEGER},#{title,jdbcType=VARCHAR},
+      #{alarmType,jdbcType=INTEGER}, #{talkType,jdbcType=INTEGER}, 
+      #{policeId,jdbcType=VARCHAR}, #{departmentId,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR},#{message,jdbcType=VARCHAR}, 
+      #{feedback,jdbcType=VARCHAR},#{reason,jdbcType=VARCHAR}, #{hostId,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{isReceive,jdbcType=INTEGER},
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 约谈记录修改 -->
+  <update id="alarmTalkUpdate" parameterType="com.bayee.political.domain.AlarmTalk" >
+    update alarm_talk
+    <set >
+    <if test="alarmRecordId != null" >
+        alarm_record_id = #{alarmRecordId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmType != null" >
+        alarm_type = #{alarmType,jdbcType=INTEGER},
+      </if>
+      <if test="talkType != null" >
+        talk_type = #{talkType,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="feedback != null" >
+        feedback = #{feedback,jdbcType=VARCHAR},
+      </if>
+       <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="hostId != null" >
+        host_id = #{hostId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isReceive != null" >
+        is_receive = #{isReceive,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.AlarmTalk" >
+    update alarm_talk
+    set alarm_record_id = #{alarmRecordId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      alarm_type = #{alarmType,jdbcType=INTEGER},
+      talk_type = #{talkType,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=VARCHAR},
+      message = #{message,jdbcType=VARCHAR},
+      feedback = #{feedback,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR},
+      host_id = #{hostId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      is_receive = #{isReceive,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--约谈记录详情查询(后台) -->
+  <select id="alarmTalkItem" parameterType="com.bayee.political.domain.AlarmTalk" resultMap="BaseResultMap">
+select a.*,b.name as police_name,b.head_image as headImage,c.name as department_name,
+d.name as host_name,d.head_image as hostHeadImage,e.position_name as positionName from alarm_talk a
+left join user b on b.police_id=a.police_id
+left join department c on c.id=a.department_id
+left join user d on d.police_id=a.host_id
+left join police_position e on e.id=d.position_id
+where a.id = #{id}
+</select>
+  <!--约谈近期列表查询(api) -->
+  <select id="alarmTalkLastList" parameterType="com.bayee.political.domain.AlarmTalk" resultMap="BaseResultMap">
+select a.*,b.name as police_name,b.head_image as headImage,c.name as department_name
+from alarm_talk a
+left join user b on b.police_id=a.police_id
+left join department c on c.id=a.department_id
+where a.host_id=#{hostId,jdbcType=VARCHAR} and a.is_receive=2
+     <if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(a.start_time,'%Y-%m-%d') = #{dateTime} 
+      </if> 
+order by a.start_time limit 3
+</select>
+  <!--约谈消息列表查询(api) -->
+  <select id="alarmTalkNewsList" parameterType="com.bayee.political.domain.AlarmTalk" resultMap="BaseResultMap">
+select a.*,b.name as police_name,b.head_image as headImage,c.name as department_name
+from alarm_talk a
+left join user b on b.police_id=a.police_id
+left join department c on c.id=a.department_id
+where a.host_id=#{hostId,jdbcType=VARCHAR} and a.is_receive!=0 
+order by a.update_date desc limit 2
+</select>
+  <!--约谈列表查询(定时任务修改约谈状态进程)-->
+  <select id="alarmTalkStatusList" parameterType="com.bayee.political.domain.AlarmTalk" resultMap="BaseResultMap">
+select * from alarm_talk where status &lt;5 order by id desc
+</select>
+  <!--约谈完成率，未完成率查询 -->
+  <select id="alarmTalkRateItem" parameterType="com.bayee.political.domain.AlarmTalkStatistics" resultMap="TalkStatistics">
+select round(a.anum/(a.anum+b.bnum),2)*100 as completionRate,
+(100-round(a.anum/(a.anum+b.bnum),2)*100) as unfinishedRate from
+(select count(*) as anum from alarm_talk where host_id=#{hostId,jdbcType=VARCHAR} 
+and status=5 
+      <if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(start_time,'%Y-%m') = #{dateTime} 
+      </if>) a
+join(select count(*) as bnum from alarm_talk where host_id=#{hostId,jdbcType=VARCHAR} 
+and status!=5
+     <if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(start_time,'%Y-%m') = #{dateTime} 
+      </if>) b
+</select>
+  <!--约谈完成人数查询 -->
+  <select id="talkPoliceNumItem" parameterType="com.bayee.political.domain.AlarmTalkPoliceNum" resultMap="TalkPoliceNum">
+select * from(select ifnull(count(*),0) as totalNum from alarm_talk 
+where host_id=#{hostId,jdbcType=VARCHAR} and status=5
+     <if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(start_time,'%Y-%m') = #{dateTime} 
+      </if>) a
+join(select ifnull(count(*),0) as addNum from alarm_talk where host_id=#{hostId,jdbcType=VARCHAR} 
+and status=5 and talk_type=1
+      <if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(start_time,'%Y-%m') = #{dateTime} 
+      </if>) b
+join(select ifnull(count(*),0) as buckleNum from alarm_talk where host_id=#{hostId,jdbcType=VARCHAR} 
+and status=5 and talk_type=2
+      <if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(start_time,'%Y-%m') = #{dateTime} 
+      </if>) c
+</select>
+  <!--约谈未完成人数查询 -->
+  <select id="noTalkPoliceNumItem" parameterType="com.bayee.political.domain.AlarmTalkPoliceNum" resultMap="TalkPoliceNum">
+select * from(select ifnull(count(*),0) as totalNum from alarm_talk where host_id=#{hostId,jdbcType=VARCHAR} and status!=5
+<if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(start_time,'%Y-%m') = #{dateTime} 
+      </if>) a
+join(select ifnull(count(*),0) as addNum from alarm_talk where host_id=#{hostId,jdbcType=VARCHAR} 
+and status!=5 and talk_type=1
+<if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(start_time,'%Y-%m') = #{dateTime} 
+      </if>) b
+join(select ifnull(count(*),0) as buckleNum from alarm_talk where host_id=#{hostId,jdbcType=VARCHAR} 
+and status!=5 and talk_type=2
+<if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(start_time,'%Y-%m') = #{dateTime} 
+      </if>) c
+</select>
+<!-- 个人谈话完成数量统计 -->
+<select id="alarmTalkOverNum" resultType="java.lang.Integer">
+select count(*) from alarm_talk where police_id=#{policeId} and status=5
+</select>
+  <!--个人谈话预约列表查询 -->
+  <select id="alarmTalkPersonalList" parameterType="com.bayee.political.domain.AlarmTalk" resultMap="BaseResultMap">
+select a.*,b.name as host_name,b.head_image as hostHeadImage,c.name as department_name,d.position_name
+from alarm_talk a
+left join user b on b.police_id=a.host_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+where a.police_id=#{policeId}
+     <if test="isReceive != null and isReceive !=''">
+        and a.is_receive=#{isReceive}
+      </if> 
+order by a.update_date desc,a.id desc limit 2
+</select>
+  <!--局领导约谈人数统计 -->
+  <select id="alarmLeaderTalkStatistics" parameterType="com.bayee.political.domain.AlarmLeaderStatistics" resultMap="alarmLeaderStatistics">
+<!-- select * from(select count(*) as totalNum from alarm_talk where host_id=#{policeId} 
+and DATE_FORMAT(creation_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')) a
+join
+(select count(*) as overNum from alarm_talk where host_id=#{policeId} 
+and DATE_FORMAT(creation_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+and status=5) b
+join(select count(*) as receiveNum from alarm_talk where host_id=#{policeId} 
+and DATE_FORMAT(creation_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+and status=2) c -->
+select * from(select count(*) as totalNum from alarm_talk where host_id=#{policeId} 
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(CURDATE(),'%Y')) a
+join
+(select count(*) as overNum from alarm_talk where host_id=#{policeId} 
+and DATE_FORMAT(creation_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+and status=5) b
+join(select count(*) as receiveNum from alarm_talk where host_id=#{policeId} 
+and DATE_FORMAT(creation_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+and status=2) c
+</select>
+  <!--局领导约谈数量累计统计-->
+  <select id="alarmLeaderTalkItem" parameterType="com.bayee.political.domain.AlarmLeaderStatistics" resultMap="alarmLeaderStatistics">
+select * from(select count(*) as totalNum from alarm_talk where host_id=#{policeId} ) a
+join
+(select count(*) as overNum from alarm_talk where host_id=#{policeId} 
+and DATE_FORMAT(creation_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')) b
+</select>
+  <!--局领导约谈事项查询-->
+  <select id="alarmLeaderTalkList" parameterType="com.bayee.political.domain.AlarmTalk" resultMap="BaseResultMap">
+select a.*,b.name as police_name,b.head_image as headImage,c.name as department_name
+from alarm_talk a
+left join user b on b.police_id=a.police_id
+left join department c on c.id=a.department_id
+where a.host_id=#{policeId,jdbcType=VARCHAR}
+order by a.start_time desc limit 2
+</select>
+<!--各月已约谈人数查询 -->
+  <select id="alarmTalkMonthNumChart" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationChart" >
+select ifnull(b.num,0) as num,a.police_month as name from alarm_police_month a
+left join(select count(*) as num,
+REPLACE(LTRIM(REPLACE(DATE_FORMAT(start_time,'%m'),'0',' ')),' ','0') as months 
+from alarm_talk 
+where host_id=#{hostId} and status=5
+and DATE_FORMAT(start_time,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY DATE_FORMAT(start_time,'%m')) b on b.months=a.id
+where a.id&lt;=REPLACE(LTRIM(REPLACE(DATE_FORMAT(CURDATE(),'%m'),'0',' ')),' ','0')
+order by a.id
+</select>
+  <!--局领导约谈列表时间查询-->
+  <select id="alarmDatePageList" parameterType="com.bayee.political.domain.TimeName" resultMap="timeName">
+select distinct name from
+(select DATE_FORMAT(a.start_time,'%Y-%m-%d') as name from alarm_talk a
+left join user b on b.police_id=a.police_id
+left join department c on c.id=a.department_id
+where a.host_id=#{hostId,jdbcType=VARCHAR}
+<if test="viewType==4">
+and a.status=3 and a.is_receive = 2 and a.content is null
+</if>
+order by a.start_time desc limit #{pageNum},#{pageSize}) as t
+order by name desc
+</select>
+  <!--局领导约谈列表分页查询-->
+  <select id="alarmLeaderTalkPageList" parameterType="com.bayee.political.domain.AlarmTalk" resultMap="BaseResultMap">
+select a.*,DATE_FORMAT(a.start_time,'%Y-%m-%d') as strStartTime,
+b.name as police_name,b.head_image as headImage,c.name as department_name
+from alarm_talk a
+left join user b on b.police_id=a.police_id
+left join department c on c.id=a.department_id
+where a.host_id=#{hostId,jdbcType=VARCHAR}
+<if test="viewType==4">
+and a.status=3 and a.is_receive = 2 and a.content is null
+</if>
+<if test="dateTime!=null and dateTime!=''">
+and a.status=3 and a.is_receive = 2 and a.content is null
+</if>
+order by a.start_time desc limit #{pageNum},#{pageSize}
+</select>
+  <!--局领导约谈列表总数查询-->
+  <select id="alarmLeaderTalkPageCount" resultType="java.lang.Integer">
+select count(*) from
+(select a.*,b.name as police_name,b.head_image as headImage,c.name as department_name
+from alarm_talk a
+left join user b on b.police_id=a.police_id
+left join department c on c.id=a.department_id
+where a.host_id=#{hostId,jdbcType=VARCHAR}
+<if test="viewType==4">
+and a.status=3 and a.is_receive = 2 and a.content is null
+</if>
+<if test="dateTime!=null and dateTime!=''">
+and a.status=3 and a.is_receive = 2 and a.content is null
+</if>) as t
+</select>
+  <!--统计需填写约谈数量-->
+  <select id="alarmTalkFillCount" resultType="java.lang.Integer">
+select ifnull(count(*),0) from alarm_talk where host_id=#{hostId} and status=3 and is_receive=2
+and content is null
+</select>
+  <!--被约谈人约谈列表时间查询-->
+  <select id="alarmObjectDatePageList" parameterType="com.bayee.political.domain.TimeName" resultMap="timeName">
+select distinct name from
+(select DATE_FORMAT(a.start_time,'%Y-%m-%d') as name
+from alarm_talk a
+left join user b on b.police_id=a.host_id
+left join department c on c.id=a.department_id
+left join police_position d on d.id=b.position_id
+where a.police_id=#{policeId,jdbcType=VARCHAR}
+<if test="viewType==4">
+and a.status=3 and a.is_receive = 2 and a.content is not null and a.feedback is null
+</if>
+order by a.start_time desc limit #{pageNum},#{pageSize}) as t
+order by name desc
+</select>
+  <!--被约谈人约谈列表分页查询-->
+  <select id="alarmObjectTalkPageList" parameterType="com.bayee.political.domain.AlarmTalk" resultMap="BaseResultMap">
+select a.*,DATE_FORMAT(a.start_time,'%Y-%m-%d') as strStartTime,
+b.name as hostName,b.head_image as hostHeadImage,c.name as department_name,
+d.position_name as positionName
+from alarm_talk a
+left join user b on b.police_id=a.host_id
+left join department c on c.id=a.department_id
+left join police_position d on d.id=b.position_id
+where a.police_id=#{policeId,jdbcType=VARCHAR}
+<if test="viewType==4">
+and a.status=3 and a.is_receive = 2 and a.content is not null and a.feedback is null
+</if>
+order by a.start_time desc limit #{pageNum},#{pageSize}
+</select>
+  <!--被约谈人约谈列表总数查询-->
+  <select id="alarmObjectTalkPageCount" resultType="java.lang.Integer">
+select count(*) from
+(select a.*,DATE_FORMAT(a.start_time,'%Y-%m-%d') as strStartTime,
+b.name as hostName,b.head_image as hostHeadImage,c.name as department_name,
+d.position_name as positionName
+from alarm_talk a
+left join user b on b.police_id=a.host_id
+left join department c on c.id=a.department_id
+left join police_position d on d.id=b.position_id
+where a.police_id=#{policeId,jdbcType=VARCHAR}
+<if test="viewType==4">
+and a.status=3 and a.is_receive = 2 and a.content is not null and a.feedback is null
+</if>) as t
+</select>
+  <!--统计被约谈人需填写反馈数量-->
+  <select id="alarmObjectTalkFillCount" resultType="java.lang.Integer">
+select ifnull(count(*),0) from alarm_talk where police_id=#{policeId,jdbcType=VARCHAR} and status=3 and is_receive=2
+and content is not null and feedback is null
+</select>
+  <!--查询当前约谈人约谈时间记录-->
+  <select id="newAlarmTalkList" parameterType="com.bayee.political.domain.AlarmTalk" resultMap="BaseResultMap">
+select * from alarm_talk where host_id=#{hostId} and status &lt;4
+order by creation_date desc
+</select>
+<!-- 获得约谈列表/根据条件查询 -->
+<select id="getAlarmTalk" resultMap="BaseResultMap">
+select a.*,b.`name` as police_name,c.`name` as department_name,e.name as host_name 
+from alarm_talk a left join user b on a.police_id = b.police_id
+left join department c on a.department_id = c.id
+left join user e on a.host_id = e.police_id 
+where `status` = 5 
+<if test="alrmTalk.startTime!=null">
+and date(a.start_time) = #{alrmTalk.startTime}
+</if>
+<if test="alrmTalk.departmentId!=null and alrmTalk.departmentId!=''">
+and a.department_id = #{alrmTalk.departmentId}
+</if>
+<if test="keywords!=null and keywords!=''">
+and (a.police_id like "%"#{keywords}"%" or b.`name` like "%"#{keywords}"%" or a.title like "%"#{keywords}"%" 
+or a.content like "%"#{keywords}"%")
+</if>
+<if test="departmentIds!=null and departmentIds!=''">
+and FIND_IN_SET(c.id,#{departmentIds}) 
+</if>
+<if test="pageSize!=null">
+limit #{pageSize},10
+</if>
+</select>
+
+<!-- 获得约谈列表数量 -->
+<select id="getAlarmTalkCount" resultType="java.lang.Integer">
+select count(*) as count from alarm_talk a left join user b on a.police_id = b.police_id
+left join department c on a.department_id = c.id
+where `status` = 5 
+<if test="alrmTalk.startTime!=null">
+and date(a.start_time) = #{alrmTalk.startTime}
+</if>
+<if test="alrmTalk.departmentId!=null and alrmTalk.departmentId!=''">
+and a.department_id = #{alrmTalk.departmentId}
+</if>
+<if test="keywords!=null and keywords!=''">
+and (a.police_id like "%"#{keywords}"%" or b.`name` like "%"#{keywords}"%" or a.title like "%"#{keywords}"%" 
+or a.content like "%"#{keywords}"%")
+</if>
+<if test="departmentIds!=null and departmentIds!=''">
+and FIND_IN_SET(c.id,#{departmentIds}) 
+</if>
+</select>
+<!--领导约谈人数趋势图 -->
+  <select id="alarmLeaderTalkLineChart" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationChart">
+select ifnull(b.num,0) as num,a.police_month as name from alarm_police_month a
+left join(select count(*) as num,
+REPLACE(LTRIM(REPLACE(DATE_FORMAT(creation_date,'%m'),'0',' ')),' ','0') as months 
+from alarm_talk where host_id=#{policeId,jdbcType=VARCHAR}
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY months) b on b.months=a.id
+where a.id&lt;=REPLACE(LTRIM(REPLACE(DATE_FORMAT(CURDATE(),'%m'),'0',' ')),' ','0')
+order by a.id
+</select>
+  <!-- 查询最新约谈详情-->
+  <select id="talkNewItem" parameterType="com.bayee.political.domain.AlarmTalk" resultMap="BaseResultMap">
+select a.*,b.name as policeName,b.head_image as headImage,
+c.name as departmentName,d.position_name as positionName from alarm_talk a
+left join user b on b.police_id=a.police_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+where 1=1 and a.alarm_record_id= #{alarmRecordId}
+and a.police_id=#{policeId} and a.alarm_type = #{alarmType}
+<if test="alarmConfigType ==1">
+and DATE_FORMAT(a.creation_date,'%Y-%m')=#{dateTime} 
+</if>
+<if test="alarmConfigType ==2">
+and DATE_FORMAT(a.creation_date,'%Y')=#{dateTime} 
+</if> 
+order by a.creation_date desc limit 1
+</select>
+  <!-- 查询进行中的约谈-->
+  <select id="talkExistList" parameterType="com.bayee.political.domain.AlarmTalk" resultMap="BaseResultMap">
+select * from alarm_talk where alarm_record_id=#{alarmRecordId} and 
+police_id=#{policeId} and alarm_type=#{alarmType} and status&lt;=3
+</select>
+
+<!-- 最新三条已完成或已发起的约谈 -->
+<select id="newThreeTalk" resultMap="BaseResultMap">
+select a.police_id,b.`name` as police_name,c.name as department_name,a.host_id,d.name as host_name,
+a.status,a.creation_date,a.end_time from alarm_talk a 
+left join user b on a.police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join user d on a.host_id = d.police_id 
+where a.status = 1 or a.status = 5 order by a.creation_date desc limit 0,3
+</select>
+
+</mapper>

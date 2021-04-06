@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.AlarmPoliceMonthMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.AlarmPoliceMonth" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_month" property="policeMonth" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_month, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from alarm_police_month
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from alarm_police_month
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.AlarmPoliceMonth" >
+    insert into alarm_police_month (id, police_month, creation_date, 
+      update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeMonth,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.AlarmPoliceMonth" >
+    insert into alarm_police_month
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeMonth != null" >
+        police_month,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeMonth != null" >
+        #{policeMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.AlarmPoliceMonth" >
+    update alarm_police_month
+    <set >
+      <if test="policeMonth != null" >
+        police_month = #{policeMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.AlarmPoliceMonth" >
+    update alarm_police_month
+    set police_month = #{policeMonth,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 查询所有公安月 -->
+  <select id="getAllMonth" resultMap="BaseResultMap">
+  select * from alarm_police_month
+  </select>
+  
+  <!-- 月度考评预警趋势图 -->
+  <select id="getMonthEvaluationTrendChart" resultMap="BaseResultMap">
+    select a.id,a.police_month,b.count from alarm_police_month a 
+left join (select a.police_month_id,count(distinct a.scored_police_id) as count 
+from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+<if test="target==1">
+and a.score_value &gt; 0 
+</if>
+<if test="target==2">
+and a.score_value &lt; 0 
+</if>
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+group by a.police_month_id) b on a.id = b.police_month_id 
+order by id 
+  </select>
+  
+</mapper>

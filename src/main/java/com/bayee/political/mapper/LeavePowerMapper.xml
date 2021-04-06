@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeavePowerMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeavePower" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="module_id" property="moduleId" jdbcType="INTEGER" />
+    <result column="checker_id" property="checkerId" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="department_object_ids" property="departmentObjectIds" jdbcType="VARCHAR" />
+    <result column="police_object_ids" property="policeObjectIds" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="checker_name" property="checkerName" />
+    <result column="department_name" property="departmentName" />
+    <result column="conditions" property="conditions" jdbcType="INTEGER" />
+    <result column="police_object_ids" property="policeObjectIds" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, module_id,checker_id,department_id,department_object_ids,police_object_ids,conditions, creation_date, update_date
+  </sql>
+  <delete id="deleteLeaveIntegralAuditPower" parameterType="java.lang.Integer" >
+    delete from leave_power
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.LeavePower" >
+    insert into leave_power (module_id,checker_id,department_id,
+    department_object_ids,police_object_ids,conditions, creation_date, update_date
+      )
+    values (#{moduleId,jdbcType=INTEGER}, #{checkerId,jdbcType=VARCHAR},
+      #{departmentId,jdbcType=INTEGER}, #{departmentObjectIds,jdbcType=VARCHAR},
+      #{policeObjectIds,jdbcType=VARCHAR},#{conditions,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateLeaveIntegralAuditPower" parameterType="com.bayee.political.domain.LeavePower" >
+    update leave_power
+    <set >
+    <if test="moduleId != null" >
+        module_id = #{moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="checkerId != null" >
+        checker_id = #{checkerId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentObjectIds != null" >
+        department_object_ids = #{departmentObjectIds,jdbcType=VARCHAR},
+      </if>
+      <if test="policeObjectIds != null" >
+        police_object_ids = #{policeObjectIds,jdbcType=VARCHAR},
+      </if>
+       <if test="conditions != null" >
+        conditions = #{conditions,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 查询积分审核权限或根据条件查询 -->
+  <select id="getLeaveIntegralAuditPowerList" resultMap="BaseResultMap">
+  select a.*,c.name as checker_name,d.name as department_name from leave_power a 
+left join user c on a.checker_id = c.police_id 
+left join department d on a.department_id = d.id 
+where 1 = 1 
+<if test="departmentId!=null and departmentId!=''">
+and a.department_id = #{departmentId}
+</if>
+<if test="keyword!=null and keyword!=''">
+and (a.checker_id like "%"#{keyword}"%" or c.`name` like "%"#{keyword}"%" or find_in_set(#{keyword},a.police_object_ids) 
+or find_in_set((select GROUP_CONCAT(police_id SEPARATOR',') from user where name like "%"#{keyword}"%"),a.police_object_ids))
+</if>
+order by a.creation_date desc
+limit #{pageSize},10 
+  </select>
+  
+  <!-- 查询积分审核权限或根据条件数量 -->
+  <select id="getLeaveIntegralAuditPowerCount" resultType="java.lang.Integer">
+    select count(*) as count from leave_power a 
+left join user c on a.checker_id = c.police_id 
+left join department d on a.department_id = d.id 
+where 1 = 1 
+<if test="departmentId!=null and departmentId!=''">
+and a.department_id = #{departmentId}
+</if>
+<if test="keyword!=null and keyword!=''">
+and (a.checker_id = #{keyword} or c.`name` = #{keyword} or find_in_set(#{keyword},a.police_object_ids) 
+or find_in_set((select GROUP_CONCAT(police_id SEPARATOR',') from user where name = #{keyword}),a.police_object_ids))
+</if>
+  </select>
+  
+  <!-- 添加积分审核权限 -->
+  <insert id="addLeaveIntegralAuditPower" useGeneratedKeys="true" keyProperty="leaveIntegralAuditPower.id"  parameterType="com.bayee.political.domain.LeavePower">
+  insert into leave_power (module_id, checker_id, department_id, department_object_ids,police_object_ids,conditions,creation_date, update_date)
+values (#{leaveIntegralAuditPower.moduleId}, #{leaveIntegralAuditPower.checkerId},
+ #{leaveIntegralAuditPower.departmentId}, #{leaveIntegralAuditPower.departmentObjectIds}, 
+ #{leaveIntegralAuditPower.policeObjectIds}, #{leaveIntegralAuditPower.conditions}, 
+ #{leaveIntegralAuditPower.creationDate}, #{leaveIntegralAuditPower.updateDate})
+  </insert>
+  
+  <!-- 根据id查询积分审核权限 -->
+  <select id="getLeaveIntegralAuditPowerById" resultMap="BaseResultMap">
+  	  select a.*,c.name as checker_name,d.name as department_name from leave_power a 
+left join user c on a.checker_id = c.police_id 
+left join department d on a.department_id = d.id 
+where a.id = #{id}
+  </select>
+  
+  <!-- 查询积分管理中所有的被记分人id -->
+  <select id="getScoredPoliceIds" resultType="java.lang.String">
+  select distinct scored_police_id from leave_integral_manage 
+  </select>
+  
+  <!-- 根据审核权限id及审核对象id查询在审核权限中是否存在 -->
+  <select id="checkIsExist" resultType="java.lang.Integer">
+  select count(*) from leave_power where id = #{id}
+and FIND_IN_SET(#{policeId}, police_object_ids)
+  </select>
+  
+  <!-- 根据兑换单位id及审核人id查询是否已创建审核权限 -->
+  <select id="isExist" resultType="java.lang.Integer">
+  select count(*) from leave_power where department_id = #{departmentId} 
+  and checker_id = #{policeId} and module_id = #{moduleId} 
+  </select>
+  <!-- 根据当前用户查询审核人 -->
+     <select id="leavePowerItem" parameterType="com.bayee.political.domain.LeavePower" resultMap="BaseResultMap" >
+SELECT * FROM leave_power where FIND_IN_SET(#{policeId}, police_object_ids) limit 1
+  </select>
+  <!-- AI休假查询当前民警所属领导 -->
+   <select id="LeavePowerPoliceList" parameterType="com.bayee.political.domain.LeavePower" resultMap="BaseResultMap" >
+select * from leave_power where module_id=2 and 
+find_in_set(#{policeId},police_object_ids) > 0
+  </select>
+</mapper>

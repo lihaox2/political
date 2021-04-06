@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeaveCompensatoryRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeaveCompensatoryRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    
+    <result column="police_name" property="policeName" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="position_name" property="positionName" jdbcType="VARCHAR" />
+    <result column="approved_name" property="approvedName" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="INTEGER" />
+    
+    <result column="position_id" property="positionId" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="approved_id" property="approvedId" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="result" property="result" jdbcType="VARCHAR" />
+    <result column="approved_result" property="approvedResult" jdbcType="VARCHAR" />
+    <result column="is_rest" property="isRest" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="read_status" property="readStatus" jdbcType="INTEGER" />
+    <result column="approved_read_status" property="approvedReadStatus" jdbcType="INTEGER" />
+    <result column="deal_time" property="dealTime" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, item_id,type, police_id, department_id, position_id, start_time, end_time, approved_id, 
+    remarks,result,approved_result,is_rest, status,read_status,approved_read_status,
+    deal_time, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leave_compensatory_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from leave_compensatory_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 调休记录新增 -->
+  <insert id="leaveCompensatoryRecordCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" useGeneratedKeys="true">
+    insert into leave_compensatory_record (item_id,type, police_id, 
+      department_id, position_id, start_time, 
+      end_time, approved_id, remarks,result,approved_result, 
+      is_rest,status,read_status,approved_read_status,deal_time, creation_date, update_date
+      )
+    values (#{itemId,jdbcType=INTEGER},#{type,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
+      #{departmentId,jdbcType=INTEGER}, #{positionId,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{approvedId,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR},
+      #{result,jdbcType=VARCHAR}, #{approvedResult,jdbcType=VARCHAR}, 
+      #{isRest,jdbcType=INTEGER},#{status,jdbcType=INTEGER}, 
+      #{readStatus,jdbcType=INTEGER},#{approvedReadStatus,jdbcType=INTEGER},
+      #{dealTime,jdbcType=TIMESTAMP},
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 调休记录修改 -->
+  <update id="leaveCompensatoryRecordUpdate" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" >
+    update leave_compensatory_record
+    <set >
+     <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null" >
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      <if test="approvedId != null" >
+        approved_id = #{approvedId,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="approvedResult != null" >
+        approved_result = #{approvedResult,jdbcType=VARCHAR},
+      </if>
+      <if test="isRest != null" >
+        is_rest = #{isRest,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="readStatus != null" >
+        read_status = #{readStatus,jdbcType=INTEGER},
+      </if>
+      <if test="approvedReadStatus != null" >
+        approved_read_status = #{approvedReadStatus,jdbcType=INTEGER},
+      </if>
+      <if test="dealTime != null" >
+        deal_time = #{dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <!-- 调休人读取状态修改 -->
+  <update id="leaveReadUpdate" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" >
+    update leave_compensatory_record
+    <set >
+      <if test="readStatus != null" >
+        read_status = #{readStatus,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER} and type = #{type,jdbcType=INTEGER} and police_id = #{policeId,jdbcType=VARCHAR} 
+  </update>
+     <!-- 审批人读取状态修改 -->
+  <update id="leaveApprovedReadUpdate" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" >
+    update leave_compensatory_record
+    <set >
+      <if test="readStatus != null" >
+        read_status = #{readStatus,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER} and type = #{type,jdbcType=INTEGER} and approved_id = #{approvedId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" >
+    update leave_compensatory_record
+    set type = #{type,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      position_id = #{positionId,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      approved_id = #{approvedId,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      result = #{result,jdbcType=VARCHAR},
+      approved_result = #{approvedResult,jdbcType=VARCHAR},
+      is_rest = #{isRest,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 个人最新调休记录查询 -->
+    <select id="leaveCompensatoryRecordNewestList" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" resultMap="BaseResultMap" >
+select a.*,b.name as approvedName,b.head_image as approvedHeadImage,c.name as approvedDepartmentName,
+d.position_name as approvedPositionName,TIMESTAMPDIFF(MINUTE,a.creation_date,SYSDATE()) as timeChange
+from leave_compensatory_record a
+left join user b on b.police_id=a.approved_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+where a.police_id=#{policeId}
+   <if test="readStatus == 0">
+		and a.read_status = 0
+	</if>
+	<if test="readStatus == 1">
+		and a.read_status = 1
+	</if>
+order by a.id desc limit 1
+  </select>
+   <!-- 个人调休记录查询 -->
+    <select id="leaveCompensatoryRecordList" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" resultMap="BaseResultMap" >
+select a.*,b.name as approvedName,b.head_image as approvedHeadImage,c.name as approvedDepartmentName,
+d.position_name as approvedPositionName,TIMESTAMPDIFF(MINUTE,a.creation_date,SYSDATE()) as timeChange
+from leave_compensatory_record a
+left join user b on b.police_id=a.approved_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+where 1=1 and a.police_id=#{policeId}
+    <if test="type != null and type != '' ">
+		and a.type = #{type}
+	</if>
+	<if test="dateTime != null and dateTime != '' ">
+		and DATE_FORMAT(a.creation_date,'%Y-%m') = #{dateTime}
+	</if>
+	<if test="readStatus == 0">
+		and a.read_status = 0
+	</if>
+	<if test="readStatus == 1">
+		and a.read_status = 1
+	</if>
+order by a.id desc limit #{pageNum},#{pageSize}
+  </select>
+  <!-- 个人调休记录总数统计 -->
+    <select id="leaveCompensatoryRecordCount" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" resultType="java.lang.Integer">
+select count(*) from(select a.*,b.name as approvedName,b.head_image as approvedHeadImage,c.name as approvedDepartmentName,
+d.position_name as approvedPositionName,TIMESTAMPDIFF(MINUTE,a.creation_date,SYSDATE()) as timeChange
+from leave_compensatory_record a
+left join user b on b.police_id=a.approved_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+where 1=1 and a.police_id=#{policeId}
+    <if test="type != null and type != '' ">
+		and a.type = #{type}
+	</if>
+	<if test="dateTime != null and dateTime != '' ">
+		and DATE_FORMAT(a.creation_date,'%Y-%m') = #{dateTime}
+	</if>
+	<if test="readStatus == 0">
+		and a.read_status = 0
+	</if>
+	<if test="readStatus == 1">
+		and a.read_status = 1
+	</if>) as t
+</select>
+   <!-- 个人调休记录详情查询 -->
+    <select id="leaveCompensatoryRecordItem" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" resultMap="BaseResultMap" >
+select a.*,TIMESTAMPDIFF(MINUTE, a.start_time,a.end_time) as timeChange,
+b.name as approvedName,b.head_image as approvedHeadImage,c.name as approvedDepartmentName,
+d.position_name as approvedPositionName,e.name as policeName,e.head_image as headHmage,f.name as departmentName,
+g.position_name as positionName
+from leave_compensatory_record a
+left join user b on b.police_id=a.approved_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+left join user e on e.police_id=a.police_id
+left join department f on f.id=a.department_id
+left join police_position g on g.id=a.position_id
+where 1=1 and a.id=#{id}
+  </select>
+  <!-- 完成事项总数统计 -->
+      <select id="leaveLeaderNeedDealtNewestCount" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" resultType="java.lang.Integer">
+select count(*) from leave_power a
+left join
+(select * from leave_compensatory_record 
+where status=2 or status=3) b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.police_id=#{policeId}
+</select>
+   <!-- 待办事项查询(2条) -->
+    <select id="leaveLeaderNeedDealtNewestList" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" resultMap="BaseResultMap" >
+select b.*,TIMESTAMPDIFF(MINUTE, b.creation_date,SYSDATE()) as timeChange from leave_power a
+left join(select a.*,b.name as approvedName,b.head_image as approvedHeadImage,c.name as approvedDepartmentName,
+d.position_name as approvedPositionName,e.name as policeName,e.head_image as headHmage,f.name as departmentName,
+g.position_name as positionName
+from leave_compensatory_record a
+left join user b on b.police_id=a.approved_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+left join user e on e.police_id=a.police_id
+left join department f on f.id=a.department_id
+left join police_position g on g.id=a.position_id
+where a.status=1) b on find_in_set(b.police_id,a.police_object_ids) > 0 
+where a.police_id=#{policeId}
+order by b.id desc limit 2
+  </select>
+     <!-- 待办事项分页查询 -->
+    <select id="leaveLeaderNeedDealtList" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" resultMap="BaseResultMap" >
+select b.*,TIMESTAMPDIFF(MINUTE, b.creation_date,SYSDATE()) as timeChange from leave_power a
+left join(select a.*,b.name as approvedName,b.head_image as approvedHeadImage,c.name as approvedDepartmentName,
+d.position_name as approvedPositionName,e.name as policeName,e.head_image as headHmage,f.name as departmentName,
+g.position_name as positionName
+from leave_compensatory_record a
+left join user b on b.police_id=a.approved_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+left join user e on e.police_id=a.police_id
+left join department f on f.id=a.department_id
+left join police_position g on g.id=a.position_id
+where a.status=1) b on find_in_set(b.police_id,a.police_object_ids) > 0 
+where 1=1 and a.police_id=#{policeId}
+<if test="type != null and type != '' ">
+		and b.type = #{type}
+	</if>
+	<if test="dateTime != null and dateTime != '' ">
+		and DATE_FORMAT(b.creation_date,'%Y-%m') = #{dateTime}
+	</if>
+order by b.id desc limit #{pageNum},#{pageSize}
+  </select>
+  <!-- 待办事项总数统计 -->
+  <select id="leaveLeaderNeedDealtCount" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" resultType="java.lang.Integer">
+select count(*) from(select b.* from leave_power a
+left join(select a.*,b.name as approvedName,b.head_image as approvedHeadImage,c.name as approvedDepartmentName,
+d.position_name as approvedPositionName,e.name as policeName,e.head_image as headHmage,f.name as departmentName,
+g.position_name as positionName
+from leave_compensatory_record a
+left join user b on b.police_id=a.approved_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+left join user e on e.police_id=a.police_id
+left join department f on f.id=a.department_id
+left join police_position g on g.id=a.position_id
+where a.status=1) b on find_in_set(b.police_id,a.police_object_ids) > 0 
+where 1=1 and a.police_id=#{policeId}
+<if test="type != null and type != '' ">
+		and b.type = #{type}
+	</if>
+	<if test="dateTime != null and dateTime != '' ">
+		and DATE_FORMAT(b.creation_date,'%Y-%m') = #{dateTime}
+	</if>) as t
+</select>
+     <!-- 已办事项分页查询 -->
+    <select id="leaveLeaderOverDealtList" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" resultMap="BaseResultMap" >
+select a.*,TIMESTAMPDIFF(MINUTE, a.creation_date,SYSDATE()) as timeChange,b.name as approvedName,b.head_image as approvedHeadImage,c.name as approvedDepartmentName,
+d.position_name as approvedPositionName,e.name as policeName,e.head_image as headHmage,f.name as departmentName,
+g.position_name as positionName,a.creation_date as creationDateStr
+from leave_compensatory_record a
+left join user b on b.police_id=a.approved_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+left join user e on e.police_id=a.police_id
+left join department f on f.id=a.department_id
+left join police_position g on g.id=a.position_id
+where 1=1 and a.approved_id=#{policeId} and a.status!=1
+    <if test="type != null and type != '' ">
+		and a.type = #{type}
+	</if>
+	<if test="dateTime != null and dateTime != '' ">
+		and DATE_FORMAT(a.creation_date,'%Y-%m') = #{dateTime}
+	</if>
+order by a.id desc limit #{pageNum},#{pageSize}
+  </select>
+  <!-- 已办事项总数统计 -->
+  <select id="leaveLeaderOverDealtCount" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" resultType="java.lang.Integer">
+select count(*) from(select a.*,b.name as approvedName,b.head_image as approvedHeadImage,c.name as approvedDepartmentName,
+d.position_name as approvedPositionName,e.name as policeName,e.head_image as headHmage,f.name as departmentName,
+g.position_name as positionName
+from leave_compensatory_record a
+left join user b on b.police_id=a.approved_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+left join user e on e.police_id=a.police_id
+left join department f on f.id=a.department_id
+left join police_position g on g.id=a.position_id
+where 1=1 and a.approved_id=#{policeId} and a.status!=1
+    <if test="type != null and type != '' ">
+		and a.type = #{type}
+	</if>
+	<if test="dateTime != null and dateTime != '' ">
+		and DATE_FORMAT(a.creation_date,'%Y-%m') = #{dateTime}
+	</if>) as t
+</select>
+     <!-- 调休记录列表查询(定时任务修改调休记录状态进程) -->
+    <select id="leaveCompensatoryRecordStatusList" parameterType="com.bayee.political.domain.LeaveCompensatoryRecord" resultMap="BaseResultMap" >
+select * from leave_compensatory_record where is_rest=1 and status=1 and SYSDATE()>start_time
+  </select>
+  
+  <!-- 获得调休记录 -->
+  <select id="getLeaveCompensatoryRecord" resultMap="BaseResultMap">
+  select a.*,c.name as approved_name, b.name as police_name, e.position_name, d.name as department_name, b.gender from leave_compensatory_record a 
+left join user b on a.police_id = b.police_id 
+left join user c on approved_id = c.police_id
+left join department d on a.department_id = d.id 
+left join police_position e on a.position_id = e.id
+where 1 = 1 
+<if test="departmentId!=null">
+and a.department_id = #{departmentId}
+</if>
+<if test="positionId!=null">
+and a.position_id = #{positionId}
+</if>
+<if test="keyword!=null">
+and (a.police_id like "%"#{keyword}"%" or b.name  like "%"#{keyword}"%" or a.approved_id  like "%"#{keyword}"%" or c.name  like "%"#{keyword}"%")
+</if>
+limit #{pageSize},10
+  </select>
+  
+  <!-- 获得调休记录数量 -->
+  <select id="getLeaveCompensatoryRecordCount" resultType="java.lang.Integer">
+    select count(*) as count from leave_compensatory_record a 
+left join user b on a.police_id = b.police_id 
+left join user c on approved_id = c.police_id
+left join department d on a.department_id = d.id 
+left join police_position e on a.position_id = e.id
+where 1 = 1 
+<if test="departmentId!=null">
+and a.department_id = #{departmentId}
+</if>
+<if test="positionId!=null">
+and a.position_id = #{positionId}
+</if>
+<if test="keyword!=null">
+and (a.police_id like "%"#{keyword}"%" or b.name  like "%"#{keyword}"%" or a.approved_id  like "%"#{keyword}"%" or c.name  like "%"#{keyword}"%")
+</if>
+  </select>
+  
+  <!-- 根据id查询调休详情 -->
+  <select id="getLeaveCompensatoryRecordOne" resultMap="BaseResultMap">
+  select a.*,c.name as approved_name, b.name as police_name, e.position_name, d.name as department_name, b.gender from leave_compensatory_record a 
+left join user b on a.police_id = b.police_id 
+left join user c on approved_id = c.police_id
+left join department d on a.department_id = d.id 
+left join police_position e on a.position_id = e.id
+where a.id = #{id} 
+  </select>
+  
+</mapper>

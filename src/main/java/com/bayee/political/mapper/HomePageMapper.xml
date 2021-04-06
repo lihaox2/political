@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.HomePageMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.HomePageModularStatistics" >
+    <result column="workPoliceNum" property="workPoliceNum" />
+    <result column="onDutyPoliceNum" property="onDutyPoliceNum" />
+    <result column="askForLeavePoliceNum" property="askForLeavePoliceNum" />
+    <result column="leavePoliceNum" property="leavePoliceNum" />
+    <result column="trainNum" property="trainNum" />
+    <result column="trainPoliceNum" property="trainPoliceNum" />
+    <result column="trainPassNum" property="trainPassNum" />
+    <result column="trainFailNum" property="trainFailNum" />
+    <result column="alarmNum" property="alarmNum" />
+    <result column="alarmCheckNum" property="alarmCheckNum" />
+    <result column="alarmEntryAndExitNum" property="alarmEntryAndExitNum" />
+    <result column="alarmTalkNum" property="alarmTalkNum" />
+    <result column="matchOngoingNum" property="matchOngoingNum" />
+    <result column="matchJoinNum" property="matchJoinNum" />
+    <result column="matchDepNum" property="matchDepNum" />
+    <result column="matchBranchOfficeNum" property="matchBranchOfficeNum" />
+  </resultMap>
+    <resultMap id="PersonalMap" type="com.bayee.political.domain.HomePageModularPersonalStatistics" >
+    <result column="attendanceDays" property="attendanceDays" />
+    <result column="leaveDays" property="leaveDays" />
+    <result column="overtimeHours" property="overtimeHours" />
+    <result column="trainNum" property="trainNum" />
+    <result column="trainPhysicalNum" property="trainPhysicalNum" />
+    <result column="trainFirearmNum" property="trainFirearmNum" />
+    <result column="trainPassNum" property="trainPassNum" />
+    <result column="trainFailNum" property="trainFailNum" />
+    <result column="matchNum" property="matchNum" />
+    <result column="matchBranchOfficeNum" property="matchBranchOfficeNum" />
+    <result column="matchDepNum" property="matchDepNum" />
+    <result column="alarmCheckNum" property="alarmCheckNum" />
+    <result column="alarmEntryAndExitNum" property="alarmEntryAndExitNum" />
+    <result column="alarmTalkNum" property="alarmTalkNum" />
+    <result column="evaluateNum" property="evaluateNum" />
+    <result column="evaluatePersonalNum" property="evaluatePersonalNum" />
+    <result column="evaluateDepNum" property="evaluateDepNum" />
+    <result column="evaluateProjectNum" property="evaluateProjectNum" />
+  </resultMap>
+  <!-- 今日出勤统计 -->
+   <select id="todayWorkItem" parameterType="com.bayee.political.domain.HomePageModularStatistics" resultMap="BaseResultMap">
+select 
+ifnull(a.anum,0) as workPoliceNum,
+ifnull(b.bnum,0) as onDutyPoliceNum,
+ifnull(c.cnum,0) as askForLeavePoliceNum,
+ifnull(d.dnum,0) as leavePoliceNum
+from 
+(select count(distinct user_id) as anum from clock_record where user_check_time is not null 
+and DATE_FORMAT(user_check_time,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')) a
+join
+(select count(distinct user_id) as bnum from clock_record where user_check_time is not null 
+and location_result='Outside'
+and DATE_FORMAT(user_check_time,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')) b
+join
+(select count(*) as cnum from leave_process a
+left join user b on b.dd_user_id=a.originator_user_id
+where DATE_FORMAT(a.leave_start_date,'%Y-%m-%d')&lt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and DATE_FORMAT(a.leave_end_date,'%Y-%m-%d')&gt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and a.leave_type='事假' and b.police_id is not null) c
+join
+(select count(*) as dnum from leave_process a
+left join user b on b.dd_user_id=a.originator_user_id
+where DATE_FORMAT(a.leave_start_date,'%Y-%m-%d')&lt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and DATE_FORMAT(a.leave_end_date,'%Y-%m-%d')&gt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and a.leave_type='离杭' and b.police_id is not null) d
+</select>
+ <!-- 今日训练统计 -->
+   <select id="todayTrainItem" parameterType="com.bayee.political.domain.HomePageModularStatistics" resultMap="BaseResultMap">
+select 
+ifnull(a.anum+b.bnum,0) as trainNum,
+ifnull(c.cnum,0) as trainPoliceNum,
+ifnull(d.dnum,0) as trainPassNum,
+ifnull(c.cnum-d.dnum,0) as trainFailNum
+from 
+(select count(*) as anum from train_physical where status=2) a
+join
+(select count(*) as bnum from train_firearm where status=2) b
+join
+(select count(*) as cnum from(
+select police_id from train_physical_achievement_details 
+where DATE_FORMAT(sign_date,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')
+union
+select police_id from train_firearm_achievement 
+where DATE_FORMAT(sign_date,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')) c) c
+join
+(select count(*) as dnum from(
+select police_id from train_physical_achievement 
+where DATE_FORMAT(achievement_date,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and achievement_grade=2
+union
+select police_id from train_firearm_achievement 
+where DATE_FORMAT(achievement_date,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and achievement_grade&gt;=2)e) d
+</select>
+ <!-- 今日预警统计 -->
+   <select id="todayAlarmItem" parameterType="com.bayee.political.domain.HomePageModularStatistics" resultMap="BaseResultMap">
+select 
+ifnull(a.anum+b.bnum,0) as alarmNum,
+ifnull(a.anum,0) as alarmCheckNum,
+ifnull(b.bnum,0) as alarmEntryAndExitNum,
+ifnull(c.cnum,0) as alarmTalkNum
+from 
+(select count(*) as anum from alarm_record 
+where DATE_FORMAT(finish_alarm_time,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')) a
+join
+(select count(*) as bnum from alarm_entry_and_exit_record 
+where DATE_FORMAT(creation_date,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and is_return=0) b
+join
+(select count(distinct police_id) as cnum from alarm_talk 
+where DATE_FORMAT(start_time,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')) c
+</select>
+ <!-- 今日赛事统计 -->
+   <select id="todayMatchItem" parameterType="com.bayee.political.domain.HomePageModularStatistics" resultMap="BaseResultMap">
+select 
+ifnull(a.anum,0) as matchOngoingNum,
+ifnull(b.bnum,0) as matchJoinNum,
+ifnull(c.cnum,0) as matchDepNum,
+ifnull(d.dnum,0) as matchBranchOfficeNum
+from 
+(select count(*) as anum from train_match where status=2) a
+join
+(select count(distinct police_id) as bnum from train_match_achievement 
+where DATE_FORMAT(sign_date,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')) b
+join
+(select count(*) as cnum from train_match where status=2 and type=1) c
+join
+(select count(*) as dnum from train_match where status=2 and type=2) d
+</select>
+
+ <!-- 我的考勤 -->
+ <select id="myAttendanceItem" parameterType="com.bayee.political.domain.HomePageModularPersonalStatistics" resultMap="PersonalMap">
+select 
+ifnull(a.anum,0) as attendanceDays,
+ifnull(b.bnum,0) as leaveDays,
+ifnull(c.cnum,0) as overtimeHours
+from 
+(select count(*) as anum from(
+select count(*),DATE_FORMAT(work_date,'%Y-%m-%d') from clock_record a
+left join user b on b.dd_user_id=a.user_id where b.police_id=#{policeId}
+and DATE_FORMAT(work_date,'%Y')=DATE_FORMAT(curdate(),'%Y')
+GROUP BY DATE_FORMAT(work_date,'%Y-%m-%d')) a) a
+join
+(select sum(leave_duaration_days) as bnum from leave_process a
+left join user b on b.dd_user_id=a.originator_user_id
+where a.result='agree' and b.police_id=#{policeId}
+and DATE_FORMAT(create_time,'%Y')=DATE_FORMAT(curdate(),'%Y')) b
+join
+(select sum(total_overtime) as cnum from leave_overtime 
+where police_id=#{policeId} and year=DATE_FORMAT(curdate(),'%Y')) c
+</select>
+ <!-- 我的训练 -->
+   <select id="myTrainItem" parameterType="com.bayee.political.domain.HomePageModularPersonalStatistics" resultMap="PersonalMap">
+select 
+ifnull(a.anum+b.bnum,0) as trainNum,
+ifnull(a.anum,0) as trainPhysicalNum,
+ifnull(b.bnum,0) as trainFirearmNum,
+ifnull(c.cnum+d.dnum,0) as trainPassNum,
+ifnull(e.enum+f.fnum,0) as trainFailNum
+from
+(select count(*) as anum from train_physical_achievement where police_id=#{policeId}
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) a
+join
+(select count(*) as bnum from train_firearm_achievement where police_id=#{policeId}
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) b
+join
+(select count(*) as cnum from train_physical_achievement 
+where police_id=#{policeId} and achievement_grade=2
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) c
+join
+(select count(*) as dnum from train_firearm_achievement 
+where police_id=#{policeId} and achievement_grade&gt;=2
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) d
+join
+(select count(*) as enum from train_physical_achievement 
+where police_id=#{policeId} and achievement_grade=1
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) e
+join
+(select count(*) as fnum from train_firearm_achievement 
+where police_id=#{policeId} and achievement_grade=1
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) f
+</select>
+ <!-- 我的赛事 -->
+   <select id="myMatchItem" parameterType="com.bayee.political.domain.HomePageModularPersonalStatistics" resultMap="PersonalMap">
+select 
+ifnull(a.anum,0) as matchNum,
+ifnull(b.bnum,0) as matchBranchOfficeNum,
+ifnull(c.cnum,0) as matchDepNum
+from
+(select count(*) as anum from train_match_achievement where police_id=#{policeId}
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) a
+join
+(select count(*) as bnum from train_match_achievement a
+left join train_match b on b.id=a.train_match_id
+where a.police_id=#{policeId} and b.type=2
+and DATE_FORMAT(a.creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) b
+join
+(select count(*) as cnum from train_match_achievement a
+left join train_match b on b.id=a.train_match_id
+where a.police_id=#{policeId} and b.type=1
+and DATE_FORMAT(a.creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) c
+</select>
+ <!--我的预警 -->
+<select id="myAlarmItem" parameterType="com.bayee.political.domain.HomePageModularPersonalStatistics" resultMap="PersonalMap">
+select 
+ifnull(a.anum,0) as alarmCheckNum,
+ifnull(b.bnum,0) as alarmEntryAndExitNum,
+ifnull(c.cnum,0) as alarmTalkNum
+from
+(select count(*) as anum from alarm_record where police_id=#{policeId}
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) a
+join
+(select count(*) as bnum from alarm_entry_and_exit_record where police_id=#{policeId}
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) b
+join
+(select count(*) as cnum from alarm_talk where police_id=#{policeId}
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) c
+</select>
+ <!-- 我的评价任务 -->
+   <select id="myEvaluateItem" parameterType="com.bayee.political.domain.HomePageModularPersonalStatistics" resultMap="PersonalMap">
+select 
+ifnull(a.anum,0) as evaluateNum,
+ifnull(b.bnum,0) as evaluatePersonalNum,
+ifnull(c.cnum,0) as evaluateDepNum,
+ifnull(d.dnum,0) as evaluateProjectNum
+from
+(select count(DISTINCT a.task_id) as anum from evaluate_task_participant a
+left join evaluate_task b on b.id=a.task_id
+where a.police_id=#{policeId}
+and DATE_FORMAT(b.creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) a
+join
+(select count(DISTINCT a.task_id) as bnum from evaluate_task_participant a
+left join evaluate_task b on b.id=a.task_id
+where a.police_id=#{policeId} and b.type=1
+and DATE_FORMAT(b.creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) b
+join
+(select count(DISTINCT a.task_id) as cnum from evaluate_task_participant a
+left join evaluate_task b on b.id=a.task_id
+where a.police_id=#{policeId} and b.type=2
+and DATE_FORMAT(b.creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) c
+join
+(select count(DISTINCT a.task_id) as dnum from evaluate_task_participant a
+left join evaluate_task b on b.id=a.task_id
+where a.police_id=#{policeId} and b.type=3
+and DATE_FORMAT(b.creation_date,'%Y')=DATE_FORMAT(curdate(),'%Y')) d
+</select>
+</mapper>

@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainMatchMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainMatch" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="match_type_id" property="matchTypeId" jdbcType="INTEGER" />
+    <result column="matchTypeName" property="matchTypeName" jdbcType="VARCHAR" />
+    <result column="nature" property="nature" jdbcType="INTEGER" />
+    <result column="place" property="place" jdbcType="VARCHAR" />
+    <result column="registration_start_date" property="registrationStartDate" jdbcType="TIMESTAMP" />
+    <result column="registration_end_date" property="registrationEndDate" jdbcType="TIMESTAMP" />
+    <result column="match_start_date" property="matchStartDate" jdbcType="TIMESTAMP" />
+    <result column="match_end_date" property="matchEndDate" jdbcType="TIMESTAMP" />
+    <result column="sign_up_status" property="signUpStatus" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="scorer_police_id" property="scorerPoliceId" jdbcType="VARCHAR" />
+    <result column="limit_people_num" property="limitPeopleNum" jdbcType="INTEGER" />
+    <result column="max_people_num" property="maxPeopleNum" jdbcType="INTEGER" />
+    <result column="cover_img" property="coverImg" jdbcType="VARCHAR" />
+    <result column="match_content" property="matchContent" jdbcType="VARCHAR" />
+    <result column="train_img" property="trainImg" jdbcType="VARCHAR" />
+    <result column="is_submit" property="isSubmit" jdbcType="INTEGER" />
+    <result column="submit_date" property="submitDate" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="match_type_name" property="matchTypeName" jdbcType="VARCHAR" />
+    <result column="police_name" property="policeName" jdbcType="VARCHAR" />
+    <result column="total_min_num" property="totalMinNum" jdbcType="INTEGER" />
+    <result column="total_max_num" property="totalMaxNum" jdbcType="INTEGER" />
+    <result column="man_min_num" property="manMinNum" jdbcType="INTEGER" />
+    <result column="man_max_num" property="manMaxNum" jdbcType="INTEGER" />
+    <result column="woman_min_num" property="womanMinNum" jdbcType="INTEGER" />
+    <result column="woman_max_num" property="womanMaxNum" jdbcType="INTEGER" />
+    <result column="match_project_id" property="matchProjectId" jdbcType="INTEGER" />
+    <result column="match_project_name" property="matchProjectName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="RecordScoreMap" type="com.bayee.political.domain.MatchRecordScore" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="proportion" property="proportion" jdbcType="DOUBLE" />
+    <result column="match_start_date" property="matchStartDate" jdbcType="TIMESTAMP" />
+    <result column="match_end_date" property="matchEndDate" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteTrainMatch" parameterType="java.lang.Integer" >
+    delete from train_match
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 赛事新增 -->
+  <insert id="trainMatchCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.TrainMatch" useGeneratedKeys="true">
+    insert into train_match (name,type,department_id, match_type_id, match_project_id, 
+      nature, place, registration_start_date, 
+      registration_end_date, match_start_date, 
+      match_end_date,sign_up_status,
+      status, scorer_police_id, 
+      limit_people_num, max_people_num, total_max_num, man_max_num, woman_max_num, cover_img, 
+      train_img,is_submit,submit_date, creation_date, update_date, 
+      match_content)
+    values (#{name,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},#{departmentId,jdbcType=INTEGER}, #{matchTypeId,jdbcType=INTEGER}, 
+      #{matchProjectId,jdbcType=INTEGER},#{nature,jdbcType=INTEGER}, #{place,jdbcType=VARCHAR}, #{registrationStartDate,jdbcType=TIMESTAMP}, 
+      #{registrationEndDate,jdbcType=TIMESTAMP}, #{matchStartDate,jdbcType=TIMESTAMP}, 
+      #{matchEndDate,jdbcType=TIMESTAMP},
+      #{signUpStatus,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{scorerPoliceId,jdbcType=VARCHAR}, 
+      #{limitPeopleNum,jdbcType=INTEGER}, #{maxPeopleNum,jdbcType=INTEGER}, 
+      #{totalMaxNum,jdbcType=INTEGER}, #{manMaxNum,jdbcType=INTEGER}, 
+      #{womanMaxNum,jdbcType=INTEGER}, #{coverImg,jdbcType=VARCHAR}, 
+      #{trainImg,jdbcType=VARCHAR}, #{isSubmit,jdbcType=INTEGER},
+      #{submitDate,jdbcType=TIMESTAMP},
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{matchContent,jdbcType=VARCHAR})
+  </insert>
+  <!-- 赛事修改 -->
+  <update id="trainMatchUpdate" parameterType="com.bayee.political.domain.TrainMatch" >
+    update train_match
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="matchTypeId != null" >
+        match_type_id = #{matchTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="matchProjectId != null" >
+        match_project_id = #{matchProjectId,jdbcType=INTEGER},
+      </if>
+      <if test="nature != null" >
+        nature = #{nature,jdbcType=INTEGER},
+      </if>
+      <if test="place != null" >
+        place = #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationStartDate != null" >
+        registration_start_date = #{registrationStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registrationEndDate != null" >
+        registration_end_date = #{registrationEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="matchStartDate != null" >
+        match_start_date = #{matchStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="matchEndDate != null" >
+        match_end_date = #{matchEndDate,jdbcType=TIMESTAMP},
+      </if>
+       <if test="signUpStatus != null" >
+        sign_up_status = #{signUpStatus,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="scorerPoliceId != null" >
+        scorer_police_id = #{scorerPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="limitPeopleNum != null" >
+        limit_people_num = #{limitPeopleNum,jdbcType=INTEGER},
+      </if>
+      <if test="totalMaxNum != null" >
+        total_max_num = #{totalMaxNum,jdbcType=INTEGER},
+      </if>
+      <if test="manMaxNum != null" >
+        man_max_num = #{manMaxNum,jdbcType=INTEGER},
+      </if>
+      <if test="womanMaxNum != null" >
+        woman_max_num = #{womanMaxNum,jdbcType=INTEGER},
+      </if>
+      <if test="maxPeopleNum != null" >
+       max_people_num = #{maxPeopleNum,jdbcType=INTEGER},
+      </if>
+      <if test="coverImg != null" >
+        cover_img = #{coverImg,jdbcType=VARCHAR},
+      </if>
+      <if test="matchContent != null" >
+        match_content = #{matchContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="trainImg != null" >
+        train_img = #{trainImg,jdbcType=VARCHAR},
+      </if>
+      <if test="isSubmit != null" >
+        is_submit = #{isSubmit,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitDate != null" >
+        submit_date = #{submitDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 赛事修改特殊 -->
+  <update id="trainMatchUpdateSpecial" parameterType="com.bayee.political.domain.TrainMatch" >
+    update train_match
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="matchTypeId != null" >
+        match_type_id = #{matchTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="matchProjectId != null" >
+        match_project_id = #{matchProjectId,jdbcType=INTEGER},
+      </if>
+      <if test="nature != null" >
+        nature = #{nature,jdbcType=INTEGER},
+      </if>
+      <if test="place != null" >
+        place = #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationStartDate != null" >
+        registration_start_date = #{registrationStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registrationEndDate != null" >
+        registration_end_date = #{registrationEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="matchStartDate != null" >
+        match_start_date = #{matchStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="matchEndDate != null" >
+        match_end_date = #{matchEndDate,jdbcType=TIMESTAMP},
+      </if>
+       <if test="signUpStatus != null" >
+        sign_up_status = #{signUpStatus,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="scorerPoliceId != null" >
+        scorer_police_id = #{scorerPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="limitPeopleNum != null" >
+        limit_people_num = #{limitPeopleNum,jdbcType=INTEGER},
+      </if>
+      
+      <if test="totalMaxNum != null" >
+        total_max_num = #{totalMaxNum,jdbcType=INTEGER},
+      </if>
+      <if test="manMaxNum != null" >
+        man_max_num = #{manMaxNum,jdbcType=INTEGER},
+      </if>
+      <if test="womanMaxNum != null" >
+        woman_max_num = #{womanMaxNum,jdbcType=INTEGER},
+      </if>
+      max_people_num = #{maxPeopleNum,jdbcType=INTEGER},
+      <if test="coverImg != null" >
+        cover_img = #{coverImg,jdbcType=VARCHAR},
+      </if>
+      <if test="matchContent != null" >
+        match_content = #{matchContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="trainImg != null" >
+        train_img = #{trainImg,jdbcType=VARCHAR},
+      </if>
+      <if test="isSubmit != null" >
+        is_submit = #{isSubmit,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainMatch" >
+    update train_match
+    set name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      match_type_id = #{matchTypeId,jdbcType=INTEGER},
+      nature = #{nature,jdbcType=INTEGER},
+      place = #{place,jdbcType=VARCHAR},
+      registration_start_date = #{registrationStartDate,jdbcType=TIMESTAMP},
+      registration_end_date = #{registrationEndDate,jdbcType=TIMESTAMP},
+      match_start_date = #{matchStartDate,jdbcType=TIMESTAMP},
+      match_end_date = #{matchEndDate,jdbcType=TIMESTAMP},
+      sign_up_status = #{signUpStatus,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      scorer_police_id = #{scorerPoliceId,jdbcType=VARCHAR},
+      limit_people_num = #{limitPeopleNum,jdbcType=INTEGER},
+      max_people_num = #{maxPeopleNum,jdbcType=INTEGER},
+      cover_img = #{coverImg,jdbcType=VARCHAR},
+      match_content = #{matchContent,jdbcType=VARCHAR},
+      train_img = #{trainImg,jdbcType=VARCHAR},
+      is_submit = #{isSubmit,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 查询分局赛事 -->
+<select id="trainOfficeMatchList" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+select * from train_match where type=2 order by creation_date desc
+</select>
+<!-- 赛事列表查询 -->
+<select id="matchList" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+select a.*,b.name as matchTypeName,ifnull(c.num,0) as policeNum,
+d.train_match_id,e.num from train_match a
+left join train_match_type b on b.id=a.match_type_id
+left join
+(select count(*) as num,train_match_id from train_match_achievement
+GROUP BY train_match_id) c on c.train_match_id=a.id
+left join(select * from train_match_achievement where police_id=#{policeId}) d on d.train_match_id=a.id
+left join
+(select a.id,b.num from train_match a
+left join
+(select count(*) as num,train_match_id from train_match_achievement
+where department_id=#{departmentId}
+GROUP BY train_match_id) b on b.train_match_id=a.id
+where a.type=2) e on e.id=a.id
+where 1=1 and a.sign_up_status=2 
+      <if test="type == null">
+        and (a.type=2 or (a.type=1 and a.department_id=#{departmentId}))
+      </if>
+      <if test="type == 2">
+        and a.type=2
+      </if>
+       <if test="type == 1">
+        and a.type=1 and a.department_id=#{departmentId}
+      </if>
+      and d.train_match_id is null and e.num is null
+order by a.id desc
+</select>
+<!-- 赛事列表数量统计 -->
+<select id="matchListCount" parameterType="com.bayee.political.domain.TrainMatch" resultType="Integer">
+select count(*) from
+(select a.*,b.name as matchTypeName,ifnull(c.num,0) as policeNum,
+d.train_match_id,e.num from train_match a
+left join train_match_type b on b.id=a.match_type_id
+left join
+(select count(*) as num,train_match_id from train_match_achievement
+GROUP BY train_match_id) c on c.train_match_id=a.id
+left join(select * from train_match_achievement where police_id=#{policeId}) d on d.train_match_id=a.id
+left join
+(select a.id,b.num from train_match a
+left join
+(select count(*) as num,train_match_id from train_match_achievement
+GROUP BY train_match_id) b on b.train_match_id=a.id
+where a.type=2) e on e.id=a.id
+where 1=1 and a.sign_up_status=2 
+      <if test="type == null">
+        and (a.type=2 or (a.type=1 and a.department_id=#{departmentId}))
+      </if>
+      <if test="type == 2">
+        and a.type=2
+      </if>
+       <if test="type == 1">
+        and a.type=1 and a.department_id=#{departmentId}
+      </if>
+      and d.train_match_id is null and e.num is null) as t
+</select>
+<!-- 我的赛事列表查询 -->
+<select id="myMatchList" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+<!-- select b.*,a.qr_code as qrCode,c.name as matchTypeName,
+TIMESTAMPDIFF(MINUTE,SYSDATE(), b.match_start_date) as timeChange,
+ifnull(d.num,0) as policeNum from train_match_achievement a 
+left join train_match b on b.id=a.train_match_id
+left join train_match_type c on c.id=b.match_type_id
+left join
+(select count(*) as num,train_match_id from train_match_achievement
+GROUP BY train_match_id) d on d.train_match_id=a.train_match_id
+where a.police_id=#{policeId}
+    <if test="type != null and type !=''">
+	    and b.type =#{type}
+	</if>
+	<if test="status != null and status !=''">
+	    and b.status =#{status}
+	</if>
+order by a.creation_date desc limit #{pageNum},#{pageSize} -->
+
+select * from(
+select '1' as objectId,b.*,a.qr_code as qrCode,c.name as matchTypeName,
+TIMESTAMPDIFF(MINUTE,SYSDATE(), b.match_start_date) as timeChange,
+ifnull(d.num,0) as policeNum from train_match_achievement a 
+left join train_match b on b.id=a.train_match_id
+left join train_match_type c on c.id=b.match_type_id
+left join
+(select count(*) as num,train_match_id from train_match_achievement
+GROUP BY train_match_id) d on d.train_match_id=a.train_match_id
+where a.police_id=#{policeId}
+UNION ALL
+select '2' as objectId,a.*,null as qrCode,c.name as matchTypeName,
+TIMESTAMPDIFF(MINUTE,SYSDATE(), a.match_start_date) as timeChange,
+ifnull(d.num,0) as policeNum from train_match a
+left join train_match_type c on c.id=a.match_type_id
+left join
+(select count(*) as num,train_match_id from train_match_achievement
+GROUP BY train_match_id) d on d.train_match_id=a.id
+join train_leader e
+where e.leader_id=#{policeId} and a.type=2) as t
+where 1=1
+    <if test="type != null and type !=''">
+	    and type =#{type}
+	</if>
+	<if test="status != null and status !=''">
+	    and status =#{status}
+	</if>
+order by creation_date desc limit #{pageNum},#{pageSize}
+</select>
+<!-- 我的赛事总数统计 -->
+<select id="myMatchListCount" parameterType="com.bayee.political.domain.TrainMatch" resultType="Integer">
+select count(*) from(
+select '1' as objectId,b.*,a.qr_code as qrCode,c.name as matchTypeName,
+TIMESTAMPDIFF(MINUTE,SYSDATE(), b.match_start_date) as timeChange,
+ifnull(d.num,0) as policeNum from train_match_achievement a 
+left join train_match b on b.id=a.train_match_id
+left join train_match_type c on c.id=b.match_type_id
+left join
+(select count(*) as num,train_match_id from train_match_achievement
+GROUP BY train_match_id) d on d.train_match_id=a.train_match_id
+where a.police_id=#{policeId}
+UNION ALL
+select '2' as objectId,a.*,null as qrCode,c.name as matchTypeName,
+TIMESTAMPDIFF(MINUTE,SYSDATE(), a.match_start_date) as timeChange,
+ifnull(d.num,0) as policeNum from train_match a
+left join train_match_type c on c.id=a.match_type_id
+left join
+(select count(*) as num,train_match_id from train_match_achievement
+GROUP BY train_match_id) d on d.train_match_id=a.id
+join train_leader e
+where e.leader_id=#{policeId} and a.type=2) as t
+where 1=1
+    <if test="type != null and type !=''">
+	    and type =#{type}
+	</if>
+	<if test="status != null and status !=''">
+	    and status =#{status}
+	</if>
+</select>
+<!-- 赛事详情查询 -->
+<select id="matchItem" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+select a.*,TIMESTAMPDIFF(MINUTE, SYSDATE(),a.match_start_date) as startTimeChange,
+TIMESTAMPDIFF(MINUTE, SYSDATE(),a.registration_end_date) as timeChange,
+(case when a.man_max_num>0 and a.woman_max_num>0 then '3'
+when a.man_max_num>0 and a.woman_max_num=0 then '1'
+when a.man_max_num=0 and a.woman_max_num>0 then '2' end) as sex,b.sort,
+b.name as matchTypeName,c.id as projectId,c.name as projectName,c.name as matchProjectName,
+c.is_more_unit as isMoreUnit,
+ifnull(d.dnum,0) as policeNum from train_match a
+left join train_match_type b on b.id=a.match_type_id
+left join train_match_project c on c.id=a.match_project_id
+left join (select count(*) as dnum,train_match_id from train_match_achievement GROUP BY train_match_id) d
+on d.train_match_id=a.id
+where a.id=#{id}
+</select>
+<!-- 赛事未录分数量 -->
+<select id="matchNoScoreNum" parameterType="com.bayee.political.domain.TrainMatch" resultType="Integer">
+select count(*) from train_match a
+left join (select count(*) as bnum,train_match_id from train_match_achievement
+GROUP BY train_match_id) b on b.train_match_id=a.id
+where scorer_police_id=#{policeId} and is_submit=0 and status!=1 and b.bnum is not null
+</select>
+<!-- 需要录分的赛事活动查询 -->
+<select id="matchRecordScoreList" parameterType="com.bayee.political.domain.MatchRecordScore" resultMap="RecordScoreMap">
+select a.*,round(ifnull(c.cnum/b.bnum,0)*100,2) as proportion,
+(case when round(ifnull(c.cnum/b.bnum,0)*100,2)&gt;0 and round(ifnull(c.cnum/b.bnum,0)*100,2)&lt;100  then '录入中'
+when round(ifnull(c.cnum/b.bnum,0)*100,2)=100 then '已完成'
+else '未录入' end) as statusName,d.is_more_unit as isMoreUnit,e.sort from train_match a 
+left join
+(select count(*) as bnum,train_match_id from train_match_achievement 
+GROUP BY train_match_id) b on b.train_match_id=a.id
+left join
+(select count(*) as cnum,train_match_id from train_match_achievement 
+where achievement is not null and achievement_grade is not null
+GROUP BY train_match_id) c on c.train_match_id=a.id
+left join train_match_project d on d.id=a.match_project_id
+left join train_match_type e on e.id=a.match_type_id
+where scorer_police_id=#{policeId} and is_submit=0 and status!=1 and b.bnum is not null
+order by a.id desc
+</select>
+<!-- 赛事活动已完成录分查询 -->
+<select id="matchRecordOverScoreList" parameterType="com.bayee.political.domain.MatchRecordScore" resultMap="RecordScoreMap">
+select a.id,a.type,a.name,a.match_start_date,a.match_end_date,
+a.submit_date as creation_date,d.is_more_unit as isMoreUnit from train_match a
+left join train_match_project d on d.id=a.match_project_id
+where a.scorer_police_id=#{policeId} and a.is_submit=1
+</select>
+<!-- 领队比赛列表查询 -->
+<select id="matchLeaderPageList" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+select a.*,b.policeNums,c.policeNum,d.name as matchTypeName from train_match a
+left join(select count(*) as policeNums,train_match_id from train_match_achievement 
+where department_id=#{departmentId}
+GROUP BY train_match_id) b on b.train_match_id=a.id
+left join(select count(*) as policeNum,train_match_id from train_match_achievement 
+GROUP BY train_match_id) c on c.train_match_id=a.id
+left join train_match_type d on d.id=a.match_type_id
+where 1=1 and a.type=2 
+    <if test="signUpStatus != null and signUpStatus !=''">
+	    and a.sign_up_status =#{signUpStatus} and b.policeNums is null
+	</if>
+	 <if test="status != null and status !=''">
+	    and a.status =#{status}
+	</if>
+order by a.id desc limit #{pageNum},#{pageSize}
+</select>
+<!-- 领队比赛列表数量统计 -->
+<select id="matchLeaderPageCount" parameterType="com.bayee.political.domain.TrainMatch" resultType="Integer">
+select count(*) from 
+(select a.*,b.policeNums,c.policeNum,d.name as matchTypeName from train_match a
+left join(select count(*) as policeNums,train_match_id from train_match_achievement 
+where department_id=#{departmentId}
+GROUP BY train_match_id) b on b.train_match_id=a.id
+left join(select count(*) as policeNum,train_match_id from train_match_achievement 
+GROUP BY train_match_id) c on c.train_match_id=a.id
+left join train_match_type d on d.id=a.match_type_id
+where 1=1 and a.type=2 
+    <if test="signUpStatus != null and signUpStatus !=''">
+	    and a.sign_up_status =#{signUpStatus} and b.policeNums is null
+	</if>
+	 <if test="status != null and status !=''">
+	    and a.status =#{status}
+	</if>) as t
+</select>
+<!-- 本周赛事列表查询 -->
+<select id="matchWeekList" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+select a.*,TIMESTAMPDIFF(MINUTE,SYSDATE(), a.match_start_date) as timeChange,b.name as matchTypeName,ifnull(c.num,0) as policeNum from train_match a
+left join train_match_type b on b.id=a.match_type_id
+left join
+(select count(*) as num,train_match_id from train_match_achievement
+GROUP BY train_match_id) c on c.train_match_id=a.id
+where 1=1 and (a.type=2 or (a.type=1 and a.department_id=#{departmentId}))
+and DATE_FORMAT(a.creation_date,'%Y-%m-%d')&gt;=#{startTime} 
+and DATE_FORMAT(a.creation_date,'%Y-%m-%d')&lt;=#{endTime}
+order by a.creation_date desc 
+</select>
+<!-- 即将比赛赛事查询 -->
+<select id="matchSoonList" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+select b.*,TIMESTAMPDIFF(MINUTE,SYSDATE(), b.match_start_date) as timeChange,
+d.name as matchTypeName,ifnull(c.num,0) as policeNum from train_match_achievement a 
+left join train_match b on b.id=a.train_match_id
+left join
+(select count(*) as num,train_match_id from train_match_achievement
+GROUP BY train_match_id) c on c.train_match_id=a.train_match_id
+left join train_match_type d on d.id=b.match_type_id
+where a.police_id=#{policeId} and b.status=1 
+order by b.creation_date desc limit 2
+</select>
+<!-- 个人已经参加赛事查询 -->
+<select id="matchPersonalAlreadyEnterList" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+select b.*,c.sort from train_match_achievement a
+left join train_match b on b.id=a.train_match_id
+left join train_match_type c on c.id=b.match_type_id
+where a.police_id=#{policeId}
+ <if test="type != null and type !=''">
+	 and b.type =#{type}
+</if>
+<if test="matchTypeId != null and matchTypeId !=''">
+	 and b.match_type_id =#{matchTypeId}
+</if>
+<if test="startTime != null and startTime !=''">
+	and DATE_FORMAT(a.creation_date,'%Y-%m-%d')&gt;=#{startTime} 
+</if>
+<if test="endTime != null and endTime !=''">
+	and DATE_FORMAT(a.creation_date,'%Y-%m-%d')&lt;=#{endTime}
+</if>
+order by b.creation_date desc
+</select>
+  <!-- 比赛列表查询（定时任务修改约谈状态进程） -->
+<select id="matchStatuslList" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+select * from train_match where sign_up_status!=3 or status!=3
+</select>
+  <!-- 查询赛事 后端 -->
+  <select id="getTrainMatchList" resultMap="BaseResultMap">
+  	select a.*,b.name as matchTypeName, c.name as department_name from train_match a 
+	left join train_match_type b on a.match_type_id = b.id 
+	left join department c on a.department_id = c.id 
+	where 1 = 1 
+	<if test="departmentId != null">
+	 and department_id = #{departmentId}
+	</if>
+	<if test="type!=null">
+	and a.match_type_id = #{type}
+	</if>
+	<if test="status!=null">
+	and a.`status` = #{status} 
+	</if>
+	<if test="registrationStartDate!=null and registrationStartDate!='' and registrationEndDate!=null and registrationEndDate!=''">
+      and #{a.registrationStartDate} between DATE_FORMAT(registration_start_date,'%Y-%m-%d %H:%i') and DATE_FORMAT(a.registration_end_date,'%Y-%m-%d %H:%i')
+    </if>
+    <if test="registrationStartDate!=null and registrationStartDate!='' and (registrationEndDate==null or registrationEndDate=='')">
+      and DATE_FORMAT(a.registration_start_date,'%Y-%m-%d %H:%i') = #{registrationStartDate}
+    </if>
+    <if test="registrationEndDate!=null and registrationEndDate!='' and (registrationStartDate==null or registrationStartDate=='')">
+      and DATE_FORMAT(a.registration_end_date,'%Y-%m-%d %H:%i') = #{registrationEndDate}
+    </if>
+    <if test="trainStartDate!=null and trainStartDate!='' and (trainEndDate==null or trainEndDate=='')">
+      and DATE_FORMAT(a.train_start_date,'%Y-%m-%d %H:%i') = #{trainStartDate}
+    </if>
+    <if test="trainEndDate!=null and trainEndDate!='' and (trainStartDate==null or trainStartDate=='')">
+      and DATE_FORMAT(a.train_end_date,'%Y-%m-%d %H:%i') = #{trainEndDate}
+    </if>
+    <if test="keyWords!=null and keyWords!=''">    
+	and (a.name = #{keyWords} or a.place = #{keyWords})
+    </if>
+	order by a.id desc 
+	<if test="pageSize!=null">
+	  limit #{pageSize},10
+	</if>
+  </select>
+  
+   <select id="getTrainMatchCount" resultType="java.lang.Integer">
+  	select count(*) as count from train_match a 
+	left join train_match_type b on a.match_type_id = b.id 
+	where 1 = 1 
+	<if test="departmentId != null">
+	 and department_id = #{departmentId}
+	</if>
+	<if test="type!=null">
+	and a.match_type_id = #{type}
+	</if>
+	<if test="status!=null">
+	and a.`status` = #{status} 
+	</if>
+	<if test="registrationStartDate!=null and registrationStartDate!='' and registrationEndDate!=null and registrationEndDate!=''">
+      and #{a.registrationStartDate} between DATE_FORMAT(registration_start_date,'%Y-%m-%d %H:%i') and DATE_FORMAT(a.registration_end_date,'%Y-%m-%d %H:%i')
+    </if>
+    <if test="registrationStartDate!=null and registrationStartDate!='' and (registrationEndDate==null or registrationEndDate=='')">
+      and DATE_FORMAT(a.registration_start_date,'%Y-%m-%d %H:%i') = #{registrationStartDate}
+    </if>
+    <if test="registrationEndDate!=null and registrationEndDate!='' and (registrationStartDate==null or registrationStartDate=='')">
+      and DATE_FORMAT(a.registration_end_date,'%Y-%m-%d %H:%i') = #{registrationEndDate}
+    </if>
+    <if test="trainStartDate!=null and trainStartDate!='' and (trainEndDate==null or trainEndDate=='')">
+      and DATE_FORMAT(a.train_start_date,'%Y-%m-%d %H:%i') = #{trainStartDate}
+    </if>
+    <if test="trainEndDate!=null and trainEndDate!='' and (trainStartDate==null or trainStartDate=='')">
+      and DATE_FORMAT(a.train_end_date,'%Y-%m-%d %H:%i') = #{trainEndDate}
+    </if>
+    <if test="keyWords!=null and keyWords!=''">    
+	and (a.name = #{keyWords} or a.place = #{keyWords})
+    </if>
+  </select>
+  
+  <!-- 立即开始 -->
+  <update id="startTrainMatch">
+  update train_match set status = 2, registration_end_date = now(), match_start_date = now() where id = #{id} 
+  </update>
+  
+  <!-- 立即结束 -->
+  <update id="endTrainMatch">
+  update train_match set status = 3, match_end_date = now() where id = #{id} 
+  </update>
+  
+  <!-- 立即重启 -->
+  <update id="reStartTrainMatch">
+  update train_match set status = 2, match_end_date = #{time} where id = #{id}  
+  </update>
+  
+  <!-- 赛事详情 -->
+  <select id="getTrainMatchById" resultMap="BaseResultMap">
+  select a.*,b.name as match_type_name,c.`name` as police_name, d.name as match_project_name, e.name as department_name from train_match a 
+left join train_match_type b on a.match_type_id = b.id 
+left join user c on a.scorer_police_id = c.police_id 
+left join train_match_project d on a.match_project_id = d.id
+left join department e on a. department_id = e.id
+where a.id = #{id} 
+  </select>
+    <!-- 进行中的赛事查询 -->
+<select id="matchInProgressList" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+<!-- select a.qr_code as qrCode,b.*,
+TIMESTAMPDIFF(MINUTE, SYSDATE(),match_start_date) as timeChange,c.name as matchTypeName from train_match_achievement a
+left join train_match b on b.id=a.train_match_id
+left join train_match_type c on c.id=b.match_type_id
+where a.police_id=#{policeId} and b.status=#{status}
+order by match_start_date ${sort} -->
+select * from(
+select '1' as objectId,qr_code as qrCode,b.*,
+TIMESTAMPDIFF(MINUTE, SYSDATE(),match_start_date) as timeChange,c.name as matchTypeName from train_match_achievement a
+left join train_match b on b.id=a.train_match_id
+left join train_match_type c on c.id=b.match_type_id
+where a.police_id=#{policeId} and b.status=#{status}
+UNION ALL
+select '2' as objectId,null as qrCode,a.*,
+TIMESTAMPDIFF(MINUTE, SYSDATE(),a.match_start_date) as timeChange,
+c.name as matchTypeName from train_match a
+left join train_match_type c on c.id=a.match_type_id
+left join
+(select count(*) as num,train_match_id from train_match_achievement 
+GROUP BY train_match_id) f on f.train_match_id=a.id
+join train_leader e
+where e.leader_id=#{policeId} and a.status=#{status} and a.type=2 and f.num is not null) a
+order by match_start_date ${sort}
+</select>
+<!-- 判断当前用户是否可扫码当前人员 -->
+	<select id="matchScorerPoliceItem" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+select * from train_match where id=#{id} and scorer_police_id = #{scorerPoliceId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getTrainMatchByMatchProjectId" resultMap="BaseResultMap">
+		select * from train_match where match_project_id = #{matchProjectId}
+	</select>
+	<select id="getTrainMatchByTrainProjectId" resultMap="BaseResultMap">
+	select * from train_match where match_project_id = #{trainProjectId}
+	</select>
+	<!-- 最新赛事详情查询 -->
+<select id="screenMatchNewest" parameterType="com.bayee.political.domain.TrainMatch" resultMap="BaseResultMap">
+select a.*,TIMESTAMPDIFF(MINUTE, SYSDATE(),a.match_start_date) as startTimeChange,
+TIMESTAMPDIFF(MINUTE, SYSDATE(),a.registration_end_date) as timeChange,
+(case when a.man_max_num>0 and a.woman_max_num>0 then '3'
+when a.man_max_num>0 and a.woman_max_num=0 then '1'
+when a.man_max_num=0 and a.woman_max_num>0 then '2' end) as sex,b.sort,
+b.name as matchTypeName,c.id as projectId,c.name as projectName,c.name as matchProjectName,
+c.is_more_unit as isMoreUnit,
+ifnull(d.dnum,0) as policeNum from train_match a
+left join train_match_type b on b.id=a.match_type_id
+left join train_match_project c on c.id=a.match_project_id
+left join (select count(*) as dnum,train_match_id from train_match_achievement GROUP BY train_match_id) d
+on d.train_match_id=a.id
+where a.status!= 1
+order by a.creation_date desc limit 1
+</select>
+</mapper>

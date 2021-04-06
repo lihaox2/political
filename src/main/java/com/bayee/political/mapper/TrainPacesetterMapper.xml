@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainPacesetterMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainPacesetter" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="head_img" property="headImg" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="view" property="view" jdbcType="INTEGER" />
+    <result column="like_num" property="likeNum" jdbcType="INTEGER" />
+    <result column="is_recommend" property="isRecommend" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="police_name" property="policeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, head_img, name, police_id, like_num, is_recommend, status, creation_date, update_date
+  </sql>
+  <select id="getTrainPacesetterOnely" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    a.*,b.name as police_name 
+    from train_pacesetter a 
+    left join user b on a.police_id = b.police_id
+    where a.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteTrainPacesetter" parameterType="java.lang.Integer" >
+    delete from train_pacesetter
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="addTrainPacesetter" parameterType="com.bayee.political.domain.TrainPacesetter" >
+    insert into train_pacesetter (id, head_img, name, 
+      police_id,view, like_num, is_recommend, 
+      status, creation_date, update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{headImg,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{policeId,jdbcType=INTEGER}, #{view,jdbcType=INTEGER},
+      #{likeNum,jdbcType=INTEGER}, #{isRecommend,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateTrainPacesetter" parameterType="com.bayee.political.domain.TrainPacesetter" >
+    update train_pacesetter
+    <set >
+      <if test="headImg != null" >
+        head_img = #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=INTEGER},
+      </if>
+       <if test="view != null" >
+        view = #{view,jdbcType=INTEGER},
+      </if>
+      <if test="likeNum != null" >
+        like_num = #{likeNum,jdbcType=INTEGER},
+      </if>
+      <if test="isRecommend != null" >
+        is_recommend = #{isRecommend,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainPacesetter" >
+    update train_pacesetter
+    set head_img = #{headImg,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      police_id = #{policeId,jdbcType=INTEGER},
+      view = #{view,jdbcType=INTEGER},
+      like_num = #{likeNum,jdbcType=INTEGER},
+      is_recommend = #{isRecommend,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 训练标兵 -->
+  <select id="getTrainPacesetterList" resultMap="BaseResultMap">
+  select a.*, b.name as police_name from train_pacesetter a 
+  left join user b on a.police_id = b.police_id 
+  where 1 = 1 
+  <if test="status!=null">
+  and a.status = #{status} 
+  </if>
+  <if test="isRecommend!=null">
+  and a.is_recommend = #{isRecommend}
+  </if>
+  <if test="keyWords!=null and keyWords!=''">
+  and a.name like "%"#{keyWords}"%"
+  </if>
+  <if test="sort==null">
+  order by a.id desc 
+  </if>
+  <if test="sort==1">
+  order by a.like_num desc 
+  </if>
+  <if test="sort==2">
+  order by a.like_num  
+  </if>
+  <if test="pageSize!=null">
+  limit #{pageSize},10 
+  </if>
+  </select>
+  
+  <select id="getTrainPacesetterCount" resultType="java.lang.Integer">
+  select count(*) from train_pacesetter 
+    where 1 = 1 
+  <if test="status!=null">
+  and status = #{status} 
+  </if>
+  <if test="isRecommend!=null">
+  and is_recommend = #{isRecommend}
+  </if>
+  <if test="keyWords!=null and keyWords!=''">
+  and name = #{keyWords}
+  </if>
+  </select>
+  
+    <!-- 训练标兵设置推荐或上下架 -->
+  <update id="pacesetterIsRecommendOrStatus">
+  	update train_pacesetter 
+  	<set>
+  		<if test="status!=null">
+  			status = #{status}
+  		</if>
+  		<if test="isRecommend!=null">
+  			is_recommend = #{isRecommend} 
+  		</if>
+  	</set>
+  	 where id = #{id} 
+  </update>
+  
+</mapper>

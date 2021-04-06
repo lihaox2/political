@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.AlarmRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.AlarmRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="police_month_id" property="policeMonthId" jdbcType="INTEGER" />
+    <result column="police_month_name" property="policeMonthName" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="DOUBLE" />
+    <result column="frequency" property="frequency" jdbcType="INTEGER" />
+    <result column="first_alarm_time" property="firstAlarmTime" jdbcType="TIMESTAMP" />
+    <result column="finish_alarm_time" property="finishAlarmTime" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type, police_id, department_id, police_month_id, score, frequency,first_alarm_time, finish_alarm_time, 
+    creation_date, update_date
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from alarm_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 预警记录新增 -->
+  <insert id="alarmRecordCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.AlarmRecord" useGeneratedKeys="true">
+    insert into alarm_record (type, police_id, 
+      department_id, police_month_id, score, frequency,
+      first_alarm_time, finish_alarm_time, creation_date, 
+      update_date)
+    values (#{type,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
+      #{departmentId,jdbcType=INTEGER}, #{policeMonthId,jdbcType=INTEGER}, #{score,jdbcType=DOUBLE}, 
+      #{frequency,jdbcType=INTEGER},now(), now(), now(), now())
+  </insert>
+  <!-- 预警记录修改 -->
+  <update id="alarmRecordUpdate" parameterType="com.bayee.political.domain.AlarmRecord" >
+    update alarm_record
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="policeMonthId != null" >
+        police_month_id = #{policeMonthId,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="frequency != null" >
+        frequency = #{frequency,jdbcType=INTEGER},
+      </if>
+      <if test="firstAlarmTime != null" >
+        first_alarm_time = #{firstAlarmTime,jdbcType=TIMESTAMP},
+      </if>
+      finish_alarm_time = now(),
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      update_date = now(),
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.AlarmRecord" >
+    update alarm_record
+    set type = #{type,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      police_month_id = #{policeMonthId,jdbcType=INTEGER},
+      score = #{score,jdbcType=DOUBLE},
+      frequency = #{frequency,jdbcType=INTEGER},
+      first_alarm_time = #{firstAlarmTime,jdbcType=TIMESTAMP},
+      finish_alarm_time = #{finishAlarmTime,jdbcType=TIMESTAMP},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据policeId查询本月是否存在预警记录 -->
+  <select id="getAlarmRecord" resultMap="BaseResultMap">
+  select * from alarm_record 
+where 1 = 1 
+and police_id = #{policeId} 
+and type = #{type} 
+and date_format(first_alarm_time,'%Y-%m')=date_format(now(),'%Y-%m')
+  </select>
+  
+</mapper>

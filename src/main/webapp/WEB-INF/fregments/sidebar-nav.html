@@ -1,0 +1,55 @@
+<div id="sidebar-nav" class="sidebar">
+	<div class="sidebar-scroll">
+		<nav>
+			<ul class="nav" style="width: 190px;">
+				<li style="text-align: center; padding: 40px;display: flex;flex-direction: column;">
+					<span style="font-size: 20px;font-weight: 700;color: #ffffff;font-size: 16!important;width: 100%;text-align: center;">智慧政工</span>
+				</li>
+				<!-- <li><a style="width: 100%;" th:text="${session.user.supplierName}">公司名称</a></li> -->
+				<li><a id="dashboard" th:href="@{/home}" class="navitem"><i class="lnr lnr-home"></i> <span>首页</span></a></li>
+				<li>
+					<a href="#order-subpages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-tag"></i> <span>AI休假</span><i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="order-subpages" class="collapse">
+						<ul class="nav">
+							<li><a id="delivery-orders" th:href="@{/orders/delivery}" class="navitem">休假1</a></li>
+							<li><a id="deliverying-orders" th:href="@{/orders/deliverying}" class="navitem">休假2</a></li>
+							<li><a id="complete-orders" th:href="@{/orders/complete}" class="navitem">休假3</a></li>
+							<li><a id="refund-orders" th:href="@{/orders/refund}" class="navitem">休假4</a></li>
+							<li><a id="orders" th:href="@{/orders}" class="navitem">休假5</a></li>
+						</ul>
+					</div>
+				</li>
+				<li><a id="train" th:href="@{/finance}" class="navitem"><i class="lnr lnr-diamond"></i> <span>智慧训练</span></a></li>
+				<li><a id="calculation" th:href="@{/finance}" class="navitem"><i class="lnr lnr-diamond"></i> <span>警力测算</span></a></li>
+				<li>
+					<a href="#settings" data-toggle="collapse" class="collapsed"><i class="lnr lnr-inbox"></i> <span>智能评价</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="settings" class="collapse ">
+						<ul class="nav">
+						    <li><a id="evaluatTask" th:href="@{/evaluation/task/list}" class="navitem">评价任务</a></li>
+							<li><a id="evaluatRole" th:href="@{/account/mgt}" class="navitem">评价权限</a></li>
+							<li><a id="evaluatRank" th:href="@{/account/position}" class="navitem">评价等次规则</a></li>
+							<li><a id="evaluatTemplate" th:href="@{/account/template}" class="navitem">评价模板</a></li>
+						</ul>
+					</div>
+				</li>
+				<li><a id="calculation" th:href="@{/finance}" class="navitem"><i class="lnr lnr-diamond"></i> <span>智慧党建</span></a></li>
+				<li><a id="calculation" th:href="@{/finance}" class="navitem"><i class="lnr lnr-diamond"></i> <span>内部审批</span></a></li>
+				<li><a id="calculation" th:href="@{/finance}" class="navitem"><i class="lnr lnr-diamond"></i> <span>在线交流</span></a></li>
+				<li><a id="calculation" th:href="@{/finance}" class="navitem"><i class="lnr lnr-diamond"></i> <span>警员全息</span></a></li>
+				<li>
+					<a href="#systems" data-toggle="collapse" class="collapsed"><i class="lnr lnr-inbox"></i> <span>系统管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="systems" class="collapse ">
+						<ul class="nav">
+						    <li><a id="account" th:href="@{/account/list}" class="navitem">账号管理</a></li>
+						    <li><a id="sup" th:href="@{/supplier/details}" class="navitem">群主管理</a></li>
+							<li><a id="accountmgt" th:href="@{/account/mgt}" class="navitem">角色管理</a></li>
+							<li><a id="position" th:href="@{/account/position}" class="navitem">配置中心</a></li>
+						</ul>
+					</div>
+				</li>
+				<li><a th:href="@{/account/logout}" style="width: 100%;margin-left: 15px;">退出登录</a></li>
+			</ul>
+		</nav>
+		<input type="hidden" id="contextPath" th:value="${#ctx.servletContext.contextPath}"/>
+	</div>
+</div>

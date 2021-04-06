@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeaveIntegralManageMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeaveIntegralManage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="scored_police_id" property="scoredPoliceId" jdbcType="VARCHAR" />
+    <result column="police_month_id" property="policeMonthId" jdbcType="INTEGER" />
+    <result column="integral_value" property="integralValue" jdbcType="DOUBLE" />
+    <result column="scoring_police_id" property="scoringPoliceId" jdbcType="VARCHAR" />
+    <result column="scoring_date" property="scoringDate" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    
+    <result column="scored_police_name" property="scoredPoliceName" />
+    <result column="police_month" property="policeMonth" />
+    <result column="department_id" property="departmentId" />
+    <result column="department_name" property="departmentName" />
+    <result column="scoring_police_name" property="scoringPoliceName" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, scored_police_id, police_month_id, integral_value, scoring_police_id, scoring_date, 
+    creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leave_integral_manage
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteLeaveIntegralManageById" parameterType="java.lang.Integer" >
+    delete from leave_integral_manage
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.LeaveIntegralManage" >
+    insert into leave_integral_manage (id, scored_police_id, police_month_id, 
+      integral_value, scoring_police_id, scoring_date, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{scoredPoliceId,jdbcType=VARCHAR}, #{policeMonthId,jdbcType=INTEGER}, 
+      #{integralValue,jdbcType=DOUBLE}, #{scoringPoliceId,jdbcType=VARCHAR}, #{scoringDate,jdbcType=TIMESTAMP}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.LeaveIntegralManage" >
+    insert into leave_integral_manage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="scoredPoliceId != null" >
+        scored_police_id,
+      </if>
+      <if test="policeMonthId != null" >
+        police_month_id,
+      </if>
+      <if test="integralValue != null" >
+        integral_value,
+      </if>
+      <if test="scoringPoliceId != null" >
+        scoring_police_id,
+      </if>
+      <if test="scoringDate != null" >
+        scoring_date,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="scoredPoliceId != null" >
+        #{scoredPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="policeMonthId != null" >
+        #{policeMonthId,jdbcType=INTEGER},
+      </if>
+      <if test="integralValue != null" >
+        #{integralValue,jdbcType=DOUBLE},
+      </if>
+      <if test="scoringPoliceId != null" >
+        #{scoringPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="scoringDate != null" >
+        #{scoringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateLeaveIntegralManageById" parameterType="com.bayee.political.domain.LeaveIntegralManage" >
+    update leave_integral_manage
+    <set >
+      <if test="scoredPoliceId != null" >
+        scored_police_id = #{scoredPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="policeMonthId != null" >
+        police_month_id = #{policeMonthId,jdbcType=INTEGER},
+      </if>
+      <if test="integralValue != null" >
+        integral_value = #{integralValue,jdbcType=DOUBLE},
+      </if>
+      <if test="scoringPoliceId != null" >
+        scoring_police_id = #{scoringPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="scoringDate != null" >
+        scoring_date = #{scoringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.LeaveIntegralManage" >
+    update leave_integral_manage
+    set scored_police_id = #{scoredPoliceId,jdbcType=VARCHAR},
+      police_month_id = #{policeMonthId,jdbcType=INTEGER},
+      integral_value = #{integralValue,jdbcType=DOUBLE},
+      scoring_police_id = #{scoringPoliceId,jdbcType=VARCHAR},
+      scoring_date = #{scoringDate,jdbcType=TIMESTAMP},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 查询全部的积分管理数据或根据条件查询积分管理数据 -->
+  <select id="getLeaveIntegralManageList" resultMap="BaseResultMap">
+  	select a.*,b.`name` as scored_police_name, c.police_month, d.id as department_id,
+d.`name` as department_name, e.`name` as scoring_police_name 
+from leave_integral_manage a 
+left join user b on a.scored_police_id = b.police_id 
+left join alarm_police_month c on a.police_month_id = c.id 
+left join department d on b.department_id = d.id 
+left join user e on a.scoring_police_id = e.police_id 
+where 1 = 1 
+<if test="policeMonth!=null and policeMonth!=''">
+and a.police_month_id = #{policeMonth} 
+</if>
+<if test="departmentId!=null and departmentId!=''">
+and d.id = #{departmentId} 
+</if>
+<if test="keyword!=null and keyword!=''">
+and (a.scored_police_id like "%"#{keyword}"%" or a.scoring_police_id like "%"#{keyword}"%" 
+or b.`name` like "%"#{keyword}"%" or e.`name` like "%"#{keyword}"%")
+</if>
+order by a.scoring_date desc 
+<if test="pageSize!=null">
+limit #{pageSize},10
+</if>
+  </select>
+  
+  <!-- 查询全部的积分管理数量或根据条件查询积分管理数量 -->
+  <select id="getLeaveIntegralManageCount" resultType="java.lang.Integer">
+    	select count(*) from leave_integral_manage a 
+left join user b on a.scored_police_id = b.police_id 
+left join alarm_police_month c on a.police_month_id = c.id 
+left join department d on b.department_id = d.id 
+left join user e on a.scoring_police_id = e.police_id 
+where 1 = 1 
+<if test="policeMonth!=null and policeMonth!=''">
+and a.police_month_id = #{policeMonth} 
+</if>
+<if test="departmentId!=null and departmentId!=''">
+and d.id = #{departmentId} 
+</if>
+<if test="keyword!=null and keyword!=''">
+and (a.scored_police_id = #{keyword} or a.scoring_police_id = #{keyword} 
+or b.`name` = #{keyword} or e.`name` = #{keyword})
+</if>
+  </select>
+  
+  <!-- 新增积分 -->
+  <insert id="addLeaveIntegralManage">
+  insert into leave_integral_manage 
+  (scored_police_id, police_month_id, integral_value, scoring_police_id, scoring_date, creation_date,update_date)
+   values (#{leaveIntegralManage.scoredPoliceId}, #{leaveIntegralManage.policeMonthId}, 
+   #{leaveIntegralManage.integralValue}, #{leaveIntegralManage.scoringPoliceId}, 
+   <if test="leaveIntegralManage.scoringDate!=null">
+   #{leaveIntegralManage.scoringDate},
+   </if>
+   <if test="leaveIntegralManage.scoringDate==null">
+   now(),
+   </if>
+   now(), now())
+  </insert>
+  
+  <!-- 根据id获得积分管理 -->
+  <select id="getLeaveIntegralManageOne" resultMap="BaseResultMap">
+  select a.*,b.`name` as scored_police_name, c.`name` as department_name, d.police_month, e.name as scoring_police_name
+from leave_integral_manage a
+left join user b on a.scored_police_id = b.police_id
+left join department c on b.department_id = c.id
+left join alarm_police_month d on a.police_month_id = d.id
+left join user e on a.scoring_police_id = e.police_id
+where a.id = #{id}
+  </select>
+  
+  <!-- 批量新增积分 -->
+  <insert id="addMoreLeaveIntegralManage">
+  insert into leave_integral_manage 
+  (scored_police_id, police_month_id, integral_value, scoring_police_id, scoring_date, creation_date,update_date) values 
+  <foreach collection="leaveIntegralManageList" item="list" separator=",">
+  (
+  #{list.scoredPoliceId}, #{list.policeMonthId}, #{list.integralValue}, #{list.scoringPoliceId}, #{list.scoringDate},
+  now(), now()
+  )
+  </foreach>
+  </insert>
+
+  <!--查询当前月是否已添加过数据-->
+  <select id="nowMonthHave" resultType="java.lang.Integer">
+    select count(*) from leave_integral_manage where 1 = 1
+and scored_police_id = #{policeId} and police_month_id = #{policeMonth}
+  </select>
+
+</mapper>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainScorerMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainScorer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="scorer_id" property="scorerId" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="police_name" property="policeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, group_id, scorer_id, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_scorer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteTrainScorer" parameterType="java.lang.Integer" >
+    delete from train_scorer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="addTrainScorer" parameterType="com.bayee.political.domain.TrainScorer" >
+    insert into train_scorer (id, group_id, scorer_id, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{scorerId,jdbcType=VARCHAR}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.TrainScorer" >
+    insert into train_scorer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="scorerId != null" >
+        scorer_id,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="scorerId != null" >
+        #{scorerId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateTrainScorer" parameterType="com.bayee.political.domain.TrainScorer" >
+    update train_scorer
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="scorerId != null" >
+        scorer_id = #{scorerId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainScorer" >
+    update train_scorer
+    set group_id = #{groupId,jdbcType=INTEGER},
+      scorer_id = #{scorerId,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 记分员配置 -->
+  <select id="getTrainScorerList" resultMap="BaseResultMap">
+  select a.*,b.`name` as group_name,c.name as police_name from train_scorer a 
+left join train_group b on a.group_id = b.id 
+left join user c on a.scorer_id = c.police_id 
+where 1 = 1 
+<if test="keyWords!=null and keyWords!=''">
+and b.name = #{keyWords}
+</if>
+order by id desc 
+limit #{pageSize},10
+  </select>
+  
+  <select id="getTrainScorerCount" resultType="java.lang.Integer">
+    select count(*) as count from train_scorer a 
+left join train_group b on a.group_id = b.id 
+left join user c on a.scorer_id = c.police_id 
+where 1 = 1 
+<if test="keyWords!=null and keyWords!=''">
+and b.name = #{keyWords}
+</if>
+  </select>
+  <!-- 综合体能未录分数量 -->
+  <select id="trainPhysicalNoScoreNum" parameterType="com.bayee.political.domain.TrainScorer" resultType="java.lang.Integer">
+select count(*) from(
+select a.id as train_physical_id,a.name,a.type,'1' as objectId,
+round(ifnull(d.dnum/c.cnum,0)*100,2) as proportion,a.creation_date,b.bnum from train_physical a
+left join
+(select count(*) as bnum,train_physical_id from train_physical_achievement 
+GROUP BY train_physical_id) b on b.train_physical_id=a.id
+left join
+(select count(*) as cnum,train_physical_id from train_physical_achievement_details 
+GROUP BY train_physical_id) c on c.train_physical_id=a.id
+left join
+(select count(*) as dnum,train_physical_id from train_physical_achievement_details 
+where achievement is not null and achievement_grade is not null
+GROUP BY train_physical_id) d on d.train_physical_id=a.id
+where a.scorer_police_id=#{policeId,jdbcType=VARCHAR} and a.is_submit=0 and a.status!=1
+and b.bnum is not null
+UNION ALL
+select a.id as train_physical_id,a.name,a.type,'2' as objectId,
+round(ifnull(c.cnum/b.bnum,0)*100,2) as proportion,a.creation_date,b.bnum from train_firearm a
+left join
+(select count(*) as bnum,train_firearm_id from train_firearm_achievement 
+GROUP BY train_firearm_id) b on b.train_firearm_id=a.id
+left join
+(select count(*) as cnum,train_firearm_id from train_firearm_achievement 
+where achievement is not null and achievement_grade is not null
+GROUP BY train_firearm_id) c on c.train_firearm_id=a.id
+where a.scorer_police_id=#{policeId,jdbcType=VARCHAR} and a.is_submit=0 and a.status!=1
+and b.bnum is not null) as a
+  </select>
+  <!-- 根据id查询记分员配置 -->
+  <select id="getTrainScorerById" resultMap="BaseResultMap">
+  select a.*,b.`name` as group_name, c.name as police_name from train_scorer a 
+left join train_group b on a.group_id = b.id
+left join user c on a.scorer_id = c.police_id 
+where a.id = #{id} 
+  </select>
+  
+</mapper>

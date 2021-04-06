@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeaveAnnualMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeaveAnnual" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="position_id" property="positionId" jdbcType="INTEGER" />
+    <result column="year" property="year" jdbcType="VARCHAR" />
+    <result column="annual_leave_count" property="annualLeaveCount" jdbcType="DOUBLE" />
+    <result column="annual_leave_days" property="annualLeaveDays" jdbcType="DOUBLE" />
+    <result column="annual_leave_num" property="annualLeaveNum" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ScreenChart" type="com.bayee.political.domain.ScreenDoubeChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="value" property="value" />
+  </resultMap>
+   <resultMap id="screenCharts" type="com.bayee.political.domain.ScreenChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="value" property="value" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id,name, department_id, position_id, year, annual_leave_count, annual_leave_days, 
+    annual_leave_num, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leave_annual
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from leave_annual
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 警员年假新增 -->
+  <insert id="leaveAnnualCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.LeaveAnnual" useGeneratedKeys="true">
+    insert into leave_annual (police_id,name, department_id, 
+      position_id, year, annual_leave_count, 
+      annual_leave_days, annual_leave_num, creation_date, 
+      update_date)
+    values (#{policeId,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR}, #{departmentId,jdbcType=INTEGER}, 
+      #{positionId,jdbcType=INTEGER}, #{year,jdbcType=VARCHAR}, #{annualLeaveCount,jdbcType=DOUBLE}, 
+      #{annualLeaveDays,jdbcType=DOUBLE}, #{annualLeaveNum,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 警员年假修改 -->
+  <update id="leaveAnnualUpdate" parameterType="com.bayee.political.domain.LeaveAnnual" >
+    update leave_annual
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null" >
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="annualLeaveCount != null" >
+        annual_leave_count = #{annualLeaveCount,jdbcType=DOUBLE},
+      </if>
+      <if test="annualLeaveDays != null" >
+        annual_leave_days = #{annualLeaveDays,jdbcType=DOUBLE},
+      </if>
+      <if test="annualLeaveNum != null" >
+        annual_leave_num = #{annualLeaveNum,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.LeaveAnnual" >
+    update leave_annual
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      position_id = #{positionId,jdbcType=INTEGER},
+      year = #{year,jdbcType=VARCHAR},
+      annual_leave_count = #{annualLeaveCount,jdbcType=DOUBLE},
+      annual_leave_days = #{annualLeaveDays,jdbcType=DOUBLE},
+      annual_leave_num = #{annualLeaveNum,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 警员年假详情查询 -->
+  <select id="leaveAnnualItem" parameterType="com.bayee.political.domain.LeaveAnnual" resultMap="BaseResultMap" >
+select * from leave_annual where 1=1 
+     <if test="id != null and id !=''">
+        and id = #{id}
+      </if>
+       <if test="policeId != null and policeId !=''">
+        and police_id = #{policeId}
+      </if>
+       <if test="year != null and year !=''">
+        and year = #{year}
+      </if>
+  </select>
+  <!-- 警员年假列表查询 -->
+    <select id="leaveAnnualList" parameterType="com.bayee.political.domain.LeaveAnnual" resultMap="BaseResultMap" >
+select * from leave_annual where 1=1 
+       <if test="policeId != null and policeId !=''">
+        and police_id = #{policeId}
+      </if>
+       <if test="year != null and year !=''">
+        and year = #{year}
+      </if>
+  </select>
+  <!-- 警员年假天数列表查询 -->
+    <select id="policeLeaveAnnualExistList" parameterType="com.bayee.political.domain.LeaveAnnual" resultMap="BaseResultMap" >
+select *,(case when num&gt;=1 and num &lt;10 then 5
+when num &gt;=10 and num &lt;20 then 10
+when num&gt;=20 then 15 end) as annual_leave_count
+from(select police_id,name,department_id,position_id,
+floor(TIMESTAMPDIFF(DAY, DATE_FORMAT(employment_date,'%Y%m%d'), DATE_FORMAT(CURDATE(),'%Y%m%d'))/365) as num,
+DATE_FORMAT(CURDATE(),'%Y') as year from user where employment_date is not null) as t
+where num&gt;0
+  </select>
+    <!-- 年休假人数统计 -->
+    <select id="annualLeaveNum" parameterType="com.bayee.political.domain.LeaveAnnual" resultType="Integer" >
+select ifnull(count(*),0) from leave_annual where 1=1
+     <if test="departmentId != null and departmentId !=''">
+        and department_id = #{departmentId}
+      </if>
+and year=DATE_FORMAT(CURDATE(),'%Y')
+and annual_leave_num&lt;3
+  </select>
+    <!-- 未休年假人数统计 -->
+    <select id="notAnnualLeaveNum" parameterType="com.bayee.political.domain.LeaveAnnual" resultType="Integer" >
+select ifnull(count(*),0) from leave_annual where 1=1
+     <if test="departmentId != null and departmentId !=''">
+        and department_id = #{departmentId}
+      </if>
+and year=DATE_FORMAT(CURDATE(),'%Y')
+and annual_leave_num=3
+  </select>
+  <!-- 单位年休假达标数量统计 -->
+    <select id="depAnnualLeaveNum" parameterType="com.bayee.political.domain.LeaveAnnual" resultType="Integer" >
+select count(*) from(select a.anum,ifnull(b.bnum,0) as bnum,a.department_id from 
+(select count(*) as anum,department_id from leave_annual
+where year=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY department_id) a left join
+(select count(*) as bnum,department_id from leave_annual
+where year=DATE_FORMAT(CURDATE(),'%Y') and annual_leave_num&lt;3
+GROUP BY department_id) b on b.department_id=a.department_id) t
+where anum=bnum
+  </select>
+   <!-- 单位年休假总数量统计 -->
+    <select id="totalDepAnnualLeaveNum" parameterType="com.bayee.political.domain.LeaveAnnual" resultType="Integer" >
+select count(*) from(select distinct department_id from leave_annual 
+where year=DATE_FORMAT(CURDATE(),'%Y')) as t
+  </select>
+  <!-- 全局年休假统计 -->
+      <select id="screenLeaveAnnualStatisticsList" parameterType="com.bayee.political.domain.ScreenDoubeChart" resultMap="ScreenChart" >
+select round(ifnull(b.bnum/a.anum,0)*100,2) as value,'已休假' as name,1 as id  from
+(select count(*) as anum  from leave_annual where year=DATE_FORMAT(CURDATE(),'%Y')) a
+join
+(select count(*) as bnum  from leave_annual where year=DATE_FORMAT(CURDATE(),'%Y')
+and annual_leave_num&lt;3) b
+UNION ALL
+select (100-round(ifnull(b.bnum/a.anum,0)*100,2)) as value,'未休假' as name,2 as id  from
+(select count(*) as anum  from leave_annual where year=DATE_FORMAT(CURDATE(),'%Y')) a
+join
+(select count(*) as bnum  from leave_annual where year=DATE_FORMAT(CURDATE(),'%Y')
+and annual_leave_num&lt;3) b
+  </select>
+  <!-- 各所年休假使用率 -->
+      <select id="screenLStationeaveAnnualStatisticsList" parameterType="com.bayee.political.domain.ScreenDoubeChart" resultMap="ScreenChart" >
+select a.department_id as id,c.abridge_name as name,round(ifnull(b.bnum,0)/a.anum,2)*100 as value from
+(select count(*) as anum,department_id from leave_annual where year = DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY department_id) as a left join
+(select count(*) as bnum,department_id from leave_annual where annual_leave_num &lt;3
+and year = DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY department_id) as b on b.department_id=a.department_id
+left join department c on c.id=a.department_id
+where c.parent_id=3
+order by a.department_id asc
+  </select>
+  <!-- 大屏近6个月请假总人数查询 -->
+  <select id="screenLeavetotalNumList" parameterType="com.bayee.political.domain.ScreenChart" resultMap="screenCharts" >
+select ifnull(b.num,0) as value,c.name from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(*) as num,DATE_FORMAT(create_time,'%Y-%m') as name from
+(select a.*,b.department_id from leave_process a left join
+user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null) as a
+GROUP BY DATE_FORMAT(create_time,'%Y-%m')) b on b.name=a.year_month
+left join month c on c.num_name=right(a.year_month,2) 
+order by a.year_month
+  </select>
+      <!-- 大屏近6个月休年假人数查询（api） -->
+  <select id="screenLAnnualNumList" parameterType="com.bayee.political.domain.ScreenChart" resultMap="screenCharts" >
+select ifnull(b.num,0) as value,c.name from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(*) as num,DATE_FORMAT(create_time,'%Y-%m') as name from
+(select a.*,b.department_id from leave_process a left join
+user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null) as a
+where 1=1 and leave_type='年休假' 
+GROUP BY DATE_FORMAT(create_time,'%Y-%m')) b on b.name=a.year_month
+left join month c on c.num_name=right(a.year_month,2) 
+order by a.year_month
+  </select>
+      <!-- 大屏近6个月病假人数查询（api） -->
+  <select id="screenLOffNumList" parameterType="com.bayee.political.domain.ScreenChart" resultMap="screenCharts" >
+select ifnull(b.num,0) as value,c.name from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(*) as num,DATE_FORMAT(create_time,'%Y-%m') as name from
+(select a.*,b.department_id from leave_process a left join
+user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null) as a
+where 1=1 and leave_type='病假' 
+GROUP BY DATE_FORMAT(create_time,'%Y-%m')) b on b.name=a.year_month
+left join month c on c.num_name=right(a.year_month,2) 
+order by a.year_month
+  </select>
+      <!-- 大屏近6个月事假人数查询（api） -->
+  <select id="screenLNumList" parameterType="com.bayee.political.domain.ScreenChart" resultMap="screenCharts" >
+select ifnull(b.num,0) as value,c.name from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(*) as num,DATE_FORMAT(create_time,'%Y-%m') as name from
+(select a.*,b.department_id from leave_process a left join
+user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null) as a
+where 1=1 and leave_type='事假' 
+GROUP BY DATE_FORMAT(create_time,'%Y-%m')) b on b.name=a.year_month
+left join month c on c.num_name=right(a.year_month,2) 
+order by a.year_month
+  </select>
+</mapper>

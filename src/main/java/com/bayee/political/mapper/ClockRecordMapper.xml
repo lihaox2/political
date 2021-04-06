@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.ClockRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.ClockRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="check_type" property="checkType" jdbcType="VARCHAR" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+    <result column="plan_id" property="planId" jdbcType="VARCHAR" />
+    <result column="record_id" property="recordId" jdbcType="VARCHAR" />
+    <result column="work_date" property="workDate" jdbcType="TIMESTAMP" />
+    <result column="time_result" property="timeResult" jdbcType="VARCHAR" />
+    <result column="location_result" property="locationResult" jdbcType="VARCHAR" />
+    <result column="approve_id" property="approveId" jdbcType="VARCHAR" />
+    <result column="procInst_id" property="procinstId" jdbcType="VARCHAR" />
+    <result column="base_check_time" property="baseCheckTime" jdbcType="TIMESTAMP" />
+    <result column="user_check_time" property="userCheckTime" jdbcType="TIMESTAMP" />
+    <result column="source_type" property="sourceType" jdbcType="VARCHAR" />
+    <result column="identification" property="identification" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="leaveCharts" type="com.bayee.political.domain.LeaveChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="num" property="num" />
+  </resultMap>
+   <resultMap id="OnlineMap" type="com.bayee.political.domain.PoliceForceOnlineStatistics" >
+    <result column="totalPoliceNum" property="totalPoliceNum" />
+    <result column="attendancePoliceNum" property="attendancePoliceNum" />
+    <result column="attendanceRate" property="attendanceRate" />
+    <result column="onDutyPoliceNum" property="onDutyPoliceNum" />
+    <result column="onDutyRate" property="onDutyRate" />
+    <result column="noAttendancePoliceNum" property="noAttendancePoliceNum" />
+    <result column="noAttendanceRate" property="noAttendanceRate" />
+    <result column="leaveTodayPoliceNum" property="leaveTodayPoliceNum" />
+    <result column="goAbroadTodayPoliceNum" property="goAbroadTodayPoliceNum" />
+    <result column="alarmTodayPoliceNum" property="alarmTodayPoliceNum" />
+    <result column="talkTodayPoliceNum" property="talkTodayPoliceNum" />
+    <result column="dayOffTodayPoliceNum" property="dayOffTodayPoliceNum" />
+    <result column="dayOffTodayRate" property="dayOffTodayRate" />
+    <result column="askForLeaveTodayPoliceNum" property="askForLeaveTodayPoliceNum" />
+    <result column="askForLeaveTodayRate" property="askForLeaveTodayRate" />
+    <result column="fallIllTodayPoliceNum" property="fallIllTodayPoliceNum" />
+    <result column="fallIllTodayRate" property="fallIllTodayRate" />
+  </resultMap>
+    <resultMap id="DepOvertimeDutypoliceNumMap" type="com.bayee.political.domain.DepOvertimeDutypoliceNum" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="overtimeNum" property="overtimeNum" jdbcType="INTEGER" />
+    <result column="dutyNum" property="dutyNum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, check_type, group_id, plan_id, record_id, work_date, time_result, location_result, 
+    approve_id, procInst_id, base_check_time, user_check_time, source_type,identification, creation_date, 
+    update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from clock_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from clock_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 钉钉打卡记录保存 -->
+  <insert id="clockRecordCreate" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.ClockRecord" useGeneratedKeys="true">
+    insert into clock_record (user_id, check_type, 
+      group_id, plan_id, record_id, 
+      work_date, time_result, location_result, 
+      approve_id, procInst_id, base_check_time, 
+      user_check_time, source_type,identification, creation_date, 
+      update_date)
+    values (#{userId,jdbcType=VARCHAR}, #{checkType,jdbcType=VARCHAR}, 
+      #{groupId,jdbcType=VARCHAR}, #{planId,jdbcType=VARCHAR}, #{recordId,jdbcType=VARCHAR}, 
+      #{workDate,jdbcType=TIMESTAMP}, #{timeResult,jdbcType=VARCHAR}, #{locationResult,jdbcType=VARCHAR}, 
+      #{approveId,jdbcType=VARCHAR}, #{procinstId,jdbcType=VARCHAR}, #{baseCheckTime,jdbcType=TIMESTAMP}, 
+      #{userCheckTime,jdbcType=TIMESTAMP}, #{sourceType,jdbcType=VARCHAR}, #{identification,jdbcType=INTEGER},
+      #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 修改打卡记录 -->
+  <update id="clockRecordUpdate" parameterType="com.bayee.political.domain.ClockRecord" >
+    update clock_record
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkType != null" >
+        check_type = #{checkType,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="planId != null" >
+        plan_id = #{planId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordId != null" >
+        record_id = #{recordId,jdbcType=VARCHAR},
+      </if>
+      <if test="workDate != null" >
+        work_date = #{workDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeResult != null" >
+        time_result = #{timeResult,jdbcType=VARCHAR},
+      </if>
+      <if test="locationResult != null" >
+        location_result = #{locationResult,jdbcType=VARCHAR},
+      </if>
+      <if test="approveId != null" >
+        approve_id = #{approveId,jdbcType=VARCHAR},
+      </if>
+      <if test="procinstId != null" >
+        procInst_id = #{procinstId,jdbcType=VARCHAR},
+      </if>
+      <if test="baseCheckTime != null" >
+        base_check_time = #{baseCheckTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userCheckTime != null" >
+        user_check_time = #{userCheckTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sourceType != null" >
+        source_type = #{sourceType,jdbcType=VARCHAR},
+      </if>
+      <if test="identification != null" >
+        identification = #{identification,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 修改打卡记录查询状态 -->
+  <update id="identificationUpdate" parameterType="com.bayee.political.domain.ClockRecord" >
+    update clock_record
+    <set >
+      <if test="identification != null" >
+        identification = #{identification,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+     where check_type='OnDuty' and identification=1
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.ClockRecord" >
+    update clock_record
+    set user_id = #{userId,jdbcType=VARCHAR},
+      check_type = #{checkType,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=VARCHAR},
+      plan_id = #{planId,jdbcType=VARCHAR},
+      record_id = #{recordId,jdbcType=VARCHAR},
+      work_date = #{workDate,jdbcType=TIMESTAMP},
+      time_result = #{timeResult,jdbcType=VARCHAR},
+      location_result = #{locationResult,jdbcType=VARCHAR},
+      approve_id = #{approveId,jdbcType=VARCHAR},
+      procInst_id = #{procinstId,jdbcType=VARCHAR},
+      base_check_time = #{baseCheckTime,jdbcType=TIMESTAMP},
+      user_check_time = #{userCheckTime,jdbcType=TIMESTAMP},
+      source_type = #{sourceType,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 个人加班排名Top10 -->
+     <select id="leavePersonalOvertimeRankList" parameterType="com.bayee.political.domain.ClockRecord" resultMap="BaseResultMap" >
+select a.police_id,a.name,a.department_id,sum(b.timeChange) as timeChange,c.name as departmentName from user a 
+right join
+(select *,round(TIMESTAMPDIFF(MINUTE, base_check_time, user_check_time)/60,2) as timeChange from clock_record 
+where check_type='OffDuty' and base_check_time is not null 
+and user_check_time&gt;=base_check_time
+and work_date &gt;= #{startTime} and work_date&lt;=#{endTime}) b on b.user_id=a.dd_user_id
+left join department c on a.department_id=c.id
+where 1=1 
+   <if test="departmentId != null and departmentId != '' ">
+		and a.department_id = #{departmentId}
+	</if> 
+	and timeChange&gt;0
+GROUP BY a.police_id,a.name,a.department_id order by sum(b.timeChange) desc limit 10
+  </select>
+    <!-- 打卡记录详情查询 -->
+     <select id="clockRecordItem" parameterType="com.bayee.political.domain.ClockRecord" resultMap="BaseResultMap" >
+select * from clock_record where user_id = #{userId,jdbcType=VARCHAR} and check_type = #{checkType,jdbcType=VARCHAR}
+and base_check_time = #{baseCheckTime,jdbcType=TIMESTAMP} and user_check_time = #{userCheckTime,jdbcType=TIMESTAMP}
+  </select>
+    <!-- 部门加班情况排名 -->
+     <select id="leaveDepOvertimeRankList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+<!-- select sum(a.total_overtime) as num,b.name from leave_overtime a
+left join department b on b.id=a.department_id
+where a.year=DATE_FORMAT(CURDATE(),'%Y') GROUP BY a.department_id 
+order by sum(a.total_overtime) desc -->
+select a.department_id as id,sum(b.timeChange) as num,c.abridge_name as name from user a right join
+(select *,round(TIMESTAMPDIFF(MINUTE, base_check_time, user_check_time)/60,2) as timeChange from clock_record 
+where check_type='OffDuty' and base_check_time is not null and user_check_time>=base_check_time
+and work_date is not null
+and work_date &gt;= #{startTime} and work_date&lt;=#{endTime}) b on b.user_id=a.dd_user_id
+left join department c on c.id=a.department_id
+GROUP BY a.department_id order by sum(b.timeChange) desc
+  </select>
+   <!-- 部门值班情况排名 -->
+     <select id="leaveDepDutyRankList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select sum(a.total_duty_time) as num,b.name from leave_duty a
+left join department b on b.id=a.department_id
+where a.year=DATE_FORMAT(CURDATE(),'%Y') GROUP BY a.department_id 
+order by sum(a.total_duty_time) desc
+  </select>
+<!-- 加班折线图查询（api） -->
+<select id="leaveOvertimeList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select a.year_month as name,ifnull(b.num,0) as num from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) a
+left join
+(select sum(timeChange) as num,DATE_FORMAT(work_date,'%Y-%m') as name from(
+select a.*,round(TIMESTAMPDIFF(MINUTE, a.base_check_time, a.user_check_time)/60,2) as timeChange,
+b.department_id from clock_record a 
+left join user b on b.dd_user_id=a.user_id
+where a.check_type='OffDuty' and a.base_check_time is not null and a.user_check_time>=a.base_check_time
+   <if test="departmentId != null and departmentId != '' ">
+		and b.department_id = #{departmentId}
+	</if>)as t
+GROUP BY DATE_FORMAT(work_date,'%Y-%m')) as b on b.name=a.year_month
+order by a.year_month
+  </select>
+  <!-- 值班折线图查询（api） -->
+<select id="leaveDutyList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select a.year_month as name,ifnull(b.num,0) as num from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) a
+		left join
+(select sum(total_duty_time) as num,concat(year,'-',month) as name from 
+(select * from leave_duty where 1=1 
+    <if test="departmentId != null and departmentId != '' ">
+		and department_id = #{departmentId}
+	</if>)  as t 
+GROUP BY concat(year,'-',month)) b on b.name=a.year_month
+order by a.year_month
+  </select>
+    <!-- 警员打卡加班数据查询 -->
+     <select id="overTimeClockRecordList" parameterType="com.bayee.political.domain.ClockRecord" resultMap="BaseResultMap" >
+select *,round(TIMESTAMPDIFF(MINUTE, base_check_time, user_check_time)/60,2) as timeChange from clock_record 
+where check_type='OffDuty' and base_check_time is not null 
+and user_check_time&gt;=base_check_time and identification=1 
+and DATE_FORMAT(creation_date,'%Y') = DATE_FORMAT(CURDATE(),'%Y')
+and TIMESTAMPDIFF(MINUTE, base_check_time, user_check_time)&gt;=60
+  </select>
+  <!-- 警员打卡值班数据查询 -->
+     <select id="dutyClockRecordList" parameterType="com.bayee.political.domain.ClockRecord" resultMap="BaseResultMap" >
+select * from clock_record 
+where check_type='OnDuty' and identification=1 
+and DATE_FORMAT(creation_date,'%Y') = DATE_FORMAT(CURDATE(),'%Y')
+  </select>
+    <!-- 查询当天下班打卡记录详情 -->
+     <select id="offDutyClockRecordItem" parameterType="com.bayee.political.domain.ClockRecord" resultMap="BaseResultMap" >
+select * from clock_record where check_type='OffDuty' and user_id=#{userId}
+and DATE_FORMAT(work_date,'%Y-%m-%d')=#{dateTime}
+and DATE_FORMAT(creation_date,'%Y') = DATE_FORMAT(CURDATE(),'%Y') limit 1
+  </select>
+    <!-- 查询打卡人员id -->
+     <select id="clockRecordUserIdList" parameterType="com.bayee.political.domain.ClockRecord" resultMap="BaseResultMap" >
+select distinct user_id from clock_record where check_type='OnDuty' and base_check_time is not null
+  </select>
+<!-- 警力在线统计 -->
+<select id="policeForceOnlineStatisticsItem" parameterType="com.bayee.political.domain.PoliceForceOnlineStatistics" resultMap="OnlineMap" >
+select 
+ifnull(a.anum,0) as totalPoliceNum,
+ifnull(b.bnum,0) as attendancePoliceNum,
+round(ifnull(b.bnum/a.anum,0)*100,2) as attendanceRate,
+ifnull(c.cnum,0) as onDutyPoliceNum,
+round(ifnull(c.cnum/a.anum,0)*100,2) as onDutyRate,
+ifnull(a.anum-b.bnum,0) as noAttendancePoliceNum,
+round(ifnull((a.anum-b.bnum)/a.anum,0)*100,2) as noAttendanceRate,
+ifnull(d.dnum,0) as leaveTodayPoliceNum,
+ifnull(e.enum,0) as goAbroadTodayPoliceNum,
+ifnull(f.fnum,0) as alarmTodayPoliceNum,
+ifnull(g.gnum,0) as talkTodayPoliceNum,
+ifnull(h.hnum,0) as dayOffTodayPoliceNum,
+round(ifnull((h.hnum-i.inum)/h.hnum,0)*100,2) as dayOffTodayRate,
+ifnull(j.jnum,0) as askForLeaveTodayPoliceNum,
+round(ifnull((j.jnum-k.knum)/j.jnum,0)*100,2) as askForLeaveTodayRate,
+ifnull(l.lnum,0) as fallIllTodayPoliceNum,
+round(ifnull((l.lnum-m.mnum)/l.lnum,0)*100,2) as fallIllTodayRate
+from 
+(select count(*) as anum from user where department_id!=47) a
+join
+(select count(distinct user_id) as bnum from clock_record where user_check_time is not null 
+and DATE_FORMAT(user_check_time,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')) b
+join
+(select count(distinct user_id) as cnum from clock_record where user_check_time is not null 
+and location_result='Outside'
+and DATE_FORMAT(user_check_time,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')) c
+join
+(select count(*) as dnum from leave_process where leave_type='离杭'
+and DATE_FORMAT(leave_start_date,'%Y-%m-%d')&lt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and DATE_FORMAT(leave_end_date,'%Y-%m-%d')&gt;=DATE_FORMAT(curdate(),'%Y-%m-%d')) d
+join
+(select count(*) as enum from alarm_entry_and_exit_record) e
+join
+(select count(*) as fnum from alarm_record where 
+DATE_FORMAT(first_alarm_time,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')) f
+join
+(select count(*) as gnum from alarm_talk where 
+DATE_FORMAT(start_time,'%Y-%m-%d')&lt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and DATE_FORMAT(end_time,'%Y-%m-%d')&gt;=DATE_FORMAT(curdate(),'%Y-%m-%d')) g
+join
+(select count(*) as hnum from leave_process where 
+DATE_FORMAT(leave_start_date,'%Y-%m-%d')&lt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and DATE_FORMAT(leave_end_date,'%Y-%m-%d')&gt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and (leave_type='年休假' or leave_type='调休' or leave_type='积分调休')) h
+join
+(select count(*) as inum from leave_process where 
+DATE_FORMAT(leave_start_date,'%Y-%m-%d')&lt;=DATE_FORMAT(DATE_SUB(curdate(),INTERVAL 1 DAY),'%Y-%m-%d')
+and DATE_FORMAT(leave_end_date,'%Y-%m-%d')&gt;=DATE_FORMAT(DATE_SUB(curdate(),INTERVAL 1 DAY),'%Y-%m-%d')
+and (leave_type='年休假' or leave_type='调休' or leave_type='积分调休')) i
+join
+(select count(*) as jnum from leave_process where 
+DATE_FORMAT(leave_start_date,'%Y-%m-%d')&lt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and DATE_FORMAT(leave_end_date,'%Y-%m-%d')&gt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and leave_type='事假') j
+join
+(select count(*) as knum from leave_process where 
+DATE_FORMAT(leave_start_date,'%Y-%m-%d')&lt;=DATE_FORMAT(DATE_SUB(curdate(),INTERVAL 1 DAY),'%Y-%m-%d')
+and DATE_FORMAT(leave_end_date,'%Y-%m-%d')&gt;=DATE_FORMAT(DATE_SUB(curdate(),INTERVAL 1 DAY),'%Y-%m-%d')
+and leave_type='事假') k
+join
+(select count(*) as lnum from leave_process where 
+DATE_FORMAT(leave_start_date,'%Y-%m-%d')&lt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and DATE_FORMAT(leave_end_date,'%Y-%m-%d')&gt;=DATE_FORMAT(curdate(),'%Y-%m-%d')
+and leave_type='病假') l
+join
+(select count(*) as mnum from leave_process where 
+DATE_FORMAT(leave_start_date,'%Y-%m-%d')&lt;=DATE_FORMAT(DATE_SUB(curdate(),INTERVAL 1 DAY),'%Y-%m-%d')
+and DATE_FORMAT(leave_end_date,'%Y-%m-%d')&gt;=DATE_FORMAT(DATE_SUB(curdate(),INTERVAL 1 DAY),'%Y-%m-%d')
+and leave_type='病假') m
+  </select>
+ <!-- 今日各部门加值班警员人数查询 -->
+     <select id="processDepOvertimeDutypoliceNumList" parameterType="com.bayee.political.domain.DepOvertimeDutypoliceNum" resultMap="DepOvertimeDutypoliceNumMap" >
+select a.id,a.name,ifnull(b.overtimeNum,0) as overtimeNum,ifnull(b.overtimeNum,0) as totalNum,'0' as dutyNum from department a
+left join (select count(distinct user_id) as overtimeNum,c.id from clock_record a
+left join user b on b.dd_user_id=a.user_id
+left join department c on c.id=b.department_id
+where check_type='OffDuty' and a.user_check_time is not null and user_check_time>base_check_time 
+and DATE_FORMAT(a.user_check_time,'%Y-%m-%d')=DATE_FORMAT(curdate(),'%Y-%m-%d')
+group by c.id) b on b.id=a.id
+where a.parent_id&lt;=3
+order by ${typeStr} ${sortStr},a.id asc
+  </select>
+  <!-- 每月加班时长趋势 -->
+<select id="screenOverTimeList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select a.year_month as name,ifnull(b.num,0) as num from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month`) a
+left join
+(select sum(timeChange) as num,DATE_FORMAT(work_date,'%Y-%m') as name from(
+select a.*,round(TIMESTAMPDIFF(MINUTE, a.base_check_time, a.user_check_time)/60,2) as timeChange,
+b.department_id from clock_record a 
+left join user b on b.dd_user_id=a.user_id
+where a.check_type='OffDuty' and a.base_check_time is not null and a.user_check_time>=a.base_check_time)as t
+GROUP BY DATE_FORMAT(work_date,'%Y-%m')) as b on b.name=a.year_month
+order by a.year_month
+  </select>
+    <!-- 每月值班时长趋势 -->
+<select id="screenDutyLineChartList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select a.year_month as name,ifnull(b.num,0) as num from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month`) a
+		left join
+(select sum(total_duty_time) as num,concat(year,'-',month) as name from 
+(select * from leave_duty where 1=1 
+    <if test="departmentId != null and departmentId != '' ">
+		and department_id = #{departmentId}
+	</if>)  as t 
+GROUP BY concat(year,'-',month)) b on b.name=a.year_month
+order by a.year_month
+  </select>
+</mapper>

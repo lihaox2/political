@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.PoliceStationMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.PoliceStation" >
+    <id column="id" property="id" />
+    <result column="police_station_name" property="policeStationName" />
+    <result column="area_coefficient" property="areaCoefficient" />
+    <result column="industry_coefficient" property="industryCoefficient" />
+    <result column="population_coefficient" property="populationCoefficient" />
+    <result column="student_coefficient" property="studentCoefficient" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_station_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from police_station
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from police_station
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.PoliceStation" >
+    insert into police_station (id, police_station_name)
+    values (#{id,jdbcType=INTEGER}, #{policeStationName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.PoliceStation" >
+    insert into police_station
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeStationName != null" >
+        police_station_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeStationName != null" >
+        #{policeStationName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.PoliceStation" >
+    update police_station
+    <set >
+      <if test="policeStationName != null" >
+        police_station_name = #{policeStationName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.PoliceStation" >
+    update police_station
+    set police_station_name = #{policeStationName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--派出所查询(api) -->
+  <select id="policeStationApiList" parameterType="com.bayee.political.domain.PoliceStation" resultMap="BaseResultMap">
+select id, SUBSTRING_INDEX(police_station_name,'派出所',1) as police_station_name from police_station where 1=1 
+     <if test="policeStationId != null and policeStationId !=''">
+        and id = #{policeStationId}
+      </if>
+      order by id
+</select>
+
+  <!--派出所全部及总数查询(api) -->
+  <select id="policeStationApiListSum" parameterType="com.bayee.political.domain.PoliceStation" resultMap="BaseResultMap">
+	select id, SUBSTRING_INDEX(police_station_name,'派出所',1) as police_station_name from police_station UNION select '33' as id, '总计' as police_station_name  
+	order by id
+</select>
+
+</mapper>

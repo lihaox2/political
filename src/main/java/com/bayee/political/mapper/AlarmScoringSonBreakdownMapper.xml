@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.AlarmScoringSonBreakdownMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.AlarmScoringSonBreakdown" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="scoring_breakdown_id" property="scoringBreakdownId" jdbcType="INTEGER" />
+    <result column="scoring_son_breakdown" property="scoringSonBreakdown" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, scoring_breakdown_id, scoring_son_breakdown, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from alarm_scoring_son_breakdown
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from alarm_scoring_son_breakdown
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.AlarmScoringSonBreakdown" >
+    insert into alarm_scoring_son_breakdown (id, scoring_breakdown_id, scoring_son_breakdown, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{scoringBreakdownId,jdbcType=INTEGER}, #{scoringSonBreakdown,jdbcType=VARCHAR}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.AlarmScoringSonBreakdown" >
+    insert into alarm_scoring_son_breakdown
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="scoringBreakdownId != null" >
+        scoring_breakdown_id,
+      </if>
+      <if test="scoringSonBreakdown != null" >
+        scoring_son_breakdown,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="scoringBreakdownId != null" >
+        #{scoringBreakdownId,jdbcType=INTEGER},
+      </if>
+      <if test="scoringSonBreakdown != null" >
+        #{scoringSonBreakdown,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.AlarmScoringSonBreakdown" >
+    update alarm_scoring_son_breakdown
+    <set >
+      <if test="scoringBreakdownId != null" >
+        scoring_breakdown_id = #{scoringBreakdownId,jdbcType=INTEGER},
+      </if>
+      <if test="scoringSonBreakdown != null" >
+        scoring_son_breakdown = #{scoringSonBreakdown,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.AlarmScoringSonBreakdown" >
+    update alarm_scoring_son_breakdown
+    set scoring_breakdown_id = #{scoringBreakdownId,jdbcType=INTEGER},
+      scoring_son_breakdown = #{scoringSonBreakdown,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 查询所有记分子细目 -->
+  <select id="getAllScoringSonBreakdowns" resultMap="BaseResultMap">
+  select * from alarm_scoring_son_breakdown
+  </select>
+  
+  <!-- 根据记分细目id查询记分子细目 -->
+  <select id="getScoringSonBreakdownsByParentId" resultMap="BaseResultMap">
+  	select * from alarm_scoring_son_breakdown 
+	where 1 = 1 
+	<if test="scoringBreakdownId!=null">
+	and scoring_breakdown_id = #{scoringBreakdownId}
+	</if>
+  </select>
+  
+  <!-- 根据计分细目名获取计分细目id -->
+  <select id="getIdBySonBreakdownName" resultType="java.lang.Integer">
+  select id from alarm_scoring_son_breakdown where scoring_son_breakdown = #{name} 
+  and scoring_breakdown_id = #{scoringBreakdownId}  
+  </select>
+  
+  
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.bayee.political.mapper.DepartmentMapper">
+	<resultMap id="departmentResult" type="com.bayee.political.domain.Department">
+	  <id property="id" column="id" />
+	  <result property="name" column="name"/>
+	  <result property="parentId" column="parent_id"/>
+	  <result property="creationDate" column="creation_date"/>
+	</resultMap>
+	
+	<select id="findById" resultMap="departmentResult">
+		select * from department where id = #{id}
+	</select>
+	
+	<!-- 部门查询 -->
+	<select id="departmentList" resultMap="departmentResult">
+		select * from department where 1=1 
+		<if test="id !=null and id!=''">
+	     and id = #{id} 
+	   </if>
+	   and parent_id &lt;4 
+	   order by id 
+	</select>
+	
+	<select id="findAll" resultMap="departmentResult">
+		select * from department order by id
+	</select>
+	
+	<insert id="save">
+	  insert into department (id,name,parent_id)
+	  values (#{id},#{name},#{parentId})
+	</insert>
+	
+	<select id="participantDepList" resultMap="departmentResult">
+		select b.* from
+		(select distinct department_id from evaluate_task_participant 
+		where police_id=#{policeId} and type=1
+and task_id=#{taskId}) as a left join department b on b.id=a.department_id
+	</select>
+	
+	<select id="getDepartmentByType" resultMap="departmentResult">
+		select * from department where parent_id = #{parentId}
+	</select>
+	
+	<!-- 根据部门id或部门id集合查询部门name及id -->
+	<select id="getDepartmentByIds" resultMap="departmentResult">
+	select id,name from department where 1 =1 
+	<if test="ids!=null and ids!=''">
+	and FIND_IN_SET(id, #{ids}) 
+	</if>
+	</select>
+	
+	<!-- 根据部门名称查询部门 -->
+	<select id="getDepartmentByName" resultMap="departmentResult">
+	select * from department where name = #{name}
+	</select>
+	
+	<!-- 根据警号查询部门 -->
+	<select id="getDepartmentByPoliceId" resultMap="departmentResult">
+	select * from department where id = (select department_id from user where police_id = #{policeId})
+	</select>
+	<!-- 扣分型统计分析部门查询 -->
+	<select id="alarmDepBuckleItem" resultMap="departmentResult">
+<!-- select distinct d.name,d.id from leave_power a
+left join alarm_evaluation b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.scored_police_id
+left join department d on d.id=c.department_id
+where a.checker_id=#{policeId} and b.score_value&lt;0
+and DATE_FORMAT(b.scoring_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+and b.scored_police_id is not null -->
+select b.name,b.id from leave_power a
+left join department b on find_in_set(b.id,a.department_object_ids) > 0
+where a.checker_id=#{policeId} and b.id is not null
+order by b.id desc
+	</select>
+	<!-- 加分型统计分析部门查询 -->
+	<select id="alarmDepAddItem" resultMap="departmentResult">
+<!-- select distinct d.name,d.id from leave_power a
+left join alarm_evaluation b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.scored_police_id
+left join department d on d.id=c.department_id
+where a.checker_id=#{policeId} and b.score_value&gt;0
+and DATE_FORMAT(b.scoring_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+and b.scored_police_id is not null -->
+select b.name,b.id from leave_power a
+left join department b on find_in_set(b.id,a.department_object_ids) > 0
+where a.checker_id=#{policeId} and b.id is not null
+order by b.id desc
+	</select>
+</mapper>

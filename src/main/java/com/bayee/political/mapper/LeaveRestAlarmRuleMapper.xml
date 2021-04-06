@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeaveRestAlarmRuleMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeaveRestAlarmRule" >
+    <id column="id" property="id" />
+    <result column="day" property="day" />
+    <result column="value" property="value" />
+    <result column="type" property="type" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, day, value, type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leave_rest_alarm_rule
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from leave_rest_alarm_rule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.LeaveRestAlarmRule" >
+    insert into leave_rest_alarm_rule (id, day, value
+      )
+    values (#{id,jdbcType=INTEGER}, #{day,jdbcType=INTEGER}, #{value,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.LeaveRestAlarmRule" >
+    insert into leave_rest_alarm_rule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="day != null" >
+        day,
+      </if>
+      <if test="value != null" >
+        value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="day != null" >
+        #{day,jdbcType=INTEGER},
+      </if>
+      <if test="value != null" >
+        #{value,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.LeaveRestAlarmRule" >
+    update leave_rest_alarm_rule
+    <set >
+      <if test="day != null" >
+        day = #{day,jdbcType=INTEGER},
+      </if>
+      <if test="value != null" >
+        value = #{value},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.LeaveRestAlarmRule" >
+    update leave_rest_alarm_rule
+    set day = #{day,jdbcType=INTEGER},
+      value = #{value,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 获得调修预警规则 -->
+  <select id="getLeaveRestAlarmRuleList" resultMap="BaseResultMap">
+  select * from leave_rest_alarm_rule 
+  </select>
+  <!-- 获得调修预警规则 -->
+  <select id="getLeaveRestAlarmRuleItem" resultMap="BaseResultMap">
+  select * from leave_rest_alarm_rule where id= #{id,jdbcType=INTEGER}
+  </select>
+</mapper>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainEvaluateRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainEvaluateRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="object_id" property="objectId" jdbcType="INTEGER" />
+    <result column="activity_id" property="activityId" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, object_id, activity_id, police_id, content, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_evaluate_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from train_evaluate_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 评论新增 -->
+  <insert id="trainEvaluateRecordCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.TrainEvaluateRecord" useGeneratedKeys="true">
+    insert into train_evaluate_record (object_id, activity_id, 
+      police_id, content, creation_date, 
+      update_date)
+    values (#{objectId,jdbcType=INTEGER}, #{activityId,jdbcType=INTEGER}, 
+      #{policeId,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 评论修改 -->
+  <update id="trainEvaluateRecordUpdate" parameterType="com.bayee.political.domain.TrainEvaluateRecord" >
+    update train_evaluate_record
+    <set >
+      <if test="objectId != null" >
+        object_id = #{objectId,jdbcType=INTEGER},
+      </if>
+      <if test="activityId != null" >
+        activity_id = #{activityId,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 评论详情查询 -->
+<select id="trainEvaluateRecordItem" parameterType="com.bayee.political.domain.TrainEvaluateRecord" resultMap="BaseResultMap">
+select * from train_evaluate_record where 1=1
+    <if test="id != null and id !=''">
+	    and id = #{id,jdbcType=INTEGER}
+	</if>
+	<if test="objectId != null and objectId !=''">
+	    and object_id = #{objectId,jdbcType=INTEGER}
+	</if>
+	<if test="activityId != null and activityId !=''">
+	    and activity_id = #{activityId,jdbcType=INTEGER}
+	</if>
+	<if test="policeId != null and policeId !=''">
+	    and police_id = #{policeId,jdbcType=VARCHAR}
+	</if>
+</select>
+  <!-- 评论列表查询 -->
+<select id="trainEvaluateRecordList" parameterType="com.bayee.political.domain.TrainEvaluateRecord" resultMap="BaseResultMap">
+select a.*,b.head_image as headImage,b.name from train_evaluate_record a
+left join user b on b.police_id=a.police_id where 1=1
+	<if test="objectId != null and objectId !=''">
+	    and a.object_id = #{objectId,jdbcType=INTEGER}
+	</if>
+	<if test="activityId != null and activityId !=''">
+	    and a.activity_id = #{activityId,jdbcType=INTEGER}
+	</if>
+	<if test="policeId != null and policeId !=''">
+	    and a.police_id = #{policeId,jdbcType=VARCHAR}
+	</if>
+	order by creation_date desc
+</select>
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainLeaderMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainLeader" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="leader_id" property="leaderId" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="police_name" property="policeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, department_id, leader_id, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_leader
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 领队删除 -->
+  <delete id="trainLeaderDelete" parameterType="java.lang.Integer" >
+    delete from train_leader
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!--  领队新增 -->
+  <insert id="trainLeaderCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.TrainLeader" useGeneratedKeys="true">
+    insert into train_leader (department_id, leader_id, 
+      creation_date, update_date)
+    values (#{departmentId,jdbcType=INTEGER}, #{leaderId,jdbcType=VARCHAR}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 领队修改-->
+  <update id="trainLeaderUpdate" parameterType="com.bayee.political.domain.TrainLeader" >
+    update train_leader
+    <set >
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="leaderId != null" >
+        leader_id = #{leaderId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainLeader" >
+    update train_leader
+    set department_id = #{departmentId,jdbcType=INTEGER},
+      leader_id = #{leaderId,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <!-- 领队详情查询 -->
+   <select id="trainLeaderItem" parameterType="com.bayee.political.domain.TrainLeader" resultMap="BaseResultMap">
+select * from train_leader where 1=1 
+     <if test="id != null and id !=''">
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="policeId != null and policeId !=''">
+        and leader_id = #{policeId,jdbcType=VARCHAR}
+      </if>
+      <if test="departmentId != null and departmentId !=''">
+        and department_id = #{departmentId,jdbcType=INTEGER}
+      </if>
+      order by id desc limit 1
+</select>
+   <!-- 是否是记分员判断查询 -->
+   <select id="trainIsScorerList" parameterType="com.bayee.political.domain.TrainLeader" resultMap="BaseResultMap">
+select '1' as objectId,id,scorer_police_id as leader_id from train_physical where scorer_police_id=#{policeId}
+UNION ALL
+select '2' as objectId,id,scorer_police_id as leader_id from train_firearm where scorer_police_id=#{policeId}
+UNION ALL
+select '3' as objectId,id,scorer_police_id as leader_id from train_match where scorer_police_id=#{policeId}
+</select>
+<!-- 获得领队 -->
+<select id="getTrainLeaderList" resultMap="BaseResultMap">
+select a.*,b.name as department_name,c.name as police_name from train_leader a 
+left join department b on a.department_id = b.id 
+left join user c on a.leader_id = c.police_id  
+where 1 = 1 
+<if test="keyword!=null and keyword!=''">
+and (b.name like "%"#{keyword}"%" or c.name like "%"#{keyword}"%" or a.leader_id like "%"#{keyword}"%")
+</if>
+order by id desc 
+limit #{pageSize},10
+</select>
+
+<!-- 获得领队数量 -->
+<select id="getTrainLeaderListCount" resultType="java.lang.Integer">
+select count(*) as count from train_leader a 
+left join department b on a.department_id = b.id 
+left join user c on a.leader_id = c.police_id  
+where 1 = 1 
+<if test="keyword!=null and keyword!=''">
+and (b.name like "%"#{keyword}"%" or c.name like "%"#{keyword}"%" or a.leader_id like "%"#{keyword}"%")
+</if>
+</select>
+
+<!-- 根据id查询领队 -->
+<select id="getTrainLeaderById" resultMap="BaseResultMap">
+select a.*,b.name as department_name,c.name as police_name from train_leader a 
+left join department b on a.department_id = b.id 
+left join user c on a.leader_id = c.police_id  
+where a.id = #{id} 
+</select>
+
+</mapper>

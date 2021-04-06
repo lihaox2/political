@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeaveRestManageMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeaveRestManage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="rest_arranger_police_id" property="restArrangerPoliceId" jdbcType="VARCHAR" />
+    <result column="rest_police_id" property="restPoliceId" jdbcType="VARCHAR" />
+    <result column="is_rest" property="isRest" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    
+    <result column="rest_arranger_police_name" property="restArrangerPoliceName"/>
+    <result column="rest_police_name" property="restPoliceName"/>
+    <result column="position_id" property="positionId"/>
+    <result column="position_name" property="positionName"/>
+    <result column="department_id" property="departmentId"/>
+    <result column="department_name" property="departmentName"/>
+    <result column="gender" property="gender"/>
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, rest_arranger_police_id, rest_police_id, is_rest, start_time, end_time, reason, 
+    creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leave_rest_manage
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from leave_rest_manage
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.LeaveRestManage" >
+    insert into leave_rest_manage (id, rest_arranger_police_id, rest_police_id, 
+      is_rest, start_time, end_time, 
+      reason, creation_date, update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{restArrangerPoliceId,jdbcType=VARCHAR}, #{restPoliceId,jdbcType=VARCHAR}, 
+      #{isRest,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{reason,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.LeaveRestManage" >
+    insert into leave_rest_manage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="restArrangerPoliceId != null" >
+        rest_arranger_police_id,
+      </if>
+      <if test="restPoliceId != null" >
+        rest_police_id,
+      </if>
+      <if test="isRest != null" >
+        is_rest,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="restArrangerPoliceId != null" >
+        #{restArrangerPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="restPoliceId != null" >
+        #{restPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="isRest != null" >
+        #{isRest,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.LeaveRestManage" >
+    update leave_rest_manage
+    <set >
+      <if test="restArrangerPoliceId != null" >
+        rest_arranger_police_id = #{restArrangerPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="restPoliceId != null" >
+        rest_police_id = #{restPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="isRest != null" >
+        is_rest = #{isRest,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.LeaveRestManage" >
+    update leave_rest_manage
+    set rest_arranger_police_id = #{restArrangerPoliceId,jdbcType=VARCHAR},
+      rest_police_id = #{restPoliceId,jdbcType=VARCHAR},
+      is_rest = #{isRest,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      reason = #{reason,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 查询全部或按条件查询调休管理 -->
+  <select id="getLeaveRestManageList" resultMap="BaseResultMap">
+  	select a.*,b.`name` as rest_arranger_police_name,c.`name` as rest_police_name,d.id as position_id,
+d.position_name, e.id as department_id, e.`name` as department_name,c.gender 
+from leave_rest_manage a 
+left join user b on a.rest_arranger_police_id = b.police_id 
+left join user c on a.rest_police_id = c.police_id 
+left join police_position d on c.position_id = d.id 
+left join department e on c.department_id = e.id 
+where 1 = 1 
+<if test="departmentId!=null and departmentId!=''">
+and e.id = #{departmentId}
+</if> 
+<if test="positionId!=null and positionId!=''">
+and d.id = #{positionId}
+</if> 
+<if test="keyword!=null and keyword!=''">
+and (a.rest_arranger_police_id like "%"#{keyword}"%" or a.rest_police_id like "%"#{keyword}"%"
+ or b.`name` like "%"#{keyword}"%" or c.`name` like "%"#{keyword}"%")
+</if>
+order by start_time desc 
+limit #{pageSize},10
+  </select>
+  
+  <!-- 查询全部或按条件查询调休管理总数量 -->
+  <select id="getLeaveRestManageListCount" resultType="java.lang.Integer">
+    	select count(*) from leave_rest_manage a 
+left join user b on a.rest_arranger_police_id = b.police_id 
+left join user c on a.rest_police_id = c.police_id 
+left join police_position d on c.position_id = d.id 
+left join department e on c.department_id = e.id 
+where 1 = 1 
+<if test="departmentId!=null and departmentId!=''">
+and e.id = #{departmentId}
+</if> 
+<if test="positionId!=null and positionId!=''">
+and d.id = #{positionId}
+</if> 
+<if test="keyword!=null and keyword!=''">
+and (a.rest_arranger_police_id like "%"#{keyword}"%" or a.rest_police_id like "%"#{keyword}"%"
+ or b.`name` like "%"#{keyword}"%" or c.`name` like "%"#{keyword}"%")
+</if>
+  </select>
+  
+  <!-- 根据id查询一条或按条件查询调休管理 -->
+  <select id="getLeaveRestManageOne" resultMap="BaseResultMap">
+    	select a.*,b.`name` as rest_arranger_police_name,c.`name` as rest_police_name,d.id as position_id,
+d.position_name, e.id as department_id, e.`name` as department_name,c.gender 
+from leave_rest_manage a 
+left join user b on a.rest_arranger_police_id = b.police_id 
+left join user c on a.rest_police_id = c.police_id 
+left join police_position d on c.position_id = d.id 
+left join department e on c.department_id = e.id 
+where a.id = #{id} 
+  </select>
+  
+</mapper>

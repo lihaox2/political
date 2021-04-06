@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainFirearmAchievementMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainFirearmAchievement" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="police_name" property="policeName" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="registration_date" property="registrationDate" jdbcType="TIMESTAMP" />
+    <result column="achievement_date" property="achievementDate" jdbcType="TIMESTAMP" />
+    <result column="sign_date" property="signDate" jdbcType="TIMESTAMP" />
+    <result column="train_firearm_id" property="trainFirearmId" jdbcType="INTEGER" />
+    <result column="train_project_type" property="trainProjectType" jdbcType="INTEGER" />
+    <result column="achievement" property="achievement" jdbcType="DOUBLE" />
+    <result column="achievement_first" property="achievementFirst" jdbcType="INTEGER" />
+    <result column="achievement_second" property="achievementSecond" jdbcType="DOUBLE" />
+    <result column="shoot_time" property="shootTime" jdbcType="DOUBLE" />
+    <result column="achievement_grade" property="achievementGrade" jdbcType="INTEGER" />
+    <result column="achievement_str" property="achievementStr" jdbcType="VARCHAR" />
+    <result column="qr_code" property="qrCode" jdbcType="VARCHAR" />
+    <result column="is_sign" property="isSign" jdbcType="INTEGER" />
+    <result column="is_submit" property="isSubmit" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, registration_date, achievement_date, train_firearm_id, train_project_type, 
+    achievement,shoot_time, achievement_grade,achievement_str, is_sign,is_submit, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_firearm_achievement
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from train_firearm_achievement
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 枪械报名新增 -->
+  <insert id="trainFirearmAchievementCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.TrainFirearmAchievement" useGeneratedKeys="true">
+    insert into train_firearm_achievement (police_id, registration_date, 
+      achievement_date,sign_date, train_firearm_id, train_project_type, 
+      achievement,achievement_first,achievement_second, shoot_time,achievement_grade,achievement_str,qr_code,is_sign,is_submit, 
+      creation_date, update_date)
+    values (#{policeId,jdbcType=VARCHAR}, #{registrationDate,jdbcType=TIMESTAMP}, 
+      #{achievementDate,jdbcType=TIMESTAMP}, #{signDate,jdbcType=TIMESTAMP}, 
+      #{trainFirearmId,jdbcType=INTEGER}, #{trainProjectType,jdbcType=INTEGER}, 
+      #{achievement,jdbcType=DOUBLE},#{achievementFirst,jdbcType=INTEGER},#{achievementSecond,jdbcType=DOUBLE},
+      #{shootTime,jdbcType=DOUBLE}, 
+      #{achievementGrade,jdbcType=INTEGER}, #{achievementStr,jdbcType=VARCHAR},
+      #{qrCode,jdbcType=VARCHAR},#{isSign,jdbcType=INTEGER}, 
+      #{isSubmit,jdbcType=INTEGER},
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 枪械报名修改 -->
+  <update id="trainFirearmAchievementUpdate" parameterType="com.bayee.political.domain.TrainFirearmAchievement" >
+    update train_firearm_achievement
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationDate != null" >
+        registration_date = #{registrationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="achievementDate != null" >
+        achievement_date = #{achievementDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signDate != null" >
+        sign_date = #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainFirearmId != null" >
+        train_firearm_id = #{trainFirearmId,jdbcType=INTEGER},
+      </if>
+      <if test="trainProjectType != null" >
+        train_project_type = #{trainProjectType,jdbcType=INTEGER},
+      </if>
+      <if test="achievement != null" >
+        achievement = #{achievement,jdbcType=DOUBLE},
+      </if>
+       <if test="achievementFirst != null" >
+        achievement_first = #{achievementFirst,jdbcType=INTEGER},
+      </if>
+       <if test="achievementSecond != null" >
+        achievement_second = #{achievementSecond,jdbcType=DOUBLE},
+      </if>
+       <if test="shootTime != null" >
+        shoot_time = #{shootTime,jdbcType=DOUBLE},
+      </if>
+      <if test="achievementGrade != null" >
+        achievement_grade = #{achievementGrade,jdbcType=INTEGER},
+      </if>
+      <if test="achievementStr != null" >
+        achievement_str = #{achievementStr,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCode != null" >
+        qr_code = #{qrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isSign != null" >
+        is_sign = #{isSign,jdbcType=INTEGER},
+      </if>
+      <if test="isSubmit != null" >
+        is_submit = #{isSubmit,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <!-- 根据警号详情id项目id修改 -->
+  <update id="trainFirearmAchievementPoliceUpdate" parameterType="com.bayee.political.domain.TrainFirearmAchievement" >
+    update train_firearm_achievement
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationDate != null" >
+        registration_date = #{registrationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="achievementDate != null" >
+        achievement_date = #{achievementDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signDate != null" >
+        sign_date = #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainFirearmId != null" >
+        train_firearm_id = #{trainFirearmId,jdbcType=INTEGER},
+      </if>
+      <if test="trainProjectType != null" >
+        train_project_type = #{trainProjectType,jdbcType=INTEGER},
+      </if>
+      <if test="achievement != null" >
+        achievement = #{achievement},
+      </if>
+       <if test="achievementFirst != null" >
+        achievement_first = #{achievementFirst,jdbcType=INTEGER},
+      </if>
+       <if test="achievementSecond != null" >
+        achievement_second = #{achievementSecond,jdbcType=DOUBLE},
+      </if>
+       <if test="shootTime != null" >
+        shoot_time = #{shootTime},
+      </if>
+      <if test="achievementGrade != null" >
+        achievement_grade = #{achievementGrade,jdbcType=INTEGER},
+      </if>
+       <if test="achievementStr != null" >
+        achievement_str = #{achievementStr,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCode != null" >
+        qr_code = #{qrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isSign != null" >
+        is_sign = #{isSign,jdbcType=INTEGER},
+      </if>
+      <if test="isSubmit != null" >
+        is_submit = #{isSubmit,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where police_id = #{policeId,jdbcType=VARCHAR} and train_firearm_id = #{trainFirearmId,jdbcType=INTEGER}
+  </update>
+    <!-- 根据警号详情id项目id批量修改枪械成绩 -->
+    <update id="updateFirearmAchievementBatch" parameterType="com.bayee.political.domain.TrainFirearmAchievement">
+    <foreach collection="list" item="hytemplate" index="index" open="" close="" separator=";">
+        UPDATE train_firearm_achievement
+        <set>
+           <if test="hytemplate.achievementDate != null" >
+                achievement_date = #{hytemplate.achievementDate,jdbcType=TIMESTAMP},
+           </if>
+           <if test="hytemplate.shootTime != null">
+                shoot_time = #{hytemplate.shootTime,jdbcType=DOUBLE},
+            </if>
+            <if test="hytemplate.isSubmit != null">
+                is_submit = #{hytemplate.isSubmit,jdbcType=INTEGER},
+            </if>
+        </set>
+        <where>
+            id = #{hytemplate.id,jdbcType=INTEGER}
+        </where>
+    </foreach>
+</update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainFirearmAchievement" >
+    update train_firearm_achievement
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      registration_date = #{registrationDate,jdbcType=TIMESTAMP},
+      achievement_date = #{achievementDate,jdbcType=TIMESTAMP},
+      sign_date = #{signDate,jdbcType=TIMESTAMP},
+      train_firearm_id = #{trainFirearmId,jdbcType=INTEGER},
+      train_project_type = #{trainProjectType,jdbcType=INTEGER},
+      achievement = #{achievement,jdbcType=DOUBLE},
+      shoot_time = #{shootTime,jdbcType=DOUBLE},
+      achievement_grade = #{achievementGrade,jdbcType=INTEGER},
+      achievement_str = #{achievementStr,jdbcType=VARCHAR},
+      qr_code = #{qrCode,jdbcType=VARCHAR},
+      is_sign = #{isSign,jdbcType=INTEGER},
+      is_submit = #{isSubmit,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 枪械项目报名人数统计 -->
+  <select id="singleTrainFirearmAchievementCount" parameterType="com.bayee.political.domain.TrainFirearmAchievement" resultType="Integer">
+select count(*) from train_firearm_achievement where train_firearm_id = #{trainFirearmId,jdbcType=INTEGER}
+</select>
+ <!-- 枪械项目报名详情 -->
+   <select id="trainFirearmAchievementItem" parameterType="com.bayee.political.domain.TrainFirearmAchievement" resultMap="BaseResultMap">
+select a.*,b.name as projectName,c.unit_name as unitName,d.head_image as headImage,d.name,
+e.name as trainFirearmName,e.train_end_date as trainEndDate,e.train_start_date as trainStartDate  
+from train_firearm_achievement a
+left join train_project b on b.id=a.train_project_type
+left join train_unit c on c.id=b.unit_id
+left join user d on d.police_id=a.police_id
+left join train_firearm e on e.id=a.train_firearm_id
+where 1=1 
+     <if test="id != null and id !=''">
+        and a.id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="trainFirearmId != null and trainFirearmId !=''">
+        and a.train_firearm_id=#{trainFirearmId,jdbcType=INTEGER}
+      </if>
+       <if test="policeId != null and policeId !=''">
+        and a.police_id = #{policeId,jdbcType=VARCHAR}
+      </if>
+</select>
+
+<!-- 获得枪械数据 -->
+<select id="getFirearmAchievementData" resultMap="BaseResultMap">
+select a.*,b.name as police_name,c.name as department_name,e.unit_name from train_firearm_achievement a 
+left join user b on a.police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join train_project d on a.train_project_type = d.id  
+left join train_unit e on d.unit_id = e.id  
+where train_firearm_id = #{trainFirearmId} 
+<if test="departmentId!=null and departmentId!=''">
+and c.id = #{departmentId}
+</if>
+<if test="keyword!=null and keyword!=''">
+and (a.police_id like "%"#{keyword}"%" or b.name like "%"#{keyword}"%") 
+</if>
+limit #{pageSize},10 
+</select>
+
+<!-- 获得枪械数据数量 -->
+<select id="getFirearmAchievementDataCount" resultType="java.lang.Integer">
+select count(*) as count from train_firearm_achievement a 
+left join user b on a.police_id = b.police_id 
+left join department c on b.department_id = c.id
+where train_firearm_id = #{trainFirearmId} 
+<if test="departmentId!=null and departmentId!=''">
+and c.id = #{departmentId}
+</if>
+<if test="keyword!=null and keyword!=''">
+and (a.police_id like "%"#{keyword}"%" or b.name like "%"#{keyword}"%")
+</if>
+</select>
+
+<!-- 根据训练id及警号获得枪械成绩排行 -->
+<select id="getFirearmRank" resultType="java.lang.Integer">
+select IFNULL(rank,0) from (select *,(case when @p=achievement then @r
+when @p:=achievement then @r:=@r+1
+end) as rank from (select * from train_firearm_achievement 
+where train_firearm_id = #{trainFirearmId} 
+order by achievement  
+<if test="sort == 2">
+desc 
+</if>
+) a, (select @r:=0,@p:=NULL) r ) a 
+where a.police_id = #{policeId} 
+</select>
+
+<!-- 修改枪械训练成绩 -->
+<update id="updateFirearmAchievement">
+update train_firearm_achievement set achievement = #{achievement} where id = #{id} and train_firearm_id = #{trainFirearmId}  
+</update>
+
+<!-- 根据id查询枪械成绩详情 -->
+<select id="getTrainFirearmAchievementById" resultMap="BaseResultMap" >
+select a.*,b.name as police_name,c.name as project_name, d.unit_name from train_firearm_achievement a 
+left join user b on a.police_id = b.police_id 
+left join train_project c on a.train_project_type = c.id 
+left join train_unit d on c.unit_id = d.id 
+where a.id = #{id} 
+</select>
+
+<!-- 枪械报名人数 -->
+<select id="firearmSignUpNum" resultType="java.lang.Integer">
+select count(distinct(police_id)) as count from train_firearm_achievement 
+where train_firearm_id = #{trainFirearmId} 
+</select>
+
+<!-- 枪械签到人数 -->
+<select id="firearmSignInNum" resultType="java.lang.Integer">
+select count(distinct(police_id)) as count from train_firearm_achievement 
+where train_firearm_id = #{trainFirearmId} 
+and is_sign = 2 
+</select>
+
+<!-- 枪械合格人数 -->
+<select id="firearmQualifiedNum" resultType="java.lang.Integer">
+select count(distinct(police_id)) as count from train_firearm_achievement 
+where train_firearm_id = #{trainFirearmId} 
+and is_sign = 2 
+and achievement_grade = 2
+</select>
+
+<!-- 枪械U型靶良好人数 -->
+<select id="firearmUFineNum" resultType="java.lang.Integer">
+select count(distinct(police_id)) as count from train_firearm_achievement 
+where train_firearm_id = #{trainFirearmId} 
+and is_sign = 2 
+and achievement_grade = 3 
+</select>
+
+<!-- 枪械U型靶优秀人数 -->
+<select id="firearmUGoodNum" resultType="java.lang.Integer">
+select count(distinct(police_id)) as count from train_firearm_achievement 
+where train_firearm_id = #{trainFirearmId} 
+and is_sign = 2 
+and achievement_grade = 4 
+</select>
+
+<!-- 枪械单位报名数 -->
+<select id="firearmCompanyNum" resultType="java.lang.Integer">
+select count(distinct(b.department_id)) as count from train_firearm_achievement a 
+left join user b on a.police_id = b.police_id 
+where a.train_firearm_id = #{trainFirearmId} 
+</select>
+
+<!-- 枪械成绩模板 -->
+<select id="getFirearmTrainAchievementTemplate" resultType="com.bayee.political.domain.TrainAchievementTemplate">
+select b.name,c.name as policeName,c.police_id as policeId,d.name as projectName,a.achievement_str as achievementStr,d.is_u as isU,e.unit_name as unit 
+from train_firearm_achievement a 
+left join train_firearm b on a.train_firearm_id = b.id 
+left join user c on a.police_id = c.police_id 
+left join train_project d on a.train_project_type = d.id 
+left join train_unit e on d.unit_id = e.id 
+where 1 = 1 
+and a.train_firearm_id = #{trainFirearmId} 
+</select>
+
+<!-- 修改枪械报名根据train_firearm_id及police_id -->
+  <update id="trainFirearmAchievementUpdateExport" parameterType="com.bayee.political.domain.TrainFirearmAchievement" >
+    update train_firearm_achievement
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationDate != null" >
+        registration_date = #{registrationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="achievementDate != null" >
+        achievement_date = #{achievementDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signDate != null" >
+        sign_date = #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainFirearmId != null" >
+        train_firearm_id = #{trainFirearmId,jdbcType=INTEGER},
+      </if>
+      <if test="trainProjectType != null" >
+        train_project_type = #{trainProjectType,jdbcType=INTEGER},
+      </if>
+      <if test="achievement != null" >
+        achievement = #{achievement,jdbcType=DOUBLE},
+      </if>
+       <if test="achievementFirst != null" >
+        achievement_first = #{achievementFirst,jdbcType=INTEGER},
+      </if>
+       <if test="achievementSecond != null" >
+        achievement_second = #{achievementSecond,jdbcType=DOUBLE},
+      </if>
+       <if test="shootTime != null" >
+        shoot_time = #{shootTime,jdbcType=DOUBLE},
+      </if>
+      <if test="achievementGrade != null" >
+        achievement_grade = #{achievementGrade,jdbcType=INTEGER},
+      </if>
+      <if test="achievementStr != null" >
+        achievement_str = #{achievementStr,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCode != null" >
+        qr_code = #{qrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isSign != null" >
+        is_sign = #{isSign,jdbcType=INTEGER},
+      </if>
+      <if test="isSubmit != null" >
+        is_submit = #{isSubmit,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where train_firearm_id = #{trainFirearmId,jdbcType=INTEGER} and police_id = #{policeId,jdbcType=INTEGER} 
+  </update>
+
+</mapper>

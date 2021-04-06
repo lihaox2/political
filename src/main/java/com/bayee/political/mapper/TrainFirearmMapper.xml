@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainFirearmMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainFirearm" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="place" property="place" jdbcType="VARCHAR" />
+    <result column="registration_start_date" property="registrationStartDate" jdbcType="TIMESTAMP" />
+    <result column="registration_end_date" property="registrationEndDate" jdbcType="TIMESTAMP" />
+    <result column="train_start_date" property="trainStartDate" jdbcType="TIMESTAMP" />
+    <result column="train_end_date" property="trainEndDate" jdbcType="TIMESTAMP" />
+    <result column="train_firearm_type" property="trainFirearmType" jdbcType="INTEGER" />
+    <result column="involvement_police_ids" property="involvementPoliceIds" jdbcType="VARCHAR" />
+    <result column="scorer_police_id" property="scorerPoliceId" jdbcType="VARCHAR" />
+    <result column="sign_up_status" property="signUpStatus" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="cover_img" property="coverImg" jdbcType="VARCHAR" />
+    <result column="train_content" property="trainContent" jdbcType="LONGVARCHAR" />
+    <result column="train_img" property="trainImg" jdbcType="VARCHAR" />
+    <result column="is_submit" property="isSubmit" jdbcType="INTEGER" />
+    <result column="submit_date" property="submitDate" jdbcType="TIMESTAMP" />
+    <result column="symbol" property="symbol" jdbcType="INTEGER" />
+	<result column="is_limit" property="isLimit" jdbcType="INTEGER" />
+	<result column="limit_type" property="limitType" jdbcType="INTEGER" />
+	<result column="limit_num" property="limitNum" jdbcType="DOUBLE" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="train_firearm_type_name" property="trainFirearmTypeName" jdbcType="VARCHAR" />
+    
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="police_name" property="policeName" jdbcType="VARCHAR" />
+    <result column="is_all" property="isAll" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.bayee.political.domain.TrainFirearm" extends="BaseResultMap" >
+    <result column="train_content" property="trainContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="calculationCharts" type="com.bayee.political.domain.CalculationChart" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,type,department_id, name, place, registration_start_date, registration_end_date, train_start_date, 
+    train_end_date, train_firearm_type, involvement_police_ids, scorer_police_id, 
+    sign_up_status,status, cover_img, train_img,is_submit, creation_date, update_date
+  </sql>
+  <sql id="Blob_Column_List" >
+    train_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from train_firearm
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="trainFirearmDelete" parameterType="java.lang.Integer" >
+    delete from train_firearm
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="trainFirearmAdd" parameterType="com.bayee.political.domain.TrainFirearm" >
+    insert into train_firearm (type,department_id, name, place, 
+      registration_start_date, registration_end_date, 
+      train_start_date, train_end_date, train_firearm_type, is_all, 
+      involvement_police_ids, scorer_police_id, sign_up_status,status, 
+      cover_img, train_img,is_submit,symbol,is_limit,limit_type,limit_num,submit_date, creation_date, 
+      update_date, train_content)
+    values (#{type,jdbcType=INTEGER},#{departmentId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{place,jdbcType=VARCHAR}, 
+      #{registrationStartDate,jdbcType=TIMESTAMP}, #{registrationEndDate,jdbcType=TIMESTAMP}, 
+      #{trainStartDate,jdbcType=TIMESTAMP}, #{trainEndDate,jdbcType=TIMESTAMP}, #{trainFirearmType,jdbcType=INTEGER}, #{isAll,jdbcType=INTEGER}, 
+      #{involvementPoliceIds,jdbcType=VARCHAR}, #{scorerPoliceId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{signUpStatus,jdbcType=INTEGER}, #{coverImg,jdbcType=VARCHAR}, #{trainImg,jdbcType=VARCHAR}, 
+      #{isSubmit,jdbcType=INTEGER},#{symbol,jdbcType=INTEGER},#{isLimit,jdbcType=INTEGER},
+	  #{limitType,jdbcType=INTEGER},#{limitNum,jdbcType=DOUBLE},
+	  #{submitDate,jdbcType=TIMESTAMP},#{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{trainContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <!-- 枪械训练修改 -->
+  <update id="trainFirearmUpdate" parameterType="com.bayee.political.domain.TrainFirearm" >
+    update train_firearm
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="place != null" >
+        place = #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationStartDate != null" >
+        registration_start_date = #{registrationStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registrationEndDate != null" >
+        registration_end_date = #{registrationEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainStartDate != null" >
+        train_start_date = #{trainStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainEndDate != null" >
+        train_end_date = #{trainEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainFirearmType != null" >
+        train_firearm_type = #{trainFirearmType,jdbcType=INTEGER},
+      </if>
+      <if test="isAll != null" >
+        is_all = #{isAll,jdbcType=INTEGER},
+      </if>
+      <if test="involvementPoliceIds != null" >
+        involvement_police_ids = #{involvementPoliceIds,jdbcType=VARCHAR},
+      </if>
+      <if test="scorerPoliceId != null" >
+        scorer_police_id = #{scorerPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="signUpStatus != null" >
+        sign_up_status =  #{signUpStatus,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="coverImg != null" >
+        cover_img = #{coverImg,jdbcType=VARCHAR},
+      </if>
+      <if test="trainImg != null" >
+        train_img = #{trainImg,jdbcType=VARCHAR},
+      </if>
+      <if test="isSubmit != null" >
+        is_submit = #{isSubmit,jdbcType=INTEGER},
+      </if>
+      <if test="submitDate != null">
+		submit_date = #{submitDate,jdbcType=TIMESTAMP},
+	  </if>
+      <if test="symbol != null">
+		symbol = #{symbol,jdbcType=INTEGER},
+	  </if>
+	  <if test="isLimit != null">
+		is_limit = #{isLimit,jdbcType=INTEGER},
+	  </if>
+	  <if test="limitType != null">
+	  	limit_type = #{limitType,jdbcType=INTEGER},
+	  </if>
+	  <if test="limitNum != null">
+	  	limit_num = #{limitNum,jdbcType=DOUBLE},
+	  </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainContent != null" >
+        train_content = #{trainContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 枪械修改特殊 -->
+  <update id="trainFirearmUpdateSpecial" parameterType="com.bayee.political.domain.TrainFirearm" >
+    update train_firearm
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="place != null" >
+        place = #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationStartDate != null" >
+        registration_start_date = #{registrationStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registrationEndDate != null" >
+        registration_end_date = #{registrationEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainStartDate != null" >
+        train_start_date = #{trainStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainEndDate != null" >
+        train_end_date = #{trainEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainFirearmType != null" >
+        train_firearm_type = #{trainFirearmType,jdbcType=INTEGER},
+      </if>
+      <if test="isAll != null" >
+        is_all = #{isAll,jdbcType=INTEGER},
+      </if>
+      <if test="involvementPoliceIds != null" >
+        involvement_police_ids = #{involvementPoliceIds,jdbcType=VARCHAR},
+      </if>
+      <if test="scorerPoliceId != null" >
+        scorer_police_id = #{scorerPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="signUpStatus != null" >
+        sign_up_status =  #{signUpStatus,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="coverImg != null" >
+        cover_img = #{coverImg,jdbcType=VARCHAR},
+      </if>
+      <if test="trainImg != null" >
+        train_img = #{trainImg,jdbcType=VARCHAR},
+      </if>
+      <if test="isSubmit != null" >
+        is_submit = #{isSubmit,jdbcType=INTEGER},
+      </if>
+      <if test="submitDate != null">
+		submit_date = #{submitDate,jdbcType=TIMESTAMP},
+	  </if>
+      <if test="symbol != null">
+		symbol = #{symbol,jdbcType=INTEGER},
+	  </if>
+	  <if test="isLimit != null">
+		is_limit = #{isLimit,jdbcType=INTEGER},
+	  </if>
+	  limit_type = #{limitType,jdbcType=INTEGER},
+	  limit_num = #{limitNum,jdbcType=DOUBLE},
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainContent != null" >
+        train_content = #{trainContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 枪械详情 -->
+   <select id="trainFirearmItem" parameterType="com.bayee.political.domain.TrainFirearm" resultMap="BaseResultMap">
+select * from train_firearm where 1=1 
+     <if test="id != null and id !=''">
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+</select>
+  <!-- 枪械列表查询（定时任务修改约谈状态进程） -->
+   <select id="firearmStatuslList" parameterType="com.bayee.political.domain.TrainFirearm" resultMap="BaseResultMap">
+select * from train_firearm where sign_up_status!=3 or status!=3 
+</select>
+<!-- 枪械判断当前用户是否可扫码当前人员 -->
+   <select id="firearmScorerPoliceItem" parameterType="com.bayee.political.domain.TrainFirearm" resultMap="BaseResultMap">
+select * from train_firearm where id=#{id} and scorer_police_id = #{scorerPoliceId,jdbcType=VARCHAR}
+</select>
+<!-- 枪械次数趋势图(近12个月)-->
+  <select id="trainDepFirearmChart" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select a.year_month as name,ifnull(b.num,0) as num from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(*) as num,DATE_FORMAT(creation_date,'%Y-%m') as name from train_firearm 
+where type=1 and department_id = #{departmentId}
+GROUP BY DATE_FORMAT(creation_date,'%Y-%m')) b on b.name=a.year_month
+order by a.year_month
+  </select>
+<!-- 获得枪械数据 后端 -->
+<select id="getTrainFirearmList" resultMap="BaseResultMap">
+    select a.*,b.name as train_firearm_type_name, c.name as department_name from train_firearm a
+left join train_project b on a.train_firearm_type = b.id
+left join department c on a.department_id = c.id
+where 1 = 1
+	<if test="departmentId != null">
+	 and a.department_id = #{departmentId}
+	</if>
+	<if test="status!=null">
+	 and a.status = #{status}
+	</if>
+    <if test="reprotTime != null and reprotTime !=''">
+		and DATE_FORMAT(a.registration_start_date,'%Y-%m-%d')&lt;=#{reprotTime} and DATE_FORMAT(a.registration_end_date,'%Y-%m-%d')&gt;=#{reprotTime}
+	</if>
+	<if test="signTime != null and signTime !=''">
+		and DATE_FORMAT(a.train_start_date,'%Y-%m-%d')&lt;=#{signTime} and DATE_FORMAT(a.train_end_date,'%Y-%m-%d')&gt;=#{signTime}
+	</if>
+    <if test="keyWords!=null and keyWords!=''">
+      and (a.name = #{keyWords} or a.place = #{keyWords})
+    </if>
+	order by id desc
+	<if test="pageSize!=null">
+	  limit #{pageSize},10
+	</if>
+  </select>
+
+  <select id="getTrainFirearmCount" resultType="java.lang.Integer">
+    select count(*) from train_firearm a
+    left join train_project b on a.train_firearm_type = b.id
+    where 1 = 1
+    <if test="departmentId != null">
+	 and department_id = #{departmentId}
+	</if>
+   <if test="status!=null">
+	 and a.status = #{status}
+	</if>
+    <if test="reprotTime != null and reprotTime !=''">
+		and DATE_FORMAT(a.registration_start_date,'%Y-%m-%d')&lt;=#{reprotTime} and DATE_FORMAT(a.registration_end_date,'%Y-%m-%d')&gt;=#{reprotTime}
+	</if>
+	<if test="signTime != null and signTime !=''">
+		and DATE_FORMAT(a.train_start_date,'%Y-%m-%d')&lt;=#{signTime} and DATE_FORMAT(a.train_end_date,'%Y-%m-%d')&gt;=#{signTime}
+	</if>
+    <if test="keyWords!=null and keyWords!=''">
+      and (a.name = #{keyWords} or a.place = #{keyWords})
+    </if>
+  </select>
+  
+  <!-- 立即开始枪械训练 -->
+  <update id="trainFirearmStart">
+  update train_firearm set status = 2, registration_end_date = now(), train_start_date = now() where id = #{id} 
+  </update>
+  
+  <!-- 立即结束枪械训练 -->
+ <update id="trainFirearmEnd">
+  update train_firearm set status = 3, train_end_date = now() where id = #{id} 
+  </update>
+  
+  <!-- 重启枪械训练 -->
+<update id="trainFirearmReStart">
+update train_firearm set status = 2, train_end_date = #{time} where id = #{id} 
+</update>
+
+<!-- 枪械详情查询 -->
+<select id="getTrainFirearmById" resultMap="BaseResultMap">
+select a.*,b.name as project_name,c.name as police_name from train_firearm a 
+left join train_project b on a.train_firearm_type = b.id 
+left join user c on a.scorer_police_id = c.police_id 
+where a.id = #{id} 
+</select>
+
+<select id="getTrainFirearmByProjectRuleId" resultMap="BaseResultMap">
+select * from train_firearm where train_firearm_type = (select project_id from train_project_rule where id = #{projectRuleId})
+</select>
+
+</mapper>

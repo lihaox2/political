@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.CalculationAlarmMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.CalculationAlarm" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_type" property="policeType" jdbcType="INTEGER" />
+    <result column="police_station_id" property="policeStationId" jdbcType="INTEGER" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="actual_police_num" property="actualPoliceNum" jdbcType="INTEGER" />
+    <result column="get_police_num" property="getPoliceNum" jdbcType="INTEGER" />
+    <result column="differ_police_num" property="differPoliceNum" jdbcType="INTEGER" />
+    <result column="is_lack" property="isLack" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+   <resultMap id="calculationCharts" type="com.bayee.political.domain.CalculationChart" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_type, police_station_id, actual_police_num, get_police_num, differ_police_num, 
+    is_lack, creation_date, update_date
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from calculation_alarm
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 警力测算预警新增 -->
+  <insert id="calculationAlarmCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.CalculationAlarm" useGeneratedKeys="true">
+    insert into calculation_alarm (police_type, police_station_id, 
+      actual_police_num, get_police_num, differ_police_num, 
+      is_lack, creation_date, update_date
+      )
+    values (#{policeType,jdbcType=INTEGER}, #{policeStationId,jdbcType=INTEGER}, 
+      #{actualPoliceNum,jdbcType=INTEGER}, #{getPoliceNum,jdbcType=INTEGER}, #{differPoliceNum,jdbcType=INTEGER}, 
+      #{isLack,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 警力测算预警修改 -->
+  <update id="calculationAlarmUpdate" parameterType="com.bayee.political.domain.CalculationAlarm" >
+    update calculation_alarm
+    <set >
+      <if test="policeType != null" >
+        police_type = #{policeType,jdbcType=INTEGER},
+      </if>
+      <if test="policeStationId != null" >
+        police_station_id = #{policeStationId,jdbcType=INTEGER},
+      </if>
+      <if test="actualPoliceNum != null" >
+        actual_police_num = #{actualPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="getPoliceNum != null" >
+        get_police_num = #{getPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="differPoliceNum != null" >
+        differ_police_num = #{differPoliceNum,jdbcType=INTEGER},
+      </if>
+      <if test="isLack != null" >
+        is_lack = #{isLack,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.CalculationAlarm" >
+    update calculation_alarm
+    set police_type = #{policeType,jdbcType=INTEGER},
+      police_station_id = #{policeStationId,jdbcType=INTEGER},
+      actual_police_num = #{actualPoliceNum,jdbcType=INTEGER},
+      get_police_num = #{getPoliceNum,jdbcType=INTEGER},
+      differ_police_num = #{differPoliceNum,jdbcType=INTEGER},
+      is_lack = #{isLack,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+      <!-- 警力测算预警详情查询 -->
+  <select id="calculationAlarmItem" parameterType="com.bayee.political.domain.CalculationAlarm" resultMap="BaseResultMap" >
+select * from calculation_alarm 
+where 1=1 
+     <if test="id != null and id !=''">
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="policeType != null and policeType !=''">
+        and police_type=#{policeType}
+      </if>
+      <if test="policeStationId != null and policeStationId !=''">
+        and police_station_id = #{policeStationId,jdbcType=INTEGER}
+      </if>
+  </select>
+        <!-- 警力测算预警列表查询 -->
+  <select id="calculationAlarmList" parameterType="com.bayee.political.domain.CalculationAlarm" resultMap="BaseResultMap" >
+select * from calculation_alarm order by id desc
+  </select>
+ <!-- 警力预警趋势查询 -->
+  <select id="calculationAlarmTrendList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select CONCAT(a.id,'月') as name,ifnull(num,0) as num from 
+(select * from month where id&lt;= CONVERT(DATE_FORMAT(CURDATE(),'%m'), UNSIGNED INTEGER)) a
+left join
+(SELECT count(*) as num,CONVERT(DATE_FORMAT(creation_date,'%m'), UNSIGNED INTEGER) as name FROM calculation_alarm 
+where police_station_id=#{policeStationId,jdbcType=INTEGER} 
+and is_lack=#{isLack,jdbcType=INTEGER} 
+      <if test="policeType != null and policeType !=''">
+        and police_type=#{policeType}
+      </if>
+and DATE_FORMAT(creation_date,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY DATE_FORMAT(creation_date,'%m')) b on b.name=a.id
+order by a.id
+  </select>
+  
+  <!-- 查询最新一条记录 -->
+  <select id="getCalculationAlarmBaseNew" resultMap="BaseResultMap">
+  select * from calculation_alarm where 1 = 1
+  <if test="policeType!=null">
+  and police_type = #{policeType} 
+  </if>
+  <if test="policeStationId!=null">
+  and police_station_id = #{policeStationId} 
+  </if>
+  order by update_date desc limit 0,1 
+  </select>
+  
+  <!-- 随机查询两条民警或辅警超出或缺少的派出所(该派出所的最新记录) -->
+  <select id="calculationRandTwo" resultMap="BaseResultMap">
+  select * from (
+  select b.name as department_name,a.police_station_id,a.actual_police_num,a.get_police_num,a.differ_police_num,a.is_lack,
+a.creation_date from calculation_alarm a 
+left join department b on a.police_station_id = b.id 
+where a.police_type = #{policeType} and (a.is_lack = 0 or a.is_lack = 2 ) 
+order by a.creation_date desc limit 0,10000000000
+) a group by a.police_station_id 
+order by a.creation_date desc 
+limit 0,2
+  </select>
+  
+    <!-- 所有民警或所有辅警 -->
+  <select id="allPoliceCount" resultType="java.lang.Integer">
+  select sum(police_num) as sum from calculation_police_station where police_type = #{policeType}
+  </select>
+  
+  <!-- 查询近N天的超出或紧缺人数 -->
+  <select id="nearDayDifferPoliceNum" resultType="java.lang.Integer">
+select differ_police_num from calculation_alarm
+where police_station_id = #{policeStationId} 
+and police_type = #{policeType} 
+and DATE_FORMAT(creation_date,'%Y-%m-%d') = #{day} 
+order by creation_date desc 
+limit 0,1
+  </select>
+  
+  <!-- 近N天紧缺或超出最大的派出所 -->
+<select id="maxDifferPoliceNumThirty" resultMap="BaseResultMap">
+select b.name as department_name,max(abs(a.differ_police_num)) as differ_police_num, is_lack from calculation_alarm a 
+left join department b on a.police_station_id = b.id
+where a.is_lack = #{isLack} and a.police_type = #{policeType} 
+and DATE_SUB(CURDATE(), INTERVAL #{day} DAY) &lt;= date(a.creation_date)
+</select>
+
+<!-- 今天紧缺或超出最大的派出所 -->
+<select id="maxDifferPoliceNum" resultMap="BaseResultMap">
+select b.name as department_name,max(abs(a.differ_police_num)) as differ_police_num, is_lack from calculation_alarm a 
+left join department b on a.police_station_id = b.id
+where a.is_lack = #{isLack} and a.police_type = #{policeType} 
+and to_days(a.creation_date) = to_days(now())
+</select>
+
+<!-- 查询单位最新民警/辅警实际数 -->
+<select id="newPoliceStationActual" resultMap="BaseResultMap">
+<!-- select * from (
+select actual_police_num, police_station_id,a.creation_date, b.name as department_name from calculation_alarm a
+left join department b on a.police_station_id = b.id 
+where a.police_type = #{policeType} 
+order by a.creation_date desc limit 0,10000
+) a group by a.police_station_id -->
+select sum(a.actual_police_num) as actual_police_num,a.police_station_id,
+a.creation_date, b.name as department_name
+from calculation a
+left join department b on a.police_station_id = b.id 
+where police_type = #{policeType}
+GROUP BY police_station_id
+</select>
+
+<!-- 查询某派出所最新数据 -->
+<select id="policeStationNewData" resultMap="BaseResultMap">
+<!-- select *, b.name as department_name from calculation_alarm a
+left join department b on a.police_station_id = b.id 
+where a.police_type = #{policeType} and police_station_id = #{policeStationId} 
+order by a.creation_date desc limit 0,1 -->
+select sum(a.actual_police_num) as actual_police_num,
+sum(a.get_police_num) as get_police_num,
+(sum(a.actual_police_num)-sum(a.get_police_num)) as differ_police_num,
+(case when (sum(a.actual_police_num)-sum(a.get_police_num))&gt;0 then '2'
+when (sum(a.actual_police_num)-sum(a.get_police_num))&lt;0 then '0'
+else 1 end) as is_lack,
+a.police_station_id,
+a.creation_date, b.name as department_name
+from calculation a
+left join department b on a.police_station_id = b.id 
+where a.police_type = #{policeType} and a.police_station_id = #{policeStationId} 
+GROUP BY police_station_id
+</select>
+
+<!-- 民警辅警总数 -->
+<select id="sumPoliceNum" resultType="java.lang.Integer">
+<!-- select sum(police_num) as sum from calculation_police_post where police_type = #{policeType}  -->
+select sum(actual_police_num) from calculation where police_type = #{policeType} 
+</select>
+  
+</mapper>

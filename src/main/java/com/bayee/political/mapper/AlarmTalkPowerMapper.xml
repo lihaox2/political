@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.AlarmTalkPowerMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.AlarmTalkPower" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="condition" property="condition" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    
+    <result column="police_object_ids" property="policeObjectIds" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="police_name" property="policeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.bayee.political.domain.AlarmTalkPower" extends="BaseResultMap" >
+    <result column="police_object_ids" property="policeObjectIds" jdbcType="LONGVARCHAR" />
+  </resultMap>
+    <resultMap id="LeavePowerMap" type="com.bayee.political.domain.LeavePower" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="module_id" property="moduleId" jdbcType="INTEGER" />
+    <result column="checker_id" property="checkerId" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="department_object_ids" property="departmentObjectIds" jdbcType="VARCHAR" />
+    <result column="police_object_ids" property="policeObjectIds" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="checker_name" property="checkerName" />
+    <result column="department_name" property="departmentName" />
+    <result column="conditions" property="conditions" jdbcType="INTEGER" />
+    <result column="police_object_ids" property="policeObjectIds" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, department_id, police_id, condition, creation_date, update_date
+  </sql>
+  <sql id="Blob_Column_List" >
+    police_object_ids
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from alarm_talk_power
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from alarm_talk_power
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.AlarmTalkPower" >
+    insert into alarm_talk_power (id, department_id, police_id, 
+      condition, creation_date, update_date, 
+      police_object_ids)
+    values (#{id,jdbcType=INTEGER}, #{departmentId,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
+      #{condition,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{policeObjectIds,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.AlarmTalkPower" >
+    insert into alarm_talk_power (department_id, police_id, `condition`, police_object_ids, creation_date, update_date) values 
+    (
+     #{departmentId,jdbcType=INTEGER},
+     #{policeId,jdbcType=VARCHAR},
+     #{condition,jdbcType=INTEGER},
+     #{policeObjectIds,jdbcType=LONGVARCHAR},
+     now(),
+     <if test="updateDate == null" >
+        now()
+     </if>
+     <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP}
+      </if>
+    )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.AlarmTalkPower" >
+    update alarm_talk_power
+    <set >
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="condition != null" >
+        condition = #{condition,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="policeObjectIds != null" >
+        police_object_ids = #{policeObjectIds,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bayee.political.domain.AlarmTalkPower" >
+    update alarm_talk_power
+    set department_id = #{departmentId,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      condition = #{condition,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      police_object_ids = #{policeObjectIds,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.AlarmTalkPower" >
+    update alarm_talk_power
+    set department_id = #{departmentId,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      condition = #{condition,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 获取约谈权限列表 -->
+  <select id="getAlarmTalkPower" resultMap="BaseResultMap">
+  	select a.id,a.police_id,c.`name` as department_name,b.`name` as police_name,a.police_object_ids from alarm_talk_power a 
+	left join user b on a.police_id = b.police_id 
+	left join department c on a.department_id = c.id 
+	where 1 = 1
+	<if test="departmentId!=null and departmentId!=0">
+	and a.department_id = #{departmentId} 
+	</if>
+	<if test="keywords!=null and keywords!=''">
+	and (b.`name` = #{keywords} or b.police_id = #{keywords} or find_in_set(#{keywords}, a.police_object_ids)) 
+	</if>
+	order by a.creation_date desc 
+	limit #{pageSize},10 
+  </select>
+  
+  <select id="getAlarmTalkPowerCount" resultType="java.lang.Integer">
+  select count(*) as count from alarm_talk_power a 
+	left join user b on a.police_id = b.police_id 
+	left join department c on a.department_id = c.id 
+	where 1 = 1
+	<if test="departmentId!=null and departmentId!=0">
+	and a.department_id = #{departmentId} 
+	</if>
+	<if test="keywords!=null and keywords!=''">
+	and (b.`name` = #{keywords} or b.police_id = #{keywords}) 
+	</if>
+  </select>
+  
+  <!-- 查询约谈详情 -->
+  <select id="getAlarmTalkPowerDetails" resultMap="BaseResultMap">
+  select a.id,a.police_id,c.`name` as department_name,b.`name` as police_name,a.police_object_ids,a.condition, a.department_id  
+  from alarm_talk_power a 
+	left join user b on a.police_id = b.police_id 
+	left join department c on a.department_id = c.id 
+	where a.id = #{id}
+  </select>
+  
+  <!-- 修改约谈权限 -->
+  <update id="alarmTalkPowerUpdate">
+  	update alarm_talk_power set department_id = #{alarmTalkPower.departmentId} ,police_id = #{alarmTalkPower.policeId}, police_object_ids = #{alarmTalkPower.policeObjectIds}, 
+  	`condition` = #{alarmTalkPower.condition}, update_date = now() where id = #{alarmTalkPower.id}
+  </update>
+  
+  <!-- 查询指定部门对应下的约谈人数量 -->
+  <select id="isHave" resultType="java.lang.Integer">
+  	select count(*) as count from alarm_talk_power where department_id = #{departmentId} and police_id = #{policeId} 
+  </select>
+  
+  <!-- 删除约谈权限根据id -->
+  <delete id="alarmTalkPowerDelete">
+  	delete from alarm_talk_power where id = #{id} 
+  </delete>
+  
+  <!-- 检查约谈权限是否被引用 -->
+  <select id="checkAlarmTalkPower" resultType="java.lang.Integer">
+  	select count(*) as count from alarm_talk_power where id = #{id} 
+  	and FIND_IN_SET(#{policeId},police_object_ids) 
+  </select>
+  
+  <!-- 获得所有被记分人id及约谈对象id -->
+  <select id="findEvaltionTalk" resultType="java.lang.String">
+  	select scored_police_id from alarm_evaluation union select police_id from alarm_talk 
+  </select>
+    <!--查询当前约谈人约谈时间记录-->
+  <select id="powerItem" parameterType="com.bayee.political.domain.LeavePower" resultMap="LeavePowerMap">
+select * from leave_power where checker_id=#{scoringPoliceId} and module_id=1
+   <if test="departmentId!=null and departmentId!=''">
+	and department_id=#{departmentId}
+	</if>
+order by creation_date desc limit 1
+</select>
+</mapper>

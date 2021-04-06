@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeavePowerObjectMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeavePowerObject" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="power_id" property="powerId" jdbcType="INTEGER" />
+    <result column="checker_id" property="checkerId" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="police_object_ids" property="policeObjectIds" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, power_id, checker_id, department_id, police_object_ids, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leave_power_object
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from leave_power_object
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 审核对象人员新增 -->
+  <insert id="leavePowerObjectCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.LeavePowerObject" useGeneratedKeys="true">
+    insert into leave_power_object (power_id, checker_id, 
+      department_id, police_object_ids, creation_date, 
+      update_date)
+    values (#{powerId,jdbcType=INTEGER}, #{checkerId,jdbcType=VARCHAR}, 
+      #{departmentId,jdbcType=INTEGER}, #{policeObjectIds,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 审核对象人员修改 -->
+  <update id="leavePowerObjectUpdate" parameterType="com.bayee.political.domain.LeavePowerObject" >
+    update leave_power_object
+    <set >
+      <if test="powerId != null" >
+        power_id = #{powerId,jdbcType=INTEGER},
+      </if>
+      <if test="checkerId != null" >
+        checker_id = #{checkerId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="policeObjectIds != null" >
+        police_object_ids = #{policeObjectIds,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.LeavePowerObject" >
+    update leave_power_object
+    set power_id = #{powerId,jdbcType=INTEGER},
+      checker_id = #{checkerId,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      police_object_ids = #{policeObjectIds,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据powerId删除 -->
+  <delete id="leavePowerObjectDeleteByPowerId">
+  delete from leave_power_object
+    where power_id = #{powerId,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 根据powerId获得police_object_ids -->
+  <select id="getPoliceObjectIdsByPowerId" resultType="java.lang.String">
+  select GROUP_CONCAT(police_object_ids SEPARATOR'-') as police_object_ids_arr from leave_power_object where power_id = #{powerId} 
+  </select>
+</mapper>

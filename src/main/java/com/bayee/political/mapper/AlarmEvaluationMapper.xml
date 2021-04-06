@@ -1,0 +1,2015 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.AlarmEvaluationMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.AlarmEvaluation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="score_items" property="scoreItems" jdbcType="INTEGER" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" /> 
+    <result column="scored_police_id" property="scoredPoliceId" jdbcType="VARCHAR" />
+    <result column="police_month_id" property="policeMonthId" jdbcType="INTEGER" />
+    <result column="scoring_breakdown_id" property="scoringBreakdownId" jdbcType="INTEGER" />
+    <result column="scoring_son_breakdown_id" property="scoringSonBreakdownId" jdbcType="INTEGER" />
+    <result column="scoring_son_breakdown_name" property="scoringSonBreakdownName" jdbcType="INTEGER" />
+    <result column="clause" property="clause" jdbcType="VARCHAR" />
+    <result column="score_value" property="scoreValue" jdbcType="DOUBLE" />
+    <result column="scoring_police_id" property="scoringPoliceId" jdbcType="VARCHAR" />
+    <result column="scoring_date" property="scoringDate" jdbcType="TIMESTAMP" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="is_true" property="isTrue" jdbcType="INTEGER" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="scored_name" property="scoredName" jdbcType="VARCHAR" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="police_month_str" property="policeMonthStr" jdbcType="VARCHAR" />
+    <result column="scoring_breakdown" property="scoringBreakdown" jdbcType="VARCHAR" />
+    <result column="scoring_son_breakdown" property="scoringSonBreakdown" jdbcType="VARCHAR" />
+    <result column="scoreing_name" property="scoreingName" jdbcType="VARCHAR" />
+    <result column="evaluation_target" property="evaluationTarget" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="creation_date_str" property="creationDateStr" jdbcType="VARCHAR" />
+    <result column="update_date_str" property="updateDateStr" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="personalStatistics" type="com.bayee.political.domain.AlarmPersonalStatistics" >
+    <result column="buckleNum" property="buckleNum" />
+    <result column="addNum" property="addNum" />
+    <result column="alarmNum" property="alarmNum" />
+    <result column="talkNum" property="talkNum" />
+  </resultMap>
+   <resultMap id="PersonalEvaluation" type="com.bayee.political.domain.AlarmPersonalEvaluation" >
+    <result column="policeMonth" property="policeMonth" jdbcType="INTEGER" />
+    <result column="addScore" property="addScore" jdbcType="DOUBLE" />
+    <result column="buckleScore" property="buckleScore" jdbcType="DOUBLE" />
+  </resultMap>
+  <resultMap id="leaveCharts" type="com.bayee.political.domain.LeaveChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="num" property="num" />
+  </resultMap>
+   <resultMap id="alarmRecordChart" type="com.bayee.political.domain.AlarmRecordChart" >
+    <result column="name" property="name" />
+    <result column="num" property="num" />
+    <result column="frequencys" property="frequencys" />
+  </resultMap>
+  <resultMap id="calculationChart" type="com.bayee.political.domain.CalculationChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="num" property="num" />
+  </resultMap>
+  <resultMap id="alarmLeaderStatistics" type="com.bayee.political.domain.AlarmLeaderStatistics" >
+    <result column="totalNum" property="totalNum" jdbcType="INTEGER" />
+    <result column="proportion" property="proportion" jdbcType="DOUBLE" />
+    <result column="receiveNum" property="receiveNum" jdbcType="INTEGER" />
+    <result column="overNum" property="overNum" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap type="com.bayee.political.domain.AlarmConfig" id="alarmConfig">
+  	<id column="id" property="id" />
+  	<result column="type" property="type" />
+    <result column="score" property="score" />
+    <result column="threshold_type" property="thresholdType" />
+  </resultMap>
+  <resultMap id="newest" type="com.bayee.political.domain.AlarmNewest" >
+    <id column="id" property="id"/>
+    <result column="head_image" property="headImage"/>
+    <result column="scored_police_id" property="scoredPoliceId"/>
+    <result column="scoredPoliceName" property="scoredPoliceName"/>
+    <result column="departmentName" property="departmentName"/>
+    <result column="score" property="score"/>
+  </resultMap>
+   <resultMap id="dateTimeItems" type="com.bayee.political.domain.DateTimeItem" >
+    <result column="timesMonthNight" property="timesMonthNight"/>
+    <result column="timesMonthMorning" property="timesMonthMorning"/>
+    <result column="currentQuarterStartTime" property="currentQuarterStartTime"/>
+    <result column="currentQuarterEndTime" property="currentQuarterEndTime"/>
+  </resultMap>
+  <resultMap id="scoreAnalysis" type="com.bayee.political.domain.AlarmPoliceScoreAnalysis" >
+    <id column="id" property="id"/>
+    <result column="head_image" property="headImage"/>
+    <result column="scored_police_id" property="scoredPoliceId"/>
+    <result column="scoredPoliceName" property="scoredPoliceName"/>
+    <result column="departmentName" property="departmentName"/>
+    <result column="score" property="score"/>
+    <result column="proportion" property="proportion"/>
+    <result column="identifier" property="identifier"/>
+  </resultMap>
+  <resultMap id="alarmAnalysisMap" type="com.bayee.political.domain.ScreenAlarmAnalysis" >
+    <result column="monthScorePersonNum" property="monthScorePersonNum"/>
+    <result column="monthScorePersonRate" property="monthScorePersonRate"/>
+    <result column="alarmScorePersonNum" property="alarmScorePersonNum"/>
+    <result column="alarmScorePersonRate" property="alarmScorePersonRate"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type, score_items, scored_police_id, police_month_id, scoring_breakdown_id, scoring_son_breakdown_id, 
+    clause,score_value, scoring_police_id, scoring_date,content, status,is_true,reason, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+   select a.*,b.`name` as scored_name, c.police_month as police_month_str, e.scoring_breakdown, f.scoring_son_breakdown 
+from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join alarm_police_month c on a.police_month_id = c.id
+left join alarm_score_item d on a.score_items = d.id
+left join alarm_scoring_breakdown e on a.scoring_breakdown_id = e.id 
+left join alarm_scoring_son_breakdown f on a.scoring_son_breakdown_id = f.id
+where a.id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from alarm_evaluation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.AlarmEvaluation" >
+    insert into alarm_evaluation (type,score_items, scored_police_id, 
+      police_month_id, scoring_breakdown_id, scoring_son_breakdown_id, 
+      clause,score_value, scoring_police_id, scoring_date,content, 
+      status,is_true,reason,approval, creation_date, update_date
+      )
+    values (#{type,jdbcType=INTEGER}, #{scoreItems,jdbcType=INTEGER}, #{scoredPoliceId,jdbcType=VARCHAR}, 
+      #{policeMonthId,jdbcType=INTEGER}, #{scoringBreakdownId,jdbcType=INTEGER}, #{scoringSonBreakdownId,jdbcType=INTEGER}, 
+      #{clause,jdbcType=VARCHAR},#{scoreValue,jdbcType=DOUBLE}, #{scoringPoliceId,jdbcType=VARCHAR}, 
+      #{scoringDate},
+      #{content,jdbcType=VARCHAR},
+      3,1,#{reason,jdbcType=VARCHAR},2,
+      now(), now()
+      )
+  </insert>
+  
+  <!-- 批量添加考评 -->
+  <insert id="insertMore">
+  	insert into alarm_evaluation (type,score_items, scored_police_id, 
+      police_month_id, scoring_breakdown_id, scoring_son_breakdown_id, 
+      clause,score_value, scoring_police_id, scoring_date,content, 
+      status,is_true,reason,approval, creation_date, update_date) 
+    values 
+    <foreach collection="alarmEvaluationList" item="evaluation" separator=",">
+    (
+    #{evaluation.type}, #{evaluation.scoreItems}, #{evaluation.scoredPoliceId}, 
+      #{evaluation.policeMonthId}, #{evaluation.scoringBreakdownId}, #{evaluation.scoringSonBreakdownId}, 
+      #{evaluation.clause},#{evaluation.scoreValue}, #{evaluation.scoringPoliceId}, 
+      #{evaluation.scoringDate},
+      #{evaluation.content},
+      3,1,#{evaluation.reason},2,
+      now(), now()
+    )
+    </foreach>
+    
+  </insert>
+  
+  <!-- 修改预约评价记录 -->
+  <update id="alarmEvaluationupdate" parameterType="com.bayee.political.domain.AlarmEvaluation" >
+    update alarm_evaluation
+    <set >
+     <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="scoreItems != null" >
+        score_items = #{scoreItems,jdbcType=INTEGER},
+      </if>
+      <if test="scoredPoliceId != null" >
+        scored_police_id = #{scoredPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="policeMonthId != null" >
+        police_month_id = #{policeMonthId,jdbcType=INTEGER},
+      </if>
+      <if test="scoringBreakdownId != null" >
+        scoring_breakdown_id = #{scoringBreakdownId,jdbcType=INTEGER},
+      </if>
+      <if test="scoringSonBreakdownId != null" >
+        scoring_son_breakdown_id = #{scoringSonBreakdownId,jdbcType=INTEGER},
+      </if>
+      <if test="clause != null" >
+        clause = #{clause,jdbcType=VARCHAR},
+      </if>
+      <if test="scoreValue != null" >
+        score_value = #{scoreValue,jdbcType=DOUBLE},
+      </if>
+      <if test="scoringPoliceId != null" >
+        scoring_police_id = #{scoringPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="scoringDate != null" >
+        scoring_date = #{scoringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isTrue != null" >
+        is_true = #{isTrue,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.AlarmEvaluation" >
+    update alarm_evaluation
+    set type = #{type,jdbcType=INTEGER},
+      score_items = #{scoreItems,jdbcType=INTEGER},
+      scored_police_id = #{scoredPoliceId,jdbcType=VARCHAR},
+      police_month_id = #{policeMonthId,jdbcType=INTEGER},
+      scoring_breakdown_id = #{scoringBreakdownId,jdbcType=INTEGER},
+      scoring_son_breakdown_id = #{scoringSonBreakdownId,jdbcType=INTEGER},
+      clause = #{clause,jdbcType=VARCHAR},
+      score_value = #{scoreValue,jdbcType=DOUBLE},
+      scoring_police_id = #{scoringPoliceId,jdbcType=VARCHAR},
+      scoring_date = #{scoringDate,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      is_true = #{isTrue,jdbcType=INTEGER},
+      reason = #{reason,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据id修改预警考评 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.AlarmEvaluation" >
+    update alarm_evaluation
+    <set >
+     <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="scoreItems != null" >
+        score_items = #{scoreItems,jdbcType=INTEGER},
+      </if>
+      <if test="scoredPoliceId != null" >
+        scored_police_id = #{scoredPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="policeMonthId != null" >
+        police_month_id = #{policeMonthId,jdbcType=INTEGER},
+      </if>
+      scoring_breakdown_id = #{scoringBreakdownId,jdbcType=INTEGER},
+      scoring_son_breakdown_id = #{scoringSonBreakdownId,jdbcType=INTEGER},
+       <if test="clause != null" >
+        clause = #{clause,jdbcType=VARCHAR},
+      </if>
+      <if test="scoreValue != null" >
+        score_value = #{scoreValue,jdbcType=DOUBLE},
+      </if>
+      <if test="scoringPoliceId != null" >
+        scoring_police_id = #{scoringPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="scoringDate != null" >
+        scoring_date = #{scoringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isTrue != null" >
+        is_true = #{isTrue,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+    <!--个人预警统计 -->
+  <select id="alarmPersonalStatisticsItem" parameterType="com.bayee.political.domain.AlarmPersonalStatistics" resultMap="personalStatistics">
+select * from
+(select count(*) as addNum from alarm_evaluation where scored_police_id=#{policeId} and status=3 and score_value&gt;0) a
+join(select count(*) as buckleNum from alarm_evaluation where scored_police_id=#{policeId} and status=3 and score_value&lt;0) b
+join(select count(*) as talkNum from alarm_talk where police_id=#{policeId} and status=5) c
+join(select count(*) as alarmNum from alarm_record where police_id=#{policeId}) d
+</select>
+    <!--个人最新记分项数量查询（最近一周） -->
+  <select id="alarmPersonalNotConfirmNum" parameterType="com.bayee.political.domain.AlarmEvaluation" resultType="java.lang.Integer">
+select count(*) from(select a.*,b.scoring_son_breakdown from alarm_evaluation a
+left join alarm_scoring_son_breakdown b on b.id=a.scoring_son_breakdown_id
+where a.scored_police_id=#{policeId} and a.status=3
+and DATE_FORMAT(a.creation_date,'%Y-%m-%d')&lt;=DATE_FORMAT(CURDATE(),'%Y-%m-%d')
+and DATE_FORMAT(a.creation_date,'%Y-%m-%d')&gt;=DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 6 DAY),'%Y-%m-%d')) as t
+
+</select>
+    <!--个人最新记分项查询（最近一周） -->
+  <select id="alarmPersonalNotConfirmList" parameterType="com.bayee.political.domain.AlarmEvaluation" resultMap="BaseResultMap">
+select a.*,(case when e.scoring_son_breakdown is not null then e.scoring_son_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is not null then d.scoring_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is null and c.item_name is not null
+then c.item_name end) as scoringSonBreakdownName,f.type_name as typeName from alarm_evaluation a
+left join alarm_score_item c on c.id=a.score_items
+left join alarm_scoring_breakdown d on d.id=a.scoring_breakdown_id
+left join alarm_scoring_son_breakdown e on e.id=a.scoring_son_breakdown_id
+left join alarm_type f on f.id=a.type
+where a.scored_police_id=#{policeId}
+and a.status=3 and DATE_FORMAT(a.creation_date,'%Y-%m-%d')&lt;=DATE_FORMAT(CURDATE(),'%Y-%m-%d')
+and DATE_FORMAT(a.creation_date,'%Y-%m-%d')&gt;=DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 6 DAY),'%Y-%m-%d')
+order by a.id desc
+</select>
+ <!--预警评价记录详情查询 -->
+  <select id="alarmEvaluationItem" parameterType="com.bayee.political.domain.AlarmEvaluation" resultMap="BaseResultMap">
+select a.*,b.type_name as typeName,c.item_name as scoreItemsName,f.name as scoreingName,
+(case when d.scoring_breakdown is not null and e.scoring_son_breakdown is not null 
+then CONCAT(d.scoring_breakdown,'/',e.scoring_son_breakdown) 
+when d.scoring_breakdown is not null and e.scoring_son_breakdown is null 
+then d.scoring_breakdown
+when d.scoring_breakdown is null and e.scoring_son_breakdown is not null 
+then e.scoring_son_breakdown end) as scoringSonBreakdownName,
+g.police_month as policeMonthStr
+from alarm_evaluation a
+left join alarm_type b on b.id=a.type
+left join alarm_score_item c on c.id=a.score_items
+left join alarm_scoring_breakdown d on d.id=a.scoring_breakdown_id
+left join alarm_scoring_son_breakdown e on e.id=a.scoring_son_breakdown_id
+left join user f on f.police_id=a.scoring_police_id
+left join alarm_police_month g on g.id=a.police_month_id
+where a.id=#{id}
+</select>
+<!--个人考评表数量查询-->
+  <select id="alarmPersonalEvaluationNum" parameterType="com.bayee.political.domain.AlarmEvaluation" resultType="java.lang.Integer">
+select count(distinct police_month_id) from alarm_evaluation 
+where scored_police_id=#{policeId} and status=3 and DATE_FORMAT(scoring_date,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+</select>
+ <!--个人考评报表列表查询 -->
+  <select id="alarmPersonalEvaluationList" parameterType="com.bayee.political.domain.AlarmPersonalEvaluation" resultMap="PersonalEvaluation">
+select a.police_month_id as policeMonth,b.anum as addScore,c.bnum as buckleScore from(
+select distinct police_month_id from alarm_evaluation where scored_police_id=#{policeId} and status=3
+      <if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(scoring_date,'%Y')=#{dateTime} 
+      </if>) a
+left join (
+select sum(score_value) as anum,police_month_id from alarm_evaluation  
+where scored_police_id=#{policeId} and status=3 and score_value&gt;0
+      <if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(scoring_date,'%Y')=#{dateTime} 
+      </if>
+GROUP BY police_month_id) b on b.police_month_id=a.police_month_id
+left join(
+select sum(score_value) as bnum,police_month_id from alarm_evaluation  
+where scored_police_id=#{policeId} and status=3 and score_value&lt;0
+      <if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(scoring_date,'%Y')=#{dateTime} 
+      </if>
+GROUP BY police_month_id) c on c.police_month_id=a.police_month_id
+order by a.police_month_id
+</select>
+ <!--个人考评报表历史扣分记录查询 -->
+  <select id="alarmPersonalEvaluationHistoryBuckleList" parameterType="com.bayee.political.domain.AlarmEvaluation" resultMap="BaseResultMap">
+select a.*, (case when e.scoring_son_breakdown is not null then e.scoring_son_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is not null then d.scoring_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is null and c.item_name is not null
+then c.item_name end) as scoringSonBreakdownName,f.type_name as typeName
+from alarm_evaluation a
+left join alarm_score_item c on c.id=a.score_items
+left join alarm_scoring_breakdown d on d.id=a.scoring_breakdown_id
+left join alarm_scoring_son_breakdown e on e.id=a.scoring_son_breakdown_id
+left join alarm_type f on f.id=a.type
+where a.scored_police_id=#{policeId} and a.status=3
+      <if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(a.scoring_date,'%Y')=#{dateTime} 
+      </if>
+     <if test="type != null and type !=''">
+        and a.type=#{type} 
+      </if> 
+      and a.score_value&lt;0
+and a.police_month_id=#{policeMonthId}
+order by a.id desc 
+</select>
+ <!--个人考评报表历史加分记录查询 -->
+  <select id="alarmPersonalEvaluationHistoryAddList" parameterType="com.bayee.political.domain.AlarmEvaluation" resultMap="BaseResultMap">
+select a.*, (case when e.scoring_son_breakdown is not null then e.scoring_son_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is not null then d.scoring_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is null and c.item_name is not null
+then c.item_name end) as scoringSonBreakdownName,f.type_name as typeName
+from alarm_evaluation a
+left join alarm_score_item c on c.id=a.score_items
+left join alarm_scoring_breakdown d on d.id=a.scoring_breakdown_id
+left join alarm_scoring_son_breakdown e on e.id=a.scoring_son_breakdown_id
+left join alarm_type f on f.id=a.type
+where a.scored_police_id=#{policeId} and a.status=3
+      <if test="dateTime != null and dateTime !=''">
+        and DATE_FORMAT(a.scoring_date,'%Y')=#{dateTime} 
+      </if>
+     <if test="type != null and type !=''">
+        and a.type=#{type} 
+      </if> 
+and a.score_value&gt;0
+and a.police_month_id=#{policeMonthId}
+order by a.id desc 
+</select>
+ <!--个人最近加扣分项查询(当前月) -->
+  <select id="alarmEvaluationLastScoreList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select sum(score_value) as num,name,scoring_breakdown_id from(select a.*,c.item_name,d.scoring_breakdown,e.scoring_son_breakdown,
+(case when e.scoring_son_breakdown is not null then e.scoring_son_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is not null then d.scoring_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is null and c.item_name is not null
+then c.item_name end) as name
+from alarm_evaluation a
+left join alarm_score_item c on c.id=a.score_items
+left join alarm_scoring_breakdown d on d.id=a.scoring_breakdown_id
+left join alarm_scoring_son_breakdown e on e.id=a.scoring_son_breakdown_id
+where a.scored_police_id=#{policeId} and a.status=3
+and DATE_FORMAT(a.scoring_date,'%Y-%m')=DATE_FORMAT(CURDATE(),'%Y-%m')) as t
+GROUP BY name,scoring_breakdown_id ORDER BY name
+</select>
+ <!--个人加分趋势查询(近一年) -->
+  <select id="alarmAddScoreList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 11 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 11 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 10 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 10 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 9 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 9 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 8 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 8 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 7 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 7 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 6 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 6 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 5 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 5 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 4 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 4 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 3 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 3 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 2 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 2 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =2 or (type=3 and score_value&gt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')
+</select>
+<!--个人扣分趋势查询(近一年) -->
+  <select id="alarmBuckleScoreList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 11 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 11 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 10 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 10 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 9 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 9 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 8 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 8 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 7 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 7 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 6 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 6 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 5 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 5 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 4 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 4 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 3 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 3 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 2 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 2 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m')
+UNION
+select ifnull(sum(score_value),0) as num,
+date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') as name
+from alarm_evaluation where scored_police_id=#{policeId}
+and status=3 and (type =1 or (type=3 and score_value&lt;0)) 
+and DATE_FORMAT(scoring_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')
+</select>
+
+<!--个人考评维度加扣分占比 -->
+  <select id="alarmPersonalEvaluationPieList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select count(a.score_value) as num,a.type,b.type_name as name from alarm_evaluation a
+left join alarm_type b on b.id=a.type
+where a.scored_police_id=#{policeId} and DATE_FORMAT(a.scoring_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+GROUP BY a.type,b.type_name order by a.type
+</select>
+<!--个人正面加分项目占比 -->
+  <select id="alarmAddProjectList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select count(a.score_items) as num,b.item_name as name from alarm_evaluation a 
+left join alarm_score_item b on b.id=a.score_items
+where a.scored_police_id=#{policeId} and a.status=3 
+and DATE_FORMAT(a.scoring_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+and (a.type =2 or (a.type=3 and a.score_value&gt;0))
+GROUP BY a.score_items order by a.score_items
+</select>
+<!--个人负面扣分项目占比 -->
+  <select id="alarmBuckleProjectList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select count(a.score_items) as num,b.item_name as name from alarm_evaluation a 
+left join alarm_score_item b on b.id=a.score_items
+where a.scored_police_id=#{policeId} and a.status=3 
+and DATE_FORMAT(a.scoring_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+and (a.type =1 or (a.type=3 and a.score_value&lt;0))
+GROUP BY a.score_items order by a.score_items
+</select>
+<!--个人考评年份查询 -->
+  <select id="alarmYearsList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationChart" >
+select distinct DATE_FORMAT(scoring_date,'%Y') as name from alarm_evaluation 
+where scored_police_id=#{policeId} and status=3
+order by DATE_FORMAT(scoring_date,'%Y') desc
+</select>
+<!--局领导当前年预警人数统计 -->
+  <select id="alarmLeaderStatistics" parameterType="com.bayee.political.domain.AlarmLeaderStatistics" resultMap="alarmLeaderStatistics">
+<!-- select count(*) as totalNum from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId} and DATE_FORMAT(b.first_alarm_time,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')  -->           
+select count(*) as totalNum from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId}
+and b.police_id is not null
+and DATE_FORMAT(b.first_alarm_time,'%Y')=DATE_FORMAT(CURDATE(),'%Y') 
+</select>
+<!--局领导上个月预警人数统计 -->
+  <select id="alarmLastLeaderStatistics" parameterType="com.bayee.political.domain.AlarmLeaderStatistics" resultMap="alarmLeaderStatistics">
+select count(*) as totalNum from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId} 
+and DATE_FORMAT(b.first_alarm_time,'%Y%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y%m')
+</select>
+<!--局领导当前月预警提醒人数统计 -->
+  <select id="alarmLeaderRemindStatistics" parameterType="com.bayee.political.domain.AlarmLeaderStatistics" resultMap="alarmLeaderStatistics">
+select ifnull(count(*),0) as totalNum from(select a.*,b.host_id from(select b.* from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId} 
+and DATE_FORMAT(b.first_alarm_time,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')) a
+left join (select * from alarm_talk where DATE_FORMAT(creation_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+and host_id=#{policeId}) b on b.police_id=a.police_id) t where host_id is null
+</select>
+<!--局领导考核预警趋势图 -->
+  <select id="alarmLeaderLineBuckleChart" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationChart">
+<!-- select ifnull(b.num,0) as num,a.police_month as name from alarm_police_month a
+left join(select count(*) as num,
+REPLACE(LTRIM(REPLACE(DATE_FORMAT(finish_alarm_time,'%m'),'0',' ')),' ','0') as months 
+from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId} and b.score &lt; 0
+and DATE_FORMAT(finish_alarm_time,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY months) b on b.months=a.id
+where a.id&lt;=REPLACE(LTRIM(REPLACE(DATE_FORMAT(CURDATE(),'%m'),'0',' ')),' ','0')
+order by a.id -->
+
+select ifnull(b.num,0) as num,a.police_month as name from alarm_police_month a
+left join(select count(*) as num,
+REPLACE(LTRIM(REPLACE(DATE_FORMAT(finish_alarm_time,'%m'),'0',' ')),' ','0') as months 
+from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId} and b.police_id is not null
+and DATE_FORMAT(finish_alarm_time,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY months) b on b.months=a.id
+where a.id&lt;=REPLACE(LTRIM(REPLACE(DATE_FORMAT(CURDATE(),'%m'),'0',' ')),' ','0')
+order by a.id
+
+</select>
+<!-- 局领导约预警加分人数趋势图 -->
+  <select id="alarmLeaderLineAddChart" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationChart">
+select ifnull(b.num,0) as num,a.police_month as name from alarm_police_month a
+left join(select count(*) as num,
+REPLACE(LTRIM(REPLACE(DATE_FORMAT(finish_alarm_time,'%m'),'0',' ')),' ','0') as months 
+from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId} and b.score &gt; 0
+and DATE_FORMAT(finish_alarm_time,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY months) b on b.months=a.id
+where a.id&lt;=REPLACE(LTRIM(REPLACE(DATE_FORMAT(CURDATE(),'%m'),'0',' ')),' ','0')
+order by a.id
+</select>
+<!-- 局领导扣分人数趋势图 -->
+  <select id="alarmLeaderTypeBuckleChart" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationChart">
+select ifnull(b.anum,0) as num,a.police_month as name from alarm_police_month a
+left join(select count(*) as anum,months from 
+(select b.* from leave_power a
+left join(select sum(score_value) as num,scored_police_id,
+REPLACE(LTRIM(REPLACE(DATE_FORMAT(scoring_date,'%m'),'0',' ')),' ','0') as months 
+from alarm_evaluation 
+where status=3 and score_value&lt;0
+and DATE_FORMAT(scoring_date,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY scored_police_id,DATE_FORMAT(scoring_date,'%m')) b 
+on find_in_set(b.scored_police_id,a.police_object_ids) > 0 
+where a.module_id=1 and a.checker_id=#{policeId}) a 
+GROUP BY months) b on b.months=a.id
+where a.id&lt;=REPLACE(LTRIM(REPLACE(DATE_FORMAT(CURDATE(),'%m'),'0',' ')),' ','0')
+order by a.id
+</select>
+<!-- 局领导加分人数趋势图 -->
+  <select id="alarmLeaderTypeAddChart" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationChart">
+select ifnull(b.anum,0) as num,a.police_month as name from alarm_police_month a
+left join(select count(*) as anum,months from 
+(select b.* from leave_power a
+left join(select sum(score_value) as num,scored_police_id,
+REPLACE(LTRIM(REPLACE(DATE_FORMAT(scoring_date,'%m'),'0',' ')),' ','0') as months 
+from alarm_evaluation 
+where status=3 and score_value&gt;0
+and DATE_FORMAT(scoring_date,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY scored_police_id,DATE_FORMAT(scoring_date,'%m')) b 
+on find_in_set(b.scored_police_id,a.police_object_ids) > 0 
+where a.module_id=1 and a.checker_id=#{policeId}) a 
+GROUP BY months) b on b.months=a.id
+where a.id&lt;=REPLACE(LTRIM(REPLACE(DATE_FORMAT(CURDATE(),'%m'),'0',' ')),' ','0')
+order by a.id
+</select>
+<!-- 局领导最新预警统计 -->
+  <select id="alarmLeaderNewestItem" parameterType="com.bayee.political.domain.AlarmLeaderStatistics" resultMap="alarmLeaderStatistics">
+select count(b.id) as totalNum from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId}
+</select>
+<!-- 查询民警预警最新时间 -->
+  <select id="alarmNewestTime" parameterType="com.bayee.political.domain.AlarmEvaluation" resultMap="BaseResultMap">
+select * from alarm_evaluation where scored_police_id=#{scoredPoliceId} and status=3
+and DATE_FORMAT(scoring_date,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+order by scoring_date desc limit 1  
+</select>
+<!-- 局领导约谈对象民警查询-->
+  <select id="alarmLeaderTalkObjectList" parameterType="com.bayee.political.domain.AlarmNewest" resultMap="newest">
+select b.police_id as scored_police_id,CONCAT(b.name,'(',b.police_id,')') as scoredPoliceName 
+from leave_power a 
+left join user b on find_in_set(b.police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{scoringPoliceId} 
+<if test="scoredPoliceId!=null and scoredPoliceId!=''">
+and b.police_id = #{scoredPoliceId} 
+</if>
+order by b.police_id
+</select>
+<!-- 局领导约谈对象预警民警查询-->
+  <select id="alarmLeaderTalkConditionList" parameterType="com.bayee.political.domain.AlarmNewest" resultMap="newest">
+select b.police_id as scored_police_id,CONCAT(c.name,'(',b.police_id,')') as scoredPoliceName 
+from leave_power a 
+left join (select distinct police_id from alarm_record) b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+where a.module_id=1 and a.checker_id=#{scoringPoliceId} 
+<if test="scoredPoliceId!=null and scoredPoliceId!=''">
+and b.police_id = #{scoredPoliceId} 
+</if> 
+order by b.police_id
+</select>
+ <!--局领导扣分预警详情 -->
+  <select id="alarmGetScoreBuckleItem" parameterType="com.bayee.political.domain.AlarmRecordChart" resultMap="alarmRecordChart" >
+select sum(a.score_value) as num,count(*) as frequencys,
+(case when e.scoring_son_breakdown is not null then e.scoring_son_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is not null then d.scoring_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is null and c.item_name is not null
+then c.item_name end) as name
+from alarm_evaluation a
+left join alarm_score_item c on c.id=a.score_items
+left join alarm_scoring_breakdown d on d.id=a.scoring_breakdown_id
+left join alarm_scoring_son_breakdown e on e.id=a.scoring_son_breakdown_id
+where a.scored_police_id=#{policeId} and a.status=3
+and score_value&lt;0
+<if test="alarmConfigType ==1">
+and DATE_FORMAT(a.scoring_date,'%Y-%m')=#{dateTime} 
+</if>
+<if test="alarmConfigType ==2">
+and DATE_FORMAT(a.scoring_date,'%Y')=#{dateTime} 
+</if>  
+GROUP BY name
+order by a.score_value
+</select>
+ <!--局领导加分预警详情 -->
+  <select id="alarmGetScoreAddItem" parameterType="com.bayee.political.domain.AlarmRecordChart" resultMap="alarmRecordChart" >
+<!-- select a.score_value as num,c.item_name,d.scoring_breakdown,e.scoring_son_breakdown,
+(case when e.scoring_son_breakdown is not null then e.scoring_son_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is not null then d.scoring_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is null and c.item_name is not null
+then c.item_name end) as name
+from alarm_evaluation a
+left join alarm_score_item c on c.id=a.score_items
+left join alarm_scoring_breakdown d on d.id=a.scoring_breakdown_id
+left join alarm_scoring_son_breakdown e on e.id=a.scoring_son_breakdown_id
+where a.scored_police_id=#{policeId} and a.status=3
+and score_value&gt;0
+and DATE_FORMAT(a.scoring_date,'%Y-%m')=#{dateTime}
+order by a.score_value desc -->
+select sum(a.score_value) as num,count(*) as frequencys,
+(case when e.scoring_son_breakdown is not null then e.scoring_son_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is not null then d.scoring_breakdown
+when e.scoring_son_breakdown is null and d.scoring_breakdown is null and c.item_name is not null
+then c.item_name end) as name
+from alarm_evaluation a
+left join alarm_score_item c on c.id=a.score_items
+left join alarm_scoring_breakdown d on d.id=a.scoring_breakdown_id
+left join alarm_scoring_son_breakdown e on e.id=a.scoring_son_breakdown_id
+where a.scored_police_id=#{policeId} and a.status=3
+and score_value&gt;0
+<if test="alarmConfigType ==1">
+and DATE_FORMAT(a.scoring_date,'%Y-%m')=#{dateTime} 
+</if>
+<if test="alarmConfigType ==2">
+and DATE_FORMAT(a.scoring_date,'%Y')=#{dateTime} 
+</if> 
+GROUP BY name
+order by a.score_value desc
+</select>
+ <!--局领导扣分最大值查询 -->
+  <select id="alarmBuckleMaxList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts">
+select ifnull(b.num,0) as num,a.police_month as name from alarm_police_month a
+left join(select min(b.score_value) as num,b.police_month_id from leave_power a
+left join alarm_evaluation b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId} and b.score_value&lt;0 
+and DATE_FORMAT(scoring_date,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY b.police_month_id) b on b.police_month_id=a.id
+where a.id&lt;=REPLACE(LTRIM(REPLACE(DATE_FORMAT(CURDATE(),'%m'),'0',' ')),' ','0')
+order by a.id
+</select>
+<!-- 查询当前季度月度时间 -->
+  <select id="dateItems" parameterType="com.bayee.political.domain.DateTimeItem" resultMap="dateTimeItems">
+select * from
+(SELECT QUARTER(adddate( dy,- 1 )) QTR,
+concat(date_add( dy, INTERVAL - 3 MONTH ),' 00:00:00') as currentQuarterStartTime,
+concat(adddate( dy,- 1 ),' 59:59:59') as currentQuarterEndTime 
+FROM (SELECT date_add( dy, INTERVAL ( 3 * QUARTER( curdate( ) ) ) MONTH ) dy FROM
+(SELECT adddate( CURRENT_DATE,- dayofyear( CURRENT_DATE ) + 1 ) dy ) x) y) a
+join
+(SELECT CONCAT(DATE_FORMAT(LAST_DAY(CURRENT_DATE()),'%Y-%m-'),'01 00:00:00') as timesMonthMorning) b
+join
+(SELECT CONCAT(LAST_DAY(CURRENT_DATE()),' 59:59:59') as timesMonthNight) as c
+</select>
+ <!--局领导加分最大值查询 -->
+  <select id="alarmAddMaxList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts">
+select ifnull(b.num,0) as num,a.police_month as name from alarm_police_month a
+left join(select max(b.score_value) as num,b.police_month_id from leave_power a
+left join alarm_evaluation b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId} and b.score_value&gt;0 
+and DATE_FORMAT(scoring_date,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY b.police_month_id) b on b.police_month_id=a.id
+where a.id&lt;=REPLACE(LTRIM(REPLACE(DATE_FORMAT(CURDATE(),'%m'),'0',' ')),' ','0')
+order by a.id
+</select>
+
+<!-- 扣分型排行榜-->
+  <select id="alarmBuckleRankList" parameterType="com.bayee.political.domain.AlarmNewest" resultMap="newest">
+select sum(score_value) as num,b.scored_police_id,c.name as scoredPoliceName,
+c.head_image as headImage from leave_power a
+left join alarm_evaluation b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.scored_police_id
+where a.module_id=1 and a.checker_id=#{policeId} and b.score_value&lt;0 
+and scoring_date&gt;=#{startTime} 
+and scoring_date&lt;=#{endTime}
+GROUP BY b.scored_police_id order by sum(score_value) asc limit 10
+</select>
+<!-- 加分型排行榜-->
+  <select id="alarmAddRankList" parameterType="com.bayee.political.domain.AlarmNewest" resultMap="newest">
+select sum(score_value) as num,b.scored_police_id,c.name as scoredPoliceName,
+c.head_image as headImage from leave_power a
+left join alarm_evaluation b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.scored_police_id
+where a.module_id=1 and a.checker_id=#{policeId} and b.score_value&gt;0 
+and scoring_date&gt;=#{startTime} 
+and scoring_date&lt;=#{endTime}
+GROUP BY b.scored_police_id order by sum(score_value) desc limit 10
+</select>
+<!--  (scoreItems必填 为记分项目分类)查询所有或根据记分细目id、
+记分子细目id、记分日期、警号、被记分人、记分查询 -->
+<select id="selectAllOrByCondition" resultMap="BaseResultMap">
+select a.*,g.item_name from (
+select a.*,b.`name` as scored_name,b.police_id,f.police_month as police_month_str,
+d.scoring_breakdown,e.scoring_son_breakdown,c.`name` as scoreing_name, h.type_name, dep.id as dep_id, 
+dep.name as department_name from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department dep on b.department_id = dep.id 
+left join user c on a.scoring_police_id = c.police_id 
+left join department depart on c.department_id = depart.id 
+left join alarm_scoring_breakdown d on a.scoring_breakdown_id = d.id 
+left join alarm_scoring_son_breakdown e on a.scoring_son_breakdown_id = e.id 
+left join alarm_police_month f on a.police_month_id = f.id 
+left join alarm_type h on a.type = h.id 
+where 1 = 1 
+<if test="scoringBreakdownId!=null and scoringBreakdownId!=''">
+and a.scoring_breakdown_id = #{scoringBreakdownId} 
+</if> 
+<if test="scoringSonBreakdownId!=null and scoringSonBreakdownId!=''">
+and a.scoring_son_breakdown_id = #{scoringSonBreakdownId} 
+</if>
+<if test="scoringDate!=null and scoringDate!=''">
+and date(a.scoring_date) = #{scoringDate} 
+</if>
+<if test="keywords!=null and keywords!=''">
+and (a.scored_police_id like "%"#{keywords}"%" or a.scoring_police_id like "%"#{keywords}"%" or b.`name` like "%"#{keywords}"%" or c.`name` like "%"#{keywords}"%")
+</if> 
+and (dep.`id` = #{departmentId} or depart.id = #{departmentId}) 
+) a left join alarm_score_item g on g.id = a.score_items where g.id = #{scoreItems} 
+<if test="searchDepId!=null">
+and a.dep_id = #{searchDepId}
+</if>
+order by a.id desc  
+<if test="pageSize!=null">
+limit #{pageSize},10 
+</if>
+</select>
+
+<select id="selectAllOrByConditionCount" resultType="java.lang.Integer">
+select count(*) as count from (
+select a.*,b.`name` as scored_name,b.police_id,f.police_month as police_month_str,
+d.scoring_breakdown,e.scoring_son_breakdown,c.`name` as scoreing_name, h.type_name, dep.id as dep_id, 
+dep.name as department_name from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department dep on b.department_id = dep.id 
+left join user c on a.scoring_police_id = c.police_id 
+left join department depart on c.department_id = depart.id 
+left join alarm_scoring_breakdown d on a.scoring_breakdown_id = d.id 
+left join alarm_scoring_son_breakdown e on a.scoring_son_breakdown_id = e.id 
+left join alarm_police_month f on a.police_month_id = f.id 
+left join alarm_type h on a.type = h.id 
+where 1 = 1 
+<if test="scoringBreakdownId!=null and scoringBreakdownId!=''">
+and a.scoring_breakdown_id = #{scoringBreakdownId} 
+</if> 
+<if test="scoringSonBreakdownId!=null and scoringSonBreakdownId!=''">
+and a.scoring_son_breakdown_id = #{scoringSonBreakdownId} 
+</if>
+<if test="scoringDate!=null and scoringDate!=''">
+and date(a.scoring_date) = #{scoringDate} 
+</if>
+<if test="keywords!=null and keywords!=''">
+and (a.scored_police_id like "%"#{keywords}"%" or a.scoring_police_id like "%"#{keywords}"%" or b.`name` like "%"#{keywords}"%" or c.`name` like "%"#{keywords}"%")
+</if>
+and (dep.`id` = #{departmentId} or depart.id = #{departmentId}) 
+) a left join alarm_score_item g on g.id = a.score_items where g.id = #{scoreItems} 
+<if test="searchDepId!=null">
+and a.dep_id = #{searchDepId}
+</if>
+</select>
+
+<!-- 本月参与总人数 -->
+<select id="theMonthTotal" resultType="java.lang.Integer">
+select count(distinct scored_police_id) as count from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where DATE_FORMAT(  scoring_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId}) 
+</select>
+<!-- 本月总人数新增 -->
+<select id="theMonthNewAddTotal" resultType="java.lang.Integer">
+select (
+(select count(distinct scored_police_id) as count from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where DATE_FORMAT(  scoring_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId}))-
+(select count(distinct scored_police_id) as count from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(  scoring_date, '%Y%m' ) ) =1
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+)
+) as number
+</select>
+<!-- 本月扣分人数 -->
+<select id="theMonthPointsDeductedNum" resultType="java.lang.Integer">
+select count(distinct scored_police_id) as count from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where score_value &lt; 0 
+and DATE_FORMAT(  scoring_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+</select>
+<!-- 本月新增扣分人数 -->
+<select id="theMonthNewAddPointsDeductedNum" resultType="java.lang.Integer">
+select ((select count(distinct scored_police_id) as count from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where score_value &lt; 0 
+and DATE_FORMAT(  scoring_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+)-
+(select count(distinct scored_police_id) as count from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where score_value &lt; 0 
+and PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(  scoring_date, '%Y%m' ) ) =1
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+)) as number
+</select>
+<!-- 本月加分人数 -->
+<select id="theMonthBonusPointsNum" resultType="java.lang.Integer">
+select count(distinct scored_police_id) as count from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where score_value &gt; 0 
+and DATE_FORMAT(  scoring_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+</select>
+<!-- 本月新增加分人数 -->
+<select id="theMonthNewAddBonusPointsNum" resultType="java.lang.Integer">
+select ((select count(distinct scored_police_id) as count from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where score_value &gt; 0 
+and DATE_FORMAT(  scoring_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+)-
+(select count(distinct scored_police_id) as count from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where score_value &gt; 0 
+and PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(  scoring_date, '%Y%m' ) ) =1
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+)) as number
+</select>
+<!-- 本月加分预警人数 -->
+<select id="theMonthBonusPointsAlarmNum" resultType="java.lang.Integer">
+select count(distinct scored_police_id) as count 
+from (select sum(score_value) as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId}) 
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = DATE_FORMAT(CURDATE() , '%c') 
+and score_value &gt; 0 
+group by scored_police_id 
+HAVING score &gt;= (select score from alarm_config where threshold_type = 2 and type = #{type}) 
+union 
+select score_value as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = DATE_FORMAT(CURDATE() , '%c') 
+and score_value &gt;= (select score from alarm_config where threshold_type = 2 and type = #{type}) 
+) a 
+</select>
+<!-- 本月新增加分预警人数 -->
+<select id="theMonthNewAddBonusPointsAlarmNum" resultType="java.lang.Integer">
+select (select count(distinct scored_police_id) as count 
+from (select sum(score_value) as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = DATE_FORMAT(CURDATE() , '%c') 
+and score_value &gt; 0 
+group by scored_police_id 
+HAVING score &gt;= (select score from alarm_config where threshold_type = 2 and type = #{type}) 
+union 
+select score_value as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = DATE_FORMAT(CURDATE() , '%c') 
+and score_value &gt;= (select score from alarm_config where threshold_type = 2 and type = #{type}) 
+) a ) - (select count(distinct scored_police_id) as count 
+from (select sum(score_value) as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = (DATE_FORMAT(CURDATE() , '%c') - 1)
+and score_value &gt; 0 
+group by scored_police_id 
+HAVING score &gt;= (select score from alarm_config where threshold_type = 2 and type = #{type}) 
+union 
+select score_value as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = (DATE_FORMAT(CURDATE() , '%c') - 1)
+and score_value &gt;= (select score from alarm_config where threshold_type = 2 and type = #{type}) 
+) a ) as count 
+</select>
+<!-- 本月扣分预警人数 -->
+<select id="theMonthPointsDeductedAlarmNum" resultType="java.lang.Integer">
+select count(distinct scored_police_id) as count 
+from (select sum(score_value) as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = DATE_FORMAT(CURDATE() , '%c') 
+and score_value &lt; 0 
+group by scored_police_id 
+HAVING score &lt;= (select score from alarm_config where threshold_type = 1 and type = #{type}) 
+union 
+select score_value as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = DATE_FORMAT(CURDATE() , '%c') 
+and score_value &lt;= (select score from alarm_config where threshold_type = 1 and type = #{type}) 
+) a 
+</select>
+<!-- 本月新增扣分预警人数 -->
+<select id="theMonthNewAddPointsDeductedAlarmNum" resultType="java.lang.Integer">
+select (select count(distinct scored_police_id) as count 
+from (select sum(score_value) as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = DATE_FORMAT(CURDATE() , '%c') 
+and score_value &lt; 0 
+group by scored_police_id 
+HAVING score &lt;= (select score from alarm_config where threshold_type = 1 and type = #{type}) 
+union 
+select score_value as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = DATE_FORMAT(CURDATE() , '%c') 
+and score_value &lt;= (select score from alarm_config where threshold_type = 1 and type = #{type}) 
+) a ) - (select count(distinct scored_police_id) as count 
+from (select sum(score_value) as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = (DATE_FORMAT(CURDATE() , '%c') - 1)
+and score_value &lt; 0 
+group by scored_police_id 
+HAVING score &lt;= (select score from alarm_config where threshold_type = 1 and type = #{type}) 
+union 
+select score_value as score,scored_police_id from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join user c on a.scoring_police_id = c.police_id 
+where 1 = 1 
+and (b.department_id = #{departmentId} or c.department_id = #{departmentId})
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = (DATE_FORMAT(CURDATE() , '%c') - 1)
+and score_value &lt;= (select score from alarm_config where threshold_type = 1 and type = #{type}) 
+) a ) as count 
+</select>
+<!-- 根据记分人查询本月未上传指标 -->
+<select id="theMonthNotUpload" resultType="java.lang.String">
+select * from (select ifnull(scoring_son_breakdown,scoring_breakdown) as scoring_son_breakdown 
+from alarm_score_item a 
+left join alarm_scoring_breakdown b on a.id= b.score_items 
+left join alarm_scoring_son_breakdown c on b.id = c.scoring_breakdown_id) y 
+where y.scoring_son_breakdown not in (select ifnull(ifnull(d.scoring_son_breakdown,c.scoring_breakdown),
+b.item_name) as scoring_son_breakdown from alarm_evaluation a 
+left join alarm_score_item b on a.score_items = b.id 
+left join alarm_scoring_breakdown c on a.scoring_breakdown_id = c.id 
+left join alarm_scoring_son_breakdown d on a.scoring_son_breakdown_id = d.id 
+where DATE_FORMAT( a.scoring_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) 
+and a.scoring_police_id = #{scoringPoliceId}
+)
+</select>
+<!-- 记分总指标数量 -->
+<select id="totalScoreTargetNum" resultType="java.lang.Integer">
+select count(*) as count from alarm_score_item a 
+left join alarm_scoring_breakdown b on a.id= b.score_items 
+left join alarm_scoring_son_breakdown c on b.id = c.scoring_breakdown_id
+</select>
+<!-- 1扣分指标数量/2加分指标数量/3中性指标数量 -->
+<select id="scoreTargetNum" resultType="java.lang.Integer">
+select count(*) as count from alarm_score_item a 
+left join alarm_scoring_breakdown b on a.id= b.score_items 
+left join alarm_scoring_son_breakdown c on b.id = c.scoring_breakdown_id 
+where a.dimension = #{number}
+</select>
+
+<!-- 根据scoringPoliceId查询记分审核 -->
+<select id="review" resultMap="BaseResultMap">
+select a.scored_police_id,b.`name` as scored_name,a.creation_date,a.reason,
+ifnull(ifnull(e.scoring_son_breakdown,d.scoring_breakdown),c.item_name) as evaluation_target from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join alarm_score_item c on a.score_items = c.id 
+left join alarm_scoring_breakdown d on d.score_items = c.id 
+left join alarm_scoring_son_breakdown e on e.scoring_breakdown_id = d.id 
+where a.status = 2 and a.is_true = 0 and a.scoring_police_id = #{scoringPoliceId}
+limit 0,2
+</select>
+
+<!-- 根据thresholdType阈值类型修改预警分配置 -->
+<update id="updateAlarmConfig">
+update alarm_config set score = #{score} where threshold_type = #{thresholdType} and type = #{type}
+</update>
+
+<!-- 月度预警报表 -->
+<select id="getMonthAlarmReport" resultMap="BaseResultMap">
+select concat(left(a.creation_date,4),'年',d.police_month,'考核结果') as creation_date_str,
+c.`name` as department_name, c.id as departmentId from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join alarm_police_month d on a.police_month_id = d.id 
+where 1 = 1 
+<if test="departmentName!=null and departmentName!=''">
+and c.`name` = #{departmentName}
+</if>
+<if test="keywords!=null and keywords!=''">
+and (concat(left(a.creation_date,4),'年',d.police_month,'考核结果') like concat('%',#{keywords},'%') 
+or c.`name` like concat('%',#{keywords},'%'))
+</if>
+<if test="ids!=null and ids!=''">
+and FIND_IN_SET(c.id,#{ids})
+</if> 
+group by c.id,a.police_month_id 
+order by d.police_month 
+limit #{pageSize},10
+</select>
+
+<!-- 月度预警报表数量 -->
+<select id="getMonthAlarmReportCount" resultType="java.lang.Integer">
+select count(*) from (select concat(left(a.creation_date,4),'年',d.police_month,'考核结果') as creation_date_str,
+c.`name` as department_name from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join alarm_police_month d on a.police_month_id = d.id 
+where 1 = 1 
+<if test="departmentName!=null and departmentName!=''">
+and c.`name` = #{departmentName}
+</if>
+<if test="keywords!=null and keywords!=''">
+and (concat(left(a.creation_date,4),'年',d.police_month,'考核结果') like concat('%',#{keywords},'%') 
+or c.`name` like concat('%',#{keywords},'%'))
+</if>
+<if test="ids!=null and ids!=''">
+and FIND_IN_SET(c.id,#{ids})
+</if> 
+group by c.id,a.police_month_id) a
+</select>
+
+<!-- 季度预警报表 -->
+<select id="getQuarterAlarmReport" resultMap="BaseResultMap">
+select concat(left(a.creation_date,4),'年',QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)),'季度','考核结果') as creation_date_str,
+c.`name` as department_name, c.id as departmentId from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join alarm_police_month d on a.police_month_id = d.id 
+where 1 = 1 
+<if test="departmentName!=null and departmentName!=''">
+and c.`name` = #{departmentName}
+</if>
+<if test="keywords!=null and keywords!=''">
+and (concat(left(a.creation_date,4),'年',QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)),'季度','考核结果') like concat('%',#{keywords},'%') 
+or c.`name` like concat('%',#{keywords},'%'))
+</if>
+<if test="ids!=null and ids!=''">
+and FIND_IN_SET(c.id,#{ids})
+</if> 
+group by c.id,QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)) 
+order by QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01))
+limit #{pageSize},10
+</select>
+<!-- 季度预警报表数量 -->
+<select id="getQuarterAlarmReportCount" resultType="java.lang.Integer">
+select count(*) as count from (select concat(left(a.creation_date,4),'年',QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)),'季度','考核结果') as creation_date_str,
+c.`name` as department_name from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join alarm_police_month d on a.police_month_id = d.id 
+where 1 = 1 
+<if test="departmentName!=null and departmentName!=''">
+and c.`name` = #{departmentName}
+</if>
+<if test="keywords!=null and keywords!=''">
+and (concat(left(a.creation_date,4),'年',QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)),'季度','考核结果') like concat('%',#{keywords},'%') 
+or c.`name` like concat('%',#{keywords},'%'))
+</if>
+<if test="ids!=null and ids!=''">
+and FIND_IN_SET(c.id,#{ids})
+</if> 
+group by c.id,QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01))) a
+</select>
+
+<!-- 预警报表单位类型 -->
+<select id="getUnitType" resultMap="BaseResultMap">
+select c.id,c.`name` as department_name from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on b.department_id = c.id
+group by c.`name`
+</select>
+
+<!-- 待办事项 -->
+<select id="waitMatter" resultMap="BaseResultMap">
+select a.id,b.`name` as scored_name,a.scored_police_id,c.`name` as department_name,a.reason,a.creation_date,a.`status` from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on c.id = b.department_id 
+where 1 = 1 
+and a.`status` = 2 
+and a.is_true = 0 
+and a.scoring_police_id = #{scoringPoliceId} 
+order by a.creation_date
+limit #{pageSize},10
+</select>
+
+<!-- 已办事项 -->
+<select id="doneMatter" resultMap="BaseResultMap">
+select a.id,b.`name` as scored_name,a.scored_police_id,c.`name` as department_name,a.reason,a.creation_date,a.`status` from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on c.id = b.department_id 
+where 1 = 1 
+and a.`status` = 3 
+and a.is_true = 1 
+and a.scoring_police_id = #{scoringPoliceId} 
+order by a.update_date desc
+limit #{pageSize},10
+</select>
+
+<!-- 待办事项数量 -->
+<select id="waitMatterCount" resultType="java.lang.Integer">
+select count(*) as count from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on c.id = b.department_id 
+where 1 = 1 
+and a.`status` = 2 
+and a.is_true = 0 
+and a.scoring_police_id = #{scoringPoliceId} 
+</select>
+
+<!-- 已办事项数量 -->
+<select id="doneMatterCount" resultType="java.lang.Integer">
+select count(*) as count from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on c.id = b.department_id 
+where 1 = 1 
+and a.`status` = 3 
+and a.is_true = 1 
+and a.scoring_police_id = #{scoringPoliceId} 
+</select>
+
+<!-- 待办事项操作 -->
+<update id="waitMatterMark">
+update alarm_evaluation set 
+`status` = 3, 
+is_true = 1, 
+approval = #{mark}, 
+update_date = now() 
+where id = #{id} 
+</update>
+
+<!-- 查询预警配置 -->
+<select id="getAlarmConfig" resultMap="alarmConfig">
+select * from alarm_config
+</select>
+
+<select id="scoreTip" resultType="java.lang.String">
+select * from (select ifnull(ifnull(c.scoring_son_breakdown,b.scoring_breakdown),a.item_name) as scoring_son_breakdown 
+from alarm_score_item a 
+left join alarm_scoring_breakdown b on a.id= b.score_items 
+left join alarm_scoring_son_breakdown c on b.id = c.scoring_breakdown_id) y 
+where y.scoring_son_breakdown not in (select ifnull(ifnull(d.scoring_son_breakdown,c.scoring_breakdown),
+b.item_name) as scoring_son_breakdown from alarm_evaluation a 
+left join alarm_score_item b on a.score_items = b.id 
+left join alarm_scoring_breakdown c on  a.scoring_breakdown_id = c.id 
+left join alarm_scoring_son_breakdown d on a.scoring_son_breakdown_id = d.id 
+where DATE_FORMAT( a.scoring_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) 
+and a.scoring_police_id = #{scoringPoliceId}
+)
+</select>
+
+<!-- 全部预警报表 -->
+<select id="getAllAlarmReport" resultMap="BaseResultMap">
+select * from (select concat(left(a.creation_date,4),'年',d.police_month,'考核结果') as creation_date_str,
+c.`name` as department_name, c.id as departmentId from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join alarm_police_month d on a.police_month_id = d.id 
+where 1 = 1 
+<if test="departmentName!=null and departmentName!=''">
+and c.`name` = #{departmentName}
+</if>
+<if test="keywords!=null and keywords!=''">
+and (concat(left(a.creation_date,4),'年',d.police_month,'考核结果') like concat('%',#{keywords},'%') 
+or c.`name` like concat('%',#{keywords},'%'))
+</if>
+group by c.id,a.police_month_id 
+union all 
+select concat(left(a.creation_date,4),'年',QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)),'季度','考核结果') as creation_date_str,
+c.`name` as department_name, c.id as departmentId from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join alarm_police_month d on a.police_month_id = d.id 
+where 1 = 1 
+<if test="departmentName!=null and departmentName!=''">
+and c.`name` = #{departmentName}
+</if>
+<if test="keywords!=null and keywords!=''">
+and (concat(left(a.creation_date,4),'年',QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)),'季度','考核结果') like concat('%',#{keywords},'%') 
+or c.`name` like concat('%',#{keywords},'%'))
+</if>
+group by c.id,QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)) 
+) a  where 1 = 1 
+<if test="ids!=null and ids!=''">
+and FIND_IN_SET(departmentId,#{ids})
+</if>  
+<if test="departmentName==null or departmentName==''">
+order by rand() 
+</if>
+limit #{pageSize},10 
+</select>
+
+<!-- 全部预警报表数量 -->
+<select id="getaAllAlarmReportCount" resultType="java.lang.Integer">
+select count(*) as count from (select concat(left(a.creation_date,4),'年',d.police_month,'考核结果') as creation_date_str,
+c.`name` as department_name, c.id as departmentId from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join alarm_police_month d on a.police_month_id = d.id 
+where 1 = 1 
+<if test="departmentName!=null and departmentName!=''">
+and c.`name` = #{departmentName}
+</if>
+<if test="keywords!=null and keywords!=''">
+and (concat(left(a.creation_date,4),'年',d.police_month,'考核结果') like concat('%',#{keywords},'%') 
+or c.`name` like concat('%',#{keywords},'%'))
+</if>
+group by c.id,a.police_month_id 
+union all 
+select concat(left(a.creation_date,4),'年',QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)),'季度','考核结果') as creation_date_str,
+c.`name` as department_name,  c.id as departmentId from alarm_evaluation a 
+left join user b on a.scored_police_id = b.police_id 
+left join department c on b.department_id = c.id 
+left join alarm_police_month d on a.police_month_id = d.id 
+where 1 = 1 
+<if test="departmentName!=null and departmentName!=''">
+and c.`name` = #{departmentName}
+</if>
+<if test="keywords!=null and keywords!=''">
+and (concat(left(a.creation_date,4),'年',QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)),'季度','考核结果') like concat('%',#{keywords},'%') 
+or c.`name` like concat('%',#{keywords},'%'))
+</if>
+group by c.id,QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)) 
+) a where 1 = 1 
+<if test="ids!=null and ids!=''">
+and FIND_IN_SET(departmentId,#{ids})
+</if> 
+</select>
+
+<!-- 最新两条负面记分 -->
+<select id="newestScoring" resultMap="BaseResultMap">
+select b.`name` as scored_name, a.scored_police_id, c.item_name as scoreItemsName,
+ a.score_value, a.scoring_date
+from alarm_evaluation a
+left join user b on a.scored_police_id = b.police_id 
+left join alarm_score_item c on a.score_items = c.id 
+where a.type = 1 and a.scoring_police_id = #{scoringPoliceId} 
+order by a.scoring_date desc limit 2
+</select>
+
+<!-- 月年度正负+中面考评分数 -->
+<select id="evaluationScoreByCondition" resultType="java.lang.Double">
+select (select IFNULL(sum(score_value),0) as score from alarm_evaluation 
+where scored_police_id=#{scoredPoliceId} and type = #{type}
+<if test="configTimeType==1">
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = DATE_FORMAT(CURDATE() , '%c')
+</if> 
+<if test="configTimeType==2">
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+</if>
+) + 
+(select IFNULL(sum(score_value),0) as score from alarm_evaluation 
+where scored_police_id=#{scoredPoliceId} and type = 3 
+<if test="configTimeType==1">
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y') 
+and police_month_id = DATE_FORMAT(CURDATE() , '%c')
+</if>
+<if test="configTimeType==2">
+and DATE_FORMAT(scoring_date, '%Y') = DATE_FORMAT(CURDATE() , '%Y')
+</if>
+) as score 
+</select>
+
+<!-- 月年度正负面加中性的考评预警分数 -->
+<select id="alarmScoreByCondition" resultType="java.lang.Double">
+select score from alarm_config 
+where type = #{configTimeType} and threshold_type = #{threshold}
+</select>
+
+<!-- 根据月度或季度获得报表详情  -->
+<select id="getReportDetails" resultType="com.bayee.political.domain.ReportDetails" >
+select a.name,a.scored_police_id as scoredPoliceId,b.bnum,c.cnum,d.dnum,e.enum as eenum, 
+f.fnum,g.gnum,h.hnum,i.inum,j.jnum,k.knum,l.lnum,m.mnum,n.nnum,o.onum,p.pnum,q.qnum,r.rnum,
+s.snum,t.tnum,u.unum,v.vnum,w.wnum,x.xnum,y.ynum,z1.z1num,z2.z2num 
+from (select DISTINCT scored_police_id,b.name from alarm_evaluation a
+left join user b on a.scored_police_id = b.police_id 
+left join department c on b.department_id = c.id 
+where 1 = 1 
+<if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="departmentId!=null and departmentId!=''">
+and c.id = #{departmentId}
+</if>
+) a 
+
+left join (select sum(score_value) as bnum,scored_police_id from alarm_evaluation where score_items=1 and scoring_breakdown_id=4 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) as b on b.scored_police_id=a.scored_police_id
+
+left join (select sum(score_value) as cnum,scored_police_id from alarm_evaluation where score_items=1 and scoring_breakdown_id=5 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) c on c.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as dnum,scored_police_id from alarm_evaluation where score_items=2 and scoring_breakdown_id=6 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) d on d.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as enum,scored_police_id from alarm_evaluation where score_items=2 and scoring_breakdown_id=7 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) e on e.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as fnum,scored_police_id from alarm_evaluation where score_items=2 and scoring_breakdown_id=8 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) f on f.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as gnum,scored_police_id from alarm_evaluation where score_items=3 and scoring_son_breakdown_id=1 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) g on g.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as hnum,scored_police_id from alarm_evaluation where score_items=3 and scoring_son_breakdown_id=2 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) h on h.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as inum,scored_police_id from alarm_evaluation where score_items=3 and scoring_son_breakdown_id=3 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) i on i.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as jnum,scored_police_id from alarm_evaluation where score_items=3 and scoring_son_breakdown_id=4 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) j on j.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as knum,scored_police_id from alarm_evaluation where score_items=3 and scoring_son_breakdown_id=5 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) k on k.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as lnum,scored_police_id from alarm_evaluation where score_items=3 and scoring_son_breakdown_id=6 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) l on l.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as mnum,scored_police_id from alarm_evaluation where score_items=4 and scoring_breakdown_id=9 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) m on m.scored_police_id=a.scored_police_id 
+left join (select sum(score_value) as nnum,scored_police_id from alarm_evaluation where score_items=4 and scoring_breakdown_id=10 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) n on n.scored_police_id=a.scored_police_id 
+left join (select sum(score_value) as onum,scored_police_id from alarm_evaluation where score_items=4 and scoring_breakdown_id=11 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) o on o.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as pnum,scored_police_id from alarm_evaluation where score_items=5 and scoring_breakdown_id=12 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) p on p.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as qnum,scored_police_id from alarm_evaluation where score_items=5 and scoring_breakdown_id=13 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) q on q.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as rnum,scored_police_id from alarm_evaluation where score_items=5 and scoring_breakdown_id=14 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) r on r.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as snum,scored_police_id from alarm_evaluation where score_items=6 and scoring_son_breakdown_id=7 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) s on s.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as tnum,scored_police_id from alarm_evaluation where score_items=6 and scoring_son_breakdown_id=8 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) t on t.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as unum,scored_police_id from alarm_evaluation where score_items=6 and scoring_breakdown_id=15 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) u on u.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as vnum,scored_police_id from alarm_evaluation where score_items=6 and scoring_breakdown_id=16 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) v on v.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as wnum,scored_police_id from alarm_evaluation where score_items=7 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) w on w.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as xnum,scored_police_id from alarm_evaluation where score_items=8 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) x on x.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as ynum,scored_police_id from alarm_evaluation where score_items=9 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+GROUP BY scored_police_id) y on y.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as z1num,scored_police_id from alarm_evaluation where 1 = 1 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+and score_value &lt; 0
+GROUP BY scored_police_id) z1 on z1.scored_police_id=a.scored_police_id 
+
+left join (select sum(score_value) as z2num,scored_police_id from alarm_evaluation where 1 = 1 
+ <if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(creation_date),'-',police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+and score_value &gt; 0
+GROUP BY scored_police_id) z2 on z2.scored_police_id=a.scored_police_id 
+
+<if test="pageSize!=null">
+limit #{pageSize},10
+</if> 
+</select>
+
+<!-- 根据月度或季度获得报表数量  -->
+<select id="getReportDetailsCount" resultType="java.lang.Integer">
+select count(*) as count from (select DISTINCT scored_police_id,b.name from alarm_evaluation a
+left join user b on a.scored_police_id = b.police_id 
+left join department c on b.department_id = c.id 
+where 1 = 1 
+<if test="conditionType==1">
+and police_month_id = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="conditionType==2">
+and QUARTER(CONCAT(year(a.creation_date),'-',a.police_month_id,'-',01)) = #{condition} 
+and year(scoring_date) = #{year} 
+</if>
+<if test="departmentId!=null and departmentId!=''">
+and c.id = #{departmentId}
+</if>
+) a 
+</select>
+
+<!-- 获取的导出的Excel标题 -->
+<select id="getExportExcelTitle" resultType="java.lang.String">
+select concat(if(dimension = 1,'负面考评',if(dimension = 2,'正面考评','中性考评')),'-',item_name,'-',
+DATE_FORMAT(now(),'%Y%m%d%H%i%s')) as title from alarm_score_item where id = #{scoreItem} 
+</select>
+ <!--警员个人分值扣分查询(近一年) -->
+  <select id="personalBuckleAnalysisList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select a.year_month as name,ifnull(b.num,0) as num from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) as a
+left join(select sum(score_value) as num,DATE_FORMAT(scoring_date,'%Y-%m') as name from leave_power a
+left join alarm_evaluation b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId} 
+and b.scored_police_id=#{scoredPoliceId} and b.score_value&lt;0 
+GROUP BY DATE_FORMAT(scoring_date,'%Y-%m')) as b on b.name=a.year_month
+order by ${name} ${sort}
+</select>
+ <!--警员个人分值加分查询(近一年) -->
+  <select id="personalAddAnalysisList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select a.year_month as name,ifnull(b.num,0) as num from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) as a
+left join(select sum(score_value) as num,DATE_FORMAT(scoring_date,'%Y-%m') as name from leave_power a
+left join alarm_evaluation b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+where a.module_id=1 and a.checker_id=#{policeId} and b.scored_police_id=#{scoredPoliceId} and b.score_value&gt;0 
+GROUP BY DATE_FORMAT(scoring_date,'%Y-%m')) as b on b.name=a.year_month
+order by ${name} ${sort}
+</select>
+
+
+ <!--扣分型警员分值分析列表(当前月前三条) -->
+  <select id="alarmBuckleScoreLimitList" parameterType="com.bayee.political.domain.AlarmPoliceScoreAnalysis" resultMap="scoreAnalysis" >
+select b.scored_police_id,ifnull(b.score,0) as score,
+d.head_image as headImage,d.name as scoredPoliceName,e.name as departmentName from leave_power a
+left join 
+(select sum(score_value) as score,scored_police_id from alarm_evaluation 
+where DATE_FORMAT(scoring_date,'%Y-%m')=#{dateTime} and score_value&lt;0
+GROUP BY scored_police_id) b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+left join user d on d.police_id=b.scored_police_id
+left join department = e on e.id=d.department_id
+where a.module_id=1 and a.checker_id=#{policeId} and b.scored_police_id is not null
+order by ABS(b.score) desc limit 3
+</select>
+ <!--加分型警员分值分析列表(当前月前三条) -->
+  <select id="alarmAddScoreLimitList" parameterType="com.bayee.political.domain.AlarmPoliceScoreAnalysis" resultMap="scoreAnalysis" >
+select b.scored_police_id,ifnull(b.score,0) as score,
+d.head_image as headImage,d.name as scoredPoliceName,e.name as departmentName from leave_power a
+left join 
+(select sum(score_value) as score,scored_police_id from alarm_evaluation 
+where DATE_FORMAT(scoring_date,'%Y-%m')=#{dateTime} and score_value&gt;0
+GROUP BY scored_police_id) b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+left join user d on d.police_id=b.scored_police_id
+left join department = e on e.id=d.department_id
+where a.module_id=1 and a.checker_id=#{policeId} and b.scored_police_id is not null
+order by b.score desc limit 3
+</select>
+ <!--扣分型警员分值分析更多列表查询 -->
+  <select id="alarmBuckleScoreMoreList" parameterType="com.bayee.political.domain.AlarmPoliceScoreAnalysis" resultMap="scoreAnalysis" >
+select b.scored_police_id,ifnull(b.score,0) as score,
+d.head_image as headImage,d.name as scoredPoliceName,e.name as departmentName from leave_power a
+left join 
+(select sum(score_value) as score,scored_police_id from alarm_evaluation 
+where DATE_FORMAT(scoring_date,'%Y-%m')=#{dateTime} and score_value&lt;0
+GROUP BY scored_police_id) b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+left join user d on d.police_id=b.scored_police_id
+left join department = e on e.id=d.department_id
+where a.module_id=1 and a.checker_id=#{policeId} and b.scored_police_id is not null
+<if test="departmentId != null and departmentId !=''">
+        and e.id = #{departmentId}
+      </if>
+order by ABS(b.score) desc
+</select>
+ <!--加分型警员分值分析更多列表查询 -->
+  <select id="alarmAddScoreMoreList" parameterType="com.bayee.political.domain.AlarmPoliceScoreAnalysis" resultMap="scoreAnalysis" >
+select b.scored_police_id,ifnull(b.score,0) as score,
+d.head_image as headImage,d.name as scoredPoliceName,e.name as departmentName from leave_power a
+left join 
+(select sum(score_value) as score,scored_police_id from alarm_evaluation 
+where DATE_FORMAT(scoring_date,'%Y-%m')=#{dateTime} and score_value&gt;0
+GROUP BY scored_police_id) b on find_in_set(b.scored_police_id,a.police_object_ids) > 0
+left join user d on d.police_id=b.scored_police_id
+left join department = e on e.id=d.department_id
+where a.module_id=1 and a.checker_id=#{policeId} and b.scored_police_id is not null
+<if test="departmentId != null and departmentId !=''">
+        and e.id = #{departmentId}
+      </if>
+order by b.score desc
+</select>
+ <!--个人扣分最新预警详情查询 -->
+  <select id="alarmPersonalRecordBuckleItem" parameterType="com.bayee.political.domain.AlarmEvaluation" resultMap="BaseResultMap">
+ select * from alarm_evaluation where scored_police_id=#{policeId} 
+and DATE_FORMAT(scoring_date,'%Y-%m')=#{dateTime}
+and score_value&lt;0
+ORDER BY creation_date desc limit 1
+</select>
+ <!--个人加分最新预警详情查询 -->
+  <select id="alarmPersonalRecordAddItem" parameterType="com.bayee.political.domain.AlarmEvaluation" resultMap="BaseResultMap">
+ select * from alarm_evaluation where scored_police_id=#{policeId} 
+and DATE_FORMAT(scoring_date,'%Y-%m')=#{dateTime}
+and score_value&gt;0
+ORDER BY creation_date desc limit 1
+</select>
+
+<!-- 本周考核预警事件数量(所有预警) -->
+<select id="alarmNumWeek" resultType="java.lang.Integer">
+select (
+(select count(distinct(scored_police_id)) as count from alarm_evaluation where 1 = 1 
+and YEARWEEK(date_format(creation_date,'%Y-%m-%d')) = YEARWEEK(now()) 
+and score_value &lt;= (select score from alarm_config where threshold_type = 1 and type = 1)
+)+
+(select count(distinct(scored_police_id)) as count from alarm_evaluation where 1 = 1 
+and YEARWEEK(date_format(creation_date,'%Y-%m-%d')) = YEARWEEK(now()) 
+and score_value &lt;= (select score from alarm_config where threshold_type = 1 and type = 2) 
+)+
+(select count(distinct(scored_police_id)) as count from alarm_evaluation where 1 = 1 
+and YEARWEEK(date_format(creation_date,'%Y-%m-%d')) = YEARWEEK(now()) 
+and score_value &gt;= (select score from alarm_config where threshold_type = 2 and type = 1) 
+)+
+(select count(distinct(scored_police_id)) as count from alarm_evaluation where 1 = 1 
+and YEARWEEK(date_format(creation_date,'%Y-%m-%d')) = YEARWEEK(now()) 
+and score_value &gt;= (select score from alarm_config where threshold_type = 2 and type = 2) 
+)
+) as count
+</select>
+<!--计分行为占比统计 -->
+  <select id="screenAlarmTypeStatisticsList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationChart" >
+select distinct a.item_name as name,ifnull(b.bnum,0) as num from alarm_score_item a
+left join(select count(*) as bnum,b.item_name from alarm_evaluation a
+left join alarm_score_item b on b.id=a.score_items
+GROUP BY b.item_name) b on b.item_name=a.item_name
+order by b.bnum desc
+</select>
+<!--每月最高负分 -->
+  <select id="screenAlarmMaxNegativeScoreList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select a.year_month,c.id,ifnull(b.num,0) as num,c.name from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select min(score_value) as num,DATE_FORMAT(scoring_date,'%Y-%m') as name from alarm_evaluation 
+GROUP BY DATE_FORMAT(scoring_date,'%Y-%m')) b on b.name=a.year_month
+left join month c on c.num_name=right(a.year_month,2) 
+order by a.year_month
+</select>
+<!--近12个月记分人数查询 -->
+  <select id="screenScoreList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationChart" >
+
+select a.year_month,c.id,ifnull(b.num,0) as num,c.id as name from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(distinct scored_police_id) as num,DATE_FORMAT(scoring_date,'%Y-%m') as name from alarm_evaluation 
+GROUP BY DATE_FORMAT(scoring_date,'%Y-%m')) b on b.name=a.year_month
+left join month c on c.num_name=right(a.year_month,2) 
+order by a.year_month
+</select>
+<!--近12个月预警人数查询 -->
+  <select id="screenAlarmList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationChart" >
+select a.year_month,c.id,ifnull(b.num,0) as num,c.id as name from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(distinct police_id) as num,DATE_FORMAT(first_alarm_time,'%Y-%m') as name from alarm_record 
+GROUP BY DATE_FORMAT(first_alarm_time,'%Y-%m')) b on b.name=a.year_month
+left join month c on c.num_name=right(a.year_month,2) 
+order by a.year_month
+</select>
+</mapper>

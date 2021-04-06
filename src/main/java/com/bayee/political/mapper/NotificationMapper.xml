@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.NotificationMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.Notification" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="module_type" property="moduleType" jdbcType="INTEGER" />
+    <result column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="task_status" property="taskStatus" jdbcType="INTEGER" />
+    <result column="read_status" property="readStatus" jdbcType="INTEGER" />
+    <result column="global" property="global" jdbcType="INTEGER" />
+    <result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
+    <result column="read_time" property="readTime" jdbcType="TIMESTAMP" />
+    <result column="receiver_id" property="receiverId" jdbcType="VARCHAR" />
+    <result column="sender_id" property="senderId" jdbcType="VARCHAR" />
+    <result column="sender_name" property="senderName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="homeStatistics" type="com.bayee.political.domain.HomePageStatistics" >
+    <result column="alarmNum" property="alarmNum" jdbcType="INTEGER" />
+    <result column="evaluateNum" property="evaluateNum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type, module_type,item_id, title, content, task_status, read_status, global, send_time, 
+    read_time, receiver_id, sender_id, sender_name, status, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from notification
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from notification
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 通知新增 -->
+  <insert id="notificationCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.Notification" useGeneratedKeys="true">
+    insert into notification (type, module_type,item_id, 
+      title, content, task_status, 
+      read_status, global, send_time, 
+      read_time, receiver_id, sender_id, 
+      sender_name, status, creation_date, 
+      update_date)
+    values (#{type,jdbcType=INTEGER}, #{moduleType,jdbcType=INTEGER},#{itemId,jdbcType=INTEGER}, 
+      #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{taskStatus,jdbcType=INTEGER}, 
+      #{readStatus,jdbcType=INTEGER}, #{global,jdbcType=INTEGER}, #{sendTime,jdbcType=TIMESTAMP}, 
+      #{readTime,jdbcType=TIMESTAMP}, #{receiverId,jdbcType=VARCHAR}, #{senderId,jdbcType=VARCHAR}, 
+      #{senderName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 通知修改 -->
+  <update id="notificationUpdate" parameterType="com.bayee.political.domain.Notification" >
+    update notification
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="moduleType != null" >
+        module_type = #{moduleType,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null" >
+        task_status = #{taskStatus,jdbcType=INTEGER},
+      </if>
+      <if test="readStatus != null" >
+        read_status = #{readStatus,jdbcType=INTEGER},
+      </if>
+      <if test="global != null" >
+        global = #{global,jdbcType=INTEGER},
+      </if>
+      <if test="sendTime != null" >
+        send_time = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="readTime != null" >
+        read_time = #{readTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receiverId != null" >
+        receiver_id = #{receiverId,jdbcType=VARCHAR},
+      </if>
+      <if test="senderId != null" >
+        sender_id = #{senderId,jdbcType=VARCHAR},
+      </if>
+      <if test="senderName != null" >
+        sender_name = #{senderName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.Notification" >
+    update notification
+    set type = #{type,jdbcType=INTEGER},
+      module_type = #{moduleType,jdbcType=INTEGER},
+      item_id = #{itemId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      task_status = #{taskStatus,jdbcType=INTEGER},
+      read_status = #{readStatus,jdbcType=INTEGER},
+      global = #{global,jdbcType=INTEGER},
+      send_time = #{sendTime,jdbcType=TIMESTAMP},
+      read_time = #{readTime,jdbcType=TIMESTAMP},
+      receiver_id = #{receiverId,jdbcType=VARCHAR},
+      sender_id = #{senderId,jdbcType=VARCHAR},
+      sender_name = #{senderName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 通知详情查询 -->
+  <select id="notificationItem" parameterType="com.bayee.political.domain.Notification" resultMap="BaseResultMap" >
+   select * from notification where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 通知消息列表查询 -->
+  <select id="notificationList" parameterType="com.bayee.political.domain.Notification" resultMap="BaseResultMap" >
+   select CONCAT('[AI预警]您有',count(*),'条约谈',content,',请尽快处理!') as content,'3' as module_type from (
+select * from(select id, (case when status=1 and is_receive=0 then "邀请待接收"
+when status=3 and is_receive=2 and content is not null and feedback is null then "意见待填写" end) as content
+from alarm_talk where police_id=#{policeId}) as a where content is not null 
+UNION
+select * from(select id, (case when status=3 and is_receive=2 and content is null and feedback is null then "内容待填写" end) as content
+from alarm_talk where host_id=#{policeId}) as a where content is not null) as t
+group by content
+UNION
+select * from(select CONCAT('[评价在线]',b.name,'任务正在进行中，赶紧参与评价吧!') as content,'5' as module_type
+from(select distinct task_id,police_id, status from evaluate_task_participant where police_id = #{policeId}) a
+left join evaluate_task b on b.id=a.task_id 
+where b.process!=0 and a.status=0
+order by b.id desc) t
+  </select>
+   <!-- 预警消息列表查询 -->
+  <select id="notificationAlarmList" parameterType="com.bayee.political.domain.Notification" resultMap="BaseResultMap" >
+select CONCAT('[AI预警]',c.name,'(',b.police_id,')','记分分值为',b.score,',已达到了预警值,请尽快查看!') as content,
+'3' as module_type from leave_power a
+left join alarm_record b on find_in_set(b.police_id,a.police_object_ids) > 0
+left join user c on c.police_id=b.police_id
+where a.module_id=1 and a.checker_id=#{policeId} 
+and DATE_FORMAT(b.first_alarm_time,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+order by b.finish_alarm_time desc
+  </select>
+  <!-- 首页各功能数量统计 -->
+  <select id="homePageStatistics" parameterType="com.bayee.political.domain.HomePageStatistics" resultMap="homeStatistics" >
+   select * from
+(select ifnull(count(*),0) as evaluateNum from
+(select distinct task_id from evaluate_task_participant 
+where police_id=#{policeId,jdbcType=VARCHAR} and status=0) as a) as t
+  </select>
+  <!-- 民警首页预警数量统计 -->
+<select id="homePageAlarmPoliceCount" resultType="java.lang.Integer">
+select (a.anum+b.bnum) as num from
+(select ifnull(count(*),0) as anum from alarm_talk 
+where police_id=#{policeId,jdbcType=VARCHAR} and status=1 and is_receive=0) a
+join
+(select ifnull(count(*),0) as bnum from alarm_talk 
+where police_id=#{policeId,jdbcType=VARCHAR} and status=3 and is_receive=2 and content is not null and feedback is null) b
+</select>
+</mapper>

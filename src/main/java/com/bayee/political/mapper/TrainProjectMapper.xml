@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainProjectMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainProject" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="unit_id" property="unitId" jdbcType="INTEGER" />
+    <result column="is_u" property="isU" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+  </resultMap>
+   <resultMap id="calculationCharts" type="com.bayee.political.domain.CalculationChart" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, type, unit_id, sort, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from train_project
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteTrainProject" parameterType="java.lang.Integer" >
+    delete from train_project
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="addTrainProject" parameterType="com.bayee.political.domain.TrainProject" >
+    insert into train_project (name, type, 
+      unit_id, is_u,sort, creation_date, 
+      update_date)
+    values (#{name,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{unitId,jdbcType=INTEGER}, #{isU,jdbcType=INTEGER},#{sort,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateTrainProject" parameterType="com.bayee.political.domain.TrainProject" >
+    update train_project
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null" >
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="isU != null" >
+        is_u = #{isU,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainProject" >
+    update train_project
+    set name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      is_u = #{isU,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 训练项目管理数据查询 后端 -->
+  <select id="getTrainProjectList" resultMap="BaseResultMap">
+  select a.*, b.unit_name from train_project a 
+left join train_unit b on a.unit_id = b.id 
+where 1 = 1 
+<if test="keyWords!=null and keyWords!=''">
+and name like "%"#{keyWords}"%" 
+</if>
+order by id desc 
+limit #{pageSize},10
+  </select>
+  
+  <select id="getTrainProjectCount" resultType="java.lang.Integer">
+    select count(*) as count from train_project a 
+left join train_unit b on a.unit_id = b.id 
+where 1 = 1 
+<if test="keyWords!=null and keyWords!=''">
+and name like "%"#{keyWords}"%"
+</if>
+  </select>
+  <!-- 参赛项目名称查询 -->
+  <select id="trainProjectRankList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select a.project_id as id,b.name,b.sort as num from train_physical_achievement_details a
+left join train_project b on b.id=a.project_id
+where 1=1 and a.train_physical_id=#{trainPhysicalId,jdbcType=INTEGER} 
+and a.train_physical_achievement_id = #{trainPhysicalAchievementId,jdbcType=INTEGER}
+and a.police_id=#{policeId,jdbcType=VARCHAR}
+<if test="projectId!=null and projectId!=''">
+and b.id = #{projectId} 
+</if>
+GROUP BY a.project_id
+  </select>
+  
+  <!-- 训练项目管理查询项目名id是否U型 -->
+  <select id="getTrainProjectNameIdIsU" resultMap="BaseResultMap">
+  select id,name,type,is_u from train_project 
+  </select>
+  
+    <!--  参赛枪械项目名称查询 -->
+  <select id="trainProjectFirearmRankList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select a.train_project_type as id,b.name,b.sort as num from train_firearm_achievement a
+left join train_project b on b.id=a.train_project_type
+where a.train_firearm_id=#{trainFirearmId,jdbcType=INTEGER} and a.police_id=#{policeId,jdbcType=VARCHAR}
+  </select>
+   <!--  查询当前民警所属组别中的综合体能项目 -->
+  <select id="trainPoliceBelongToList" parameterType="com.bayee.political.domain.TrainProject" resultMap="BaseResultMap" >
+select b.* from train_physical_project_record a
+left join train_project b on FIND_IN_SET(b.id,a.train_project) >0
+where a.train_physical_id=#{trainPhysicalId} and a.train_group_id=#{groupId}
+and b.id is not null
+order by b.id asc
+  </select>
+    <!--  录分训练计划中综合体能项目查询 -->
+  <select id="trainRecordProjectPhysicalList" parameterType="com.bayee.political.domain.TrainProject" resultMap="BaseResultMap" >
+select a.project_id as id,a.achievement_date,a.name,ifnull(b.totalEnterNum,0) as totalEnterNum,
+ifnull(c.enterNum,0) as enterNum,
+(case when ifnull(c.enterNum,0)>0 then '已录入' else '待录入' end) as statusName from
+(select distinct a.project_id,a.achievement_date,b.name from train_physical_achievement_details a
+left join train_project b on b.id=a.project_id
+where a.train_physical_id=#{trainPhysicalId}) a
+left join (select count(*) as totalEnterNum,project_id from train_physical_achievement_details 
+where train_physical_id=#{trainPhysicalId} 
+GROUP BY project_id) as b on b.project_id=a.project_id
+left join(select count(*) as enterNum,project_id from train_physical_achievement_details 
+where train_physical_id=#{trainPhysicalId} and achievement is not null and achievement_grade is not null
+GROUP BY project_id) c on c.project_id=a.project_id
+order by a.achievement_date desc,a.project_id asc
+  </select>
+   <!-- 录分训练计划中枪械查询  -->
+  <select id="trainRecordProjectFirearmList" parameterType="com.bayee.political.domain.TrainProject" resultMap="BaseResultMap" >
+select a.train_project_type as id,a.name,ifnull(b.totalEnterNum,0) as totalEnterNum,
+ifnull(c.enterNum,0) as enterNum,d.is_u from
+(select distinct a.train_project_type,b.name from train_firearm_achievement a
+left join train_project b on b.id=a.train_project_type
+where a.train_firearm_id=#{trainFirearmId}) as a
+left join(select count(*) as totalEnterNum,train_project_type from train_firearm_achievement 
+where train_firearm_id=1 GROUP BY train_project_type) b on b.train_project_type=a.train_project_type
+left join(select count(*) as enterNum,train_project_type from train_firearm_achievement 
+where train_firearm_id=#{trainFirearmId} and is_sign=2 
+and achievement is not null and achievement_grade is not null
+GROUP BY train_project_type) c on c.train_project_type=a.train_project_type
+left join train_project d on d.id=a.train_project_type
+order by a.train_project_type asc
+  </select>
+  
+  <!-- 根据项目ids字符串查询项目名names -->
+  <select id="getTrainProjectNamesByIds" resultType="java.lang.String">
+  select GROUP_CONCAT(name SEPARATOR',') as project_name from train_project 
+where FIND_IN_SET(id,#{ids}) 
+  </select>
+  
+  <!-- 训练项目详情 -->
+  <select id="getTrainProjectById" resultMap="BaseResultMap">
+  	select a.*,b.unit_name from train_project a 
+left join train_unit b on a.unit_id = b.id 
+where a.id = #{id} 
+  </select>
+  
+  <!-- 根据项目名称 获取该项目的个数 -->
+  <select id="getRepeatTrainProjectCount" resultType="java.lang.Integer">
+  select count(*) as count from train_project where name= #{name} 
+  </select>
+  
+  <!-- 根据训练成绩id及警号 查询训练项目 -->
+  <select id="getTrainProjectByConditon" resultMap="BaseResultMap">
+  select a.* from train_project a 
+left join train_firearm_achievement b on b.train_project_type = a.id 
+where b.train_firearm_id = #{trainFirearmId} and b.police_id = #{policeId}  
+  </select>
+  
+  <!-- 根据项目名称查询项目id -->
+  <select id="getTrainProjectByName" resultType="java.lang.Integer">
+  select id from train_project where name = #{name} 
+  </select>
+   <!-- 根据项目名称查询项目id -->
+     <select id="trainProjectIdItem" parameterType="com.bayee.political.domain.TrainProject" resultMap="BaseResultMap" >
+  select * from train_project where name = #{name} 
+  </select>
+</mapper>

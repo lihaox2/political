@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.bayee.political.mapper.LeaveProcessMapper">
+	<resultMap id="leaveProcessResult" type="com.bayee.political.domain.LeaveProcess">
+	  <id property="id" column="id" />
+	  <result property="processCode" column="leave_process_code"/>
+	  <result property="processInstanceId" column="leave_process_instance_id"/>
+	  <result property="businessId" column="business_id"/>
+	  <result property="title" column="title"/>
+	  <result property="createTime" column="create_time"/>
+	  <result property="finishTime" column="finish_time"/>
+	  <result property="bizAction" column="biz_action"/>
+	  <result property="departmentId" column="originator_dept_id"/>
+	  <result property="userId" column="originator_user_id"/>
+	  <result property="result" column="result"/>
+	  <result property="status" column="status"/>
+	  <result property="ccUserIds" column="cc_userids"/>
+	  <result property="leaveType" column="leave_type"/>
+	  <result property="leaveReason" column="leave_reason"/>
+	  <result property="leaveStartDate" column="leave_start_date"/>
+	  <result property="leaveEndDate" column="leave_end_date"/>
+	  <result property="leaveDuarationDays" column="leave_duaration_days"/>
+	  <result property="destination" column="destination"/>
+	  <result property="transportation" column="transportation"/>
+	  <result property="identification" column="identification"/>
+	  <result property="alarmItem" column="alarm_item"/>
+	  <result property="overtimeItem" column="overtime_item"/>
+	  <result property="pointItem" column="point_item"/>
+	  <result property="creationDate" column="creation_date"/>
+	  <result property="updateDate" column="update_date" />
+	</resultMap>
+	
+	<resultMap id="leaveCharts" type="com.bayee.political.domain.LeaveChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="num" property="num" />
+  </resultMap>
+	
+	<resultMap type="com.bayee.political.domain.DepartmentAnnualLeaveRatio" id="deptRatio">
+		<id property="id" column="id" />
+		<result property="name" column="name"/>
+		<result property="deptAnnualLeaveCount" column="dept_annual_leave_count"/>
+	  	<result property="deptAnnualLeaveRatio" column="dept_annual_leave_ratio"/>
+	  	<result property="deptTotal" column="dept_total"/>
+	</resultMap>
+	
+	<resultMap type="com.bayee.political.domain.MonthlyLeaveTotal" id="monthlyCount">
+		<id property="month" column="month" />
+		<result property="count" column="count"/>
+	</resultMap>
+	
+	<resultMap type="com.bayee.political.domain.LeaveTypeCount" id="typeCount">
+		<id property="leaveType" column="leave_type" />
+		<result property="count" column="count"/>
+	</resultMap>
+	
+ <resultMap id="calculationCharts" type="com.bayee.political.domain.CalculationChart" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="personalStatistics" type="com.bayee.political.domain.LeavePersonalStatistics">
+	  <result property="totalDays" column="totalDays"/>
+	  <result property="annualLeaveDays" column="annual_leave_days"/>
+	  <result property="annualLeaveNum" column="annual_leave_num"/>
+	   <result property="overtimeHours" column="overtimeHours"/>
+	  <result property="points" column="points"/>
+	</resultMap>
+	 <resultMap id="thisYearStatistics" type="com.bayee.political.domain.LeaveThisYearStatistics">
+	  <result property="overtimeNum" column="overtimeNum"/>
+	  <result property="overtimeHours" column="overtimeHours"/>
+	  <result property="aveOvertimeHours" column="aveOvertimeHours"/>
+	  <result property="businessTravelNum" column="businessTravelNum"/>
+	  <result property="businessTravelDays" column="businessTravelDays"/>
+	  <result property="aveBusinessTravelDays" column="aveBusinessTravelDays"/>
+	  <result property="totalPoints" column="totalPoints"/>
+	  <result property="residualPoints" column="residualPoints"/>
+	  <result property="pointsChangeDays" column="pointsChangeDays"/>
+	  <result property="leaveNum" column="leaveNum"/>
+	  <result property="leaveDays" column="leaveDays"/>
+	</resultMap>
+	<select id="findByBusinessId" resultMap="leaveProcessResult">
+		select * from leave_process where business_id = #{businessId}
+	</select>
+	
+	<select id="findById" resultMap="leaveProcessResult">
+		select * from leave_process where id = #{id}
+	</select>
+	
+	<select id="findByUserId" resultMap="leaveProcessResult">
+		select * from leave_process where originator_user_id = #{userId}
+		order by create_time desc
+	</select>
+	
+	<select id="findAll" resultMap="leaveProcessResult">
+		select * from leave_process
+	</select>
+	
+	<select id="countAnnualLeveByUser" resultType="int">
+		SELECT count(distinct(originator_user_id)) FROM leave_process 
+		where leave_type = '年休假'
+		and status = 'COMPLETED' and result = 'agree'
+		and DATE_FORMAT(create_time,'%Y') = #{year}
+	</select>
+	
+	<select id="countAnnualLeaveRatioByDepartment" resultMap="deptRatio">
+		select a.*, b.dept_total, (a.dept_annual_leave_count/b.dept_total)*100 as dept_annual_leave_ratio from (
+		select d.id, d.name, count(distinct(l.originator_user_id)) as dept_annual_leave_count
+		from leave_process l
+		left join department d on d.id = l.originator_dept_id
+		left join user u on u.department_id = d.id
+		where l.leave_type = '年休假'
+		and status = 'COMPLETED' 
+		and result = 'agree'
+		and DATE_FORMAT(create_time,'%Y') = #{year}
+		group by l.originator_dept_id
+		) a
+		left join 
+		(select d.id, count(*) as dept_total from user 
+		left join department d on d.id = department_id
+		group by department_id) b
+		on b.id = a.id
+	</select>
+	
+	<select id="countMonthlyLeaveByYear" resultMap="monthlyCount">
+		SELECT DATE_FORMAT(create_time,'%m') month, count(*) count
+		FROM leave_process 
+		where status = 'COMPLETED' and result = 'agree'
+		and DATE_FORMAT(create_time,'%Y') = #{year}
+		group by DATE_FORMAT(create_time,'%m')
+		order by month asc
+	</select>
+	
+	<select id="countLeaveByTypes" resultMap="typeCount">
+		SELECT leave_type, count(leave_type) count
+		FROM leave_process 
+		where status = 'COMPLETED'
+		and result = 'agree'
+		and DATE_FORMAT(create_time,'%Y') = #{year}
+		group by leave_type
+		order by count desc
+	</select>
+	
+	<select id="countUserLeaveByTypes" resultMap="typeCount">
+		SELECT leave_type, count(leave_type) count
+		FROM leave_process 
+		where status = 'COMPLETED'
+		and result = 'agree'
+		and DATE_FORMAT(create_time,'%Y') = #{year}
+		and originator_user_id = #{userId}
+		group by leave_type
+	</select>
+	
+	<select id="countTotalLeave" resultType="int">
+		select count(*) as total_leave from leave_process 
+		where status = 'COMPLETED' and result = 'agree'
+		and DATE_FORMAT(create_time,'%Y') = #{year}
+	</select>
+	
+	<select id="countUserTotalLeaveCount" resultType="int">
+		select count(*) as total_leave from leave_process l
+		where l.originator_user_id = #{userId}
+		and status = 'COMPLETED' and result = 'agree'
+		and DATE_FORMAT(create_time,'%Y') = #{year}
+	</select>
+	
+	<select id="countAnnualLeaveLeftCount" resultType="int">
+		select annual_leave_count -
+		COALESCE((select sum(leave_duaration_days) as annual_leave_used_count
+		 from leave_process l
+		where leave_type = '年休假' and status = 'COMPLETED' and result ='agree'
+		and l.originator_user_id = #{userId}
+		and DATE_FORMAT(create_time,'%Y') = #{year}),0) as annual_leave_left_count
+		from user_annual_leave
+		where user_id = #{userId}
+		and year = #{year}
+	</select>
+	
+	<select id="countAnnualLeaveUsedTimes" resultType="int">
+		select count(*) as annual_leave_used_times
+		 from leave_process 
+		where leave_type = '年休假' and status = 'COMPLETED' and result ='agree'
+		and originator_user_id = #{userId}
+		and DATE_FORMAT(create_time,'%Y') = #{year}
+	</select>
+	
+	<insert id="save" useGeneratedKeys="true" keyProperty="id">
+	   INSERT INTO leave_process
+		(leave_process_code,
+		leave_process_instance_id,
+		business_id,
+		title,
+		create_time,
+		finish_time,
+		biz_action,
+		originator_dept_id,
+		originator_user_id,
+		result,
+		status,
+		cc_userids,
+		leave_type,
+		leave_reason,
+		leave_start_date,
+		leave_end_date,
+		leave_duaration_days,
+		destination,
+		transportation,
+		identification,
+		alarm_item,
+		overtime_item,
+		point_item
+		)
+		VALUES
+		(
+		#{processCode},
+		#{processInstanceId},
+		#{businessId},
+		#{title},
+		#{createTime},
+		#{finishTime},
+		#{bizAction},
+		#{departmentId},
+		#{userId},
+		#{result},
+		#{status},
+		#{ccUserIds},
+		#{leaveType},
+		#{leaveReason},
+		#{leaveStartDate},
+		#{leaveEndDate},
+		#{leaveDuarationDays},
+		#{destination},
+		#{transportation},
+		1,
+		1,
+		1,
+		1
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE leave_process
+		SET
+		leave_process_code = #{processCode},
+		leave_process_instance_id = #{processInstanceId},
+		business_id = #{businessId},
+		title = #{title},
+		create_time = #{createTime},
+		finish_time = #{finishTime},
+		biz_action = #{bizAction},
+		originator_dept_id = #{departmentId},
+		originator_user_id = #{userId},
+		result = #{result},
+		status = #{status},
+		cc_userids = #{ccUserIds},
+		leave_type = #{leaveType},
+		leave_reason = #{leaveReason},
+		leave_start_date = #{leaveStartDate},
+		leave_end_date = #{leaveEndDate},
+		leave_duaration_days = #{leaveDuarationDays},
+		destination = #{destination},
+		transportation = #{transportation}
+		WHERE id = #{id}
+	</update>
+	<!-- 修改请假表状态 -->
+  <update id="leaveProcessAlarmItemUpdate" parameterType="com.bayee.political.domain.LeaveProcess" >
+    update leave_process
+    <set >
+      <if test="alarmItem != null" >
+        alarm_item = #{alarmItem,jdbcType=INTEGER},
+      </if>
+      <if test="overtimeItem != null" >
+        overtime_item = #{overtimeItem,jdbcType=INTEGER},
+      </if>
+      <if test="pointItem != null" >
+        point_item = #{pointItem,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+	<!-- 请假记录修改 -->
+	<update id="leaveProcessUpdate" parameterType="com.bayee.political.domain.LeaveProcess" >
+    update leave_process
+    <set >
+      <if test="identification != null" >
+        identification = #{identification,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where originator_user_id = #{userId,jdbcType=VARCHAR} and leave_type = "年休假"
+  </update>
+	  <!-- 每月请假类型占比查询 -->
+  <select id="leaveTypeList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select a.leave_type as name,ifnull(b.num,0) as num from(select distinct leave_type from leave_process) as a
+left join(select leave_type,ifnull(count(*),0) as num from 
+(select a.*,b.department_id from leave_process a left join
+user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null) as a 
+where 1=1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(CURDATE(),'%Y-%m')
+<if test="departmentId != null and departmentId != '' ">
+		and department_id = #{departmentId}
+	</if>
+GROUP BY leave_type) as b on b.leave_type=a.leave_type 
+order by b.num desc
+  </select>
+<!-- 个人休假情况统计 -->
+  <select id="leavePersonalStatisticsItem" parameterType="com.bayee.political.domain.LeavePersonalStatistics" resultMap="personalStatistics" >
+select * from
+(select ifnull(SUM(b.leave_duaration_days),0) as totalDays from  user a 
+left join leave_process b on b.originator_user_id=a.dd_user_id
+where a.police_id=#{policeId} and DATE_FORMAT(b.create_time,'%Y') = DATE_FORMAT(CURDATE(),'%Y')) as a
+join 
+(select ifnull(sum(annual_leave_days),0) as annual_leave_days,
+ifnull(sum(annual_leave_num),0) as annual_leave_num from leave_annual 
+where police_id=#{policeId} and year=DATE_FORMAT(CURDATE(),'%Y')) as b
+join
+(select ifnull(sum(total_overtime),0) as overtimeHours,
+ifnull(sum(residual_overtime),0) as residualOvertime from leave_overtime 
+where police_id=#{policeId} and year=#{year}) as c
+join(select ifnull(sum(total_points),0) as points,
+ifnull(sum(residual_points),0) as residualPoints from leave_points 
+where police_id=#{policeId} and year=#{year} and half_year=#{halfYear}) as d
+  </select>
+  <!-- 个人加班可调休天数查询 -->
+  <select id="leavePersonalOverTimeChangeDays" parameterType="com.bayee.political.domain.LeavePersonalStatistics" resultMap="personalStatistics" >
+select overtimeChangeDays from(
+select sum(a.residual_overtime/hour*day1) as overtimeChangeDays
+from leave_overtime a
+join leave_overtime_rule b
+where a.police_id=#{policeId} and a.year=#{currentYearStr}
+and a.total_overtime&gt;=b.day2*24) as a
+  </select>
+   <!-- 个人积分可调休天数查询 -->
+  <select id="leavePersonalpointsChangeDays" parameterType="com.bayee.political.domain.LeavePersonalStatistics" resultMap="personalStatistics" >
+select sum((a.residual_points-bnum)/c.integral_value*day) as pointsChangeDays
+from leave_points a
+join(select sum(total_points)/count(*) as bnum from leave_points where year=#{currentYearStr} and half_year=#{halfYear}) b
+join leave_integral_exchange_rule c
+where a.police_id=#{policeId} and a.year=#{currentYearStr} and a.half_year=#{halfYear}
+and a.total_points&gt;bnum
+  </select>
+<!-- 个人请假原因占比情况 -->
+  <select id="leaveReasonAnalysisList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select b.leave_type as name,count(b.leave_duaration_days) as num from user a 
+left join leave_process b on b.originator_user_id=a.dd_user_id
+where a.police_id=#{policeId} and DATE_FORMAT(b.create_time,'%Y') = DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY b.leave_type
+  </select>
+  <!-- 个人最近请假查询列表 -->
+  <select id="leavePersonalList" parameterType="com.bayee.political.domain.LeaveProcess" resultMap="leaveProcessResult" >
+  select a.police_id,b.* from user a 
+left join leave_process b on b.originator_user_id=a.dd_user_id
+where 1=1 and a.police_id=#{policeId} 
+      <if test="leaveType != null and leaveType !=''">
+        and b.leave_type = #{leaveType}
+      </if>
+      <if test="identification != null and identification !=''">
+        and b.identification = #{identification}
+      </if>
+and DATE_FORMAT(b.create_time,'%Y') = DATE_FORMAT(CURDATE(),'%Y')
+order by b.id desc
+  </select>
+    <!-- 近12个月请假总人数查询（api） -->
+  <select id="leavetotalNumList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select a.year_month as name,ifnull(b.num,0) as num from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(*) as num,DATE_FORMAT(create_time,'%Y-%m') as name from
+(select a.*,b.department_id from leave_process a left join
+user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null) as a
+where 1=1
+    <if test="departmentId != null and departmentId != '' ">
+		and department_id = #{departmentId}
+	</if> 
+GROUP BY DATE_FORMAT(create_time,'%Y-%m')) b on b.name=a.year_month
+order by a.year_month
+  </select>
+      <!-- 近12个月休年假人数查询（api） -->
+  <select id="leaveAnnualNumList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select a.year_month as name,ifnull(b.num,0) as num from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(*) as num,DATE_FORMAT(create_time,'%Y-%m') as name from
+(select a.*,b.department_id from leave_process a left join
+user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null) as a
+where 1=1 and leave_type='年休假' 
+    <if test="departmentId != null and departmentId != '' ">
+		and department_id = #{departmentId}
+	</if> 
+GROUP BY DATE_FORMAT(create_time,'%Y-%m')) b on b.name=a.year_month
+order by a.year_month
+  </select>
+      <!-- 近12个月病假人数查询（api） -->
+  <select id="leaveOffNumList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select a.year_month as name,ifnull(b.num,0) as num from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(*) as num,DATE_FORMAT(create_time,'%Y-%m') as name from
+(select a.*,b.department_id from leave_process a left join
+user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null) as a
+where 1=1 and leave_type='病假' 
+    <if test="departmentId != null and departmentId != '' ">
+		and department_id = #{departmentId}
+	</if> 
+GROUP BY DATE_FORMAT(create_time,'%Y-%m')) b on b.name=a.year_month
+order by a.year_month
+  </select>
+      <!-- 近12个月事假人数查询（api） -->
+  <select id="leaveNumList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select a.year_month as name,ifnull(b.num,0) as num from
+(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `year_month` 
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `year_month`) as a
+left join
+(select count(*) as num,DATE_FORMAT(create_time,'%Y-%m') as name from
+(select a.*,b.department_id from leave_process a left join
+user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null) as a
+where 1=1 and leave_type='事假' 
+    <if test="departmentId != null and departmentId != '' ">
+		and department_id = #{departmentId}
+	</if> 
+GROUP BY DATE_FORMAT(create_time,'%Y-%m')) b on b.name=a.year_month
+order by a.year_month
+  </select>
+        <!-- 每月请假人数查询（api） -->
+  <select id="leaveDepAnnualChartList" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select a.department_id as id,c.abridge_name as name,round(ifnull(b.bnum,0)/a.anum,2)*100 as num from
+(select count(*) as anum,department_id from leave_annual where year = DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY department_id) as a left join
+(select count(*) as bnum,department_id from leave_annual where annual_leave_num &lt;3
+and year = DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY department_id) as b on b.department_id=a.department_id
+left join department c on c.id=a.department_id
+order by round(ifnull(b.bnum,0)/a.anum,2) desc,a.department_id asc limit 10
+  </select>
+<!-- 各部门平均年假使用率查询（api） -->
+  <select id="leaveDepAverageItem" parameterType="com.bayee.political.domain.LeaveChart" resultType="Integer" >
+select count(*) from leave_annual where 1=1 
+    <if test="departmentId != null and departmentId != '' ">
+		and department_id = #{departmentId}
+	</if> 
+	and annual_leave_num &lt;3 and year = DATE_FORMAT(CURDATE(),'%Y')
+  </select>
+<!-- 休假中民警数量（api） -->
+  <select id="onHolidayNumItem" parameterType="com.bayee.political.domain.CalculationChart" resultType="Integer" >
+select count(*) as num from (
+select a.*,(UNIX_TIMESTAMP(a.create_time)+a.leave_duaration_days*24*60*60) as end_time,
+UNIX_TIMESTAMP(SYSDATE()) as nowTime,
+b.police_id,b.department_id from leave_process a 
+left join user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null and a.leave_type='年休假'
+    <if test="departmentId != null and departmentId != '' ">
+		and b.department_id = #{departmentId}
+	</if>
+) as t where end_time &gt; nowTime
+  </select>
+<!-- 请假中民警数量（api） -->
+  <select id="askingForLeaveNumItem" parameterType="com.bayee.political.domain.CalculationChart" resultType="Integer" >
+select count(*) as num from (
+select a.*,(UNIX_TIMESTAMP(a.create_time)+a.leave_duaration_days*24*60*60) as end_time,
+UNIX_TIMESTAMP(SYSDATE()) as nowTime,
+b.police_id,b.department_id from leave_process a 
+left join user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null and a.leave_type!='年休假'
+    <if test="departmentId != null and departmentId != '' ">
+		and b.department_id = #{departmentId}
+	</if>
+) as t where end_time &gt; nowTime
+  </select>
+  <!-- 个人加班时长查询 -->
+  <select id="leavePersonalOvertimeItem" parameterType="com.bayee.political.domain.LeavePersonalStatistics" resultMap="personalStatistics" >
+select ifnull(sum(residual_overtime),0) as overtimeHours,
+ifnull(sum(residual_overtime),0) as residualOvertime from leave_overtime where police_id=#{policeId} and year=DATE_FORMAT(CURDATE(),'%Y') limit 1
+  </select>
+  <!-- 个人积分查询 -->
+  <select id="leavePersonalPointsItems" parameterType="com.bayee.political.domain.LeavePersonalStatistics" resultMap="personalStatistics" >
+select ifnull(sum(residual_points),0) as residualPoints from leave_points 
+where police_id=#{policeId} and year=#{year} and half_year=#{halfYear}
+  </select>
+  <!-- 各单位需调休人数查询 -->
+  <select id="leaveDepCompensatoryChart" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select ifnull(b.num,0) as num,a.abridge_name as name from department a
+left join
+(select count(*) as num,department_id from leave_compensatory_alarm where year=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY department_id) as b on b.department_id=a.id
+where a.parent_id &lt;=3
+ORDER BY b.num desc,a.id asc limit 10
+  </select>
+<!-- 各单位年休假率查询 -->
+  <select id="leaveDepAnnualNotStandardStatistics" parameterType="com.bayee.political.domain.LeaveChart" resultMap="leaveCharts" >
+select round(ifnull(b.bnum/a.anum,0)*100,2) as num,a.department_id,c.name from 
+(select count(*) as anum,department_id from leave_annual
+where year=DATE_FORMAT(CURDATE(),'%Y')
+GROUP BY department_id) a
+left join
+(select count(*) as bnum,department_id from leave_annual
+where year=DATE_FORMAT(CURDATE(),'%Y') and annual_leave_num&lt;3
+GROUP BY department_id) b on b.department_id=a.department_id
+left join department c on c.id=a.department_id
+order by num desc
+  </select>
+  <!-- 加班调休列表查询 -->
+  <select id="leaveLeaderOvertimeTaskList" parameterType="com.bayee.political.domain.LeaveProcess" resultMap="leaveProcessResult" >
+select * from leave_process where status='COMPLETED' and leave_type='调休' and (overtime_item=1 or overtime_item is null)
+  </select>
+    <!-- 积分调休列表查询 -->
+  <select id="leaveLeaderPointTaskList" parameterType="com.bayee.political.domain.LeaveProcess" resultMap="leaveProcessResult" >
+select * from leave_process where status='COMPLETED' and leave_type='积分调休' and (point_item=1 or point_item is null)
+  </select>
+    <!-- 个人当前年情况统计 -->
+  <select id="leaveThisYearStatisticsItem" parameterType="com.bayee.political.domain.LeaveThisYearStatistics" resultMap="thisYearStatistics" >
+select 
+ifnull(a.anum,0) as overtimeNum,
+ifnull(b.bnum,0) as overtimeHours,
+round(ifnull(b.bnum/a.anum,0),2) as aveOvertimeHours,
+ifnull(c.cnum,0) as businessTravelNum,
+ifnull(d.dnum,0) as businessTravelDays,
+round(ifnull(d.dnum/c.cnum,0),2) as aveBusinessTravelDays,
+ifnull(e.enum,0) as leaveNum,
+ifnull(f.fnum,0) as leaveDays
+from
+(select count(*) as anum,b.police_id from clock_record a
+left join user b on b.dd_user_id=user_id
+where a.check_type='OffDuty' and a.base_check_time is not null 
+and a.user_check_time&gt;=a.base_check_time
+and DATE_FORMAT(a.creation_date,'%Y') = DATE_FORMAT(CURDATE(),'%Y')
+and TIMESTAMPDIFF(MINUTE, a.base_check_time, a.user_check_time)&gt;=60
+and b.police_id=#{policeId}) a
+join 
+(select sum(total_overtime) as bnum from leave_overtime 
+where year=DATE_FORMAT(CURDATE(),'%Y') and police_id=#{policeId}) b
+join
+(select count(*) as cnum,b.police_id from leave_process a
+left join user b on b.dd_user_id=a.originator_user_id
+where a.leave_type='离杭' and b.police_id=#{policeId} and a.result='agree'
+and DATE_FORMAT(a.create_time,'%Y') = DATE_FORMAT(CURDATE(),'%Y')) c 
+join
+(select sum(a.leave_duaration_days) as dnum,b.police_id from leave_process a
+left join user b on b.dd_user_id=a.originator_user_id
+where a.leave_type='离杭' and b.police_id=#{policeId} and a.result='agree'
+and DATE_FORMAT(a.create_time,'%Y') = DATE_FORMAT(CURDATE(),'%Y')) d 
+join
+(select count(*) as enum from leave_process a
+left join user b on b.dd_user_id=a.originator_user_id
+where b.police_id=#{policeId} and a.result='agree'
+and DATE_FORMAT(a.create_time,'%Y') = DATE_FORMAT(CURDATE(),'%Y')) e
+join
+(select sum(leave_duaration_days) as fnum from leave_process a
+left join user b on b.dd_user_id=a.originator_user_id
+where b.police_id=#{policeId} and a.result='agree'
+and DATE_FORMAT(a.create_time,'%Y') = DATE_FORMAT(CURDATE(),'%Y')) f
+  </select>
+  <!-- 请假类型占比 -->
+  <select id="screenLeaveTypeList" parameterType="com.bayee.political.domain.CalculationChart" resultMap="calculationCharts" >
+select a.leave_type as name,ifnull(b.num,0) as num from(select distinct leave_type from leave_process) as a
+left join(select leave_type,ifnull(count(*),0) as num from 
+(select a.*,b.department_id from leave_process a left join
+user b on b.dd_user_id=a.originator_user_id
+where b.department_id is not null) as a
+GROUP BY leave_type) as b on b.leave_type=a.leave_type 
+order by b.num desc
+  </select>
+</mapper>

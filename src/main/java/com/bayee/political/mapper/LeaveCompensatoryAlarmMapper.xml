@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeaveCompensatoryAlarmMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeaveCompensatoryAlarm" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+     <result column="rule_id" property="ruleId" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="position_id" property="positionId" jdbcType="INTEGER" />
+    <result column="position_name" property="positionName" jdbcType="VARCHAR" />
+    <result column="year" property="year" jdbcType="VARCHAR" />
+    <result column="work_days" property="workDays" jdbcType="DOUBLE" />
+    <result column="colour" property="colour" jdbcType="VARCHAR" />
+    <result column="is_rest" property="isRest" jdbcType="INTEGER" />
+    <result column="identification" property="identification" jdbcType="INTEGER" />
+    <result column="is_deal" property="isDeal" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type,rule_id, police_id, name, department_id, position_id, 
+    year, work_days,is_rest,identification,is_deal, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leave_compensatory_alarm
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from leave_compensatory_alarm
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 警员调休预警新增 -->
+  <insert id="leaveCompensatoryAlarmCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" useGeneratedKeys="true">
+    insert into leave_compensatory_alarm (type,rule_id, police_id, 
+      name, department_id,position_id, year, 
+      work_days,is_rest,identification,is_deal, creation_date, update_date
+      )
+    values (#{type,jdbcType=INTEGER},#{ruleId,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{departmentId,jdbcType=INTEGER}, 
+      #{positionId,jdbcType=INTEGER}, #{year,jdbcType=VARCHAR}, #{workDays,jdbcType=DOUBLE}, 
+      #{isRest,jdbcType=INTEGER}, #{identification,jdbcType=INTEGER},
+      #{isDeal,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 警员调休预警修改 -->
+  <update id="leaveCompensatoryAlarmUpdate" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" >
+    update leave_compensatory_alarm
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="ruleId != null" >
+        rule_id = #{ruleId,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null" >
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="workDays != null" >
+        work_days = #{workDays,jdbcType=DOUBLE},
+      </if>
+      <if test="isRest != null" >
+        is_rest = #{isRest,jdbcType=INTEGER},
+      </if>
+       <if test="identification != null" >
+        identification = #{identification,jdbcType=INTEGER},
+      </if>
+       <if test="isDeal != null" >
+        is_deal = #{isDeal,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 警员调休预警连续加班修改 -->
+    <update id="leaveCompensatoryAlarmTimeUpdate" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" >
+    update leave_compensatory_alarm
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="ruleId != null" >
+        rule_id = #{ruleId,jdbcType=INTEGER},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="workDays != null" >
+        work_days = #{workDays,jdbcType=DOUBLE},
+      </if>
+      <if test="isRest != null" >
+        is_rest = #{isRest,jdbcType=INTEGER},
+      </if>
+       <if test="identification != null" >
+        identification = #{identification,jdbcType=INTEGER},
+      </if>
+      <if test="isDeal != null" >
+        is_deal = #{isDeal,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+     where police_id = #{policeId,jdbcType=VARCHAR} 
+    and type = #{type,jdbcType=INTEGER} and rule_id = #{ruleId,jdbcType=INTEGER}
+  </update>
+  <!-- 警员调休预警不打卡修改 -->
+      <update id="leaveCompensatoryAlarmAllUpdate" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" >
+    update leave_compensatory_alarm
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="ruleId != null" >
+        rule_id = #{ruleId,jdbcType=INTEGER},
+      </if>
+      <if test="workDays != null" >
+        work_days = #{workDays,jdbcType=DOUBLE},
+      </if>
+       <if test="identification != null" >
+        identification = #{identification,jdbcType=INTEGER},
+      </if>
+      <if test="isDeal != null" >
+        is_deal = #{isDeal,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where identification = 1 and type = #{type,jdbcType=INTEGER} and  police_id = #{policeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" >
+    update leave_compensatory_alarm
+    set type = #{type,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      position_id = #{positionId,jdbcType=INTEGER},
+      year = #{year,jdbcType=VARCHAR},
+      work_days = #{workDays,jdbcType=DOUBLE},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <!-- 局领导需强制调休人员详情查询 -->
+  <select id="leaveLeaderCompensatoryAlarmItem" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultMap="BaseResultMap" >
+select a.*,b.head_image as headImage,year(now())- year(substring(b.id_card,7,8)) as age,
+(case when b.gender=1 then '男' else '女' end) as gender,
+(case when a.type=1 then '出差' else '工作' end) as typeName,
+d.name as departmentName,e.position_name,f.value as colour,f.value_name as ruleName from leave_compensatory_alarm a
+left join user b on b.police_id=a.police_id
+left join department d on d.id=b.department_id
+left join police_position e on e.id=b.position_id
+left join leave_rest_alarm_rule f on f.id=a.rule_id
+where a.year=DATE_FORMAT(CURDATE(),'%Y') and a.id=#{id,jdbcType=INTEGER}
+</select>
+  <!-- 局领导需强制调休人员查询 -->
+  <select id="leaveLeaderCompensatoryAlarmNewestList" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultMap="BaseResultMap" >
+select b.*,TIMESTAMPDIFF(MINUTE, b.creation_date,SYSDATE()) as timeChange from leave_power a
+left join(select a.*,b.head_image as headImage,year(now())- year(substring(b.id_card,7,8)) as age,
+(case when b.gender=1 then '男' else '女' end) as gender,
+(case when a.type=1 then '出差' else '工作' end) as typeName,
+d.name as departmentName,e.position_name,f.value as colour,f.value_name as ruleName from leave_compensatory_alarm a
+left join user b on b.police_id=a.police_id
+left join department d on d.id=b.department_id
+left join police_position e on e.id=b.position_id
+left join leave_rest_alarm_rule f on f.id=a.rule_id
+where a.year=DATE_FORMAT(CURDATE(),'%Y')) b on find_in_set(b.police_id,a.police_object_ids) > 0 
+where a.checker_id=#{policeId} and b.is_deal=0 order by b.id desc limit 3
+</select>
+      <!-- 警员调休预警总数统计 -->
+  <select id="leaveLeaderCompensatoryAlarmNewestCount" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultType="Integer" >
+select count(*) from(select b.*,TIMESTAMPDIFF(MINUTE, b.creation_date,SYSDATE()) as timeChange from leave_power a
+left join(select a.*,b.head_image as headImage,year(now())- year(substring(b.id_card,7,8)) as age,
+(case when b.gender=1 then '男' else '女' end) as gender,
+(case when a.type=1 then '出差' else '工作' end) as typeName,
+d.name as departmentName,e.position_name,f.value as colour,f.value_name as ruleName from leave_compensatory_alarm a
+left join user b on b.police_id=a.police_id
+left join department d on d.id=b.department_id
+left join police_position e on e.id=b.position_id
+left join leave_rest_alarm_rule f on f.id=a.rule_id
+where a.year=DATE_FORMAT(CURDATE(),'%Y')) b on find_in_set(b.police_id,a.police_object_ids) > 0 
+where a.checker_id=#{policeId}) as t
+</select>
+      <!-- 警员调休预警分页查询 -->
+  <select id="leaveLeaderCompensatoryAlarmList" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultMap="BaseResultMap" >
+select b.*,TIMESTAMPDIFF(MINUTE, b.creation_date,SYSDATE()) as timeChange from leave_power a
+left join(select a.*,b.head_image as headImage,year(now())- year(substring(b.id_card,7,8)) as age,
+(case when b.gender=1 then '男' else '女' end) as gender,
+(case when a.type=1 then '出差' else '工作' end) as typeName,
+d.name as departmentName,e.position_name,f.value as colour,f.value_name as ruleName from leave_compensatory_alarm a
+left join user b on b.police_id=a.police_id
+left join department d on d.id=b.department_id
+left join police_position e on e.id=b.position_id
+left join leave_rest_alarm_rule f on f.id=a.rule_id
+where a.year=DATE_FORMAT(CURDATE(),'%Y')) b on find_in_set(b.police_id,a.police_object_ids) > 0 
+where a.checker_id=#{policeId} order by b.id desc limit #{pageNum},#{pageSize}
+</select>
+      <!-- 根据季度查询民警累计出差天数 -->
+  <select id="quarterPoliceList" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultMap="BaseResultMap" >
+select ifnull(sum(leave_duaration_days),0) as work_days,police_id from(
+SELECT a.*,b.police_id,c.day FROM leave_process a left join 
+user b on b.dd_user_id=a.originator_user_id
+join (select * from leave_rest_alarm_rule where id=1) c
+where a.leave_type='离杭' and b.police_id is not null
+and DATE_FORMAT(create_time,'%Y-%m-%d')&gt;=#{startTime}
+and DATE_FORMAT(create_time,'%Y-%m-%d')&lt;=#{endTime}
+and a.leave_duaration_days&gt;=c.day) as a
+GROUP BY police_id
+</select>
+      <!-- 根据季度,创建时间,警号查询季度预警 -->
+  <select id="quarterPoliceItem" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultMap="BaseResultMap" >
+SELECT * FROM leave_compensatory_alarm where type=#{type} 
+and rule_id=#{ruleId} and police_id=#{policeId}
+and DATE_FORMAT(creation_date,'%Y-%m-%d')&gt;=#{startTime}
+and DATE_FORMAT(creation_date,'%Y-%m-%d')&lt;=#{endTime}
+limit 1
+</select>
+  <!-- 根据每月查询民警累计出差天数 -->
+  <select id="monthPoliceList" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultMap="BaseResultMap" >
+select ifnull(sum(leave_duaration_days),0) as work_days,police_id from(
+SELECT a.*,b.police_id,c.day FROM leave_process a left join 
+user b on b.dd_user_id=a.originator_user_id
+join (select * from leave_rest_alarm_rule where id=2) c
+where a.leave_type='离杭' and b.police_id is not null
+and DATE_FORMAT(create_time,'%Y-%m-%d')&gt;=#{startTime}
+and DATE_FORMAT(create_time,'%Y-%m-%d')&lt;=#{endTime}
+and a.leave_duaration_days&gt;=c.day) as a
+GROUP BY police_id
+</select>
+<!-- 查询单次民警出差天数 -->
+  <select id="singlePoliceList" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultMap="BaseResultMap" >
+select id,ifnull(leave_duaration_days,0) as work_days,police_id from(
+SELECT a.*,b.police_id,c.day FROM leave_process a left join 
+user b on b.dd_user_id=a.originator_user_id
+join (select * from leave_rest_alarm_rule where id=3) c
+where a.leave_type='离杭' and b.police_id is not null
+and DATE_FORMAT(create_time,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+and a.leave_duaration_days&gt;=c.day and a.alarm_item=1) as a
+</select>
+<!-- 查询连续未打卡天数-->
+  <select id="notRecordList" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultMap="BaseResultMap" >
+select * from(
+select datediff(date_format(DATE_SUB(curdate(), INTERVAL 1 day),'%Y-%m-%d'),
+DATE_FORMAT(work_date,"%Y-%m-%d")) as work_days,user_id,
+  (case when b.day1&gt;c.day2 then c.day2
+	when b.day1&lt;c.day2 then b.day1 end) as day,d.police_id from 
+(select user_id,max(work_date) as work_date from clock_record 
+where check_type='OnDuty' and base_check_time is not null group by user_id) a
+join (select day as day1 from leave_rest_alarm_rule where id=4) as b
+join (select day as day2 from leave_rest_alarm_rule where id=5) as c
+left join user d on d.dd_user_id=a.user_id) as t
+where work_days&gt;=day and police_id is not null
+<!-- select * from(
+select datediff(date_format(DATE_SUB(curdate(), INTERVAL 1 day),'%Y-%m-%d'),
+DATE_FORMAT(work_date,"%Y-%m-%d")) as work_days,user_id,
+  (case when b.day1&gt;c.day2 then c.day2
+	when b.day1&lt;c.day2 then b.day1 end) as day,d.police_id from 
+(select user_id,max(work_date) as work_date from clock_record 
+where check_type='OnDuty' and base_check_time is not null group by user_id) a
+join (select day as day1 from leave_rest_alarm_rule where id=4) as b
+join (select day as day2 from leave_rest_alarm_rule where id=5) as c
+left join user d on d.dd_user_id=a.user_id) as t
+where police_id is not null -->
+</select>
+<!-- 查询连续工作预警 -->
+  <select id="continuePoliceItem" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultMap="BaseResultMap" >
+SELECT * FROM leave_compensatory_alarm where type=#{type} and police_id=#{policeId} and identification=1
+limit 1
+</select>
+<!-- 查询个人连续未打卡天数-->
+  <select id="notRecordPoliceItem" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultMap="BaseResultMap" >
+select * from(
+select datediff(date_format(DATE_SUB(curdate(), INTERVAL 1 day),'%Y-%m-%d'),
+DATE_FORMAT(work_date,"%Y-%m-%d")) as work_days,user_id,
+  (case when b.day1&gt;c.day2 then c.day2
+	when b.day1&lt;c.day2 then b.day1 end) as day,d.police_id from 
+(select user_id,max(work_date) as work_date from clock_record 
+where check_type='OnDuty' and base_check_time is not null group by user_id) a
+join (select day as day1 from leave_rest_alarm_rule where id=4) as b
+join (select day as day2 from leave_rest_alarm_rule where id=5) as c
+left join user d on d.dd_user_id=a.user_id) as t
+where police_id=#{policeId}
+</select>
+<!--  查询预警连续加班人员-->
+  <select id="alarmComRecordList" parameterType="com.bayee.political.domain.LeaveCompensatoryAlarm" resultMap="BaseResultMap" >
+select * from leave_compensatory_alarm where type=2 and identification=1
+</select>
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainProjectURuleMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainProjectURule" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="rule_id" property="ruleId" jdbcType="INTEGER" />
+    <result column="grade_id" property="gradeId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="min_num" property="minNum" jdbcType="DOUBLE" />
+    <result column="max_num" property="maxNum" jdbcType="DOUBLE" />
+    <result column="symbol_a" property="symbolA" jdbcType="INTEGER" />
+    <result column="symbol_b" property="symbolB" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, rule_id,grade_id, name, min_num, max_num, symbol_a, symbol_b, creation_date, update_date
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from train_project_u_rule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="addTrainProjectURule" parameterType="com.bayee.political.domain.TrainProjectURule" >
+    insert into train_project_u_rule (id, rule_id,grade_id, name, 
+      min_num, max_num, symbol_a, 
+      symbol_b, creation_date, update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{ruleId,jdbcType=INTEGER},#{gradeId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{minNum,jdbcType=DOUBLE}, #{maxNum,jdbcType=DOUBLE}, #{symbolA,jdbcType=INTEGER}, 
+      #{symbolB,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.TrainProjectURule" >
+    update train_project_u_rule
+    <set >
+      <if test="ruleId != null" >
+        rule_id = #{ruleId,jdbcType=INTEGER},
+      </if>
+      <if test="gradeId != null" >
+        grade_id = #{gradeId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="minNum != null" >
+        min_num = #{minNum,jdbcType=DOUBLE},
+      </if>
+      <if test="maxNum != null" >
+        max_num = #{maxNum,jdbcType=DOUBLE},
+      </if>
+      <if test="symbolA != null" >
+        symbol_a = #{symbolA,jdbcType=INTEGER},
+      </if>
+      <if test="symbolB != null" >
+        symbol_b = #{symbolB,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainProjectURule" >
+    update train_project_u_rule
+    set rule_id = #{ruleId,jdbcType=INTEGER},
+      grade_id = #{gradeId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      min_num = #{minNum,jdbcType=DOUBLE},
+      max_num = #{maxNum,jdbcType=DOUBLE},
+      symbol_a = #{symbolA,jdbcType=INTEGER},
+      symbol_b = #{symbolB,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 根据项目规则id查询U型靶成绩规则-->
+     <select id="TrainProjectURuleList" parameterType="com.bayee.political.domain.TrainProjectURule" resultMap="BaseResultMap">
+select * from train_project_u_rule where 1=1
+        <if test="_parameter != null">
+			and rule_id = #{ruleId,jdbcType=INTEGER}
+		</if>
+		order by id
+</select>
+
+<!-- 根据ruleId删除U型靶规则 -->
+<delete id="deleteTrainProjectURule">
+delete from train_project_u_rule where rule_id = #{ruleId}
+</delete>
+
+</mapper>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskCaseAbilityRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskCaseAbilityRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="reconsideration_litigation_status" property="reconsiderationLitigationStatus" jdbcType="INTEGER" />
+    <result column="letter_visit_status" property="letterVisitStatus" jdbcType="INTEGER" />
+    <result column="law_enforcement_fault_status" property="lawEnforcementFaultStatus" jdbcType="INTEGER" />
+    <result column="judicial_supervision_status" property="judicialSupervisionStatus" jdbcType="INTEGER" />
+    <result column="case_expert_status" property="caseExpertStatus" jdbcType="INTEGER" />
+    <result column="excellent_legal_officer_status" property="excellentLegalOfficerStatus" jdbcType="INTEGER" />
+    <result column="basic_test_status" property="basicTestStatus" jdbcType="INTEGER" />
+    <result column="high_test_status" property="highTestStatus" jdbcType="INTEGER" />
+    <result column="judicial_test_status" property="judicialTestStatus" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, reconsideration_litigation_status, letter_visit_status, law_enforcement_fault_status, 
+    judicial_supervision_status, case_expert_status, excellent_legal_officer_status, 
+    basic_test_status, high_test_status, judicial_test_status, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from risk_case_ability_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_case_ability_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseAbilityRecord" >
+    insert into risk_case_ability_record (id, police_id, reconsideration_litigation_status, 
+      letter_visit_status, law_enforcement_fault_status, 
+      judicial_supervision_status, case_expert_status, 
+      excellent_legal_officer_status, basic_test_status, 
+      high_test_status, judicial_test_status, creation_date, 
+      update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{reconsiderationLitigationStatus,jdbcType=INTEGER}, 
+      #{letterVisitStatus,jdbcType=INTEGER}, #{lawEnforcementFaultStatus,jdbcType=INTEGER}, 
+      #{judicialSupervisionStatus,jdbcType=INTEGER}, #{caseExpertStatus,jdbcType=INTEGER}, 
+      #{excellentLegalOfficerStatus,jdbcType=INTEGER}, #{basicTestStatus,jdbcType=INTEGER}, 
+      #{highTestStatus,jdbcType=INTEGER}, #{judicialTestStatus,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskCaseAbilityRecord" >
+    insert into risk_case_ability_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="reconsiderationLitigationStatus != null" >
+        reconsideration_litigation_status,
+      </if>
+      <if test="letterVisitStatus != null" >
+        letter_visit_status,
+      </if>
+      <if test="lawEnforcementFaultStatus != null" >
+        law_enforcement_fault_status,
+      </if>
+      <if test="judicialSupervisionStatus != null" >
+        judicial_supervision_status,
+      </if>
+      <if test="caseExpertStatus != null" >
+        case_expert_status,
+      </if>
+      <if test="excellentLegalOfficerStatus != null" >
+        excellent_legal_officer_status,
+      </if>
+      <if test="basicTestStatus != null" >
+        basic_test_status,
+      </if>
+      <if test="highTestStatus != null" >
+        high_test_status,
+      </if>
+      <if test="judicialTestStatus != null" >
+        judicial_test_status,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="reconsiderationLitigationStatus != null" >
+        #{reconsiderationLitigationStatus,jdbcType=INTEGER},
+      </if>
+      <if test="letterVisitStatus != null" >
+        #{letterVisitStatus,jdbcType=INTEGER},
+      </if>
+      <if test="lawEnforcementFaultStatus != null" >
+        #{lawEnforcementFaultStatus,jdbcType=INTEGER},
+      </if>
+      <if test="judicialSupervisionStatus != null" >
+        #{judicialSupervisionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="caseExpertStatus != null" >
+        #{caseExpertStatus,jdbcType=INTEGER},
+      </if>
+      <if test="excellentLegalOfficerStatus != null" >
+        #{excellentLegalOfficerStatus,jdbcType=INTEGER},
+      </if>
+      <if test="basicTestStatus != null" >
+        #{basicTestStatus,jdbcType=INTEGER},
+      </if>
+      <if test="highTestStatus != null" >
+        #{highTestStatus,jdbcType=INTEGER},
+      </if>
+      <if test="judicialTestStatus != null" >
+        #{judicialTestStatus,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskCaseAbilityRecord" >
+    update risk_case_ability_record
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="reconsiderationLitigationStatus != null" >
+        reconsideration_litigation_status = #{reconsiderationLitigationStatus,jdbcType=INTEGER},
+      </if>
+      <if test="letterVisitStatus != null" >
+        letter_visit_status = #{letterVisitStatus,jdbcType=INTEGER},
+      </if>
+      <if test="lawEnforcementFaultStatus != null" >
+        law_enforcement_fault_status = #{lawEnforcementFaultStatus,jdbcType=INTEGER},
+      </if>
+      <if test="judicialSupervisionStatus != null" >
+        judicial_supervision_status = #{judicialSupervisionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="caseExpertStatus != null" >
+        case_expert_status = #{caseExpertStatus,jdbcType=INTEGER},
+      </if>
+      <if test="excellentLegalOfficerStatus != null" >
+        excellent_legal_officer_status = #{excellentLegalOfficerStatus,jdbcType=INTEGER},
+      </if>
+      <if test="basicTestStatus != null" >
+        basic_test_status = #{basicTestStatus,jdbcType=INTEGER},
+      </if>
+      <if test="highTestStatus != null" >
+        high_test_status = #{highTestStatus,jdbcType=INTEGER},
+      </if>
+      <if test="judicialTestStatus != null" >
+        judicial_test_status = #{judicialTestStatus,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskCaseAbilityRecord" >
+    update risk_case_ability_record
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      reconsideration_litigation_status = #{reconsiderationLitigationStatus,jdbcType=INTEGER},
+      letter_visit_status = #{letterVisitStatus,jdbcType=INTEGER},
+      law_enforcement_fault_status = #{lawEnforcementFaultStatus,jdbcType=INTEGER},
+      judicial_supervision_status = #{judicialSupervisionStatus,jdbcType=INTEGER},
+      case_expert_status = #{caseExpertStatus,jdbcType=INTEGER},
+      excellent_legal_officer_status = #{excellentLegalOfficerStatus,jdbcType=INTEGER},
+      basic_test_status = #{basicTestStatus,jdbcType=INTEGER},
+      high_test_status = #{highTestStatus,jdbcType=INTEGER},
+      judicial_test_status = #{judicialTestStatus,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

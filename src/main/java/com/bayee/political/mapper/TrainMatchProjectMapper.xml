@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.TrainMatchProjectMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.TrainMatchProject" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="nature" property="nature" jdbcType="INTEGER" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="unit_id" property="unitId" jdbcType="INTEGER" />
+    <result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="is_more_unit" property="isMoreUnit" jdbcType="INTEGER" />
+    <result column="gender" property="gender" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, type, nature, unit_id,is_more_unit, sort, creation_date, update_date
+  </sql>
+  <select id="selectTrainMatchProjectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select a.*, b.name as type_name, c.unit_name
+    from train_match_project a 
+    left join train_match_type b on a.type = b.id 
+    left join train_unit c on a.unit_id = c.id
+    where a.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteTrainMatchProject" parameterType="java.lang.Integer" >
+    delete from train_match_project
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="addTrainMatchProject" parameterType="com.bayee.political.domain.TrainMatchProject" >
+    insert into train_match_project (id, name, type, nature,unit_id,is_more_unit, sort, gender, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},#{nature,jdbcType=INTEGER},
+      #{unitId,jdbcType=INTEGER}, #{isMoreUnit,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{gender,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateTrainMatchProject" parameterType="com.bayee.political.domain.TrainMatchProject" >
+    update train_match_project
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="nature != null" >
+        nature = #{nature,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null" >
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="isMoreUnit != null" >
+        is_more_unit = #{isMoreUnit,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.TrainMatchProject" >
+    update train_match_project
+    set name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      nature = #{nature,jdbcType=INTEGER},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      is_more_unit = #{isMoreUnit,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 查询比赛项目 -->
+  <select id="getTrainMatchProjectList" resultMap="BaseResultMap">
+  select a.*,b.name as type_name, c.unit_name from train_match_project a 
+	left join train_match_type b on a.type = b.id 
+	 left join train_unit c on a.unit_id = c.id 
+	where 1 = 1 
+	<if test="keyword!=null and keyword!=''">
+	and a.name like "%"#{keyword}"%" 
+	</if>
+	order by a.id desc 
+	limit #{pageSize},10 
+  </select>
+  
+    <select id="getTrainMatchProjectCount" resultType="java.lang.Integer">
+  select count(*) as count from train_match_project a 
+	left join train_match_type b on a.type = b.id 
+	where 1 = 1 
+	<if test="keyword!=null and keyword!=''">
+	and a.name like "%"#{keyword}"%"
+	</if>
+  </select>
+  
+  <select id="getTrainMatchProjectByType" resultMap="BaseResultMap">
+  select * from train_match_project where type = #{type} 
+  </select>
+</mapper>

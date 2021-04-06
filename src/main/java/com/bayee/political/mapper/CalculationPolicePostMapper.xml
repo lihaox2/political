@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.CalculationPolicePostMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.CalculationPolicePost" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_type" property="policeType" jdbcType="INTEGER" />
+    <result column="police_station_ids" property="policeStationIds" jdbcType="VARCHAR" />
+    <result column="police_post_id" property="policePostId" jdbcType="INTEGER" />
+    <result column="police_num" property="policeNum" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_type, police_station_ids, police_post_id, police_num, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from calculation_police_post
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from calculation_police_post
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.CalculationPolicePost" >
+    insert into calculation_police_post (id, police_type, police_station_ids, 
+      police_post_id, police_num, creation_date, 
+      update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeType,jdbcType=INTEGER}, #{policeStationIds,jdbcType=VARCHAR}, 
+      #{policePostId,jdbcType=INTEGER}, #{policeNum,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 根据policeType和岗位id修改 -->
+  <update id="calculationPolicePostUpdate" parameterType="com.bayee.political.domain.CalculationPolicePost" >
+    update calculation_police_post
+    <set >
+      <if test="policeType != null" >
+        police_type = #{policeType,jdbcType=INTEGER},
+      </if>
+      <if test="policeStationIds != null" >
+        police_station_ids = #{policeStationIds,jdbcType=VARCHAR},
+      </if>
+      <if test="policePostId != null" >
+        police_post_id = #{policePostId,jdbcType=INTEGER},
+      </if>
+      <if test="policeNum != null" >
+        police_num = #{policeNum,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where police_type = #{policeType,jdbcType=INTEGER} and police_post_id = #{policePostId,jdbcType=INTEGER}
+  </update>
+  <update id="dididfi" parameterType="com.bayee.political.domain.CalculationPolicePost" >
+    update calculation_police_post
+    <set >
+      <if test="policeType != null" >
+        police_type = #{policeType,jdbcType=INTEGER},
+      </if>
+      <if test="policeStationIds != null" >
+        police_station_ids = #{policeStationIds,jdbcType=VARCHAR},
+      </if>
+      <if test="policePostId != null" >
+        police_post_id = #{policePostId,jdbcType=INTEGER},
+      </if>
+      <if test="policeNum != null" >
+        police_num = #{policeNum,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.CalculationPolicePost" >
+    update calculation_police_post
+    set police_type = #{policeType,jdbcType=INTEGER},
+      police_station_ids = #{policeStationIds,jdbcType=VARCHAR},
+      police_post_id = #{policePostId,jdbcType=INTEGER},
+      police_num = #{policeNum,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="calculationPolicePostUpdateByid">
+  	update calculation_police_post set police_num = #{sum}, update_date = now() where id = #{id}
+  </update>
+    <!-- 查询当前岗位数量 -->
+  <select id="calculationPolicePostNumItem" parameterType="com.bayee.political.domain.CalculationPolicePost" resultMap="BaseResultMap" >
+select sum(actual_police_num) as policeNum,station_post_id as police_post_id
+from calculation where police_type=#{policeType,jdbcType=INTEGER} and station_post_id = #{stationPostId,jdbcType=INTEGER}
+GROUP BY station_post_id
+  </select>
+</mapper>

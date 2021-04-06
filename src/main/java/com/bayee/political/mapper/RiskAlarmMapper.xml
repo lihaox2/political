@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskAlarmMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskAlarm" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="alarm_type" property="alarmType" jdbcType="INTEGER" />
+    <result column="alarm_score" property="alarmScore" jdbcType="DOUBLE" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, alarm_type, alarm_score, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from risk_alarm
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_alarm
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskAlarm" >
+    insert into risk_alarm (id, police_id, alarm_type, 
+      alarm_score, creation_date, update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{alarmType,jdbcType=INTEGER}, 
+      #{alarmScore,jdbcType=DOUBLE}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskAlarm" >
+    insert into risk_alarm
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="alarmType != null" >
+        alarm_type,
+      </if>
+      <if test="alarmScore != null" >
+        alarm_score,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmType != null" >
+        #{alarmType,jdbcType=INTEGER},
+      </if>
+      <if test="alarmScore != null" >
+        #{alarmScore,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskAlarm" >
+    update risk_alarm
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmType != null" >
+        alarm_type = #{alarmType,jdbcType=INTEGER},
+      </if>
+      <if test="alarmScore != null" >
+        alarm_score = #{alarmScore,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskAlarm" >
+    update risk_alarm
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      alarm_type = #{alarmType,jdbcType=INTEGER},
+      alarm_score = #{alarmScore,jdbcType=DOUBLE},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 警员预警分页查询 -->
+<select id="riskAlarmPageList" parameterType="com.bayee.political.domain.RiskAlarm" resultMap="BaseResultMap">
+select count(*) as num,a.police_id,b.name,b.head_image as headImage,
+c.name as departmentName,d.position_name as positionName,e.creation_date from risk_alarm a
+left join user b on b.police_id=a.police_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+left join(select police_id,MAX(creation_date) as creation_date 
+from risk_alarm GROUP BY police_id) e on e.police_id=a.police_id
+where 1=1
+    <if test="startTime != null and startTime !=''">
+	    and a.creation_date &gt;=#{startTime} 
+	</if>
+	 <if test="endTime != null and endTime !=''">
+	    and a.creation_date &lt;=#{endTime}
+	</if>
+GROUP BY a.police_id order by count(*) desc limit #{pageNum},#{pageSize}
+</select>
+<!-- 警员预警列表总数 -->
+<select id="riskAlarmPageCount" parameterType="com.bayee.political.domain.RiskAlarm" resultType="Integer">
+select count(*) from 
+(select count(*) as num,a.police_id,b.name,b.head_image as headImage,
+c.name as departmentName,d.position_name as positionName,e.creation_date from risk_alarm a
+left join user b on b.police_id=a.police_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id
+left join(select police_id,MAX(creation_date) as creation_date 
+from risk_alarm GROUP BY police_id) e on e.police_id=a.police_id
+where 1=1
+    <if test="startTime != null and startTime !=''">
+	    and a.creation_date &gt;=#{startTime} 
+	</if>
+	 <if test="endTime != null and endTime !=''">
+	    and a.creation_date &lt;=#{endTime}
+	</if>
+GROUP BY a.police_id) as t
+</select>
+</mapper>

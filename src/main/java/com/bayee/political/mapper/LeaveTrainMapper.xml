@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.LeaveTrainMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.LeaveTrain" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    
+    <result column="police_name" property="policeName" jdbcType="VARCHAR" />
+    <result column="position_name" property="positionName" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, type, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from leave_train
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from leave_train
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.LeaveTrain" >
+    insert into leave_train (id, police_id, type, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertLeaveTrainList" parameterType="com.bayee.political.domain.LeaveTrain" >
+    insert into leave_train
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      creation_date,
+      update_date,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+     now(),now(),
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.LeaveTrain" >
+    update leave_train
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.LeaveTrain" >
+    update leave_train
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getLeaveTrainList" resultMap="BaseResultMap" >
+  select a.*,b.`name` as police_name,c.position_name,d.`name` as department_name from leave_train a 
+left join user b on a.police_id = b.police_id 
+left join police_position c on b.position_id = c.id 
+left join department d on b.department_id = d.id 
+where 1 = 1
+<if test="type==1 or type==2">
+and a.type = #{type}
+</if>
+<if test="departmentId!=null and departmentId!=''">
+and d.id = #{departmentId}
+</if>
+<if test="keyWord!=null and keyWord!=''">
+and (a.police_id like "%"#{keyWord}"%" or b.`name` like "%"#{keyWord}"%")
+</if>
+order by creation_date desc 
+<if test="pageSize!=null">
+limit #{pageSize},10
+</if>
+  </select>
+  
+  <select id="getLeaveTrainListCount" resultType="java.lang.Integer" >
+    select count(*) from leave_train a 
+left join user b on a.police_id = b.police_id 
+left join police_position c on b.position_id = c.id 
+left join department d on b.department_id = d.id 
+where 1 = 1
+<if test="type==1 or type==2">
+and a.type = #{type}
+</if>
+<if test="departmentId!=null and departmentId!=''">
+and d.id = #{departmentId}
+</if>
+<if test="keyWord!=null and keyWord!=''">
+and (a.police_id like "%"#{keyWord}"%" or b.`name` like "%"#{keyWord}"%")
+</if>
+  </select>
+  
+  <!-- 根据id获得疗修养数据 -->
+  <select id="getLeaveTrainOne" resultMap="BaseResultMap">
+  	select a.*,b.name as police_name, c.name as department_name, d.position_name from leave_train a
+left join user b on a.police_id = b.police_id
+left join department c on b.department_id = c.id
+left join police_position d on b.position_id = d.id
+where a.id = #{id}
+  </select>
+  
+  <!-- 批量插入疗修养数据 -->
+  <insert id="addMoreLeaveTrain">
+  insert into leave_train (police_id, type, creation_date, update_date) values 
+  <foreach collection="leaveTrain" item="train" separator=",">
+  (
+  #{train.policeId},
+  #{train.type},
+  now(),
+  now()
+  )
+  </foreach>
+  </insert>
+   <!-- 各单位疗休养人员数量统计 -->
+    <select id="leaveDepTrainStatisticsNum" parameterType="com.bayee.political.domain.LeaveTrain" resultType="Integer" >
+select count(*) from leave_train a
+left join user b on b.police_id=a.police_id 
+where 1=1
+     <if test="departmentId != null and departmentId !=''">
+        and b.department_id = #{departmentId}
+      </if>  
+      <if test="type != null and type !=''">
+        and a.type = #{type}
+      </if>
+  </select>
+    <!-- 中层领导查看自己部门疗休养人员数据 -->
+      <select id="leaveDepTrainStatisticsList" parameterType="com.bayee.political.domain.LeaveTrain" resultMap="BaseResultMap">
+select a.police_id,b.name,b.head_image as headImage,b.type from
+(select * from user where police_id=#{policeId}) a
+left join(SELECT a.*,b.department_id,b.head_image,b.name FROM leave_train a 
+left join user b on b.police_id=a.police_id) b on b.department_id=a.department_id
+where 1=1
+     <if test="type != null and type !=''">
+        and b.type = #{type}
+      </if>
+      order by a.police_id asc
+  </select>
+</mapper>

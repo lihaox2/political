@@ -1,6 +1,7 @@
 package com.bayee.political.domain;
 
 import java.util.Date;
+import java.util.List;
 
 public class RiskCaseTestRecord {
     private Integer id;
@@ -16,6 +17,10 @@ public class RiskCaseTestRecord {
     private Date creationDate;
 
     private Date updateDate;
+    
+    private Double indexNum;
+    
+    private List<ScreenDoubeChart> list;
 
     public Integer getId() {
         return id;
@@ -72,4 +77,21 @@ public class RiskCaseTestRecord {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+
+	public Double getIndexNum() {
+		return indexNum;
+	}
+
+	public void setIndexNum(Double indexNum) {
+		this.indexNum = indexNum;
+	}
+
+	public List<ScreenDoubeChart> getList() {
+		return list;
+	}
+
+	public void setList(List<ScreenDoubeChart> list) {
+		this.list = list;
+	}
+    
 }

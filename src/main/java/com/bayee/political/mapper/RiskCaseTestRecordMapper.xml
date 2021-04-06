@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskCaseTestRecord" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="index_num" property="indexNum" jdbcType="DOUBLE" />
     <result column="year" property="year" jdbcType="VARCHAR" />
     <result column="semester" property="semester" jdbcType="INTEGER" />
     <result column="score" property="score" jdbcType="DOUBLE" />
@@ -11,7 +12,7 @@
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, police_id, year, semester, score, creation_date, update_date
+    id, police_id,index_num, year, semester, score, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -24,10 +25,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseTestRecord" >
-    insert into risk_case_test_record (id, police_id, year, 
+    insert into risk_case_test_record (id, police_id,index_num, year, 
       semester, score, creation_date, 
       update_date)
-    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum}, #{year,jdbcType=VARCHAR}, 
       #{semester,jdbcType=INTEGER}, #{score,jdbcType=DOUBLE}, #{creationDate,jdbcType=TIMESTAMP}, 
       #{updateDate,jdbcType=TIMESTAMP})
   </insert>
@@ -39,6 +40,9 @@
       </if>
       <if test="policeId != null" >
         police_id,
+      </if>
+      <if test="indexNum != null" >
+        index_num,
       </if>
       <if test="year != null" >
         year,
@@ -63,6 +67,9 @@
       <if test="policeId != null" >
         #{policeId,jdbcType=VARCHAR},
       </if>
+      <if test="indexNum != null" >
+        #{indexNum},
+      </if>
       <if test="year != null" >
         #{year,jdbcType=VARCHAR},
       </if>
@@ -86,6 +93,9 @@
       <if test="policeId != null" >
         police_id = #{policeId,jdbcType=VARCHAR},
       </if>
+      <if test="indexNum != null" >
+        index_num = #{indexNum},
+      </if>
       <if test="year != null" >
         year = #{year,jdbcType=VARCHAR},
       </if>
@@ -107,6 +117,7 @@
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskCaseTestRecord" >
     update risk_case_test_record
     set police_id = #{policeId,jdbcType=VARCHAR},
+      index_num = #{indexNum},
       year = #{year,jdbcType=VARCHAR},
       semester = #{semester,jdbcType=INTEGER},
       score = #{score,jdbcType=DOUBLE},
@@ -114,4 +125,26 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+    <!-- 警员执法考试风险指数查询 -->
+	<select id="riskCaseTestItem"  resultMap="BaseResultMap">
+		select * from risk_case_test_record 
+		where police_id=#{policeId,jdbcType=VARCHAR} and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+		order by id desc limit 1
+	</select>
+  
+  <!-- 执法考试风险指数图例 -->
+	<select id="riskCaseTestChart"  resultMap="ScreenDoubeChartMap">
+	select ifnull(b.value,0) as value,CONCAT(c.id,'月') as name
+	from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+	    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+	    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+	    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+	    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+	    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` ) a
+	left join(select sum(index_num) as value,DATE_FORMAT(creation_date, '%Y-%m') as name from risk_case_test_record
+	where police_id=#{policeId,jdbcType=VARCHAR} GROUP BY DATE_FORMAT(creation_date, '%Y-%m')) b on b.name=a.year_month
+	left join month c on c.num_name=right(a.year_month,2) 
+	order by a.year_month
+	</select>
 </mapper>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bayee.political.mapper.RiskStutyPalmSchoolRecordMapper">
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskStutyPalmSchoolRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="police_id" jdbcType="VARCHAR" property="policeId" />
+    <result column="textbook_law_enforcement_rate" jdbcType="DOUBLE" property="textbookLawEnforcementRate" />
+    <result column="police_involved_rate" jdbcType="DOUBLE" property="policeInvolvedRate" />
+    <result column="gun1_handover_rate" jdbcType="DOUBLE" property="gun1HandoverRate" />
+    <result column="force_rate" jdbcType="DOUBLE" property="forceRate" />
+    <result column="gun2_handover_rate" jdbcType="DOUBLE" property="gun2HandoverRate" />
+    <result column="physical_rate" jdbcType="DOUBLE" property="physicalRate" />
+    <result column="drink_deal_rate" jdbcType="DOUBLE" property="drinkDealRate" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, police_id, textbook_law_enforcement_rate, police_involved_rate, gun1_handover_rate, 
+    force_rate, gun2_handover_rate, physical_rate, drink_deal_rate, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from risk_stuty_palm_school_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from risk_stuty_palm_school_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskStutyPalmSchoolRecord">
+    insert into risk_stuty_palm_school_record (id, police_id, textbook_law_enforcement_rate, 
+      police_involved_rate, gun1_handover_rate, force_rate, 
+      gun2_handover_rate, physical_rate, drink_deal_rate, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{textbookLawEnforcementRate,jdbcType=DOUBLE}, 
+      #{policeInvolvedRate,jdbcType=DOUBLE}, #{gun1HandoverRate,jdbcType=DOUBLE}, #{forceRate,jdbcType=DOUBLE}, 
+      #{gun2HandoverRate,jdbcType=DOUBLE}, #{physicalRate,jdbcType=DOUBLE}, #{drinkDealRate,jdbcType=DOUBLE}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskStutyPalmSchoolRecord">
+    insert into risk_stuty_palm_school_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="policeId != null">
+        police_id,
+      </if>
+      <if test="textbookLawEnforcementRate != null">
+        textbook_law_enforcement_rate,
+      </if>
+      <if test="policeInvolvedRate != null">
+        police_involved_rate,
+      </if>
+      <if test="gun1HandoverRate != null">
+        gun1_handover_rate,
+      </if>
+      <if test="forceRate != null">
+        force_rate,
+      </if>
+      <if test="gun2HandoverRate != null">
+        gun2_handover_rate,
+      </if>
+      <if test="physicalRate != null">
+        physical_rate,
+      </if>
+      <if test="drinkDealRate != null">
+        drink_deal_rate,
+      </if>
+      <if test="creationDate != null">
+        creation_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null">
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="textbookLawEnforcementRate != null">
+        #{textbookLawEnforcementRate,jdbcType=DOUBLE},
+      </if>
+      <if test="policeInvolvedRate != null">
+        #{policeInvolvedRate,jdbcType=DOUBLE},
+      </if>
+      <if test="gun1HandoverRate != null">
+        #{gun1HandoverRate,jdbcType=DOUBLE},
+      </if>
+      <if test="forceRate != null">
+        #{forceRate,jdbcType=DOUBLE},
+      </if>
+      <if test="gun2HandoverRate != null">
+        #{gun2HandoverRate,jdbcType=DOUBLE},
+      </if>
+      <if test="physicalRate != null">
+        #{physicalRate,jdbcType=DOUBLE},
+      </if>
+      <if test="drinkDealRate != null">
+        #{drinkDealRate,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null">
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskStutyPalmSchoolRecord">
+    update risk_stuty_palm_school_record
+    <set>
+      <if test="policeId != null">
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="textbookLawEnforcementRate != null">
+        textbook_law_enforcement_rate = #{textbookLawEnforcementRate,jdbcType=DOUBLE},
+      </if>
+      <if test="policeInvolvedRate != null">
+        police_involved_rate = #{policeInvolvedRate,jdbcType=DOUBLE},
+      </if>
+      <if test="gun1HandoverRate != null">
+        gun1_handover_rate = #{gun1HandoverRate,jdbcType=DOUBLE},
+      </if>
+      <if test="forceRate != null">
+        force_rate = #{forceRate,jdbcType=DOUBLE},
+      </if>
+      <if test="gun2HandoverRate != null">
+        gun2_handover_rate = #{gun2HandoverRate,jdbcType=DOUBLE},
+      </if>
+      <if test="physicalRate != null">
+        physical_rate = #{physicalRate,jdbcType=DOUBLE},
+      </if>
+      <if test="drinkDealRate != null">
+        drink_deal_rate = #{drinkDealRate,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null">
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskStutyPalmSchoolRecord">
+    update risk_stuty_palm_school_record
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      textbook_law_enforcement_rate = #{textbookLawEnforcementRate,jdbcType=DOUBLE},
+      police_involved_rate = #{policeInvolvedRate,jdbcType=DOUBLE},
+      gun1_handover_rate = #{gun1HandoverRate,jdbcType=DOUBLE},
+      force_rate = #{forceRate,jdbcType=DOUBLE},
+      gun2_handover_rate = #{gun2HandoverRate,jdbcType=DOUBLE},
+      physical_rate = #{physicalRate,jdbcType=DOUBLE},
+      drink_deal_rate = #{drinkDealRate,jdbcType=DOUBLE},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

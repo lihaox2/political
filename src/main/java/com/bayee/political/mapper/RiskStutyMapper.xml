@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bayee.political.mapper.RiskStutyMapper">
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskStuty">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="police_id" jdbcType="VARCHAR" property="policeId" />
+    <result column="index_num" jdbcType="DOUBLE" property="indexNum" />
+    <result column="activities_party_num" jdbcType="DOUBLE" property="activitiesPartyNum" />
+    <result column="palm_school_num" jdbcType="DOUBLE" property="palmSchoolNum" />
+    <result column="unit_train_num" jdbcType="DOUBLE" property="unitTrainNum" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, police_id, index_num, activities_party_num, palm_school_num, unit_train_num, 
+    creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from risk_stuty
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from risk_stuty
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskStuty">
+    insert into risk_stuty (id, police_id, index_num, 
+      activities_party_num, palm_school_num, unit_train_num, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
+      #{activitiesPartyNum,jdbcType=DOUBLE}, #{palmSchoolNum,jdbcType=DOUBLE}, #{unitTrainNum,jdbcType=DOUBLE}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskStuty">
+    insert into risk_stuty
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="policeId != null">
+        police_id,
+      </if>
+      <if test="indexNum != null">
+        index_num,
+      </if>
+      <if test="activitiesPartyNum != null">
+        activities_party_num,
+      </if>
+      <if test="palmSchoolNum != null">
+        palm_school_num,
+      </if>
+      <if test="unitTrainNum != null">
+        unit_train_num,
+      </if>
+      <if test="creationDate != null">
+        creation_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null">
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNum != null">
+        #{indexNum,jdbcType=DOUBLE},
+      </if>
+      <if test="activitiesPartyNum != null">
+        #{activitiesPartyNum,jdbcType=DOUBLE},
+      </if>
+      <if test="palmSchoolNum != null">
+        #{palmSchoolNum,jdbcType=DOUBLE},
+      </if>
+      <if test="unitTrainNum != null">
+        #{unitTrainNum,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null">
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskStuty">
+    update risk_stuty
+    <set>
+      <if test="policeId != null">
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNum != null">
+        index_num = #{indexNum,jdbcType=DOUBLE},
+      </if>
+      <if test="activitiesPartyNum != null">
+        activities_party_num = #{activitiesPartyNum,jdbcType=DOUBLE},
+      </if>
+      <if test="palmSchoolNum != null">
+        palm_school_num = #{palmSchoolNum,jdbcType=DOUBLE},
+      </if>
+      <if test="unitTrainNum != null">
+        unit_train_num = #{unitTrainNum,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null">
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskStuty">
+    update risk_stuty
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      index_num = #{indexNum,jdbcType=DOUBLE},
+      activities_party_num = #{activitiesPartyNum,jdbcType=DOUBLE},
+      palm_school_num = #{palmSchoolNum,jdbcType=DOUBLE},
+      unit_train_num = #{unitTrainNum,jdbcType=DOUBLE},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

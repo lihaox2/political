@@ -349,22 +349,25 @@ public class RiskServiceImpl implements RiskService {
 	public RiskConductBureauRoleResultDTO riskConductBureauRole(String policeId, String dateTime, String lastDateTime) {
 		RiskConductBureauRoleResultDTO resultDTO = new RiskConductBureauRoleResultDTO();
 		RiskConductBureauRule bureauRule = riskConductBureauRuleMapper.findRiskConductBureauRole(policeId, dateTime);
-		resultDTO.setIndexNum(bureauRule.getIndexNum());
-		resultDTO.setDeductionScoreCount(bureauRule.getDeductionScoreCount());
-		resultDTO.setTotalDeductionScore(bureauRule.getTotalDeductionScore());
+		if(bureauRule != null){
+			resultDTO.setIndexNum(bureauRule.getIndexNum());
+			resultDTO.setDeductionScoreCount(bureauRule.getDeductionScoreCount());
+			resultDTO.setTotalDeductionScore(bureauRule.getTotalDeductionScore());
 
-		ScreenDoubeChart chart1 = new ScreenDoubeChart();
-		RiskConductBureauRule bureauRuleUpMonth = riskConductBureauRuleMapper.findRiskConductBureauRole(policeId, lastDateTime);
-		chart1.setId(1);
-		chart1.setName("上月");
-		chart1.setValue(bureauRuleUpMonth.getIndexNum());
+			ScreenDoubeChart chart1 = new ScreenDoubeChart();
+			RiskConductBureauRule bureauRuleUpMonth = riskConductBureauRuleMapper.findRiskConductBureauRole(policeId, lastDateTime);
+			if (bureauRuleUpMonth != null) {
+				chart1.setId(1);
+				chart1.setName("上月");
+				chart1.setValue(bureauRuleUpMonth.getIndexNum());
+			}
 
-		ScreenDoubeChart chart2 = new ScreenDoubeChart();
-		chart2.setId(2);
-		chart2.setName("本月");
-		chart2.setValue(resultDTO.getIndexNum());
-		resultDTO.setMonthList(Arrays.asList(chart1, chart2));
-
+			ScreenDoubeChart chart2 = new ScreenDoubeChart();
+			chart2.setId(2);
+			chart2.setName("本月");
+			chart2.setValue(resultDTO.getIndexNum());
+			resultDTO.setMonthList(Arrays.asList(chart1, chart2));
+		}
 		return resultDTO;
 	}
 

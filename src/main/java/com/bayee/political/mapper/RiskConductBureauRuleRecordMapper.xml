@@ -139,4 +139,10 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="findByPoliceIdAndDate" resultMap="BaseResultMap">
+    select * from risk_conduct_bureau_rule_record
+    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = #{dateTime}
+  </select>
+
 </mapper>

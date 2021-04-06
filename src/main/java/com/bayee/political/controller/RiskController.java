@@ -1,5 +1,6 @@
 package com.bayee.political.controller;
 
+import com.bayee.political.domain.*;
 import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
 import com.bayee.political.pojo.dto.RiskConductResultDTO;
 import com.bayee.political.pojo.json.RiskConductBureauRoleResult;
@@ -21,22 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.bayee.political.domain.RiskAlarm;
-import com.bayee.political.domain.RiskAlarmType;
-import com.bayee.political.domain.RiskCase;
-import com.bayee.political.domain.RiskDrink;
-import com.bayee.political.domain.RiskDuty;
-import com.bayee.political.domain.RiskDutyDealPoliceRecord;
-import com.bayee.political.domain.RiskHealth;
-import com.bayee.political.domain.RiskHistoryReport;
-import com.bayee.political.domain.RiskIndexMonitorChild;
-import com.bayee.political.domain.RiskReportRecord;
-import com.bayee.political.domain.RiskSocialContact;
-import com.bayee.political.domain.RiskSocialContactRecord;
-import com.bayee.political.domain.RiskTrain;
-import com.bayee.political.domain.RiskTrainFailChart;
-import com.bayee.political.domain.ScreenChart;
-import com.bayee.political.domain.ScreenDoubeChart;
 import com.bayee.political.service.RiskService;
 import com.bayee.political.utils.DataListPage;
 import com.bayee.political.utils.DataListReturn;
@@ -745,6 +730,23 @@ public class RiskController extends BaseController {
 		DataListReturn dlr = new DataListReturn();
 		//警员局规计分风险指数
 		List<ScreenDoubeChart> list = riskService.riskConductBureauRoleChart(policeId);
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(list);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+	}
+
+	@GetMapping("/risk/conduct/bureau/role/record/list")
+	public ResponseEntity<?> riskConductBureauRoleRecordList(@RequestParam(value = "policeId", required = false) String policeId,
+															 @RequestParam(value = "dateTime", required = false) String dateTime)
+			throws ParseException{
+		DataListReturn dlr = new DataListReturn();
+		if (dateTime == null || "".equals(dateTime)) {
+			dateTime = sd.format(new Date());
+		}
+		//局规计分详情
+		List<RiskConductBureauRuleRecord> list = riskService.findRiskConductBureauRuleRecord(policeId, dateTime);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);

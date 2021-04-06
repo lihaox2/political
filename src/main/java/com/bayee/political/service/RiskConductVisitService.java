@@ -1,13 +1,12 @@
-package com.bayee.political.mapper;
+package com.bayee.political.service;
 
 import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
 import com.bayee.political.domain.RiskConductVisit;
 import com.bayee.political.domain.ScreenDoubeChart;
 
-public interface RiskConductVisitMapper {
-    int deleteByPrimaryKey(Integer id);
+public interface RiskConductVisitService {
+	
+	 int deleteByPrimaryKey(Integer id);
 
     int insert(RiskConductVisit record);
 
@@ -20,8 +19,9 @@ public interface RiskConductVisitMapper {
     int updateByPrimaryKey(RiskConductVisit record);
     
     //警员信访投诉风险指数查询
-    RiskConductVisit riskConductVisitItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
+    RiskConductVisit riskConductVisitItem(String policeId, String dateTime);
     
     // 信访投诉风险指数图例
- 	List<ScreenDoubeChart> riskConductVisitChart(@Param("policeId") String policeId);
+ 	List<ScreenDoubeChart> riskConductVisitChart(String policeId);
+
 }

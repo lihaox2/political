@@ -125,4 +125,9 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="riskConductTrafficViolationRecordList" resultMap="BaseResultMap">
+  	SELECT * FROM risk_conduct_traffic_violation_record r WHERE
+	 r.police_id=#{policeId} and DATE_FORMAT(r.creation_date, '%Y-%m')=#{dateTime} ORDER BY id desc
+  </select>
 </mapper>

@@ -122,4 +122,13 @@ public interface RiskService {
 	// 警员警员指标历史记录新增
 	int riskReportRecordCreat(RiskReportRecord record);
 
+	// 警员社交风险查询
+	RiskSocialContact riskSocialContactIndexItem(String policeId, String dateTime);
+
+	// 社交风险指数图例
+	List<ScreenDoubeChart> riskSocialContactIndexChart(String policeId, String tableName);
+
+	// 社交详情记录
+	List<RiskSocialContactRecord> riskSocialContactRecordList(Integer socialContactId);
+
 }

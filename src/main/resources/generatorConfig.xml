@@ -35,18 +35,13 @@
             targetPackage="com.bayee.political.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
-        <table schema="nth_smart_political" tableName="risk_conduct_bureau_rule_record"
-            domainObjectName="RiskConductBureauRuleRecord" enableCountByExample="false"
+        <table schema="nth_smart_political" tableName="risk_social_contact"
+            domainObjectName="RiskSocialContact" enableCountByExample="false"
             enableUpdateByExample="false" enableDeleteByExample="false"
             enableSelectByExample="false" selectByExampleQueryId="false">
         </table>
-        <table schema="nth_smart_political" tableName="risk_conduct_traffic_violation"
-            domainObjectName="RiskConductTrafficViolation" enableCountByExample="false"
-            enableUpdateByExample="false" enableDeleteByExample="false"
-            enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-        <table schema="nth_smart_political" tableName="risk_conduct_traffic_violation_record"
-            domainObjectName="RiskConductTrafficViolationRecord" enableCountByExample="false"
+        <table schema="nth_smart_political" tableName="risk_social_contact_record"
+            domainObjectName="RiskSocialContactRecord" enableCountByExample="false"
             enableUpdateByExample="false" enableDeleteByExample="false"
             enableSelectByExample="false" selectByExampleQueryId="false">
         </table>

@@ -199,7 +199,8 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductBureauRuleRecordMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductTrafficViolationMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductTrafficViolationRecordMapper.class);
-
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskSocialContactMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskSocialContactRecordMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -918,5 +919,17 @@ public class AppConfiguration {
 	public RiskConductTrafficViolationRecordMapper riskConductTrafficViolationRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskConductTrafficViolationRecordMapper.class);
+	}
+	
+	@Bean
+	public RiskSocialContactMapper riskSocialContactMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskSocialContactMapper.class);
+	}
+	
+	@Bean
+	public RiskSocialContactRecordMapper riskSocialContactRecordMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskSocialContactRecordMapper.class);
 	}
 }

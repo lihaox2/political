@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskSocialContactRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskSocialContactRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="social_contact_id" property="socialContactId" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="place_name" property="placeName" jdbcType="VARCHAR" />
+    <result column="enter_time" property="enterTime" jdbcType="TIMESTAMP" />
+    <result column="leave_time" property="leaveTime" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, social_contact_id, police_id, place_name, enter_time, leave_time, creation_date, 
+    update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from risk_social_contact_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_social_contact_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskSocialContactRecord" >
+    insert into risk_social_contact_record (id, social_contact_id, police_id, 
+      place_name, enter_time, leave_time, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{socialContactId,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
+      #{placeName,jdbcType=VARCHAR}, #{enterTime,jdbcType=TIMESTAMP}, #{leaveTime,jdbcType=TIMESTAMP}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskSocialContactRecord" >
+    insert into risk_social_contact_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="socialContactId != null" >
+        social_contact_id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="placeName != null" >
+        place_name,
+      </if>
+      <if test="enterTime != null" >
+        enter_time,
+      </if>
+      <if test="leaveTime != null" >
+        leave_time,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="socialContactId != null" >
+        #{socialContactId,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="placeName != null" >
+        #{placeName,jdbcType=VARCHAR},
+      </if>
+      <if test="enterTime != null" >
+        #{enterTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaveTime != null" >
+        #{leaveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskSocialContactRecord" >
+    update risk_social_contact_record
+    <set >
+      <if test="socialContactId != null" >
+        social_contact_id = #{socialContactId,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="placeName != null" >
+        place_name = #{placeName,jdbcType=VARCHAR},
+      </if>
+      <if test="enterTime != null" >
+        enter_time = #{enterTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaveTime != null" >
+        leave_time = #{leaveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskSocialContactRecord" >
+    update risk_social_contact_record
+    set social_contact_id = #{socialContactId,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      place_name = #{placeName,jdbcType=VARCHAR},
+      enter_time = #{enterTime,jdbcType=TIMESTAMP},
+      leave_time = #{leaveTime,jdbcType=TIMESTAMP},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 警员社交风险查询 -->
+<select id="riskSocialContactRecordList" parameterType="com.bayee.political.domain.RiskSocialContactRecord" resultMap="BaseResultMap">
+select * from risk_social_contact_record 
+where social_contact_id = #{socialContactId,jdbcType=INTEGER}
+order by id desc
+</select>
+</mapper>

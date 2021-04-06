@@ -79,6 +79,12 @@ public class RiskServiceImpl implements RiskService {
 	@Autowired
 	RiskCaseTestRecordMapper riskCaseTestRecordMapper;// 警员考试记录
 
+	@Autowired
+	RiskSocialContactMapper riskSocialContactMapper;// 警员社交风险
+
+	@Autowired
+	RiskSocialContactRecordMapper riskSocialContactRecordMapper;// 警员社交记录
+
 	/**
 	 * 警员行为规范
 	 */
@@ -306,5 +312,23 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public int riskReportRecordCreat(RiskReportRecord record) {
 		return riskReportRecordMapper.riskReportRecordCreat(record);
+	}
+
+	// 警员社交风险查询
+	@Override
+	public RiskSocialContact riskSocialContactIndexItem(String policeId, String dateTime) {
+		return riskSocialContactMapper.riskSocialContactIndexItem(policeId, dateTime);
+	}
+
+	// 社交风险指数图例
+	@Override
+	public List<ScreenDoubeChart> riskSocialContactIndexChart(String policeId, String tableName) {
+		return riskSocialContactMapper.riskSocialContactIndexChart(policeId, tableName);
+	}
+	
+	// 社交详情记录
+	@Override
+	public List<RiskSocialContactRecord> riskSocialContactRecordList(Integer socialContactId) {
+		return riskSocialContactRecordMapper.riskSocialContactRecordList(socialContactId);
 	}
 }

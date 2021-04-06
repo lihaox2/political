@@ -22,12 +22,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.bayee.political.domain.RiskAlarm;
 import com.bayee.political.domain.RiskAlarmType;
 import com.bayee.political.domain.RiskCase;
+import com.bayee.political.domain.RiskDrink;
 import com.bayee.political.domain.RiskDuty;
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
 import com.bayee.political.domain.RiskHealth;
 import com.bayee.political.domain.RiskHistoryReport;
 import com.bayee.political.domain.RiskIndexMonitorChild;
 import com.bayee.political.domain.RiskReportRecord;
+import com.bayee.political.domain.RiskSocialContact;
+import com.bayee.political.domain.RiskSocialContactRecord;
 import com.bayee.political.domain.RiskTrain;
 import com.bayee.political.domain.RiskTrainFailChart;
 import com.bayee.political.domain.ScreenChart;
@@ -640,6 +643,66 @@ public class RiskController extends BaseController {
 		DataListReturn dlr = new DataListReturn();
 		// 警员行为规范风险指数
 		List<ScreenDoubeChart> list = riskService.riskConductChart(policeId);
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(list);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+	}
+
+	// 警员社交风险查询
+	@RequestMapping(value = "/risk/social/contact/index/item", method = RequestMethod.GET)
+	public ResponseEntity<?> riskSocialContactIndexItem(
+			@RequestParam(value = "policeId", required = false) String policeId,
+			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+		DataListReturn dlr = new DataListReturn();
+		if (dateTime == null) {
+			dateTime = sd.format(new Date());
+		}
+		Date currdate = sd.parse(dateTime);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(currdate);
+		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
+		String lastDateTime = sd.format(calendar.getTime());
+		// 警员社交风险查询
+		RiskSocialContact item = riskService.riskSocialContactIndexItem(policeId, dateTime);
+		if (item != null) {
+			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
+			// 上个月警员社交风险查询
+			RiskSocialContact item2 = riskService.riskSocialContactIndexItem(policeId, lastDateTime);
+			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
+			itemChart2.setId(1);
+			itemChart2.setName("上月");
+			if (item2 != null) {
+				itemChart2.setValue(item2.getIndexNum());
+			} else {
+				itemChart2.setValue(0.0);
+			}
+			list.add(itemChart2);
+			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
+			itemChart1.setId(2);
+			itemChart1.setName("本月");
+			itemChart1.setValue(item.getIndexNum());
+			list.add(itemChart1);
+			item.setList(list);
+			// 社交详情记录
+			List<RiskSocialContactRecord> recordList = riskService.riskSocialContactRecordList(item.getId());
+			item.setRecordList(recordList);
+		}
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(item);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+	}
+
+	// 半年内社交风险指数
+	@RequestMapping(value = "/risk/social/contact/index/chart", method = RequestMethod.GET)
+	public ResponseEntity<?> riskSocialContactIndexChart(
+			@RequestParam(value = "policeId", required = false) String policeId) throws ApiException, ParseException {
+		DataListReturn dlr = new DataListReturn();
+		// 半年内社交风险指数
+		List<ScreenDoubeChart> list = riskService.riskSocialContactIndexChart(policeId, "risk_social_contact");
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);

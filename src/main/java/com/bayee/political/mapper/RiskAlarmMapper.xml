@@ -6,11 +6,12 @@
     <result column="police_id" property="policeId" jdbcType="VARCHAR" />
     <result column="alarm_type" property="alarmType" jdbcType="INTEGER" />
     <result column="alarm_score" property="alarmScore" jdbcType="DOUBLE" />
+    <result column="is_talk" property="isTalk" jdbcType="INTEGER" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, police_id, alarm_type, alarm_score, creation_date, update_date
+    id, police_id, alarm_type, alarm_score,is_talk, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -22,12 +23,13 @@
     delete from risk_alarm
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.bayee.political.domain.RiskAlarm" >
-    insert into risk_alarm (id, police_id, alarm_type, 
-      alarm_score, creation_date, update_date
+  <!-- 警员预警新增 -->
+  <insert id="riskAlarmCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.RiskAlarm" useGeneratedKeys="true">
+    insert into risk_alarm (police_id, alarm_type, 
+      alarm_score,is_talk, creation_date, update_date
       )
-    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{alarmType,jdbcType=INTEGER}, 
-      #{alarmScore,jdbcType=DOUBLE}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+    values (#{policeId,jdbcType=VARCHAR}, #{alarmType,jdbcType=INTEGER}, 
+      #{alarmScore,jdbcType=DOUBLE},#{isTalk,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskAlarm" >
@@ -85,6 +87,9 @@
       <if test="alarmScore != null" >
         alarm_score = #{alarmScore,jdbcType=DOUBLE},
       </if>
+       <if test="isTalk != null" >
+        is_talk = #{isTalk,jdbcType=INTEGER},
+      </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -112,7 +117,7 @@ left join department c on c.id=b.department_id
 left join police_position d on d.id=b.position_id
 left join(select police_id,MAX(creation_date) as creation_date 
 from risk_alarm GROUP BY police_id) e on e.police_id=a.police_id
-where 1=1
+where 1=1 and a.alarm_type=11001
     <if test="startTime != null and startTime !=''">
 	    and a.creation_date &gt;=#{startTime} 
 	</if>
@@ -131,7 +136,7 @@ left join department c on c.id=b.department_id
 left join police_position d on d.id=b.position_id
 left join(select police_id,MAX(creation_date) as creation_date 
 from risk_alarm GROUP BY police_id) e on e.police_id=a.police_id
-where 1=1
+where 1=1 and a.alarm_type=11001
     <if test="startTime != null and startTime !=''">
 	    and a.creation_date &gt;=#{startTime} 
 	</if>

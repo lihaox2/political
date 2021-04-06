@@ -11,6 +11,7 @@ import com.bayee.political.domain.RiskCase;
 import com.bayee.political.domain.RiskDuty;
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
 import com.bayee.political.domain.RiskHealth;
+import com.bayee.political.domain.RiskIndexMonitorChild;
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.RiskTrain;
 import com.bayee.political.domain.ScreenChart;
@@ -74,7 +75,7 @@ public class RiskServiceImpl implements RiskService {
 
 	@Autowired
 	RiskCaseLawEnforcementRecordMapper riskCaseLawEnforcementRecordMapper;// 警员执法管理记录
-	
+
 	@Autowired
 	RiskCaseLawEnforcementMapper riskCaseLawEnforcementMapper;// 警员执法管理风险
 
@@ -116,15 +117,16 @@ public class RiskServiceImpl implements RiskService {
 
 	// 警员风险分页查询
 	@Override
-	public List<RiskReportRecord> riskPageList(String keyWords, String sortName, String dateTime, String lastDateTime,
-			Integer pageSize, Integer pageNum) {
-		return riskReportRecordMapper.riskPageList(keyWords, sortName, dateTime, lastDateTime, pageSize, pageNum);
+	public List<RiskReportRecord> riskPageList(String keyWords, Integer alarmType, String sortName, String dateTime,
+			String lastDateTime, Integer pageSize, Integer pageNum) {
+		return riskReportRecordMapper.riskPageList(keyWords, alarmType, sortName, dateTime, lastDateTime, pageSize,
+				pageNum);
 	}
 
 	// 警员风险列表总数
 	@Override
-	public int riskPageCount(String keyWords, String dateTime, String lastDateTime) {
-		return riskReportRecordMapper.riskPageCount(keyWords, dateTime, lastDateTime);
+	public int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime) {
+		return riskReportRecordMapper.riskPageCount(keyWords, alarmType, dateTime, lastDateTime);
 	}
 
 	// 警员预警类型查询
@@ -185,5 +187,53 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public List<ScreenDoubeChart> riskCaseIndexChart(String policeId) {
 		return riskCaseMapper.riskCaseIndexChart(policeId);
+	}
+
+	// 综合指数风险
+	@Override
+	public RiskIndexMonitorChild comprehensiveIndex(String dateTime) {
+		return riskReportRecordMapper.comprehensiveIndex(dateTime);
+	}
+
+	// 行为规范风险
+	@Override
+	public RiskIndexMonitorChild conductIndex(String dateTime) {
+		return riskReportRecordMapper.conductIndex(dateTime);
+	}
+
+	// 执法办案风险
+	@Override
+	public RiskIndexMonitorChild caseIndex(String dateTime) {
+		return riskReportRecordMapper.caseIndex(dateTime);
+	}
+
+	// 接警执勤风险
+	@Override
+	public RiskIndexMonitorChild dutyIndex(String dateTime) {
+		return riskReportRecordMapper.dutyIndex(dateTime);
+	}
+
+	// 警务技能风险
+	@Override
+	public RiskIndexMonitorChild trainIndex(String dateTime) {
+		return riskReportRecordMapper.trainIndex(dateTime);
+	}
+
+	// 社交风险
+	@Override
+	public RiskIndexMonitorChild socialContactIndex(String dateTime) {
+		return riskReportRecordMapper.socialContactIndex(dateTime);
+	}
+
+	// 家属评价风险
+	@Override
+	public RiskIndexMonitorChild familyEvaluationIndex(String dateTime) {
+		return riskReportRecordMapper.familyEvaluationIndex(dateTime);
+	}
+
+	// 健康风险
+	@Override
+	public RiskIndexMonitorChild healthIndex(String year, String dateTime) {
+		return riskReportRecordMapper.healthIndex(year, dateTime);
 	}
 }

@@ -10,6 +10,7 @@ import com.bayee.political.domain.RiskCase;
 import com.bayee.political.domain.RiskDuty;
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
 import com.bayee.political.domain.RiskHealth;
+import com.bayee.political.domain.RiskIndexMonitorChild;
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.RiskTrain;
 import com.bayee.political.domain.ScreenChart;
@@ -38,11 +39,11 @@ public interface RiskService {
 	int riskAlarmPageCount(String startTime, String endTime);
 
 	// 警员风险分页查询
-	List<RiskReportRecord> riskPageList(String keyWords, String sortName, String dateTime, String lastDateTime,
-			Integer pageSize, Integer pageNum);
+	List<RiskReportRecord> riskPageList(String keyWords, Integer alarmType, String sortName, String dateTime,
+			String lastDateTime, Integer pageSize, Integer pageNum);
 
 	// 警员风险列表总数
-	int riskPageCount(String keyWords, String dateTime, String lastDateTime);
+	int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime);
 
 	// 警员预警类型查询
 	List<RiskAlarmType> riskAlarmTypeList(Integer id);
@@ -73,5 +74,29 @@ public interface RiskService {
 
 	// 执法办案风险指数图例
 	List<ScreenDoubeChart> riskCaseIndexChart(String policeId);
+
+	// 综合指数风险
+	RiskIndexMonitorChild comprehensiveIndex(String dateTime);
+
+	// 行为规范风险
+	RiskIndexMonitorChild conductIndex(String dateTime);
+
+	// 执法办案风险
+	RiskIndexMonitorChild caseIndex(String dateTime);
+
+	// 接警执勤风险
+	RiskIndexMonitorChild dutyIndex(String dateTime);
+
+	// 警务技能风险
+	RiskIndexMonitorChild trainIndex(String dateTime);
+
+	// 社交风险
+	RiskIndexMonitorChild socialContactIndex(String dateTime);
+
+	// 家属评价风险
+	RiskIndexMonitorChild familyEvaluationIndex(String dateTime);
+
+	// 健康风险
+	RiskIndexMonitorChild healthIndex(String year, String dateTime);
 
 }

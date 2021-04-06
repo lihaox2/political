@@ -22,6 +22,8 @@ public class RiskAlarm {
     private Double alarmScore;
     
     private Integer num; // 累计次数
+    
+    private Integer isTalk; // 是否被约谈（0否1是）
 
     private Date creationDate;
 
@@ -157,6 +159,20 @@ public class RiskAlarm {
 	 */
 	public void setNum(Integer num) {
 		this.num = num;
+	}
+
+	/**
+	 * @return the isTalk
+	 */
+	public Integer getIsTalk() {
+		return isTalk;
+	}
+
+	/**
+	 * @param isTalk the isTalk to set
+	 */
+	public void setIsTalk(Integer isTalk) {
+		this.isTalk = isTalk;
 	}
     
 }

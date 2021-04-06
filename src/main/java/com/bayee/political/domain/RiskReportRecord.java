@@ -22,7 +22,7 @@ public class RiskReportRecord {
 
     private Double totalNum;
     
-    private Double lastTotalNum;
+    private double lastTotalNum;
     
     private Double riskRate;
 
@@ -40,11 +40,32 @@ public class RiskReportRecord {
 
     private Double healthNum;
     
+    private Double drinkNum;
+
+    private Double studyNum;
+    
     private List<ScreenDoubeChart> chartList;
 
     private Date creationDate;
 
     private Date updateDate;
+
+    public RiskReportRecord() {
+
+	}
+
+	public RiskReportRecord(double initValue) {
+    	this.totalNum = initValue;
+    	this.conductNum = initValue;
+    	this.handlingCaseNum = initValue;
+    	this.dutyNum = initValue;
+    	this.trainNum = initValue;
+    	this.socialContactNum = initValue;
+    	this.amilyEvaluationNum = initValue;
+    	this.healthNum = initValue;
+    	this.studyNum = initValue;
+    	this.drinkNum = initValue;
+	}
 
     public Integer getId() {
         return id;
@@ -255,5 +276,32 @@ public class RiskReportRecord {
 	public void setChartList(List<ScreenDoubeChart> chartList) {
 		this.chartList = chartList;
 	}
-	
+
+	/**
+	 * @return the drinkNum
+	 */
+	public Double getDrinkNum() {
+		return drinkNum;
+	}
+
+	/**
+	 * @param drinkNum the drinkNum to set
+	 */
+	public void setDrinkNum(Double drinkNum) {
+		this.drinkNum = drinkNum;
+	}
+
+	/**
+	 * @return the studyNum
+	 */
+	public Double getStudyNum() {
+		return studyNum;
+	}
+
+	/**
+	 * @param studyNum the studyNum to set
+	 */
+	public void setStudyNum(Double studyNum) {
+		this.studyNum = studyNum;
+	}
 }

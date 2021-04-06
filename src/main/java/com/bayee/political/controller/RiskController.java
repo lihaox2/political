@@ -1,6 +1,8 @@
 package com.bayee.political.controller;
 
+import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
 import com.bayee.political.pojo.dto.RiskConductResultDTO;
+import com.bayee.political.pojo.json.RiskConductBureauRoleResult;
 import com.bayee.political.pojo.json.RiskConductResult;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -703,6 +705,46 @@ public class RiskController extends BaseController {
 		DataListReturn dlr = new DataListReturn();
 		// 半年内社交风险指数
 		List<ScreenDoubeChart> list = riskService.riskSocialContactIndexChart(policeId, "risk_social_contact");
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(list);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+	}
+
+	@GetMapping("/risk/conduct/bureau/role/index")
+	public ResponseEntity<?> riskConductBureauRole(@RequestParam(value = "policeId", required = false) String policeId,
+												   @RequestParam(value = "dateTime", required = false) String dateTime)
+			throws ParseException{
+		DataListReturn dlr = new DataListReturn();
+		if (dateTime == null || "".equals(dateTime)) {
+			dateTime = sd.format(new Date());
+		}
+		Date currdate = sd.parse(dateTime);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(currdate);
+		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
+		String lastDateTime = sd.format(calendar.getTime());
+		// 警员局规计分风险指数查询
+		RiskConductBureauRoleResultDTO resultDTO = riskService.riskConductBureauRole(policeId, dateTime, lastDateTime);
+		RiskConductBureauRoleResult result = new RiskConductBureauRoleResult();
+		result.setIndexNum(resultDTO.getIndexNum());
+		result.setDeductionScoreCount(resultDTO.getDeductionScoreCount());
+		result.setTotalDeductionScore(resultDTO.getTotalDeductionScore());
+		result.setMonthList(resultDTO.getMonthList());
+
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(result);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<>(dlr, HttpStatus.OK);
+	}
+
+	@GetMapping("/risk/conduct/bureau/role/chart")
+	public ResponseEntity<?> riskConductBureauRoleChart(@RequestParam(value = "policeId", required = false) String policeId){
+		DataListReturn dlr = new DataListReturn();
+		//警员局规计分风险指数
+		List<ScreenDoubeChart> list = riskService.riskConductBureauRoleChart(policeId);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);

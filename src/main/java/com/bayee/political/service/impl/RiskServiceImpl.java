@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.bayee.political.domain.*;
 import com.bayee.political.mapper.*;
+import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
 import com.bayee.political.pojo.dto.RiskConductResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,6 +91,18 @@ public class RiskServiceImpl implements RiskService {
 	 */
 	@Autowired
 	RiskConductMapper riskConductMapper;
+
+	/**
+	 * 局规计分
+	 */
+	@Autowired
+	RiskConductBureauRuleMapper riskConductBureauRuleMapper;
+
+	/**
+	 * 局规计分原数据
+	 */
+	@Autowired
+	RiskConductBureauRuleRecordMapper riskConductBureauRuleRecordMapper;
 
 	// 警员健康风险指数查询
 	@Override
@@ -264,17 +277,17 @@ public class RiskServiceImpl implements RiskService {
 
 			Map<String, Object> totalCountAndStatueMonth1 = riskConductMapper
 					.findMostSeriousStatusAndTotalCount(policeId, lastDateTime);
-			ScreenDoubeChart screenDoubleChart2 = new ScreenDoubeChart();
-			screenDoubleChart2.setId(1);
-			screenDoubleChart2.setName("上月");
-			screenDoubleChart2.setValue(Integer.valueOf(totalCountAndStatueMonth1.get("totalCount").toString()));
-
 			ScreenDoubeChart screenDoubleChart1 = new ScreenDoubeChart();
-			screenDoubleChart1.setId(2);
-			screenDoubleChart1.setName("本月");
-			screenDoubleChart1.setValue(resultDTO.getTotalCount());
+			screenDoubleChart1.setId(1);
+			screenDoubleChart1.setName("上月");
+			screenDoubleChart1.setValue(Integer.valueOf(totalCountAndStatueMonth1.get("totalCount").toString()));
 
-			resultDTO.setMonthList(Arrays.asList(screenDoubleChart2, screenDoubleChart1));
+			ScreenDoubeChart screenDoubleChart2 = new ScreenDoubeChart();
+			screenDoubleChart2.setId(2);
+			screenDoubleChart2.setName("本月");
+			screenDoubleChart2.setValue(resultDTO.getTotalCount());
+
+			resultDTO.setMonthList(Arrays.asList(screenDoubleChart1, screenDoubleChart2));
 		}
 		return resultDTO;
 	}
@@ -330,5 +343,38 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public List<RiskSocialContactRecord> riskSocialContactRecordList(Integer socialContactId) {
 		return riskSocialContactRecordMapper.riskSocialContactRecordList(socialContactId);
+	}
+
+	@Override
+	public RiskConductBureauRoleResultDTO riskConductBureauRole(String policeId, String dateTime, String lastDateTime) {
+		RiskConductBureauRoleResultDTO resultDTO = new RiskConductBureauRoleResultDTO();
+		RiskConductBureauRule bureauRule = riskConductBureauRuleMapper.findRiskConductBureauRole(policeId, dateTime);
+		resultDTO.setIndexNum(bureauRule.getIndexNum());
+		resultDTO.setDeductionScoreCount(bureauRule.getDeductionScoreCount());
+		resultDTO.setTotalDeductionScore(bureauRule.getTotalDeductionScore());
+
+		ScreenDoubeChart chart1 = new ScreenDoubeChart();
+		RiskConductBureauRule bureauRuleUpMonth = riskConductBureauRuleMapper.findRiskConductBureauRole(policeId, lastDateTime);
+		chart1.setId(1);
+		chart1.setName("上月");
+		chart1.setValue(bureauRuleUpMonth.getIndexNum());
+
+		ScreenDoubeChart chart2 = new ScreenDoubeChart();
+		chart2.setId(2);
+		chart2.setName("本月");
+		chart2.setValue(resultDTO.getIndexNum());
+		resultDTO.setMonthList(Arrays.asList(chart1, chart2));
+
+		return resultDTO;
+	}
+
+	@Override
+	public List<ScreenDoubeChart> riskConductBureauRoleChart(String policeId) {
+		return riskConductBureauRuleMapper.findRiskConductBureauRoleChart(policeId);
+	}
+
+	@Override
+	public List<RiskConductBureauRuleRecord> findRiskConductBureauRuleRecord(String policeId, String dateTime) {
+		return riskConductBureauRuleRecordMapper.findByPoliceIdAndDate(policeId, dateTime);
 	}
 }

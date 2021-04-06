@@ -3236,11 +3236,11 @@ public class AiEarlyWarnController<E, V> extends BaseController {
 							dateList.get(i).setName("昨天");
 						} else {
 							dateList.get(i).setName(dateList.get(i).getName().substring(5, 7) + "月"
-									+ dateList.get(i).getName().substring(8, 10) + '日');
+									+ dateList.get(i).getName().substring(8, 10) + "日");
 						}
 					} else {
 						dateList.get(i).setName(yearStr + "年" + dateList.get(i).getName().substring(5, 7) + "月"
-								+ dateList.get(i).getName().substring(8, 10) + '日');
+								+ dateList.get(i).getName().substring(8, 10) + "日");
 					}
 				}
 				if (dateList.get(i).getTalkList().size() > 0) {

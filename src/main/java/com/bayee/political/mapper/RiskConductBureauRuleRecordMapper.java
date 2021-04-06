@@ -1,6 +1,9 @@
 package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskConductBureauRuleRecord;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface RiskConductBureauRuleRecordMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,12 @@ public interface RiskConductBureauRuleRecordMapper {
     int updateByPrimaryKeySelective(RiskConductBureauRuleRecord record);
 
     int updateByPrimaryKey(RiskConductBureauRuleRecord record);
+
+    /**
+     * 查询扣分详情
+     * @param policeId
+     * @param dateTime
+     * @return
+     */
+    List<RiskConductBureauRuleRecord> findByPoliceIdAndDate(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
 }

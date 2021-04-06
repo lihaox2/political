@@ -3,6 +3,7 @@ package com.bayee.political.service;
 import java.util.List;
 
 import com.bayee.political.domain.*;
+import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
 import com.bayee.political.pojo.dto.RiskConductResultDTO;
 import org.springframework.stereotype.Service;
 
@@ -130,5 +131,29 @@ public interface RiskService {
 
 	// 社交详情记录
 	List<RiskSocialContactRecord> riskSocialContactRecordList(Integer socialContactId);
+
+	/**
+	 * 查询局规计分
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastDateTime
+	 * @return
+	 */
+	RiskConductBureauRoleResultDTO riskConductBureauRole(String policeId, String dateTime, String lastDateTime);
+
+	/**
+	 * 查询局规计分图形
+	 * @param policeId
+	 * @return
+	 */
+	List<ScreenDoubeChart> riskConductBureauRoleChart(String policeId);
+
+	/**
+	 * 查询具体扣分详情
+	 * @param policeId
+	 * @param dateTime
+	 * @return
+	 */
+	List<RiskConductBureauRuleRecord> findRiskConductBureauRuleRecord(String policeId, String dateTime);
 
 }

@@ -7042,7 +7042,7 @@ public class TrainController extends BaseController {
 	}
 
 	// 枪械新增并导入成绩
-	@RequestMapping(value = "/import/train/physical", method = RequestMethod.POST)
+	@RequestMapping(value = "/import/train/firearm", method = RequestMethod.POST)
 	public ResponseEntity<?> importAddTrainFirearm(@Param("name") String name, @Param("place") String place,
 			@Param("registrationStartDate") String registrationStartDate, @Param("trainContent") String trainContent,
 			@Param("file") MultipartFile file, HttpServletRequest request) {

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bayee.political.mapper.RiskStutyPalmSchoolMapper">
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskStutyPalmSchool">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="police_id" jdbcType="VARCHAR" property="policeId" />
+    <result column="index_num" jdbcType="DOUBLE" property="indexNum" />
+    <result column="need_class" jdbcType="INTEGER" property="needClass" />
+    <result column="over_class" jdbcType="INTEGER" property="overClass" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, police_id, index_num, need_class, over_class, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from risk_stuty_palm_school
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from risk_stuty_palm_school
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskStutyPalmSchool">
+    insert into risk_stuty_palm_school (id, police_id, index_num, 
+      need_class, over_class, creation_date, 
+      update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
+      #{needClass,jdbcType=INTEGER}, #{overClass,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskStutyPalmSchool">
+    insert into risk_stuty_palm_school
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="policeId != null">
+        police_id,
+      </if>
+      <if test="indexNum != null">
+        index_num,
+      </if>
+      <if test="needClass != null">
+        need_class,
+      </if>
+      <if test="overClass != null">
+        over_class,
+      </if>
+      <if test="creationDate != null">
+        creation_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null">
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNum != null">
+        #{indexNum,jdbcType=DOUBLE},
+      </if>
+      <if test="needClass != null">
+        #{needClass,jdbcType=INTEGER},
+      </if>
+      <if test="overClass != null">
+        #{overClass,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null">
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskStutyPalmSchool">
+    update risk_stuty_palm_school
+    <set>
+      <if test="policeId != null">
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNum != null">
+        index_num = #{indexNum,jdbcType=DOUBLE},
+      </if>
+      <if test="needClass != null">
+        need_class = #{needClass,jdbcType=INTEGER},
+      </if>
+      <if test="overClass != null">
+        over_class = #{overClass,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null">
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskStutyPalmSchool">
+    update risk_stuty_palm_school
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      index_num = #{indexNum,jdbcType=DOUBLE},
+      need_class = #{needClass,jdbcType=INTEGER},
+      over_class = #{overClass,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

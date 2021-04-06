@@ -2,6 +2,8 @@ package com.bayee.political.service;
 
 import java.util.List;
 
+import com.bayee.political.domain.*;
+import com.bayee.political.pojo.dto.RiskConductResultDTO;
 import org.springframework.stereotype.Service;
 
 import com.bayee.political.domain.RiskAlarm;
@@ -98,5 +100,23 @@ public interface RiskService {
 
 	// 健康风险
 	RiskIndexMonitorChild healthIndex(String year, String dateTime);
+
+	/**
+	 * 警员行为规范风险指数查询
+	 * 
+	 * @param policeId
+	 * @param date
+	 * @param lastDateTime
+	 * @return
+	 */
+	RiskConductResultDTO riskConduct(String policeId, String date, String lastDateTime);
+
+	/**
+	 * 警员行为规范风险指数图例
+	 * 
+	 * @param policeId
+	 * @return
+	 */
+	List<ScreenDoubeChart> riskConductChart(String policeId);
 
 }

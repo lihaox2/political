@@ -1,6 +1,10 @@
 package com.bayee.political.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import com.bayee.political.domain.RiskCaseLawEnforcement;
+import com.bayee.political.domain.ScreenDoubeChart;
 
 public interface RiskCaseLawEnforcementMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +18,10 @@ public interface RiskCaseLawEnforcementMapper {
     int updateByPrimaryKeySelective(RiskCaseLawEnforcement record);
 
     int updateByPrimaryKey(RiskCaseLawEnforcement record);
+    
+    // 警员执法办案风险指数查询
+    RiskCaseLawEnforcement riskCaseLawEnforcementItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
+    
+    // 执法办案风险指数图例
+ 	List<ScreenDoubeChart> riskCaseLawEnforcementChart(@Param("policeId") String policeId);
 }

@@ -191,6 +191,12 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskCaseLawEnforcementTypeMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskCaseTestRecordMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskCaseLawEnforcementMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskCaseAbilityMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskFamilyEvaluationMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskFamilyEvaluationRankMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskFamilyEvaluationRecordMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductMapper.class);
+
 		return sqlSessionFactory.getObject();
 	}
 
@@ -219,6 +225,12 @@ public class AppConfiguration {
 				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		velocityEngine.setVelocityPropertiesMap(velocityPropertiesMap);
 		return velocityEngine.createVelocityEngine();
+	}
+
+	@Bean
+	public RiskConductMapper riskConductMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskConductMapper.class);
 	}
 
 	@Bean
@@ -863,4 +875,27 @@ public class AppConfiguration {
 		return sessionTemplate.getMapper(RiskCaseLawEnforcementMapper.class);
 	}
 	
+	@Bean
+	public RiskCaseAbilityMapper riskCaseAbilityMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskCaseAbilityMapper.class);
+	}
+	
+	@Bean
+	public RiskFamilyEvaluationMapper riskFamilyEvaluationMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskFamilyEvaluationMapper.class);
+	}
+	
+	@Bean
+	public RiskFamilyEvaluationRankMapper riskFamilyEvaluationRankMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskFamilyEvaluationRankMapper.class);
+	}
+	
+	@Bean
+	public RiskFamilyEvaluationRecordMapper riskFamilyEvaluationRecordMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskFamilyEvaluationRecordMapper.class);
+	}
 }

@@ -1,7 +1,12 @@
 package com.bayee.political.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+import com.bayee.political.domain.*;
+import com.bayee.political.mapper.*;
+import com.bayee.political.pojo.dto.RiskConductResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,6 +89,12 @@ public class RiskServiceImpl implements RiskService {
 
 	@Autowired
 	RiskCaseTestRecordMapper riskCaseTestRecordMapper;// 警员考试记录
+
+	/**
+	 * 警员行为规范
+	 */
+	@Autowired
+	RiskConductMapper riskConductMapper;
 
 	// 警员健康风险指数查询
 	@Override
@@ -236,4 +247,46 @@ public class RiskServiceImpl implements RiskService {
 	public RiskIndexMonitorChild healthIndex(String year, String dateTime) {
 		return riskReportRecordMapper.healthIndex(year, dateTime);
 	}
+
+	@Override
+	public RiskConductResultDTO riskConduct(String policeId, String date, String lastDateTime) {
+		RiskConductResultDTO resultDTO = new RiskConductResultDTO();
+
+		Map<String, Object> totalCountAndStatue = riskConductMapper.findMostSeriousStatusAndTotalCount(policeId, date);
+		if (totalCountAndStatue != null) {
+			Object v = totalCountAndStatue.get("totalCount");
+			resultDTO.setTotalCount(Integer.valueOf(v.toString()));
+			resultDTO.setStatus(Integer.valueOf(totalCountAndStatue.get("status").toString()));
+			riskConductMapper.countByConductType(policeId, date).forEach(map -> {
+				if (map.get("type") != null && map.get("type").equals(1)) {
+					resultDTO.setBureauCount(Integer.valueOf(map.get("count").toString()));
+				} else if (map.get("type") != null && map.get("type").equals(2)) {
+					resultDTO.setLettersCount(Integer.valueOf(map.get("count").toString()));
+				} else if (map.get("type") != null && map.get("type").equals(3)) {
+					resultDTO.setTrafficCount(Integer.valueOf(map.get("count").toString()));
+				}
+			});
+
+			Map<String, Object> totalCountAndStatueMonth1 = riskConductMapper
+					.findMostSeriousStatusAndTotalCount(policeId, lastDateTime);
+			ScreenDoubeChart screenDoubleChart2 = new ScreenDoubeChart();
+			screenDoubleChart2.setId(1);
+			screenDoubleChart2.setName("上月");
+			screenDoubleChart2.setValue(Integer.valueOf(totalCountAndStatueMonth1.get("totalCount").toString()));
+
+			ScreenDoubeChart screenDoubleChart1 = new ScreenDoubeChart();
+			screenDoubleChart1.setId(2);
+			screenDoubleChart1.setName("本月");
+			screenDoubleChart1.setValue(resultDTO.getTotalCount());
+
+			resultDTO.setMonthList(Arrays.asList(screenDoubleChart2, screenDoubleChart1));
+		}
+		return resultDTO;
+	}
+
+	@Override
+	public List<ScreenDoubeChart> riskConductChart(String policeId) {
+		return riskConductMapper.findRiskConductChart(policeId);
+	}
+
 }

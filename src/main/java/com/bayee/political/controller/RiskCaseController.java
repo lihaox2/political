@@ -102,7 +102,7 @@ public class RiskCaseController extends BaseController {
 	}
 	
 	
-	// 警员执管理风险查询
+	// 警员执法管理风险查询
 	@RequestMapping(value = "/risk/case/law/enforcement/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskCaseLawEnforcementItem(@RequestParam(value = "policeId", required = false) String policeId,
 			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {

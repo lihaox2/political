@@ -10,6 +10,12 @@
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+  
+  <resultMap id="ScreenDoubeChartMap" type="com.bayee.political.domain.ScreenDoubeChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="value" property="value" />
+  </resultMap>
   <sql id="Base_Column_List">
     id, police_id, index_num, rank_id, comment, creation_date, update_date
   </sql>

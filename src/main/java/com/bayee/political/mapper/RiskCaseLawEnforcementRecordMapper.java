@@ -1,5 +1,9 @@
 package com.bayee.political.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
 
 public interface RiskCaseLawEnforcementRecordMapper {
@@ -14,4 +18,6 @@ public interface RiskCaseLawEnforcementRecordMapper {
     int updateByPrimaryKeySelective(RiskCaseLawEnforcementRecord record);
 
     int updateByPrimaryKey(RiskCaseLawEnforcementRecord record);
+    
+    List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordList(@Param("policeId")String policeId,@Param("dateTime")String dateTime);
 }

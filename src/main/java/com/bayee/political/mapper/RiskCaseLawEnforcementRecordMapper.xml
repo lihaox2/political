@@ -10,6 +10,8 @@
     <result column="deduction_score" jdbcType="DOUBLE" property="deductionScore" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    
+    <result column="name" jdbcType="VARCHAR" property="typeName" />
   </resultMap>
   <sql id="Base_Column_List">
     id, police_id, type, content, input_time, deduction_score, creation_date, update_date
@@ -125,4 +127,11 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  
+  <select id="riskCaseLawEnforcementRecordList" resultMap="BaseResultMap">
+  	SELECT r.*,t.`name` FROM risk_case_law_enforcement_record r,risk_case_law_enforcement_type t WHERE
+  	 r.type=t.id AND r.police_id=#{policeId} and DATE_FORMAT(r.creation_date, '%Y-%m')=#{dateTime}
+	order by r.id desc
+  </select>
 </mapper>

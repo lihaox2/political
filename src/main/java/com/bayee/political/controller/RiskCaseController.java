@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bayee.political.domain.RiskCaseAbility;
 import com.bayee.political.domain.RiskCaseLawEnforcement;
+import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
 import com.bayee.political.domain.RiskCaseTestRecord;
 import com.bayee.political.domain.RiskFamilyEvaluation;
 import com.bayee.political.domain.ScreenDoubeChart;
 import com.bayee.political.service.RiskCaseAbilityService;
+import com.bayee.political.service.RiskCaseLawEnforcementRecordService;
 import com.bayee.political.service.RiskCaseLawEnforcementService;
 import com.bayee.political.service.RiskCaseTestRecordService;
 import com.bayee.political.service.RiskFamilyEvaluationService;
@@ -42,6 +44,9 @@ public class RiskCaseController extends BaseController {
 	
 	@Autowired
 	RiskFamilyEvaluationService riskFamilyEvaluationService;
+	
+	@Autowired
+	RiskCaseLawEnforcementRecordService riskCaseLawEnforcementRecordService;
 	
 	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
 	
@@ -263,6 +268,23 @@ public class RiskCaseController extends BaseController {
 		DataListReturn dlr = new DataListReturn();
 		// 半年内接警执勤风险指数
 		List<ScreenDoubeChart> list = riskFamilyEvaluationService.riskFamilyEvaluationChart(policeId);
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(list);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+	}
+	
+	// 警员接警执勤数据列表查询
+	@RequestMapping(value = "/risk/law/enforcement/list", method = RequestMethod.GET)
+	public ResponseEntity<?> riskDutyRecordItem(@RequestParam(value = "policeId", required = false) String policeId,
+			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+		DataListReturn dlr = new DataListReturn();
+		if (dateTime == null) {
+			dateTime = sd.format(new Date());
+		}
+		// 警员接警执勤数据列表查询
+		List<RiskCaseLawEnforcementRecord> list = riskCaseLawEnforcementRecordService.riskCaseLawEnforcementRecordList(policeId, dateTime);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);

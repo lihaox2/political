@@ -202,4 +202,7 @@ public interface UserMapper {
 	// 训练人员列表查询
 	List<User> userTrainList();
 
+	// 查询全部警员详细信息数据
+	List<User> userInfoAllList();
+
 }

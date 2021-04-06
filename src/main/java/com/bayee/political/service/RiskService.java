@@ -110,4 +110,16 @@ public interface RiskService {
 	// 警员历史风险报告查询
 	List<RiskHistoryReport> riskHistoryReportList(String policeId, String dateTime);
 
+	// 警员警务技能统计查询
+	RiskTrain riskTrainStatisticsItem(String policeId, String dateTime);
+
+	// 警员警务技能新增
+	int riskTrainCreat(RiskTrain record);
+
+	// 警员警务技能修改
+	int riskTrainUpdate(RiskTrain record);
+
+	// 警员警员指标历史记录新增
+	int riskReportRecordCreat(RiskReportRecord record);
+
 }

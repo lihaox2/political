@@ -194,4 +194,7 @@ public interface UserService {
 	// 警力在线民警总数
 	int policeForceOnlineCount();
 
+	// 查询全部警员详细信息数据
+	List<User> userInfoAllList();
+
 }

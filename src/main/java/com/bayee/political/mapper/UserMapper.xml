@@ -615,4 +615,8 @@ where 1=1 and department_id!=47
         and is_cadre = #{isCadre}
       </if>
   </select>
+   <!-- 全体人员查询 -->
+  <select id="userInfoAllList" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+   select * from user where department_id!=47 order by id 
+  </select>
 </mapper>

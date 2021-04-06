@@ -36,6 +36,19 @@
     delete from risk_train
     where id = #{id,jdbcType=INTEGER}
   </delete>
+   <!-- 警员警务技能新增 -->
+  <insert id="riskTrainCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.RiskTrain" useGeneratedKeys="true">
+    insert into risk_train (police_id, index_num, 
+      physical_num, physical_pass_num, physical_fail_num, 
+      physical_standard_status, firearm_num, firearm_pass_num, 
+      firearm_fail_num, firearm_standard_status, 
+      creation_date, update_date)
+    values (#{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
+      #{physicalNum,jdbcType=INTEGER}, #{physicalPassNum,jdbcType=INTEGER}, #{physicalFailNum,jdbcType=INTEGER}, 
+      #{physicalStandardStatus,jdbcType=INTEGER}, #{firearmNum,jdbcType=INTEGER}, #{firearmPassNum,jdbcType=INTEGER}, 
+      #{firearmFailNum,jdbcType=INTEGER}, #{firearmStandardStatus,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskTrain" >
     insert into risk_train (id, police_id, index_num, 
       physical_num, physical_pass_num, physical_fail_num, 
@@ -175,6 +188,49 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 警员警务技能修改 -->
+  <update id="riskTrainUpdate" parameterType="com.bayee.political.domain.RiskTrain" >
+    update risk_train
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNum != null" >
+        index_num = #{indexNum,jdbcType=DOUBLE},
+      </if>
+      <if test="physicalNum != null" >
+        physical_num = #{physicalNum,jdbcType=INTEGER},
+      </if>
+      <if test="physicalPassNum != null" >
+        physical_pass_num = #{physicalPassNum,jdbcType=INTEGER},
+      </if>
+      <if test="physicalFailNum != null" >
+        physical_fail_num = #{physicalFailNum,jdbcType=INTEGER},
+      </if>
+      <if test="physicalStandardStatus != null" >
+        physical_standard_status = #{physicalStandardStatus,jdbcType=INTEGER},
+      </if>
+      <if test="firearmNum != null" >
+        firearm_num = #{firearmNum,jdbcType=INTEGER},
+      </if>
+      <if test="firearmPassNum != null" >
+        firearm_pass_num = #{firearmPassNum,jdbcType=INTEGER},
+      </if>
+      <if test="firearmFailNum != null" >
+        firearm_fail_num = #{firearmFailNum,jdbcType=INTEGER},
+      </if>
+      <if test="firearmStandardStatus != null" >
+        firearm_standard_status = #{firearmStandardStatus,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskTrain" >
     update risk_train
     set police_id = #{policeId,jdbcType=VARCHAR},
@@ -210,5 +266,27 @@ left join(select sum(${fieldName}) as value,DATE_FORMAT(creation_date, '%Y-%m') 
 where police_id=#{policeId,jdbcType=VARCHAR} GROUP BY DATE_FORMAT(creation_date, '%Y-%m')) b on b.name=a.year_month
 left join month c on c.num_name=right(a.year_month,2) 
 order by a.year_month
+</select>
+    <!-- 警员警务技能统计查询 -->
+<select id="riskTrainStatisticsItem" parameterType="com.bayee.political.domain.RiskTrain" resultMap="BaseResultMap">
+select 
+ifnull(a.anum,0) as physicalNum,
+ifnull(b.bnum,0) as physicalPassNum,
+ifnull(a.anum-ifnull(b.bnum,0),0) as physicalFailNum,
+ifnull(c.cnum,0) as firearmNum,
+ifnull(d.dnum,0) as firearmPassNum,
+ifnull(c.cnum-ifnull(d.dnum,0),0) as firearmFailNum
+from 
+(select count(*) as anum from train_physical_achievement where police_id=#{policeId,jdbcType=VARCHAR}
+and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) a
+join
+(select count(*) as bnum from train_physical_achievement where police_id=#{policeId,jdbcType=VARCHAR} 
+and achievement_grade =2 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) b
+join
+(select count(*) as cnum from train_firearm_achievement where police_id=#{policeId,jdbcType=VARCHAR} 
+and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
+join
+(select count(*) as dnum from train_firearm_achievement where police_id=#{policeId,jdbcType=VARCHAR} 
+and achievement_grade >1 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) d
 </select>
 </mapper>

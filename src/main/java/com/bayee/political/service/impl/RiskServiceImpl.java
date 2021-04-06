@@ -284,4 +284,27 @@ public class RiskServiceImpl implements RiskService {
 		return riskReportRecordMapper.riskHistoryReportList(policeId, dateTime);
 	}
 
+	// 警员警务技能统计查询
+	@Override
+	public RiskTrain riskTrainStatisticsItem(String policeId, String dateTime) {
+		return riskTrainMapper.riskTrainStatisticsItem(policeId, dateTime);
+	}
+
+	// 警员警务技能新增
+	@Override
+	public int riskTrainCreat(RiskTrain record) {
+		return riskTrainMapper.riskTrainCreat(record);
+	}
+
+	// 警员警务技能修改
+	@Override
+	public int riskTrainUpdate(RiskTrain record) {
+		return riskTrainMapper.riskTrainUpdate(record);
+	}
+
+	// 警员警员指标历史记录新增
+	@Override
+	public int riskReportRecordCreat(RiskReportRecord record) {
+		return riskReportRecordMapper.riskReportRecordCreat(record);
+	}
 }

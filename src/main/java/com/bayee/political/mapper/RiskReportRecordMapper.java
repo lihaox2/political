@@ -66,4 +66,7 @@ public interface RiskReportRecordMapper {
 	// 警员历史风险报告查询
 	List<RiskHistoryReport> riskHistoryReportList(@Param("policeId") String policeId,
 			@Param("dateTime") String dateTime);
+
+	// 警员警员指标历史记录新增
+	int riskReportRecordCreat(RiskReportRecord record);
 }

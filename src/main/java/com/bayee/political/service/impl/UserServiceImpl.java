@@ -243,11 +243,17 @@ public class UserServiceImpl implements UserService {
 	public int userProcessCount(Integer departmentId, Integer positionId, Integer isUnitLeader, Integer isCadre) {
 		return userMapper.userProcessCount(departmentId, positionId, isUnitLeader, isCadre);
 	}
-	
+
 	// 训练人员列表查询
 	@Override
 	public List<User> userTrainList() {
 		return userMapper.userTrainList();
+	}
+
+	// 查询全部警员详细信息数据
+	@Override
+	public List<User> userInfoAllList() {
+		return userMapper.userInfoAllList();
 	}
 
 }

@@ -114,4 +114,30 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="countByConductType" resultType="HashMap">
+    select conduct_type type,count(1) as count from risk_conduct
+    where police_id = #{policeId} and DATE_FORMAT(creation_date,'%Y-%m') = #{date}
+    GROUP BY conduct_type
+  </select>
+
+  <select id="findMostSeriousStatusAndTotalCount" resultType="HashMap">
+    select count(1) as totalCount, max(serious_status) as status from risk_conduct
+    where police_id = #{policeId} and DATE_FORMAT(creation_date,'%Y-%m') = #{date}
+  </select>
+
+  <select id="findRiskConductChart" resultType="com.bayee.political.domain.ScreenDoubeChart">
+    select ifnull(b.value,0) as value,CONCAT(c.id,'月') as name
+    from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month`
+      UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month`
+      UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month`
+      UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month`
+      UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month`
+      UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` ) a
+      left join(select count(1) as value,DATE_FORMAT(creation_date, '%Y-%m') as name from risk_conduct
+      where police_id=#{policeId} GROUP BY DATE_FORMAT(creation_date, '%Y-%m')) b on b.name=a.year_month
+      left join month c on c.num_name=right(a.year_month,2)
+    order by a.year_month
+  </select>
+
 </mapper>

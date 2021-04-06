@@ -195,7 +195,8 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskFamilyEvaluationMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskFamilyEvaluationRankMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskFamilyEvaluationRecordMapper.class);
-		
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductMapper.class);
+
 		return sqlSessionFactory.getObject();
 	}
 
@@ -224,6 +225,12 @@ public class AppConfiguration {
 				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		velocityEngine.setVelocityPropertiesMap(velocityPropertiesMap);
 		return velocityEngine.createVelocityEngine();
+	}
+
+	@Bean
+	public RiskConductMapper riskConductMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskConductMapper.class);
 	}
 
 	@Bean

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskConductBureauRuleRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskConductBureauRuleRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="input_time" property="inputTime" jdbcType="TIMESTAMP" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="deduction_score" property="deductionScore" jdbcType="DOUBLE" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, type, input_time, content, deduction_score, remarks, creation_date, 
+    update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from risk_conduct_bureau_rule_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_conduct_bureau_rule_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
+    insert into risk_conduct_bureau_rule_record (id, police_id, type, 
+      input_time, content, deduction_score, 
+      remarks, creation_date, update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{deductionScore,jdbcType=DOUBLE}, 
+      #{remarks,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
+    insert into risk_conduct_bureau_rule_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="inputTime != null" >
+        input_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="deductionScore != null" >
+        deduction_score,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="inputTime != null" >
+        #{inputTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="deductionScore != null" >
+        #{deductionScore,jdbcType=DOUBLE},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
+    update risk_conduct_bureau_rule_record
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="inputTime != null" >
+        input_time = #{inputTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="deductionScore != null" >
+        deduction_score = #{deductionScore,jdbcType=DOUBLE},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
+    update risk_conduct_bureau_rule_record
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      input_time = #{inputTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=VARCHAR},
+      deduction_score = #{deductionScore,jdbcType=DOUBLE},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

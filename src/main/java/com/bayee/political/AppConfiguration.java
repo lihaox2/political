@@ -196,6 +196,9 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskFamilyEvaluationRankMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskFamilyEvaluationRecordMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductBureauRuleRecordMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductTrafficViolationMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductTrafficViolationRecordMapper.class);
 
 		return sqlSessionFactory.getObject();
 	}
@@ -897,5 +900,23 @@ public class AppConfiguration {
 	public RiskFamilyEvaluationRecordMapper riskFamilyEvaluationRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskFamilyEvaluationRecordMapper.class);
+	}
+	
+	@Bean
+	public RiskConductBureauRuleRecordMapper riskConductBureauRuleRecordMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskConductBureauRuleRecordMapper.class);
+	}
+	
+	@Bean
+	public RiskConductTrafficViolationMapper riskConductTrafficViolationMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskConductTrafficViolationMapper.class);
+	}
+	
+	@Bean
+	public RiskConductTrafficViolationRecordMapper riskConductTrafficViolationRecordMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskConductTrafficViolationRecordMapper.class);
 	}
 }

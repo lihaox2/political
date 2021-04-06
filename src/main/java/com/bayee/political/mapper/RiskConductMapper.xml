@@ -4,14 +4,16 @@
   <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskConduct">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="police_id" jdbcType="VARCHAR" property="policeId" />
-    <result column="conduct_type" jdbcType="INTEGER" property="conductType" />
-    <result column="serious_status" jdbcType="INTEGER" property="seriousStatus" />
-    <result column="input_time" jdbcType="TIMESTAMP" property="inputTime" />
+    <result column="index_num" jdbcType="DOUBLE" property="indexNum" />
+    <result column="bureau_rule_score" jdbcType="DOUBLE" property="bureauRuleScore" />
+    <result column="visit_score" jdbcType="DOUBLE" property="visitScore" />
+    <result column="traffic_violation_score" jdbcType="DOUBLE" property="trafficViolationScore" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, police_id, conduct_type, serious_status, input_time, creation_date, update_date
+    id, police_id, index_num, bureau_rule_score, visit_score, traffic_violation_score, 
+    creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,12 +26,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConduct">
-    insert into risk_conduct (id, police_id, conduct_type, 
-      serious_status, input_time, creation_date, 
-      update_date)
-    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{conductType,jdbcType=INTEGER}, 
-      #{seriousStatus,jdbcType=INTEGER}, #{inputTime,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP}, 
-      #{updateDate,jdbcType=TIMESTAMP})
+    insert into risk_conduct (id, police_id, index_num, 
+      bureau_rule_score, visit_score, traffic_violation_score, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
+      #{bureauRuleScore,jdbcType=DOUBLE}, #{visitScore,jdbcType=DOUBLE}, #{trafficViolationScore,jdbcType=DOUBLE}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConduct">
     insert into risk_conduct
@@ -40,14 +42,17 @@
       <if test="policeId != null">
         police_id,
       </if>
-      <if test="conductType != null">
-        conduct_type,
+      <if test="indexNum != null">
+        index_num,
       </if>
-      <if test="seriousStatus != null">
-        serious_status,
+      <if test="bureauRuleScore != null">
+        bureau_rule_score,
       </if>
-      <if test="inputTime != null">
-        input_time,
+      <if test="visitScore != null">
+        visit_score,
+      </if>
+      <if test="trafficViolationScore != null">
+        traffic_violation_score,
       </if>
       <if test="creationDate != null">
         creation_date,
@@ -63,14 +68,17 @@
       <if test="policeId != null">
         #{policeId,jdbcType=VARCHAR},
       </if>
-      <if test="conductType != null">
-        #{conductType,jdbcType=INTEGER},
+      <if test="indexNum != null">
+        #{indexNum,jdbcType=DOUBLE},
       </if>
-      <if test="seriousStatus != null">
-        #{seriousStatus,jdbcType=INTEGER},
+      <if test="bureauRuleScore != null">
+        #{bureauRuleScore,jdbcType=DOUBLE},
       </if>
-      <if test="inputTime != null">
-        #{inputTime,jdbcType=TIMESTAMP},
+      <if test="visitScore != null">
+        #{visitScore,jdbcType=DOUBLE},
+      </if>
+      <if test="trafficViolationScore != null">
+        #{trafficViolationScore,jdbcType=DOUBLE},
       </if>
       <if test="creationDate != null">
         #{creationDate,jdbcType=TIMESTAMP},
@@ -86,14 +94,17 @@
       <if test="policeId != null">
         police_id = #{policeId,jdbcType=VARCHAR},
       </if>
-      <if test="conductType != null">
-        conduct_type = #{conductType,jdbcType=INTEGER},
+      <if test="indexNum != null">
+        index_num = #{indexNum,jdbcType=DOUBLE},
       </if>
-      <if test="seriousStatus != null">
-        serious_status = #{seriousStatus,jdbcType=INTEGER},
+      <if test="bureauRuleScore != null">
+        bureau_rule_score = #{bureauRuleScore,jdbcType=DOUBLE},
       </if>
-      <if test="inputTime != null">
-        input_time = #{inputTime,jdbcType=TIMESTAMP},
+      <if test="visitScore != null">
+        visit_score = #{visitScore,jdbcType=DOUBLE},
+      </if>
+      <if test="trafficViolationScore != null">
+        traffic_violation_score = #{trafficViolationScore,jdbcType=DOUBLE},
       </if>
       <if test="creationDate != null">
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -107,37 +118,17 @@
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskConduct">
     update risk_conduct
     set police_id = #{policeId,jdbcType=VARCHAR},
-      conduct_type = #{conductType,jdbcType=INTEGER},
-      serious_status = #{seriousStatus,jdbcType=INTEGER},
-      input_time = #{inputTime,jdbcType=TIMESTAMP},
+      index_num = #{indexNum,jdbcType=DOUBLE},
+      bureau_rule_score = #{bureauRuleScore,jdbcType=DOUBLE},
+      visit_score = #{visitScore,jdbcType=DOUBLE},
+      traffic_violation_score = #{trafficViolationScore,jdbcType=DOUBLE},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="countByConductType" resultType="HashMap">
-    select conduct_type type,count(1) as count from risk_conduct
-    where police_id = #{policeId} and DATE_FORMAT(creation_date,'%Y-%m') = #{date}
-    GROUP BY conduct_type
-  </select>
-
-  <select id="findMostSeriousStatusAndTotalCount" resultType="HashMap">
-    select count(1) as totalCount, max(serious_status) as status from risk_conduct
-    where police_id = #{policeId} and DATE_FORMAT(creation_date,'%Y-%m') = #{date}
-  </select>
-
-  <select id="findRiskConductChart" resultType="com.bayee.political.domain.ScreenDoubeChart">
-    select ifnull(b.value,0) as value,CONCAT(c.id,'月') as name
-    from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month`
-      UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month`
-      UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month`
-      UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month`
-      UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month`
-      UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` ) a
-      left join(select count(1) as value,DATE_FORMAT(creation_date, '%Y-%m') as name from risk_conduct
-      where police_id=#{policeId} GROUP BY DATE_FORMAT(creation_date, '%Y-%m')) b on b.name=a.year_month
-      left join month c on c.num_name=right(a.year_month,2)
-    order by a.year_month
+  <select id="findRiskConductByPoliceIdAndDate" resultMap="BaseResultMap">
+    select * from risk_conduct where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = #{dateTime}
   </select>
 
 </mapper>

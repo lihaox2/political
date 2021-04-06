@@ -90,24 +90,6 @@ public interface RiskService {
 	// 健康风险
 	RiskIndexMonitorChild healthIndex(String year, String dateTime);
 
-	/**
-	 * 警员行为规范风险指数查询
-	 * 
-	 * @param policeId
-	 * @param date
-	 * @param lastDateTime
-	 * @return
-	 */
-	RiskConductResultDTO riskConduct(String policeId, String date, String lastDateTime);
-
-	/**
-	 * 警员行为规范风险指数图例
-	 * 
-	 * @param policeId
-	 * @return
-	 */
-	List<ScreenDoubeChart> riskConductChart(String policeId);
-
 	// 警员历史风险报告查询
 	List<RiskHistoryReport> riskHistoryReportList(String policeId, String dateTime);
 

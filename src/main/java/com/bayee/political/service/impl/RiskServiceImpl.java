@@ -256,47 +256,6 @@ public class RiskServiceImpl implements RiskService {
 		return riskReportRecordMapper.healthIndex(year, dateTime);
 	}
 
-	@Override
-	public RiskConductResultDTO riskConduct(String policeId, String date, String lastDateTime) {
-		RiskConductResultDTO resultDTO = new RiskConductResultDTO();
-
-		Map<String, Object> totalCountAndStatue = riskConductMapper.findMostSeriousStatusAndTotalCount(policeId, date);
-		if (totalCountAndStatue != null) {
-			Object v = totalCountAndStatue.get("totalCount");
-			resultDTO.setTotalCount(Integer.valueOf(v.toString()));
-			resultDTO.setStatus(Integer.valueOf(totalCountAndStatue.get("status").toString()));
-			riskConductMapper.countByConductType(policeId, date).forEach(map -> {
-				if (map.get("type") != null && map.get("type").equals(1)) {
-					resultDTO.setBureauCount(Integer.valueOf(map.get("count").toString()));
-				} else if (map.get("type") != null && map.get("type").equals(2)) {
-					resultDTO.setLettersCount(Integer.valueOf(map.get("count").toString()));
-				} else if (map.get("type") != null && map.get("type").equals(3)) {
-					resultDTO.setTrafficCount(Integer.valueOf(map.get("count").toString()));
-				}
-			});
-
-			Map<String, Object> totalCountAndStatueMonth1 = riskConductMapper
-					.findMostSeriousStatusAndTotalCount(policeId, lastDateTime);
-			ScreenDoubeChart screenDoubleChart1 = new ScreenDoubeChart();
-			screenDoubleChart1.setId(1);
-			screenDoubleChart1.setName("上月");
-			screenDoubleChart1.setValue(Integer.valueOf(totalCountAndStatueMonth1.get("totalCount").toString()));
-
-			ScreenDoubeChart screenDoubleChart2 = new ScreenDoubeChart();
-			screenDoubleChart2.setId(2);
-			screenDoubleChart2.setName("本月");
-			screenDoubleChart2.setValue(resultDTO.getTotalCount());
-
-			resultDTO.setMonthList(Arrays.asList(screenDoubleChart1, screenDoubleChart2));
-		}
-		return resultDTO;
-	}
-
-	@Override
-	public List<ScreenDoubeChart> riskConductChart(String policeId) {
-		return riskConductMapper.findRiskConductChart(policeId);
-	}
-
 	// 警员历史风险报告查询
 	@Override
 	public List<RiskHistoryReport> riskHistoryReportList(String policeId, String dateTime) {

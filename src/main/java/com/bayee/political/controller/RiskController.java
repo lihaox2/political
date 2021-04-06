@@ -596,47 +596,6 @@ public class RiskController extends BaseController {
 		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
 	}
 
-	@GetMapping("/risk/conduct/index/item")
-	public ResponseEntity<?> riskConduct(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ParseException {
-		DataListReturn dlr = new DataListReturn();
-		if (dateTime == null || "".equals(dateTime)) {
-			dateTime = sd.format(new Date());
-		}
-		Date currdate = sd.parse(dateTime);
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(currdate);
-		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
-		String lastDateTime = sd.format(calendar.getTime());
-		// 警员行为规范风险指数查询
-		RiskConductResultDTO resultDTO = riskService.riskConduct(policeId, dateTime, lastDateTime);
-		RiskConductResult result = new RiskConductResult();
-		result.setTotalCount(resultDTO.getTotalCount());
-		result.setBureauCount(resultDTO.getBureauCount());
-		result.setLettersCount(resultDTO.getLettersCount());
-		result.setTrafficCount(resultDTO.getTrafficCount());
-		result.setMonthList(resultDTO.getMonthList());
-		result.setStatus(resultDTO.getStatus());
-
-		dlr.setStatus(true);
-		dlr.setMessage("success");
-		dlr.setResult(result);
-		dlr.setCode(StatusCode.getSuccesscode());
-		return new ResponseEntity<>(dlr, HttpStatus.OK);
-	}
-
-	@GetMapping("/risk/conduct/index/chart")
-	public ResponseEntity<?> riskConductChart(@RequestParam(value = "policeId", required = false) String policeId) {
-		DataListReturn dlr = new DataListReturn();
-		// 警员行为规范风险指数
-		List<ScreenDoubeChart> list = riskService.riskConductChart(policeId);
-		dlr.setStatus(true);
-		dlr.setMessage("success");
-		dlr.setResult(list);
-		dlr.setCode(StatusCode.getSuccesscode());
-		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
-	}
-
 	// 警员社交风险查询
 	@RequestMapping(value = "/risk/social/contact/index/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskSocialContactIndexItem(

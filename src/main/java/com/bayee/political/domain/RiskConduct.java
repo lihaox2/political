@@ -7,11 +7,13 @@ public class RiskConduct {
 
     private String policeId;
 
-    private Integer conductType;
+    private Double indexNum;
 
-    private Integer seriousStatus;
+    private Double bureauRuleScore;
 
-    private Date inputTime;
+    private Double visitScore;
+
+    private Double trafficViolationScore;
 
     private Date creationDate;
 
@@ -33,28 +35,36 @@ public class RiskConduct {
         this.policeId = policeId == null ? null : policeId.trim();
     }
 
-    public Integer getConductType() {
-        return conductType;
+    public Double getIndexNum() {
+        return indexNum;
     }
 
-    public void setConductType(Integer conductType) {
-        this.conductType = conductType;
+    public void setIndexNum(Double indexNum) {
+        this.indexNum = indexNum;
     }
 
-    public Integer getSeriousStatus() {
-        return seriousStatus;
+    public Double getBureauRuleScore() {
+        return bureauRuleScore;
     }
 
-    public void setSeriousStatus(Integer seriousStatus) {
-        this.seriousStatus = seriousStatus;
+    public void setBureauRuleScore(Double bureauRuleScore) {
+        this.bureauRuleScore = bureauRuleScore;
     }
 
-    public Date getInputTime() {
-        return inputTime;
+    public Double getVisitScore() {
+        return visitScore;
     }
 
-    public void setInputTime(Date inputTime) {
-        this.inputTime = inputTime;
+    public void setVisitScore(Double visitScore) {
+        this.visitScore = visitScore;
+    }
+
+    public Double getTrafficViolationScore() {
+        return trafficViolationScore;
+    }
+
+    public void setTrafficViolationScore(Double trafficViolationScore) {
+        this.trafficViolationScore = trafficViolationScore;
     }
 
     public Date getCreationDate() {

@@ -25,6 +25,7 @@ import com.bayee.political.domain.RiskCase;
 import com.bayee.political.domain.RiskDuty;
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
 import com.bayee.political.domain.RiskHealth;
+import com.bayee.political.domain.RiskHistoryReport;
 import com.bayee.political.domain.RiskIndexMonitorChild;
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.RiskTrain;
@@ -476,6 +477,24 @@ public class RiskController extends BaseController {
 		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
 	}
 
+	// 警员历史风险报告查询
+	@RequestMapping(value = "/risk/history/report/list", method = RequestMethod.GET)
+	public ResponseEntity<?> riskHistoryReportList(@RequestParam(value = "policeId", required = false) String policeId,
+			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+		DataListReturn dlr = new DataListReturn();
+		if (dateTime == null) {
+			dateTime = sd.format(new Date());
+		}
+		dateTime = dateTime.substring(0, 4);
+		// 警员历史风险报告查询
+		List<RiskHistoryReport> list = riskService.riskHistoryReportList(policeId, dateTime);
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(list);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+	}
+
 	// 警员风险指标监测
 	@RequestMapping(value = "/risk/index/monitor/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskIndexMonitorItem(@RequestParam(value = "dateTime", required = false) String dateTime)
@@ -619,7 +638,7 @@ public class RiskController extends BaseController {
 	@GetMapping("/risk/conduct/index/chart")
 	public ResponseEntity<?> riskConductChart(@RequestParam(value = "policeId", required = false) String policeId) {
 		DataListReturn dlr = new DataListReturn();
-		//警员行为规范风险指数
+		// 警员行为规范风险指数
 		List<ScreenDoubeChart> list = riskService.riskConductChart(policeId);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -627,6 +646,5 @@ public class RiskController extends BaseController {
 		dlr.setCode(StatusCode.getSuccesscode());
 		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
 	}
-
 
 }

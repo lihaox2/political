@@ -10,17 +10,6 @@ import com.bayee.political.pojo.dto.RiskConductResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bayee.political.domain.RiskAlarm;
-import com.bayee.political.domain.RiskAlarmType;
-import com.bayee.political.domain.RiskCase;
-import com.bayee.political.domain.RiskDuty;
-import com.bayee.political.domain.RiskDutyDealPoliceRecord;
-import com.bayee.political.domain.RiskHealth;
-import com.bayee.political.domain.RiskIndexMonitorChild;
-import com.bayee.political.domain.RiskReportRecord;
-import com.bayee.political.domain.RiskTrain;
-import com.bayee.political.domain.ScreenChart;
-import com.bayee.political.domain.ScreenDoubeChart;
 import com.bayee.political.mapper.RiskAlarmMapper;
 import com.bayee.political.mapper.RiskAlarmTypeMapper;
 import com.bayee.political.mapper.RiskCaseAbilityRecordMapper;
@@ -287,6 +276,12 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public List<ScreenDoubeChart> riskConductChart(String policeId) {
 		return riskConductMapper.findRiskConductChart(policeId);
+	}
+
+	// 警员历史风险报告查询
+	@Override
+	public List<RiskHistoryReport> riskHistoryReportList(String policeId, String dateTime) {
+		return riskReportRecordMapper.riskHistoryReportList(policeId, dateTime);
 	}
 
 }

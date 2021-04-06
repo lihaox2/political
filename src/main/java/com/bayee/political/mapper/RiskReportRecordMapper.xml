@@ -30,6 +30,11 @@
     <result column="talkPoliceNum" property="talkPoliceNum" />
     <result column="isDisplay" property="isDisplay" />
   </resultMap>
+  <resultMap id="RiskHistoryReportMap" type="com.bayee.political.domain.RiskHistoryReport" >
+    <result column="police_id" property="policeId" />
+    <result column="total_num" property="totalNum" />
+    <result column="dateTime" property="dateTime" />
+  </resultMap>
   <sql id="Base_Column_List" >
      id, police_id, year, month, total_num, conduct_num, handling_case_num, duty_num, 
     train_num, social_contact_num, amily_evaluation_num, health_num,drink_num,study_num,
@@ -455,5 +460,13 @@ where alarm_type=11008 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) b
 join
 (select count(*) as cnum from risk_alarm where alarm_type=11008 and is_talk=1
 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
+</select>
+<!-- 警员历史风险报告查询 -->
+<select id="riskHistoryReportList" parameterType="com.bayee.political.domain.RiskHistoryReport" resultMap="RiskHistoryReportMap">
+SELECT a.*,CONCAT(b.id,'月') as dateTimeMonth,DATE_FORMAT(a.creation_date, '%Y-%m') as dateTime
+FROM risk_report_record a
+left join month b on b.num_name=a.month
+where a.police_id=#{policeId} and DATE_FORMAT(a.creation_date, '%Y')=#{dateTime}
+order by b.id desc
 </select>
 </mapper>

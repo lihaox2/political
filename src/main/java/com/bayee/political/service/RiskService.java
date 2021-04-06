@@ -6,18 +6,6 @@ import com.bayee.political.domain.*;
 import com.bayee.political.pojo.dto.RiskConductResultDTO;
 import org.springframework.stereotype.Service;
 
-import com.bayee.political.domain.RiskAlarm;
-import com.bayee.political.domain.RiskAlarmType;
-import com.bayee.political.domain.RiskCase;
-import com.bayee.political.domain.RiskDuty;
-import com.bayee.political.domain.RiskDutyDealPoliceRecord;
-import com.bayee.political.domain.RiskHealth;
-import com.bayee.political.domain.RiskIndexMonitorChild;
-import com.bayee.political.domain.RiskReportRecord;
-import com.bayee.political.domain.RiskTrain;
-import com.bayee.political.domain.ScreenChart;
-import com.bayee.political.domain.ScreenDoubeChart;
-
 /**
  * @author shentuqiwei
  * @version 2021年3月26日 上午10:07:30
@@ -118,5 +106,8 @@ public interface RiskService {
 	 * @return
 	 */
 	List<ScreenDoubeChart> riskConductChart(String policeId);
+
+	// 警员历史风险报告查询
+	List<RiskHistoryReport> riskHistoryReportList(String policeId, String dateTime);
 
 }

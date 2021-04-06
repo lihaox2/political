@@ -1,6 +1,9 @@
 package com.bayee.political.mapper;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.bayee.political.domain.RiskFamilyEvaluation;
 import com.bayee.political.domain.ScreenDoubeChart;
 
@@ -18,8 +21,8 @@ public interface RiskFamilyEvaluationMapper {
     int updateByPrimaryKey(RiskFamilyEvaluation record);
     
     // 家属评价风险指数查询
-    RiskFamilyEvaluation riskFamilyEvaluationItem(String policeId,String dateTime);
+    RiskFamilyEvaluation riskFamilyEvaluationItem(@Param("policeId")String policeId,@Param("dateTime")String dateTime);
     
     // 家属评价风险指数图例
- 	List<ScreenDoubeChart> riskFamilyEvaluationChart(String policeId);
+ 	List<ScreenDoubeChart> riskFamilyEvaluationChart(@Param("policeId")String policeId);
 }

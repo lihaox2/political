@@ -11,6 +11,12 @@
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
+  
+  <resultMap id="ScreenDoubeChartMap" type="com.bayee.political.domain.ScreenDoubeChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="value" property="value" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, police_id,index_num, year, semester, score, creation_date, update_date
   </sql>

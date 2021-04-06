@@ -469,4 +469,9 @@ left join month b on b.num_name=a.month
 where a.police_id=#{policeId} and DATE_FORMAT(a.creation_date, '%Y')=#{dateTime}
 order by b.id desc
 </select>
+
+  <select id="findRiskReportRecord" resultMap="BaseResultMap">
+    select * from risk_report_record where police_id = #{policeId} and year = #{year} and month = #{month}
+  </select>
+
 </mapper>

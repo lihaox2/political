@@ -8,10 +8,12 @@ import com.bayee.political.mapper.RiskTrainMapper;
 import com.bayee.political.service.RiskSkillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author xxl
@@ -27,6 +29,7 @@ public class RiskSkillServiceImpl implements RiskSkillService {
     RiskAlarmMapper riskAlarmMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public RiskTrain riskSkillDetails(User user) {
         LocalDate localDate = LocalDate.now();
         String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
@@ -56,7 +59,7 @@ public class RiskSkillServiceImpl implements RiskSkillService {
                 riskAlarm.setAlarmScore(totalScore);
                 riskAlarm.setCreationDate(new Date());
                 riskAlarm.setIsTalk(0);
-                riskAlarmMapper.insert(riskAlarm);
+                riskAlarmMapper.insertSelective(riskAlarm);
             }
             riskTrainMapper.updateByPrimaryKey(riskTrain);
 
@@ -65,4 +68,5 @@ public class RiskSkillServiceImpl implements RiskSkillService {
             return null;
         }
     }
+
 }

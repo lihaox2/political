@@ -22,6 +22,15 @@ public interface RiskReportRecordMapper {
 
 	int updateByPrimaryKey(RiskReportRecord record);
 
+	/**
+	 * 查询警员指标历史记录
+	 * @param policeId
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	RiskReportRecord findRiskReportRecord(@Param("policeId") String policeId,@Param("year") String year,@Param("month") String month);
+
 	// 警员风险分页查询
 	List<RiskReportRecord> riskPageList(@Param("keyWords") String keyWords, @Param("alarmType") Integer alarmType,
 			@Param("sortName") String sortName, @Param("dateTime") String dateTime,

@@ -1,7 +1,10 @@
 package com.bayee.political.service;
 
+import com.bayee.political.domain.RiskConduct;
 import com.bayee.political.domain.RiskConductBureauRule;
 import com.bayee.political.domain.User;
+
+import java.util.List;
 
 /**
  * 局规计分服务层
@@ -15,6 +18,12 @@ public interface RiskConductBureauRuleService {
      * @param user
      * @return
      */
-    RiskConductBureauRule riskConductBureauRuleDetails(User user);
+    RiskConduct riskConductBureauRuleDetails(User user);
+
+    /**
+     * 批量添加局规计分风险指数数据
+     * @param riskConductBureauRuleList
+     */
+    void addRiskConductBureauRuleList(List<RiskConductBureauRule> riskConductBureauRuleList);
 
 }

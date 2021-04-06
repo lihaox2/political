@@ -34,4 +34,10 @@ public interface RiskConductBureauRuleMapper {
      */
     List<ScreenDoubeChart> findRiskConductBureauRoleChart(String policeId);
 
+    /**
+     * 批量添加局规计分风险指数数据
+     * @param riskConductBureauRuleList
+     */
+    void insertRiskConductBureauRuleList(List<RiskConductBureauRule> riskConductBureauRuleList);
+
 }

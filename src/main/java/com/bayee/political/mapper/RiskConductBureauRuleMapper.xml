@@ -134,4 +134,17 @@
     order by a.year_month
   </select>
 
+  <insert id="insertRiskConductBureauRuleList" parameterType="List">
+    insert into risk_conduct_bureau_rule (id, police_id, index_num,
+          deduction_score_count, total_deduction_score,
+          creation_date, update_date)
+    values
+    <foreach collection="list" item="r" separator=",">
+      (null, #{r.policeId,jdbcType=VARCHAR}, #{r.indexNum,jdbcType=DOUBLE},
+      #{r.deductionScoreCount,jdbcType=INTEGER}, #{r.totalDeductionScore,jdbcType=DOUBLE},
+      #{r.creationDate,jdbcType=TIMESTAMP}, #{r.updateDate,jdbcType=TIMESTAMP})
+    </foreach>
+
+  </insert>
+
 </mapper>

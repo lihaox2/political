@@ -35,4 +35,10 @@ public interface RiskTrainMapper {
 	// 警员警务技能统计查询
 	RiskTrain riskTrainStatisticsItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
 
+	/**
+	 * 批量添加警务技能计算数据
+	 * @param riskTrains
+	 */
+	void insertRiskTrainList(List<RiskTrain> riskTrains);
+
 }

@@ -289,4 +289,21 @@ join
 (select count(*) as dnum from train_firearm_achievement where police_id=#{policeId,jdbcType=VARCHAR} 
 and achievement_grade >1 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) d
 </select>
+
+  <insert id="insertRiskTrainList" parameterType="List">
+    insert into  risk_train (id, police_id, index_num,
+         physical_num, physical_pass_num, physical_fail_num,
+         physical_standard_status, firearm_num, firearm_pass_num,
+         firearm_fail_num, firearm_standard_status,
+         creation_date, update_date)
+    values
+    <foreach collection="list" separator="," item="t">
+      (null, #{t.policeId,jdbcType=VARCHAR}, #{t.indexNum,jdbcType=DOUBLE},
+      #{t.physicalNum,jdbcType=INTEGER}, #{t.physicalPassNum,jdbcType=INTEGER}, #{t.physicalFailNum,jdbcType=INTEGER},
+      #{t.physicalStandardStatus,jdbcType=INTEGER}, #{t.firearmNum,jdbcType=INTEGER}, #{t.firearmPassNum,jdbcType=INTEGER},
+      #{t.firearmFailNum,jdbcType=INTEGER}, #{t.firearmStandardStatus,jdbcType=INTEGER},
+      #{t.creationDate,jdbcType=TIMESTAMP}, #{t.updateDate,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+
 </mapper>

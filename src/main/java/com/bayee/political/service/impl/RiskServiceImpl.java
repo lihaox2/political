@@ -325,7 +325,7 @@ public class RiskServiceImpl implements RiskService {
 	public List<ScreenDoubeChart> riskSocialContactIndexChart(String policeId, String tableName) {
 		return riskSocialContactMapper.riskSocialContactIndexChart(policeId, tableName);
 	}
-	
+
 	// 社交详情记录
 	@Override
 	public List<RiskSocialContactRecord> riskSocialContactRecordList(Integer socialContactId) {

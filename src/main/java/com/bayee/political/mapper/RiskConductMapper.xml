@@ -11,6 +11,12 @@
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+  
+  <resultMap id="ScreenDoubeChartMap" type="com.bayee.political.domain.ScreenDoubeChart" >
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="value" property="value" />
+  </resultMap>
   <sql id="Base_Column_List">
     id, police_id, index_num, bureau_rule_score, visit_score, traffic_violation_score, 
     creation_date, update_date
@@ -131,4 +137,25 @@
     select * from risk_conduct where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = #{dateTime}
   </select>
 
+<!-- 警员行为规范风险指数查询 -->
+	<select id="riskConductItem"  resultMap="BaseResultMap">
+		select * from risk_conduct 
+		where police_id=#{policeId,jdbcType=VARCHAR} and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+		order by id desc limit 1
+	</select>
+  
+  <!-- 行为规范风险指数图例 -->
+	<select id="riskConductChart"  resultMap="ScreenDoubeChartMap">
+	select ifnull(b.value,0) as value,CONCAT(c.id,'月') as name
+	from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 
+	    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `year_month` 
+	    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `year_month` 
+	    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `year_month` 
+	    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `year_month` 
+	    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `year_month` ) a
+	left join(select sum(index_num) as value,DATE_FORMAT(creation_date, '%Y-%m') as name from risk_conduct
+	where police_id=#{policeId,jdbcType=VARCHAR} GROUP BY DATE_FORMAT(creation_date, '%Y-%m')) b on b.name=a.year_month
+	left join month c on c.num_name=right(a.year_month,2) 
+	order by a.year_month
+	</select>
 </mapper>

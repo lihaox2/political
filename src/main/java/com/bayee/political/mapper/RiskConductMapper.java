@@ -1,7 +1,11 @@
 package com.bayee.political.mapper;
 
-import com.bayee.political.domain.RiskConduct;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
+
+import com.bayee.political.domain.RiskConduct;
+import com.bayee.political.domain.ScreenDoubeChart;
 
 public interface RiskConductMapper {
     int deleteByPrimaryKey(Integer id);
@@ -23,5 +27,11 @@ public interface RiskConductMapper {
      * @return
      */
     RiskConduct findRiskConductByPoliceIdAndDate(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
+    
+    //警员交通违章风险指数查询
+    RiskConduct riskConductItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
+    
+    // 交通违章风险指数图例
+ 	List<ScreenDoubeChart> riskConductChart(@Param("policeId") String policeId);
 
 }

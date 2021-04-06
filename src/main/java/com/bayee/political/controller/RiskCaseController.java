@@ -19,6 +19,7 @@ import com.bayee.political.domain.RiskCaseAbility;
 import com.bayee.political.domain.RiskCaseLawEnforcement;
 import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
 import com.bayee.political.domain.RiskCaseTestRecord;
+import com.bayee.political.domain.RiskConduct;
 import com.bayee.political.domain.RiskConductTrafficViolation;
 import com.bayee.political.domain.RiskConductTrafficViolationRecord;
 import com.bayee.political.domain.RiskConductVisit;
@@ -29,6 +30,7 @@ import com.bayee.political.service.RiskCaseAbilityService;
 import com.bayee.political.service.RiskCaseLawEnforcementRecordService;
 import com.bayee.political.service.RiskCaseLawEnforcementService;
 import com.bayee.political.service.RiskCaseTestRecordService;
+import com.bayee.political.service.RiskConductService;
 import com.bayee.political.service.RiskConductTrafficViolationRecordService;
 import com.bayee.political.service.RiskConductTrafficViolationService;
 import com.bayee.political.service.RiskConductVisitRecordService;
@@ -67,6 +69,9 @@ public class RiskCaseController extends BaseController {
 	
 	@Autowired
 	private RiskConductTrafficViolationRecordService riskConductTrafficViolationRecordService;
+	
+	@Autowired
+	private RiskConductService riskConductService;
 	
 	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
 	
@@ -452,6 +457,62 @@ public class RiskCaseController extends BaseController {
 		}
 		// 警员执法管理扣分详情查询
 		List<RiskConductTrafficViolationRecord> list = riskConductTrafficViolationRecordService.riskConductTrafficViolationRecordList(policeId, dateTime);
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(list);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+	}
+	
+	// 警员行为规范风险查询
+	@RequestMapping(value = "/risk/conduct/item", method = RequestMethod.GET)
+	public ResponseEntity<?> riskConductItem(@RequestParam(value = "policeId", required = false) String policeId,
+			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+		DataListReturn dlr = new DataListReturn();
+		if (dateTime == null) {
+			dateTime = sd.format(new Date());
+		}
+		Date currdate = sd.parse(dateTime);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(currdate);
+		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
+		String lastDateTime = sd.format(calendar.getTime());
+		// 警员执法办案风险指数查询
+		RiskConduct item = riskConductService.riskConductItem(policeId, dateTime);
+		if (item != null) {
+			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
+			// 上个月警员接警执勤指数查询
+			RiskConduct item2 = riskConductService.riskConductItem(policeId, lastDateTime);
+			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
+			itemChart2.setId(1);
+			itemChart2.setName("上月");
+			if (item2 != null) {
+				itemChart2.setValue(item2.getIndexNum());
+			} else {
+				itemChart2.setValue(0.0);
+			}
+			list.add(itemChart2);
+			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
+			itemChart1.setId(2);
+			itemChart1.setName("本月");
+			itemChart1.setValue(item.getIndexNum());
+			list.add(itemChart1);
+			item.setList(list);
+		}
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(item);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+	}
+	
+	// 交通行为规范指数图例
+	@RequestMapping(value = "/risk/conduct/chart", method = RequestMethod.GET)
+	public ResponseEntity<?> riskConductChart(@RequestParam(value = "policeId", required = false) String policeId)
+			throws ApiException, ParseException {
+		DataListReturn dlr = new DataListReturn();
+		// 半年内接警执勤风险指数
+		List<ScreenDoubeChart> list = riskConductService.riskConductChart(policeId);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);

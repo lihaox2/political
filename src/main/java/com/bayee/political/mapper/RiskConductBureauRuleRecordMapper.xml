@@ -11,6 +11,7 @@
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, police_id, type, input_time, content, deduction_score, remarks, creation_date, 
@@ -141,8 +142,9 @@
   </update>
 
   <select id="findByPoliceIdAndDate" resultMap="BaseResultMap">
-    select * from risk_conduct_bureau_rule_record
-    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = #{dateTime}
+    select r1.*, r2.name as type_name from risk_conduct_bureau_rule_record r1, risk_conduct_bureau_rule_type r2
+    where r1.type = r2.id
+    and r1.police_id = #{policeId} and DATE_FORMAT(r1.creation_date, '%Y-%m') = #{dateTime}
   </select>
 
 </mapper>

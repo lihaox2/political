@@ -379,6 +379,9 @@ public class RiskController extends BaseController {
 		}
 		// 警员警务技能指数查询
 		RiskTrain item = riskService.riskTrainIndexItem(policeId, dateTime);
+		if (item == null) {
+			item = new RiskTrain();
+		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(item);
@@ -419,6 +422,9 @@ public class RiskController extends BaseController {
 		RiskHealth item = riskService.riskHealthIndexItem(policeId, dateTime);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
+		if (item == null) {
+			item = new RiskHealth();
+		}
 		dlr.setResult(item);
 		dlr.setCode(StatusCode.getSuccesscode());
 		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
@@ -658,8 +664,7 @@ public class RiskController extends BaseController {
 
 	@GetMapping("/risk/conduct/bureau/role/index")
 	public ResponseEntity<?> riskConductBureauRole(@RequestParam(value = "policeId", required = false) String policeId,
-												   @RequestParam(value = "dateTime", required = false) String dateTime)
-			throws ParseException{
+			@RequestParam(value = "dateTime", required = false) String dateTime) throws ParseException {
 		DataListReturn dlr = new DataListReturn();
 		if (dateTime == null || "".equals(dateTime)) {
 			dateTime = sd.format(new Date());
@@ -685,9 +690,10 @@ public class RiskController extends BaseController {
 	}
 
 	@GetMapping("/risk/conduct/bureau/role/chart")
-	public ResponseEntity<?> riskConductBureauRoleChart(@RequestParam(value = "policeId", required = false) String policeId){
+	public ResponseEntity<?> riskConductBureauRoleChart(
+			@RequestParam(value = "policeId", required = false) String policeId) {
 		DataListReturn dlr = new DataListReturn();
-		//警员局规计分风险指数
+		// 警员局规计分风险指数
 		List<ScreenDoubeChart> list = riskService.riskConductBureauRoleChart(policeId);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -697,14 +703,14 @@ public class RiskController extends BaseController {
 	}
 
 	@GetMapping("/risk/conduct/bureau/role/record/list")
-	public ResponseEntity<?> riskConductBureauRoleRecordList(@RequestParam(value = "policeId", required = false) String policeId,
-															 @RequestParam(value = "dateTime", required = false) String dateTime)
-			throws ParseException{
+	public ResponseEntity<?> riskConductBureauRoleRecordList(
+			@RequestParam(value = "policeId", required = false) String policeId,
+			@RequestParam(value = "dateTime", required = false) String dateTime) throws ParseException {
 		DataListReturn dlr = new DataListReturn();
 		if (dateTime == null || "".equals(dateTime)) {
 			dateTime = sd.format(new Date());
 		}
-		//局规计分详情
+		// 局规计分详情
 		List<RiskConductBureauRuleRecord> list = riskService.findRiskConductBureauRuleRecord(policeId, dateTime);
 		dlr.setStatus(true);
 		dlr.setMessage("success");

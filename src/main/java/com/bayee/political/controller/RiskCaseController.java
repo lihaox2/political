@@ -109,6 +109,8 @@ public class RiskCaseController extends BaseController {
 			itemChart1.setValue(item.getIndexNum());
 			list.add(itemChart1);
 			item.setList(list);
+		}else {
+			item=new RiskCaseAbility();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -166,6 +168,8 @@ public class RiskCaseController extends BaseController {
 			itemChart1.setValue(item.getIndexNum());
 			list.add(itemChart1);
 			item.setList(list);
+		}else {
+			item=new RiskCaseLawEnforcement();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -222,6 +226,8 @@ public class RiskCaseController extends BaseController {
 			itemChart1.setValue(item.getIndexNum());
 			list.add(itemChart1);
 			item.setList(list);
+		}else {
+			item=new RiskCaseTestRecord();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -278,6 +284,8 @@ public class RiskCaseController extends BaseController {
 			itemChart1.setValue(item.getIndexNum());
 			list.add(itemChart1);
 			item.setList(list);
+		}else {
+			item=new RiskFamilyEvaluation();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -351,6 +359,8 @@ public class RiskCaseController extends BaseController {
 			itemChart1.setValue(item.getIndexNum());
 			list.add(itemChart1);
 			item.setList(list);
+		}else {
+			item=new RiskConductVisit();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -425,6 +435,8 @@ public class RiskCaseController extends BaseController {
 			itemChart1.setValue(item.getIndexNum());
 			list.add(itemChart1);
 			item.setList(list);
+		}else {
+			item=new RiskConductTrafficViolation();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -498,6 +510,8 @@ public class RiskCaseController extends BaseController {
 			itemChart1.setValue(item.getIndexNum());
 			list.add(itemChart1);
 			item.setList(list);
+		}else {
+			item=new RiskConduct();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -506,7 +520,7 @@ public class RiskCaseController extends BaseController {
 		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
 	}
 	
-	// 交通行为规范指数图例
+	// 行为规范指数图例
 	@RequestMapping(value = "/risk/conduct/chart", method = RequestMethod.GET)
 	public ResponseEntity<?> riskConductChart(@RequestParam(value = "policeId", required = false) String policeId)
 			throws ApiException, ParseException {

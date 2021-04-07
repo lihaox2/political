@@ -125,7 +125,6 @@ public class RiskController extends BaseController {
 		String lastDateTime = sd.format(calendar.getTime());
 		// 警员风险详情查询
 		RiskReportRecord item = riskService.riskReportRecordItem(id, policeId, dateTime, lastDateTime);
-		
 		if(item==null) {
 			item=new RiskReportRecord();
 		}
@@ -430,16 +429,11 @@ public class RiskController extends BaseController {
 		}
 		// 警员健康风险指数查询
 		RiskHealth item = riskService.riskHealthIndexItem(policeId, dateTime);
-		
 		if(item==null) {
 			item=new RiskHealth();
 		}
-		
 		dlr.setStatus(true);
 		dlr.setMessage("success");
-		if (item == null) {
-			item = new RiskHealth();
-		}
 		dlr.setResult(item);
 		dlr.setCode(StatusCode.getSuccesscode());
 		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);

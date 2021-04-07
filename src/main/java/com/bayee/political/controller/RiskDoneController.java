@@ -70,7 +70,9 @@ public class RiskDoneController {
             if (riskConduct != null && riskConduct.getIndexNum() != null) {
                 record.setConductNum(riskConduct.getIndexNum());
             }
-            record.setTotalNum(Math.min(record.getTotalScore(), 100));
+            record.setTotalNum(Math.min(record.getConductNum() + record.getHandlingCaseNum() + record.getDutyNum()
+                    + record.getTrainNum() + record.getSocialContactNum() + record.getAmilyEvaluationNum() +
+                    record.getHealthNum() + record.getStudyNum() + record.getDrinkNum(), 100));
             record.setCreationDate(new Date());
 
             RiskReportRecord oldRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);

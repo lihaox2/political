@@ -67,11 +67,6 @@ public class RiskReportRecord {
     	this.drinkNum = initValue;
 	}
 
-	public Double getTotalScore(){
-    	return this.conductNum + this.handlingCaseNum + this.dutyNum + this.trainNum + this.socialContactNum
-				+ this.amilyEvaluationNum + this.healthNum + this.studyNum + this.drinkNum;
-	}
-
     public Integer getId() {
         return id;
     }

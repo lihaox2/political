@@ -125,6 +125,10 @@ public class RiskController extends BaseController {
 		String lastDateTime = sd.format(calendar.getTime());
 		// 警员风险详情查询
 		RiskReportRecord item = riskService.riskReportRecordItem(id, policeId, dateTime, lastDateTime);
+		
+		if(item==null) {
+			item=new RiskReportRecord();
+		}
 		// 警员风险雷达图
 		List<ScreenDoubeChart> list2 = riskService.riskChartList(item.getPoliceId(), dateTime);
 		item.setChartList(list2);
@@ -231,6 +235,8 @@ public class RiskController extends BaseController {
 			itemChart1.setValue(item.getIndexNum());
 			list.add(itemChart1);
 			item.setList(list);
+		}else {
+			item=new RiskCase();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -288,6 +294,8 @@ public class RiskController extends BaseController {
 			itemChart1.setValue(item.getIndexNum());
 			list.add(itemChart1);
 			item.setList(list);
+		}else {
+			item=new RiskCase();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -330,6 +338,8 @@ public class RiskController extends BaseController {
 			itemChart1.setValue(item.getIndexNum());
 			list.add(itemChart1);
 			item.setList(list);
+		}else {
+			item=new RiskDuty();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
@@ -420,6 +430,11 @@ public class RiskController extends BaseController {
 		}
 		// 警员健康风险指数查询
 		RiskHealth item = riskService.riskHealthIndexItem(policeId, dateTime);
+		
+		if(item==null) {
+			item=new RiskHealth();
+		}
+		
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		if (item == null) {
@@ -640,6 +655,8 @@ public class RiskController extends BaseController {
 			// 社交详情记录
 			List<RiskSocialContactRecord> recordList = riskService.riskSocialContactRecordList(item.getId());
 			item.setRecordList(recordList);
+		}else {
+			item=new RiskSocialContact();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");

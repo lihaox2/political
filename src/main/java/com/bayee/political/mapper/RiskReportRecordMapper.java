@@ -78,4 +78,17 @@ public interface RiskReportRecordMapper {
 
 	// 警员警员指标历史记录新增
 	int riskReportRecordCreat(RiskReportRecord record);
+	
+	RiskReportRecord getByPoliceIdMonth(@Param("year") String year, @Param("month") String month,
+			@Param("policeId") String policeId);
+	
+	/**
+	 * 批量添加报备数据
+	 * 
+	 * @param riskReportRecordList
+	 */
+	void insertRiskReportRecords(List<RiskReportRecord> riskReportRecordList);
+
+	// 警员警员指标历史记录修改
+	int riskReportRecordUpdate(RiskReportRecord record);
 }

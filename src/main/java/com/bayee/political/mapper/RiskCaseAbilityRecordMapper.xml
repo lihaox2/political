@@ -188,4 +188,14 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+   <select id="findPoliceCaseData" resultMap="BaseResultMap">
+    select * from risk_case_ability_record where police_id = #{policeId}
+            and creation_date BETWEEN date_add(#{date},interval -day(#{date}) + 1 day) and LAST_DAY(#{date})
+  </select>
+  
+  <select id="getByYearAndPoliceId" resultType="Integer">
+  	select id from risk_case_ability_record where year=#{year} and police_id = #{policeId};
+  </select>
+  
 </mapper>

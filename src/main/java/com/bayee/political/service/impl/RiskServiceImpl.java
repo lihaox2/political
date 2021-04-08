@@ -103,6 +103,9 @@ public class RiskServiceImpl implements RiskService {
 	 */
 	@Autowired
 	RiskConductBureauRuleRecordMapper riskConductBureauRuleRecordMapper;
+	
+	@Autowired
+	RiskDrinkRecordMapper riskDrinkRecordMapper;// 警员饮酒记录
 
 	// 警员健康风险指数查询
 	@Override
@@ -338,5 +341,29 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public List<RiskConductBureauRuleRecord> findRiskConductBureauRuleRecord(String policeId, String dateTime) {
 		return riskConductBureauRuleRecordMapper.findByPoliceIdAndDate(policeId, dateTime);
+	}
+
+	@Override
+	public int insertInpromt(RiskDrinkRecord riskDrinkRecord) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<RiskHealth> getByYear(String year) {
+		// TODO Auto-generated method stub
+		return riskHealthMapper.getByYear(year);
+	}
+
+	@Override
+	public Double fraction(Integer id) {
+		// TODO Auto-generated method stub
+		return riskHealthMapper.fraction(id);
+	}
+
+	@Override
+	public int updateRiskReportRecord(RiskReportRecord record) {
+		// TODO Auto-generated method stub
+		return riskReportRecordMapper.riskReportRecordUpdate(record);
 	}
 }

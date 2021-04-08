@@ -1,5 +1,9 @@
 package com.bayee.political.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.bayee.political.domain.RiskHealthRecord;
 
 public interface RiskHealthRecordMapper {
@@ -14,4 +18,8 @@ public interface RiskHealthRecordMapper {
     int updateByPrimaryKeySelective(RiskHealthRecord record);
 
     int updateByPrimaryKey(RiskHealthRecord record);
+
+    Integer getByIdAndYear(@Param("policeId") String policeId,@Param("year")String year);
+    
+    List<RiskHealthRecord> selectYearAll(@Param("year")String year);
 }

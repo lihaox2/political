@@ -30,7 +30,7 @@
     delete from risk_case_test_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseTestRecord" >
+  <insert id="insertTest" parameterType="com.bayee.political.domain.RiskCaseTestRecord" >
     insert into risk_case_test_record (id, police_id,index_num, year, 
       semester, score, creation_date, 
       update_date)
@@ -152,5 +152,9 @@
 	where police_id=#{policeId,jdbcType=VARCHAR} GROUP BY DATE_FORMAT(creation_date, '%Y-%m')) b on b.name=a.year_month
 	left join month c on c.num_name=right(a.year_month,2) 
 	order by a.year_month
+	</select>
+	
+	<select id="isExistence" resultType="Integer">
+	select id from risk_case_test_record where year=#{year} and semester=#{semester} and police_id = #{policeId}
 	</select>
 </mapper>

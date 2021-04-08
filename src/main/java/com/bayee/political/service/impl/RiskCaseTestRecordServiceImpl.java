@@ -23,12 +23,6 @@ public class RiskCaseTestRecordServiceImpl implements RiskCaseTestRecordService{
 	}
 
 	@Override
-	public int insert(RiskCaseTestRecord record) {
-		// TODO Auto-generated method stub
-		return riskCaseTestRecordMapper.insert(record);
-	}
-
-	@Override
 	public int insertSelective(RiskCaseTestRecord record) {
 		// TODO Auto-generated method stub
 		return riskCaseTestRecordMapper.insertSelective(record);
@@ -62,6 +56,18 @@ public class RiskCaseTestRecordServiceImpl implements RiskCaseTestRecordService{
 	public List<ScreenDoubeChart> riskCaseTestChart(String policeId) {
 		// TODO Auto-generated method stub
 		return riskCaseTestRecordMapper.riskCaseTestChart(policeId);
+	}
+
+	@Override
+	public int insertTest(RiskCaseTestRecord record) {
+		// TODO Auto-generated method stub
+		return riskCaseTestRecordMapper.insertTest(record);
+	}
+
+	@Override
+	public Integer isExistence(String policeId, String year, Integer semester) {
+		// TODO Auto-generated method stub
+		return riskCaseTestRecordMapper.isExistence(policeId, year, semester);
 	}
 	
 	

@@ -6,6 +6,7 @@
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="police_id" jdbcType="VARCHAR" property="policeId" />
     <result column="is_work_day" jdbcType="INTEGER" property="isWorkDay" />
+    <result column="drink_date" property="drinkDate" jdbcType="TIMESTAMP" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
@@ -103,4 +104,83 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <update id="updateIsWorkDay">
+    update risk_drink_record set is_work_day = 1 where DATE_FORMAT(creation_date,'%Y-%m-%d')
+                                                         in (select date from date where is_work_day = 1 and DATE_FORMAT(date,'%Y') = #{year})
+  </update>
+
+  <select id="findRORThreeDaysDrinkData" resultMap="BaseResultMap">
+    select distinct r1.*
+    from risk_drink_record r1, risk_drink_record r2, risk_drink_record r3
+    where r1.police_id = #{policeId} and r1.creation_date BETWEEN date_add(#{date},interval -day(#{date}) + 1 day) and LAST_DAY(#{date})
+      and r1.creation_date is not null and r2.creation_date is not null and r3.creation_date is not null
+      and
+      ((DATEDIFF(r1.creation_date, r2.creation_date) = 1 and DATEDIFF(r1.creation_date, r3.creation_date) = 2
+        and DATEDIFF(r2.creation_date, r3.creation_date) = 1)
+        or
+       (DATEDIFF(r2.creation_date, r1.creation_date) = 1 and DATEDIFF(r2.creation_date, r3.creation_date) = 2
+         and DATEDIFF(r1.creation_date, r3.creation_date) = 1)
+        or
+       (DATEDIFF(r3.creation_date, r2.creation_date) = 1 and DATEDIFF(r2.creation_date, r1.creation_date) = 1
+         and DATEDIFF(r3.creation_date, r1.creation_date) = 2)
+        )
+    order by r1.creation_date
+  </select>
+
+  <select id="findPoliceDrinkData" resultMap="BaseResultMap">
+    select * from risk_drink_record r1 where r1.police_id = #{policeId}
+                                         and r1.creation_date BETWEEN date_add(#{date},interval -day(#{date}) + 1 day) and LAST_DAY(#{date})
+  </select>
+  
+  
+  <insert id="insertInpromt" parameterType="com.bayee.political.domain.RiskDrinkRecord" >
+    insert into risk_drink_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="isWorkDay != null" >
+        is_work_day,
+      </if>
+      <if test="drinkDate != null" >
+        drink_date,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="isWorkDay != null" >
+        #{isWorkDay,jdbcType=INTEGER},
+      </if>
+      <if test="drinkDate != null" >
+        #{drinkDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
 </mapper>

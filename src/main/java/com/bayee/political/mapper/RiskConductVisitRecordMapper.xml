@@ -138,6 +138,13 @@
   
   <select id="riskConductVisitRecordList" resultMap="BaseResultMap">
   	SELECT * FROM risk_conduct_visit_record r WHERE
-	 r.police_id=#{policeId} and DATE_FORMAT(r.creation_date, '%Y-%m')=#{dateTime} ORDER BY id desc
+	 r.police_id=#{policeId} 
+	 <if test="timeType == 1">
+	    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+	</if>
+    <if test="timeType == 2">
+	    and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+	</if>
+	 ORDER BY id desc
   </select>
 </mapper>

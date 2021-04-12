@@ -19,5 +19,6 @@ public interface RiskConductVisitRecordMapper {
 
     int updateByPrimaryKey(RiskConductVisitRecord record);
     
-    List<RiskConductVisitRecord> riskConductVisitRecordList(@Param("policeId")String policeId,@Param("dateTime")String dateTime);
+    List<RiskConductVisitRecord> riskConductVisitRecordList(@Param("policeId")String policeId,@Param("dateTime")String dateTime,
+			@Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
 }

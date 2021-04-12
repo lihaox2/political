@@ -47,7 +47,7 @@ public interface RiskService {
 										  String lastMonthTime, Integer timeType);
 
 	// 警员警务技能指数查询
-	RiskTrain riskTrainIndexItem(String policeId, String dateTime);
+	RiskTrain riskTrainIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType);
 
 	// 警员综合训练不合格趋势图
 	List<ScreenChart> riskTrainFailChart(String policeId, String fieldName);
@@ -108,7 +108,7 @@ public interface RiskService {
 	int riskReportRecordCreat(RiskReportRecord record);
 
 	// 警员社交风险查询
-	RiskSocialContact riskSocialContactIndexItem(String policeId, String dateTime);
+	RiskSocialContact riskSocialContactIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType);
 
 	// 社交风险指数图例
 	List<ScreenDoubeChart> riskSocialContactIndexChart(String policeId, String tableName);
@@ -168,5 +168,7 @@ public interface RiskService {
 	Double fraction(Integer id);
 	
 	int updateRiskReportRecord(RiskReportRecord record);
+	
+	List<RiskHistoryReportTime> riskHistoryReportTimeList(String policeId);
 
 }

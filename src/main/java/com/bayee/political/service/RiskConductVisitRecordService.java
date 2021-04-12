@@ -18,7 +18,7 @@ public interface RiskConductVisitRecordService {
 
     int updateByPrimaryKey(RiskConductVisitRecord record);
     
-    List<RiskConductVisitRecord> riskConductVisitRecordList(String policeId,String dateTime);
+    List<RiskConductVisitRecord> riskConductVisitRecordList(String policeId,String dateTime, String lastMonthTime, Integer timeType);
     
     Integer selectByName(String name);
 

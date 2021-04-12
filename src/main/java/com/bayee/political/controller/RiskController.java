@@ -1,9 +1,5 @@
 package com.bayee.political.controller;
 
-import com.bayee.political.domain.*;
-import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
-import com.bayee.political.pojo.json.RiskConductBureauRoleResult;
-
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +18,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.bayee.political.domain.RiskAlarm;
+import com.bayee.political.domain.RiskAlarmType;
+import com.bayee.political.domain.RiskCase;
+import com.bayee.political.domain.RiskConductBureauRuleRecord;
+import com.bayee.political.domain.RiskDuty;
+import com.bayee.political.domain.RiskDutyDealPoliceRecord;
+import com.bayee.political.domain.RiskHealth;
+import com.bayee.political.domain.RiskHistoryReport;
+import com.bayee.political.domain.RiskHistoryReportTime;
+import com.bayee.political.domain.RiskIndexMonitorChild;
+import com.bayee.political.domain.RiskReportRecord;
+import com.bayee.political.domain.RiskSocialContact;
+import com.bayee.political.domain.RiskSocialContactRecord;
+import com.bayee.political.domain.RiskTrain;
+import com.bayee.political.domain.RiskTrainFailChart;
+import com.bayee.political.domain.ScreenChart;
+import com.bayee.political.domain.ScreenDoubeChart;
+import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
+import com.bayee.political.pojo.json.RiskConductBureauRoleResult;
 import com.bayee.political.service.RiskService;
 import com.bayee.political.utils.DataListPage;
 import com.bayee.political.utils.DataListReturn;
@@ -453,13 +468,18 @@ public class RiskController extends BaseController {
 	// 警员警务技能指数查询
 	@RequestMapping(value = "/risk/train/index/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskTrainIndexItem(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
+		String lastMonthTime = DateUtils.lastMonthTime();
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
 		// 警员警务技能指数查询
-		RiskTrain item = riskService.riskTrainIndexItem(policeId, dateTime);
+		RiskTrain item = riskService.riskTrainIndexItem(policeId, dateTime,lastMonthTime,timeType);
 		if (item == null) {
 			item = new RiskTrain();
 		}
@@ -564,7 +584,13 @@ public class RiskController extends BaseController {
 		}
 		dateTime = dateTime.substring(0, 4);
 		// 警员历史风险报告查询
-		List<RiskHistoryReport> list = riskService.riskHistoryReportList(policeId, dateTime);
+		List<RiskHistoryReportTime> list = riskService.riskHistoryReportTimeList(policeId);
+		//List<RiskHistoryReport> list = riskService.riskHistoryReportList(policeId, dateTime);
+		for (int i = 0; i < list.size(); i++) {
+			List<RiskHistoryReport> list2 = riskService.riskHistoryReportList(policeId,
+					String.valueOf(list.get(i).getId()));
+			list.get(i).setMonthList(list2);
+		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);
@@ -687,8 +713,12 @@ public class RiskController extends BaseController {
 	@RequestMapping(value = "/risk/social/contact/index/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskSocialContactIndexItem(
 			@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {// 
+			timeType = 1;
+		}
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
@@ -697,12 +727,13 @@ public class RiskController extends BaseController {
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
+		String lastMonthTime = DateUtils.lastMonthTime();
 		// 警员社交风险查询
-		RiskSocialContact item = riskService.riskSocialContactIndexItem(policeId, dateTime);
+		RiskSocialContact item = riskService.riskSocialContactIndexItem(policeId, dateTime, lastMonthTime, timeType);
 		if (item != null) {
 			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
 			// 上个月警员社交风险查询
-			RiskSocialContact item2 = riskService.riskSocialContactIndexItem(policeId, lastDateTime);
+			RiskSocialContact item2 = riskService.riskSocialContactIndexItem(policeId, lastDateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
 			itemChart2.setId(1);
 			itemChart2.setName("上月");

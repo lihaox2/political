@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskHistoryReport;
+import com.bayee.political.domain.RiskHistoryReportTime;
 import com.bayee.political.domain.RiskIndexMonitorChild;
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.ScreenDoubeChart;
@@ -94,4 +95,8 @@ public interface RiskReportRecordMapper {
 
 	// 警员警员指标历史记录修改
 	int riskReportRecordUpdate(RiskReportRecord record);
+	
+	List<RiskHistoryReportTime> riskHistoryReportTimeList(@Param("policeId") String policeId);
+	
+	Double findPoliceHealthScoreByYear(@Param("policeId") String policeId,@Param("year") String year);
 }

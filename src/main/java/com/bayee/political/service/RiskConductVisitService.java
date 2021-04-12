@@ -19,7 +19,7 @@ public interface RiskConductVisitService {
     int updateByPrimaryKey(RiskConductVisit record);
     
     //警员信访投诉风险指数查询
-    RiskConductVisit riskConductVisitItem(String policeId, String dateTime);
+    RiskConductVisit riskConductVisitItem(String policeId, String dateTime, String lastMonthTime, Integer timeType);
     
     // 信访投诉风险指数图例
  	List<ScreenDoubeChart> riskConductVisitChart(String policeId);

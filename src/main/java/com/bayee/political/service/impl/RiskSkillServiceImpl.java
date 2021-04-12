@@ -33,7 +33,7 @@ public class RiskSkillServiceImpl implements RiskSkillService {
     public RiskTrain riskSkillDetails(User user) {
         LocalDate localDate = LocalDate.now();
         String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
-        RiskTrain riskTrain = riskTrainMapper.riskTrainIndexItem(user.getPoliceId(), date);
+        RiskTrain riskTrain = riskTrainMapper.findRiskTrainByPoliceIdAndDate(user.getPoliceId(), date);
 
         double comprehensiveScore = 5d;
         double shootingScore = 5d;

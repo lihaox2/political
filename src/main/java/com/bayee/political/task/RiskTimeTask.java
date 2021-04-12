@@ -60,7 +60,7 @@ public class RiskTimeTask extends BaseController {
 		List<User> userList = userService.userInfoAllList();
 		for (int i = 0; i < userList.size(); i++) {
 			// 警员警务技能指数查询
-			RiskTrain ritem = riskService.riskTrainIndexItem(userList.get(i).getPoliceId(), dateTime);
+			RiskTrain ritem = riskService.riskTrainIndexItem(userList.get(i).getPoliceId(), dateTime,null,2);
 			// 警员警务技能统计查询
 			RiskTrain item = riskService.riskTrainStatisticsItem(userList.get(i).getPoliceId(), dateTime);
 			if (ritem == null) {

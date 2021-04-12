@@ -181,8 +181,8 @@ public class RiskServiceImpl implements RiskService {
 
 	// 警员警务技能指数查询
 	@Override
-	public RiskTrain riskTrainIndexItem(String policeId, String dateTime) {
-		return riskTrainMapper.riskTrainIndexItem(policeId, dateTime);
+	public RiskTrain riskTrainIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
+		return riskTrainMapper.riskTrainIndexItem(policeId, dateTime, lastMonthTime, timeType);
 	}
 
 	// 警员综合训练不合格趋势图
@@ -302,8 +302,8 @@ public class RiskServiceImpl implements RiskService {
 
 	// 警员社交风险查询
 	@Override
-	public RiskSocialContact riskSocialContactIndexItem(String policeId, String dateTime) {
-		return riskSocialContactMapper.riskSocialContactIndexItem(policeId, dateTime);
+	public RiskSocialContact riskSocialContactIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
+		return riskSocialContactMapper.riskSocialContactIndexItem(policeId, dateTime,lastMonthTime,timeType);
 	}
 
 	// 社交风险指数图例
@@ -417,5 +417,11 @@ public class RiskServiceImpl implements RiskService {
 	public int updateRiskReportRecord(RiskReportRecord record) {
 		// TODO Auto-generated method stub
 		return riskReportRecordMapper.riskReportRecordUpdate(record);
+	}
+
+	@Override
+	public List<RiskHistoryReportTime> riskHistoryReportTimeList(String policeId) {
+		// TODO Auto-generated method stub
+		return riskReportRecordMapper.riskHistoryReportTimeList(policeId);
 	}
 }

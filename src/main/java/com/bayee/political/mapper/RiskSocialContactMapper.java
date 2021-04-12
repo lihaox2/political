@@ -22,7 +22,8 @@ public interface RiskSocialContactMapper {
 
 	// 警员社交风险查询
 	RiskSocialContact riskSocialContactIndexItem(@Param("policeId") String policeId,
-			@Param("dateTime") String dateTime);
+			@Param("dateTime") String dateTime,
+			@Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
 
 	// 社交风险指数图例
 	List<ScreenDoubeChart> riskSocialContactIndexChart(@Param("policeId") String policeId,

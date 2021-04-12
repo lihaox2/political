@@ -302,8 +302,12 @@ public class RiskCaseController extends BaseController {
 	@RequestMapping(value = "/risk/family/evaluation/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskFamilyEvaluationItem(
 			@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {// 
+			timeType = 1;
+		}
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
@@ -312,6 +316,7 @@ public class RiskCaseController extends BaseController {
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
+		String lastMonthTime = DateUtils.lastMonthTime();
 		// 警员执法办案风险指数查询
 		RiskFamilyEvaluation item = riskFamilyEvaluationService.riskFamilyEvaluationItem(policeId, dateTime);
 		if (item != null) {
@@ -378,8 +383,12 @@ public class RiskCaseController extends BaseController {
 	// 警员信访投诉风险查询
 	@RequestMapping(value = "/risk/conduct/visit/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskConductVisitItem(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
@@ -388,12 +397,13 @@ public class RiskCaseController extends BaseController {
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
+		String lastMonthTime = DateUtils.lastMonthTime();
 		// 警员执法办案风险指数查询
-		RiskConductVisit item = riskConductVisitService.riskConductVisitItem(policeId, dateTime);
+		RiskConductVisit item = riskConductVisitService.riskConductVisitItem(policeId, dateTime, lastMonthTime, timeType);
 		if (item != null) {
 			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
 			// 上个月警员接警执勤指数查询
-			RiskConductVisit item2 = riskConductVisitService.riskConductVisitItem(policeId, lastDateTime);
+			RiskConductVisit item2 = riskConductVisitService.riskConductVisitItem(policeId, lastDateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
 			itemChart2.setId(1);
 			itemChart2.setName("上月");
@@ -436,14 +446,20 @@ public class RiskCaseController extends BaseController {
 	// 警员信访投诉扣分详情
 	@RequestMapping(value = "/risk/conduct/visit/list", method = RequestMethod.GET)
 	public ResponseEntity<?> riskConductVisitList(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
+
+		String lastMonthTime = DateUtils.lastMonthTime();
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
-		// 警员执法管理扣分详情查询
+		// 警员信访投诉扣分详情
 		List<RiskConductVisitRecord> list = riskConductVisitRecordService.riskConductVisitRecordList(policeId,
-				dateTime);
+				dateTime,lastMonthTime,timeType);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);

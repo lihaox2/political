@@ -595,5 +595,17 @@ order by b.id desc
       #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
     </foreach>
   </insert>
+<!-- 警员历史风险报告年份查询 -->
+<select id="riskHistoryReportTimeList" parameterType="com.bayee.political.domain.RiskHistoryReportTime" resultMap="RiskHistoryReportTimeMap">
+select 1 as id,'总计' as year,1 as timeType
+UNION ALL
+select * from(
+select DATE_FORMAT(creation_date, '%Y') as id,concat(DATE_FORMAT(creation_date, '%Y'),'年')  as year,2 as timeType from risk_report_record 
+where police_id=#{policeId}
+GROUP BY DATE_FORMAT(creation_date, '%Y') order by DATE_FORMAT(creation_date, '%Y') desc) as t
+</select>
 
+<select id="findPoliceHealthScoreByYear" resultType="Double">
+    select health_num from risk_report_record where police_id = #{policeId} and year = #{year} and health_num > 0 limit 1
+  </select>
 </mapper>

@@ -124,9 +124,16 @@
   
   <!-- 警员信访投诉风险指数查询 -->
 <select id="riskConductVisitItem"  resultMap="BaseResultMap">
-	select * from risk_conduct_visit 
-	where police_id=#{policeId,jdbcType=VARCHAR} and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
-	order by id desc limit 1
+	select id, police_id, sum(index_num) as index_num, 
+	sum(deduction_score_count) as deduction_score_count ,
+	sum(total_deduction_score) total_deduction_score from risk_conduct_visit
+	where police_id=#{policeId,jdbcType=VARCHAR} 
+    <if test="timeType == 1">
+	    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+	</if>
+    <if test="timeType == 2">
+	    and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+	</if>
 </select>
   
   <!-- 信访投诉风险指数图例 -->

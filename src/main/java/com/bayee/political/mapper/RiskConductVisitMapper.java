@@ -20,7 +20,8 @@ public interface RiskConductVisitMapper {
     int updateByPrimaryKey(RiskConductVisit record);
     
     //警员信访投诉风险指数查询
-    RiskConductVisit riskConductVisitItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
+    RiskConductVisit riskConductVisitItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime,
+			@Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
     
     // 信访投诉风险指数图例
  	List<ScreenDoubeChart> riskConductVisitChart(@Param("policeId") String policeId);

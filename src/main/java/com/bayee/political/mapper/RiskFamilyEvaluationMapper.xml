@@ -121,14 +121,14 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  <!-- 警员执法考试风险指数查询 -->
+  <!-- 警员家属评价风险指数查询 -->
 	<select id="riskFamilyEvaluationItem"  resultMap="BaseResultMap">
 		select * from risk_family_evaluation 
 		where police_id=#{policeId,jdbcType=VARCHAR} and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
 		order by id desc limit 1
 	</select>
   
-  <!-- 执法考试风险指数图例 -->
+  <!-- 家属评价风险指数图例 -->
 	<select id="riskFamilyEvaluationChart"  resultMap="ScreenDoubeChartMap">
 	select ifnull(b.value,0) as value,CONCAT(c.id,'月') as name
 	from(SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `year_month` 

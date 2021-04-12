@@ -56,9 +56,9 @@ public class RiskConductVisitRecordServiceImpl implements RiskConductVisitRecord
 	}
 
 	@Override
-	public List<RiskConductVisitRecord> riskConductVisitRecordList(String policeId, String dateTime) {
+	public List<RiskConductVisitRecord> riskConductVisitRecordList(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
 		// TODO Auto-generated method stub
-		return riskConductVisitRecordMapper.riskConductVisitRecordList(policeId, dateTime);
+		return riskConductVisitRecordMapper.riskConductVisitRecordList(policeId, dateTime, lastMonthTime, timeType);
 	}
 
 	@Override

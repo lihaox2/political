@@ -6,6 +6,8 @@ public class RiskCaseAbilityRecord {
     private Integer id;
 
     private String policeId;
+    
+    private String year;
 
     private Integer reconsiderationLitigationStatus;
 
@@ -132,4 +134,12 @@ public class RiskCaseAbilityRecord {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
 }

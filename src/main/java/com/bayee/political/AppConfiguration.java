@@ -204,6 +204,9 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductBureauRuleMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductVisitMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductVisitRecordMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskDrinkRecordMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskStutyUnitTrainRecordMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskStutyActivitiesPartyRecordMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -952,5 +955,23 @@ public class AppConfiguration {
 	public RiskConductVisitRecordMapper riskConductVisitRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskConductVisitRecordMapper.class);
+	}
+	
+	@Bean
+	public RiskDrinkRecordMapper riskDrinkRecordMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskDrinkRecordMapper.class);
+	}
+	
+	@Bean
+	public RiskStutyUnitTrainRecordMapper riskStutyUnitTrainRecordMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskStutyUnitTrainRecordMapper.class);
+	}
+	
+	@Bean
+	public RiskStutyActivitiesPartyRecordMapper riskStutyActivitiesPartyRecordMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskStutyActivitiesPartyRecordMapper.class);
 	}
 }

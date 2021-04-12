@@ -52,7 +52,8 @@ public class GetExcel {
             
             List<String> list = new ArrayList<String>();
             
-            if (null == row.getCell(0) || "".equals(GetString(row.getCell(0))) || "".equals(row.getCell(0).getStringCellValue())) {
+            if (null == row.getCell(0) || "".equals(GetString(row.getCell(0))) || 
+            		"".equals(row.getCell(0).getStringCellValue())) {
             	break;
             }
             

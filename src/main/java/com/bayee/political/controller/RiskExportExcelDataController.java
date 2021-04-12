@@ -109,9 +109,7 @@ public class RiskExportExcelDataController {
 		
 		// 记录错误行
 		int index = 0;
-
 		try {
-
 			for (List<String> excel : readExcel) {
 				
 				Integer riskHealthRecordId=riskHealthRecordService.getByIdAndYear(excel.get(5), yearStr);
@@ -472,36 +470,36 @@ public class RiskExportExcelDataController {
 
 			for (List<String> excel : readExcel) {
 				
-				if(excel.get(4).equals("jcj")) {
+				if(excel.get(2).equals("jcj")) {
 					RiskDutyDealPoliceRecord riskDutyDealPoliceRecord=new RiskDutyDealPoliceRecord();
 					
-					riskDutyDealPoliceRecord.setPoliceId(excel.get(1));
+					riskDutyDealPoliceRecord.setPoliceId(excel.get(0));
 					riskDutyDealPoliceRecord.setType(12001);
-					riskDutyDealPoliceRecord.setContent(excel.get(5));
+					riskDutyDealPoliceRecord.setContent(excel.get(3));
 					
-					riskDutyDealPoliceRecord.setInputTime(DateUtils.toDate2(excel.get(6)));
-					riskDutyDealPoliceRecord.setDeductionScore(Double.valueOf(excel.get(7)));
-					riskDutyDealPoliceRecord.setCreationDate(new Date());
+					riskDutyDealPoliceRecord.setInputTime(DateUtils.toDate2(excel.get(4)));
+					riskDutyDealPoliceRecord.setDeductionScore(Double.valueOf(excel.get(5)));
+					riskDutyDealPoliceRecord.setCreationDate(DateUtils.toDate2(excel.get(4)));
 					
 					riskDutyDealPoliceRecordService.insertSelective(riskDutyDealPoliceRecord);
 					
 				}else {
 					RiskCaseLawEnforcementRecord riskCaseLawEnforcementRecord=new RiskCaseLawEnforcementRecord();
 					
-					riskCaseLawEnforcementRecord.setPoliceId(excel.get(1));
-					riskCaseLawEnforcementRecord.setContent(excel.get(5));
+					riskCaseLawEnforcementRecord.setPoliceId(excel.get(0));
+					riskCaseLawEnforcementRecord.setContent(excel.get(3));
 					
-					riskCaseLawEnforcementRecord.setInputTime(DateUtils.toDate2(excel.get(6)));
-					riskCaseLawEnforcementRecord.setDeductionScore(Double.valueOf(excel.get(7)));
-					riskCaseLawEnforcementRecord.setCreationDate(new Date());
+					riskCaseLawEnforcementRecord.setInputTime(DateUtils.toDate2(excel.get(4)));
+					riskCaseLawEnforcementRecord.setDeductionScore(Double.valueOf(excel.get(5)));
+					riskCaseLawEnforcementRecord.setCreationDate(DateUtils.toDate2(excel.get(4)));
 					
-					if(excel.get(4).equals("xtsy")) {
+					if(excel.get(2).equals("xtsy")) {
 						riskCaseLawEnforcementRecord.setType(12002);
-					}else if(excel.get(4).equals("sawp")) {
+					}else if(excel.get(2).equals("sawp")) {
 						riskCaseLawEnforcementRecord.setType(12003);
-					}else if(excel.get(4).equals("baq")) {
+					}else if(excel.get(2).equals("baq")) {
 						riskCaseLawEnforcementRecord.setType(12004);
-					}else if(excel.get(4).equals("wsba")) {
+					}else if(excel.get(2).equals("wsba")) {
 						riskCaseLawEnforcementRecord.setType(12005);
 					}
 					
@@ -619,13 +617,14 @@ public class RiskExportExcelDataController {
 				
 				riskCaseTestRecord.setYear(excel.get(0));
 				//riskCaseTestRecord.setType(excel.get(1));
-				riskCaseTestRecord.setSemester(Double.valueOf(excel.get(2)).intValue());
+				riskCaseTestRecord.setSemester(Double.valueOf(excel.get(1)).intValue());
 				riskCaseTestRecord.setIndexNum(0.0);
-				riskCaseTestRecord.setPoliceId(excel.get(6));
-				riskCaseTestRecord.setScore(Double.valueOf(excel.get(7)));
+				riskCaseTestRecord.setName(excel.get(2));
+				riskCaseTestRecord.setPoliceId(excel.get(4));
+				riskCaseTestRecord.setScore(Double.valueOf(excel.get(5)));
 				
 
-				Integer id=riskCaseTestRecordService.isExistence(excel.get(6), excel.get(0), Double.valueOf(excel.get(2)).intValue());
+				Integer id=riskCaseTestRecordService.isExistence(excel.get(4), excel.get(0), Double.valueOf(excel.get(1)).intValue());
 				
 				if(id!=null) {
 					riskCaseTestRecord.setId(id);
@@ -677,26 +676,25 @@ public class RiskExportExcelDataController {
 			for (List<String> excel : readExcel) {
 				index++;
 				RiskCaseAbilityRecord riskCaseAbilityRecord = new RiskCaseAbilityRecord();
-				//riskCaseAbilityRecord.setYear(excel.get(0));
-				riskCaseAbilityRecord.setPoliceId(excel.get(4));
-				riskCaseAbilityRecord.setReconsiderationLitigationStatus(Double.valueOf(excel.get(5)).intValue());
-				riskCaseAbilityRecord.setLetterVisitStatus(Double.valueOf(excel.get(6)).intValue());
-				riskCaseAbilityRecord.setLawEnforcementFaultStatus(Double.valueOf(excel.get(7)).intValue());
-				riskCaseAbilityRecord.setJudicialSupervisionStatus(Double.valueOf(excel.get(8)).intValue());
-				riskCaseAbilityRecord.setCaseExpertStatus(Double.valueOf(excel.get(9)).intValue());
-				riskCaseAbilityRecord.setExcellentLegalOfficerStatus(Double.valueOf(excel.get(10)).intValue());
-				riskCaseAbilityRecord.setBasicTestStatus(Double.valueOf(excel.get(11)).intValue());
-				riskCaseAbilityRecord.setHighTestStatus(Double.valueOf(excel.get(12)).intValue());
-				riskCaseAbilityRecord.setJudicialTestStatus(Double.valueOf(excel.get(13)).intValue());
-				
-				Integer id=riskCaseAbilityRecordService.getByYearAndPoliceId(excel.get(0),excel.get(4));
+				riskCaseAbilityRecord.setYear(excel.get(0));
+				riskCaseAbilityRecord.setPoliceId(excel.get(2));
+				riskCaseAbilityRecord.setReconsiderationLitigationStatus(Double.valueOf(excel.get(3)).intValue());
+				riskCaseAbilityRecord.setLetterVisitStatus(Double.valueOf(excel.get(4)).intValue());
+				riskCaseAbilityRecord.setLawEnforcementFaultStatus(Double.valueOf(excel.get(5)).intValue());
+				riskCaseAbilityRecord.setJudicialSupervisionStatus(Double.valueOf(excel.get(6)).intValue());
+				riskCaseAbilityRecord.setCaseExpertStatus(Double.valueOf(excel.get(7)).intValue());
+				riskCaseAbilityRecord.setExcellentLegalOfficerStatus(Double.valueOf(excel.get(8)).intValue());
+				riskCaseAbilityRecord.setBasicTestStatus(Double.valueOf(excel.get(9)).intValue());
+				riskCaseAbilityRecord.setHighTestStatus(Double.valueOf(excel.get(10)).intValue());
+				riskCaseAbilityRecord.setJudicialTestStatus(Double.valueOf(excel.get(11)).intValue());
+				Integer id=riskCaseAbilityRecordService.getByYearAndPoliceId(excel.get(0),excel.get(2));
 				
 				if(id!=null) {
 					riskCaseAbilityRecord.setId(id);
 					riskCaseAbilityRecord.setUpdateDate(new Date());
 					riskCaseAbilityRecordService.updateByPrimaryKeySelective(riskCaseAbilityRecord);
 				}else {
-					riskCaseAbilityRecord.setCreationDate(new Date());
+					riskCaseAbilityRecord.setCreationDate(DateUtils.toDate2(excel.get(0)));
 					riskCaseAbilityRecordService.insertSelective(riskCaseAbilityRecord);
 				}
 			}

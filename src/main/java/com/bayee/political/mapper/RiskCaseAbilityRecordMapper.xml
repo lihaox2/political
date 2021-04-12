@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskCaseAbilityRecord" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="year" property="year" jdbcType="VARCHAR" />
     <result column="reconsideration_litigation_status" property="reconsiderationLitigationStatus" jdbcType="INTEGER" />
     <result column="letter_visit_status" property="letterVisitStatus" jdbcType="INTEGER" />
     <result column="law_enforcement_fault_status" property="lawEnforcementFaultStatus" jdbcType="INTEGER" />
@@ -17,7 +18,7 @@
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, police_id, reconsideration_litigation_status, letter_visit_status, law_enforcement_fault_status, 
+    id, police_id,year, reconsideration_litigation_status, letter_visit_status, law_enforcement_fault_status, 
     judicial_supervision_status, case_expert_status, excellent_legal_officer_status, 
     basic_test_status, high_test_status, judicial_test_status, creation_date, update_date
   </sql>
@@ -32,13 +33,13 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseAbilityRecord" >
-    insert into risk_case_ability_record (id, police_id, reconsideration_litigation_status, 
+    insert into risk_case_ability_record (id, police_id,year, reconsideration_litigation_status, 
       letter_visit_status, law_enforcement_fault_status, 
       judicial_supervision_status, case_expert_status, 
       excellent_legal_officer_status, basic_test_status, 
       high_test_status, judicial_test_status, creation_date, 
       update_date)
-    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{reconsiderationLitigationStatus,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR},#{year}, #{reconsiderationLitigationStatus,jdbcType=INTEGER}, 
       #{letterVisitStatus,jdbcType=INTEGER}, #{lawEnforcementFaultStatus,jdbcType=INTEGER}, 
       #{judicialSupervisionStatus,jdbcType=INTEGER}, #{caseExpertStatus,jdbcType=INTEGER}, 
       #{excellentLegalOfficerStatus,jdbcType=INTEGER}, #{basicTestStatus,jdbcType=INTEGER}, 
@@ -53,6 +54,9 @@
       </if>
       <if test="policeId != null" >
         police_id,
+      </if>
+      <if test="year != null" >
+        year,
       </if>
       <if test="reconsiderationLitigationStatus != null" >
         reconsideration_litigation_status,
@@ -95,6 +99,9 @@
       <if test="policeId != null" >
         #{policeId,jdbcType=VARCHAR},
       </if>
+      <if test="year != null" >
+        #{year},
+      </if>
       <if test="reconsiderationLitigationStatus != null" >
         #{reconsiderationLitigationStatus,jdbcType=INTEGER},
       </if>
@@ -136,6 +143,9 @@
       <if test="policeId != null" >
         police_id = #{policeId,jdbcType=VARCHAR},
       </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=VARCHAR},
+      </if>
       <if test="reconsiderationLitigationStatus != null" >
         reconsideration_litigation_status = #{reconsiderationLitigationStatus,jdbcType=INTEGER},
       </if>
@@ -174,7 +184,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskCaseAbilityRecord" >
     update risk_case_ability_record
-    set police_id = #{policeId,jdbcType=VARCHAR},
+    set police_id = #{policeId,jdbcType=VARCHAR},year = #{year,jdbcType=VARCHAR},
       reconsideration_litigation_status = #{reconsiderationLitigationStatus,jdbcType=INTEGER},
       letter_visit_status = #{letterVisitStatus,jdbcType=INTEGER},
       law_enforcement_fault_status = #{lawEnforcementFaultStatus,jdbcType=INTEGER},

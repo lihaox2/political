@@ -11,6 +11,8 @@ public class RiskCaseTestRecord {
     private String year;
 
     private Integer semester;
+    
+    private String name;
 
     private Double score;
 
@@ -93,5 +95,12 @@ public class RiskCaseTestRecord {
 	public void setList(List<ScreenDoubeChart> list) {
 		this.list = list;
 	}
-    
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

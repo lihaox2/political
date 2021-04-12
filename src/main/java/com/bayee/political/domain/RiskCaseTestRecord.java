@@ -15,6 +15,8 @@ public class RiskCaseTestRecord {
     private String name;
 
     private Double score;
+    
+    private Double deductionScore;
 
     private Date creationDate;
 
@@ -102,5 +104,13 @@ public class RiskCaseTestRecord {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Double getDeductionScore() {
+		return deductionScore;
+	}
+
+	public void setDeductionScore(Double deductionScore) {
+		this.deductionScore = deductionScore;
 	}
 }

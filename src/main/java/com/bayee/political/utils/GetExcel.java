@@ -52,8 +52,7 @@ public class GetExcel {
             
             List<String> list = new ArrayList<String>();
             
-            if (null == row.getCell(0) || "".equals(GetString(row.getCell(0))) || 
-            		"".equals(row.getCell(0).getStringCellValue())) {
+            if (null == row.getCell(0) || "".equals(GetString(row.getCell(0)))) {
             	break;
             }
             
@@ -106,7 +105,9 @@ public class GetExcel {
         try {
             val = String.valueOf(cell.getStringCellValue());
         } catch (IllegalStateException e) {
-            val = String.valueOf(cell.getNumericCellValue());
+        	//val = String.valueOf(cell.getNumericCellValue());
+        	DecimalFormat df = new DecimalFormat("0");
+            val = df.format(cell.getNumericCellValue());
         }
 
         if (val.indexOf("E") > -1) {//防止科学计数法  防止数字变成科学记数法

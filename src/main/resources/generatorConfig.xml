@@ -35,8 +35,8 @@
             targetPackage="com.bayee.political.mapper" targetProject="political/src/main/java">
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
-        <table schema="nth_smart_political" tableName="risk_conduct"
-            domainObjectName="RiskConduct" enableCountByExample="false"
+        <table schema="nth_smart_political" tableName="risk_case_test"
+            domainObjectName="RiskCaseTest" enableCountByExample="false"
             enableUpdateByExample="false" enableDeleteByExample="false"
             enableSelectByExample="false" selectByExampleQueryId="false">
         </table>

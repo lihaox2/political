@@ -9,6 +9,7 @@
     <result column="semester" property="semester" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="score" property="score" jdbcType="DOUBLE" />
+    <result column="deduction_score" property="deductionScore" jdbcType="DOUBLE" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -19,7 +20,7 @@
     <result column="value" property="value" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, police_id,index_num, year, semester,name, score, creation_date, update_date
+    id, police_id,index_num, year, semester,name, score,deduction_score, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -33,10 +34,10 @@
   </delete>
   <insert id="insertTest" parameterType="com.bayee.political.domain.RiskCaseTestRecord" >
     insert into risk_case_test_record (id, police_id,index_num, year, 
-      semester,name, score, creation_date, 
+      semester,name, score,deduction_score, creation_date, 
       update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum}, #{year,jdbcType=VARCHAR}, 
-      #{semester,jdbcType=INTEGER},#{name}, #{score,jdbcType=DOUBLE}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{semester,jdbcType=INTEGER},#{name}, #{score,jdbcType=DOUBLE},#{deductionScore}, #{creationDate,jdbcType=TIMESTAMP}, 
       #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskCaseTestRecord" >
@@ -62,6 +63,9 @@
       </if>
       <if test="score != null" >
         score,
+      </if>
+      <if test="deductionScore != null" >
+        deduction_score,
       </if>
       <if test="creationDate != null" >
         creation_date,
@@ -92,6 +96,9 @@
       <if test="score != null" >
         #{score,jdbcType=DOUBLE},
       </if>
+      <if test="deductionScore != null" >
+        #{deductionScore},
+      </if>
       <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -121,6 +128,9 @@
       <if test="score != null" >
         score = #{score,jdbcType=DOUBLE},
       </if>
+      <if test="deductionScore != null" >
+        deduction_score=#{deductionScore},
+      </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -138,6 +148,7 @@
       semester = #{semester,jdbcType=INTEGER},
       name=#{name},
       score = #{score,jdbcType=DOUBLE},
+      deduction_score=#{deductionScore},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

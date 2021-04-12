@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.bayee.political.domain.RiskConductVisitRecord;
 import com.bayee.political.mapper.RiskConductVisitRecordMapper;
+import com.bayee.political.mapper.RiskConductVisitTypeMapper;
 import com.bayee.political.service.RiskConductVisitRecordService;
 
 @Service
@@ -14,6 +15,9 @@ public class RiskConductVisitRecordServiceImpl implements RiskConductVisitRecord
 	
 	@Autowired
 	private RiskConductVisitRecordMapper riskConductVisitRecordMapper;
+	
+	@Autowired
+	private RiskConductVisitTypeMapper riskConductVisitTypeMapper;
 
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
@@ -55,6 +59,12 @@ public class RiskConductVisitRecordServiceImpl implements RiskConductVisitRecord
 	public List<RiskConductVisitRecord> riskConductVisitRecordList(String policeId, String dateTime) {
 		// TODO Auto-generated method stub
 		return riskConductVisitRecordMapper.riskConductVisitRecordList(policeId, dateTime);
+	}
+
+	@Override
+	public Integer selectByName(String name) {
+		// TODO Auto-generated method stub
+		return riskConductVisitTypeMapper.selectByName(name);
 	}
 
 }

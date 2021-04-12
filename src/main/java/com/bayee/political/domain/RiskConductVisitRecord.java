@@ -14,6 +14,8 @@ public class RiskConductVisitRecord {
     private String content;
 
     private String remarks;
+    
+    private Double deductionScore;
 
     private Date creationDate;
 
@@ -82,4 +84,14 @@ public class RiskConductVisitRecord {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+
+	public Double getDeductionScore() {
+		return deductionScore;
+	}
+
+	public void setDeductionScore(Double deductionScore) {
+		this.deductionScore = deductionScore;
+	}
+    
+    
 }

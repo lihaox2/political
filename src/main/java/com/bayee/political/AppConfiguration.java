@@ -207,6 +207,7 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskDrinkRecordMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskStutyUnitTrainRecordMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskStutyActivitiesPartyRecordMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductVisitTypeMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -973,5 +974,11 @@ public class AppConfiguration {
 	public RiskStutyActivitiesPartyRecordMapper riskStutyActivitiesPartyRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskStutyActivitiesPartyRecordMapper.class);
+	}
+	
+	@Bean
+	public RiskConductVisitTypeMapper riskConductVisitTypeMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskConductVisitTypeMapper.class);
 	}
 }

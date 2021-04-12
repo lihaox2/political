@@ -8,11 +8,12 @@
     <result column="input_time" jdbcType="TIMESTAMP" property="inputTime" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="deduction_score" jdbcType="DOUBLE" property="deductionScore" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, police_id, type, input_time, content, remarks, creation_date, update_date
+    id, police_id, type, input_time, content, remarks,deduction_score, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -26,10 +27,10 @@
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductVisitRecord">
     insert into risk_conduct_visit_record (id, police_id, type, 
-      input_time, content, remarks, 
+      input_time, content, remarks, deduction_score,
       creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
-      #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{deductionScore},
       #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductVisitRecord">
@@ -52,6 +53,9 @@
       </if>
       <if test="remarks != null">
         remarks,
+      </if>
+      <if test="deductionScore != null">
+        deduction_score,
       </if>
       <if test="creationDate != null">
         creation_date,
@@ -79,6 +83,9 @@
       <if test="remarks != null">
         #{remarks,jdbcType=VARCHAR},
       </if>
+      <if test="deductionScore != null">
+        #{deductionScore},
+      </if>
       <if test="creationDate != null">
         #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -105,6 +112,9 @@
       <if test="remarks != null">
         remarks = #{remarks,jdbcType=VARCHAR},
       </if>
+      <if test="deductionScore != null">
+        deduction_score = #{deductionScore},
+      </if>
       <if test="creationDate != null">
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -121,7 +131,7 @@
       input_time = #{inputTime,jdbcType=TIMESTAMP},
       content = #{content,jdbcType=VARCHAR},
       remarks = #{remarks,jdbcType=VARCHAR},
-      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},deduction_score = #{deductionScore},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

@@ -40,4 +40,9 @@ public interface RiskConductBureauRuleMapper {
      */
     void insertRiskConductBureauRuleList(List<RiskConductBureauRule> riskConductBureauRuleList);
 
+    // 警员局规计分风险查询
+    RiskConductBureauRule riskConductBureauRuleIndexItem(@Param("policeId") String policeId,
+                                                         @Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime,
+                                                         @Param("timeType") Integer timeType);
+
 }

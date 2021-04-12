@@ -1064,4 +1064,11 @@ public class AlarmServiceImpl implements AlarmService {
 		return alarmTalkMapper.newThreeTalk();
 	}
 
+	// 警员局规计分数据列表查询
+	@Override
+	public List<AlarmEvaluation> riskConductBureauRuleRecordList(String policeId, String dateTime, String lastMonthTime,
+																 Integer timeType) {
+		return alarmEvaluationMapper.riskConductBureauRuleRecordList(policeId, dateTime, lastMonthTime, timeType);
+	}
+
 }

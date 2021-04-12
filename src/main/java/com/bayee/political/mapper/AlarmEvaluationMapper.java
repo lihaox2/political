@@ -541,4 +541,9 @@ public interface AlarmEvaluationMapper {
 	// 近12个月预警人数查询
 	List<CalculationChart> screenAlarmList();
 
+	// 警员局规计分数据列表查询
+	List<AlarmEvaluation> riskConductBureauRuleRecordList(@Param("policeId") String policeId,
+														  @Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime,
+														  @Param("timeType") Integer timeType);
+
 }

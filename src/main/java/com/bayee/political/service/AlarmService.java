@@ -894,4 +894,8 @@ public interface AlarmService {
 	// 查询进行中的约谈
 	List<AlarmTalk> talkExistList(String policeId, Integer alarmRecordId, Integer alarmType);
 
+	// 警员局规计分数据列表查询
+	List<AlarmEvaluation> riskConductBureauRuleRecordList(String policeId, String dateTime, String lastMonthTime,
+														  Integer timeType);
+
 }

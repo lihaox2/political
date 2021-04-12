@@ -359,6 +359,13 @@ public class RiskServiceImpl implements RiskService {
 		return riskCaseTestRecordMapper.riskCaseTestRecordList(policeId, dateTime, lastMonthTime, timeType);
 	}
 
+	// 警员局规计分风险查询
+	@Override
+	public RiskConductBureauRule riskConductBureauRuleIndexItem(String policeId, String dateTime, String lastMonthTime,
+																Integer timeType) {
+		return riskConductBureauRuleMapper.riskConductBureauRuleIndexItem(policeId, dateTime, lastMonthTime, timeType);
+	}
+
 	@Override
 	public RiskConductBureauRoleResultDTO riskConductBureauRole(String policeId, String dateTime, String lastDateTime) {
 		RiskConductBureauRoleResultDTO resultDTO = new RiskConductBureauRoleResultDTO();

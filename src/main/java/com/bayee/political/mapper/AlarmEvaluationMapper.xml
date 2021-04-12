@@ -2012,4 +2012,20 @@ GROUP BY DATE_FORMAT(first_alarm_time,'%Y-%m')) b on b.name=a.year_month
 left join month c on c.num_name=right(a.year_month,2) 
 order by a.year_month
 </select>
+
+    <!--警员局规计分数据列表查询 -->
+    <select id="riskConductBureauRuleRecordList" parameterType="com.bayee.political.domain.AlarmEvaluation" resultMap="BaseResultMap">
+        select a.id,a.scored_police_id,a.scoring_breakdown_id,a.content,a.scoring_date,ABS(a.score_value) as score_value,
+        b.scoring_breakdown as scoreItemsName from alarm_evaluation a
+        left join alarm_scoring_breakdown b on b.id=a.scoring_breakdown_id
+        where a.score_items=1 and a.scored_police_id=#{policeId}
+        <if test="timeType == 1">
+            and DATE_FORMAT(a.scoring_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(a.scoring_date, '%Y-%m')&lt;=#{dateTime}
+        </if>
+        <if test="timeType == 2">
+            and DATE_FORMAT(a.scoring_date, '%Y-%m')=#{dateTime}
+        </if>
+        ORDER BY a.creation_date desc
+    </select>
+
 </mapper>

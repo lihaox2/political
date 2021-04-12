@@ -137,6 +137,10 @@ public interface RiskService {
 	List<RiskCaseTestRecord> riskCaseTestRecordList(String policeId, String dateTime, String lastMonthTime,
 													Integer timeType);
 
+	// 警员局规计分风险查询
+	RiskConductBureauRule riskConductBureauRuleIndexItem(String policeId, String dateTime, String lastMonthTime,
+														 Integer timeType);
+
 	/**
 	 * 查询局规计分
 	 * @param policeId

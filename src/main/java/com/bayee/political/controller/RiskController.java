@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.bayee.political.domain.*;
+import com.bayee.political.service.AlarmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,23 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.bayee.political.domain.RiskAlarm;
-import com.bayee.political.domain.RiskAlarmType;
-import com.bayee.political.domain.RiskCase;
-import com.bayee.political.domain.RiskConductBureauRuleRecord;
-import com.bayee.political.domain.RiskDuty;
-import com.bayee.political.domain.RiskDutyDealPoliceRecord;
-import com.bayee.political.domain.RiskHealth;
-import com.bayee.political.domain.RiskHistoryReport;
-import com.bayee.political.domain.RiskHistoryReportTime;
-import com.bayee.political.domain.RiskIndexMonitorChild;
-import com.bayee.political.domain.RiskReportRecord;
-import com.bayee.political.domain.RiskSocialContact;
-import com.bayee.political.domain.RiskSocialContactRecord;
-import com.bayee.political.domain.RiskTrain;
-import com.bayee.political.domain.RiskTrainFailChart;
-import com.bayee.political.domain.ScreenChart;
-import com.bayee.political.domain.ScreenDoubeChart;
 import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
 import com.bayee.political.pojo.json.RiskConductBureauRoleResult;
 import com.bayee.political.service.RiskService;
@@ -54,6 +39,9 @@ public class RiskController extends BaseController {
 
 	@Autowired
 	private RiskService riskService;
+
+	@Autowired
+	private AlarmService alarmService;
 
 	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
 
@@ -778,9 +766,15 @@ public class RiskController extends BaseController {
 
 	@GetMapping("/risk/conduct/bureau/role/index")
 	public ResponseEntity<?> riskConductBureauRole(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ParseException {
+												   @RequestParam(value = "dateTime", required = false) String dateTime,
+												   @RequestParam(value = "timeType", required = false) Integer timeType)
+			throws ParseException {
 		DataListReturn dlr = new DataListReturn();
-		if (dateTime == null || "".equals(dateTime)) {
+		String lastMonthTime = DateUtils.lastMonthTime();
+		if (timeType == null) {// 1总计2月份
+			timeType = 1;
+		}
+		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
 		Date currdate = sd.parse(dateTime);
@@ -788,19 +782,44 @@ public class RiskController extends BaseController {
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
-		// 警员局规计分风险指数查询
-		RiskConductBureauRoleResultDTO resultDTO = riskService.riskConductBureauRole(policeId, dateTime, lastDateTime);
-		RiskConductBureauRoleResult result = new RiskConductBureauRoleResult();
-		result.setIndexNum(resultDTO.getIndexNum());
-		result.setDeductionScoreCount(resultDTO.getDeductionScoreCount());
-		result.setTotalDeductionScore(resultDTO.getTotalDeductionScore());
-		result.setMonthList(resultDTO.getMonthList());
-
+		// 警员局规计分风险查询
+		RiskConductBureauRule item = riskService.riskConductBureauRuleIndexItem(policeId, dateTime, lastMonthTime,
+				timeType);
+		if (item != null) {
+			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
+			// 上个月警员局规计分风险查询
+			RiskConductBureauRule item2 = riskService.riskConductBureauRuleIndexItem(policeId, lastDateTime,
+					lastMonthTime, 2);
+			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
+			itemChart2.setId(1);
+			itemChart2.setName("上月");
+			if (item2 != null) {
+				itemChart2.setValue(item2.getIndexNum());
+			} else {
+				itemChart2.setValue(0.0);
+			}
+			list.add(itemChart2);
+			// 本月警员局规计分风险查询
+			RiskConductBureauRule item3 = riskService.riskConductBureauRuleIndexItem(policeId, dateTime, lastMonthTime,
+					2);
+			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
+			itemChart1.setId(2);
+			itemChart1.setName("本月");
+			if (item3 != null) {
+				itemChart1.setValue(item3.getIndexNum());
+			} else {
+				itemChart1.setValue(0.0);
+			}
+			list.add(itemChart1);
+			item.setList(list);
+		} else {
+			item = new RiskConductBureauRule();
+		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");
-		dlr.setResult(result);
+		dlr.setResult(item);
 		dlr.setCode(StatusCode.getSuccesscode());
-		return new ResponseEntity<>(dlr, HttpStatus.OK);
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
 	}
 
 	@GetMapping("/risk/conduct/bureau/role/chart")
@@ -819,13 +838,19 @@ public class RiskController extends BaseController {
 	@GetMapping("/risk/conduct/bureau/role/record/list")
 	public ResponseEntity<?> riskConductBureauRoleRecordList(
 			@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ParseException {
 		DataListReturn dlr = new DataListReturn();
-		if (dateTime == null || "".equals(dateTime)) {
+		String lastMonthTime = DateUtils.lastMonthTime();
+		if (timeType == null) {// 1总计2月份
+			timeType = 1;
+		}
+		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
-		// 局规计分详情
-		List<RiskConductBureauRuleRecord> list = riskService.findRiskConductBureauRuleRecord(policeId, dateTime);
+		// 警员局规计分数据列表查询
+		List<AlarmEvaluation> list = alarmService.riskConductBureauRuleRecordList(policeId, dateTime, lastMonthTime,
+				timeType);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);

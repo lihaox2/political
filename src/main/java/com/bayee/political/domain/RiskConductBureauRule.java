@@ -1,6 +1,7 @@
 package com.bayee.political.domain;
 
 import java.util.Date;
+import java.util.List;
 
 public class RiskConductBureauRule {
     private Integer id;
@@ -16,6 +17,16 @@ public class RiskConductBureauRule {
     private Date creationDate;
 
     private Date updateDate;
+
+    private List<ScreenDoubeChart> list;
+
+    public List<ScreenDoubeChart> getList() {
+        return list;
+    }
+
+    public void setList(List<ScreenDoubeChart> list) {
+        this.list = list;
+    }
 
     public Integer getId() {
         return id;

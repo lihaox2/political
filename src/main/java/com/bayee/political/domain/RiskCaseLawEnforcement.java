@@ -17,8 +17,21 @@ public class RiskCaseLawEnforcement {
     private Date creationDate;
 
     private Date updateDate;
+
+    /**
+     * 是否显示详情（0否1是）
+     */
+    private Integer isDisplay;
     
     private List<ScreenDoubeChart> list;
+
+    public Integer getIsDisplay() {
+        return isDisplay;
+    }
+
+    public void setIsDisplay(Integer isDisplay) {
+        this.isDisplay = isDisplay;
+    }
 
     public Integer getId() {
         return id;

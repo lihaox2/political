@@ -179,4 +179,17 @@
 	<select id="isExistence" resultType="Integer">
 	select id from risk_case_test_record where year=#{year} and semester=#{semester} and police_id = #{policeId}
 	</select>
+
+  <!-- 警员执法考试数据列表查询 -->
+  <select id="riskCaseTestRecordList" parameterType="com.bayee.political.domain.RiskCaseTestRecord" resultMap="BaseResultMap">
+    select *,(case when index_num=0 and score >=60 then '及格'
+    when index_num>0 and score &lt;60 then '不及格'
+    else '暂无成绩' end) as achievementStr from risk_case_test_record where police_id=#{policeId}
+    <if test="timeType == 1">
+      and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+    </if>
+  </select>
 </mapper>

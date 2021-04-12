@@ -20,6 +20,16 @@ public class RiskDuty {
 
     private Date updateDate;
 
+    private Integer isDisplay;// 是否显示详情（0否1是）
+
+    public Integer getIsDisplay() {
+        return isDisplay;
+    }
+
+    public void setIsDisplay(Integer isDisplay) {
+        this.isDisplay = isDisplay;
+    }
+
     public Integer getId() {
         return id;
     }

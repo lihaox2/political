@@ -43,6 +43,8 @@ public class RiskReportRecord {
     private Double drinkNum;
 
     private Double studyNum;
+
+	private Double workNum;
     
     private List<ScreenDoubeChart> chartList;
 
@@ -312,5 +314,13 @@ public class RiskReportRecord {
 	 */
 	public void setStudyNum(Double studyNum) {
 		this.studyNum = studyNum;
+	}
+
+	public Double getWorkNum() {
+		return workNum;
+	}
+
+	public void setWorkNum(Double workNum) {
+		this.workNum = workNum;
 	}
 }

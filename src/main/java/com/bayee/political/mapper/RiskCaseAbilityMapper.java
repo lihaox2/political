@@ -25,4 +25,8 @@ public interface RiskCaseAbilityMapper {
     
     // 执法办案风险指数图例
  	List<ScreenDoubeChart> riskCaseAbilityChart(@Param("policeId") String policeId);
+
+    // 警员执法能力风险查询
+    RiskCaseAbility riskCaseAbilityIndexItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime,
+                                             @Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
 }

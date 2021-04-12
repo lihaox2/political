@@ -385,4 +385,16 @@ public class DateUtils {
 			report.setEndTime(endTime);
 			return report;
 		}
+
+	// 获取近12个月的最后一个月时间
+	public static String lastMonthTime() throws ParseException {
+		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
+		String dateTime = sd.format(new Date());
+		Date currdate = sd.parse(dateTime);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(currdate);
+		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 11);
+		String lastMonthTime = sd.format(calendar.getTime());
+		return lastMonthTime;
+	}
 }

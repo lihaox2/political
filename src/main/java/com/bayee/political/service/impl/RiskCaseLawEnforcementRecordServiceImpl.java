@@ -17,7 +17,7 @@ public class RiskCaseLawEnforcementRecordServiceImpl implements RiskCaseLawEnfor
 	@Override
 	public List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordList(String policeId,String dateTime) {
 		// TODO Auto-generated method stub
-		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordList(policeId,dateTime);
+		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordList(policeId,dateTime, null , 2);
 	}
 
 	@Override

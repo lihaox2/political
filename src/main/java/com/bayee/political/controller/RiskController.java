@@ -3,6 +3,8 @@ package com.bayee.political.controller;
 import com.bayee.political.domain.*;
 import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
 import com.bayee.political.pojo.json.RiskConductBureauRoleResult;
+
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +42,8 @@ public class RiskController extends BaseController {
 
 	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
 
+	DecimalFormat df = new DecimalFormat(".00");
+
 	// 警员风险分页查询
 	@RequestMapping(value = "/risk/page/list", method = RequestMethod.GET)
 	public ResponseEntity<?> riskPageList(@RequestParam(value = "keyWords", required = false) String keyWords,
@@ -75,6 +79,7 @@ public class RiskController extends BaseController {
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
+		String lastMonthTime = DateUtils.lastMonthTime();
 		Integer pageNums = pageNum;
 		if (pageSize == null) {
 			pageSize = 10;
@@ -82,14 +87,27 @@ public class RiskController extends BaseController {
 		pageNum = ((pageNum) - 1) * pageSize;
 		// 警员风险分页查询
 		List<RiskReportRecord> list = riskService.riskPageList(keyWords, alarmType, sortName, dateTime, lastDateTime,
-				pageSize, pageNum);
+				lastMonthTime, pageSize, pageNum);
 		for (int i = 0; i < list.size(); i++) {
+			// 警员健康风险指数查询
+			RiskHealth item = riskService.riskHealthIndexNewestItem(list.get(i).getPoliceId());
+			if (item != null && item.getIndexNum() != null) {
+				list.get(i).setHealthNum(item.getIndexNum());
+			} else {
+				list.get(i).setHealthNum(0.0);
+			}
+			Double totalNum = list.get(i).getConductNum() + list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum()
+					+ list.get(i).getTrainNum() + list.get(i).getSocialContactNum()
+					+ list.get(i).getAmilyEvaluationNum() + list.get(i).getDrinkNum() + list.get(i).getStudyNum()
+					+ list.get(i).getWorkNum() + list.get(i).getHealthNum();
+			list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));
 			// 警员风险雷达图
-			List<ScreenDoubeChart> list2 = riskService.riskChartList(list.get(i).getPoliceId(), dateTime);
+			List<ScreenDoubeChart> list2 = riskService.riskChartList(list.get(i).getPoliceId(), dateTime, lastMonthTime,
+					1);
 			list.get(i).setChartList(list2);
 		}
 		// 警员风险列表总数
-		int total = riskService.riskPageCount(keyWords, alarmType, dateTime, lastDateTime);
+		int total = riskService.riskPageCount(keyWords, alarmType, dateTime, lastDateTime, lastMonthTime);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);
@@ -111,8 +129,12 @@ public class RiskController extends BaseController {
 	@RequestMapping(value = "/risk/report/record/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskReportRecordItem(@RequestParam(value = "id", required = false) Integer id,
 			@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {// 1总计2月份
+			timeType = 1;
+		}
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
@@ -121,14 +143,27 @@ public class RiskController extends BaseController {
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
+		String lastMonthTime = DateUtils.lastMonthTime();
 		// 警员风险详情查询
-		RiskReportRecord item = riskService.riskReportRecordItem(id, policeId, dateTime, lastDateTime);
-		if (item == null) {
-			item = new RiskReportRecord();
+		RiskReportRecord item = riskService.riskReportRecordItem(id, policeId, dateTime, lastDateTime, lastMonthTime,
+				timeType);
+		if (item != null) {
+			// 警员健康风险指数查询
+			RiskHealth ritem = riskService.riskHealthIndexNewestItem(policeId);
+			if (ritem != null && ritem.getIndexNum() != null) {
+				item.setHealthNum(ritem.getIndexNum());
+			} else {
+				item.setHealthNum(0.0);
+			}
+			Double totalNum = item.getConductNum() + item.getHandlingCaseNum() + item.getDutyNum() + item.getTrainNum()
+					+ item.getSocialContactNum() + item.getAmilyEvaluationNum() + item.getDrinkNum()
+					+ item.getStudyNum() + item.getWorkNum() + item.getHealthNum();
+			item.setTotalNum(Double.valueOf(df.format(totalNum)));
+			// 警员风险雷达图
+			List<ScreenDoubeChart> list2 = riskService.riskChartList(item.getPoliceId(), dateTime, lastMonthTime,
+					timeType);
+			item.setChartList(list2);
 		}
-		// 警员风险雷达图
-		List<ScreenDoubeChart> list2 = riskService.riskChartList(item.getPoliceId(), dateTime);
-		item.setChartList(list2);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(item);
@@ -201,8 +236,14 @@ public class RiskController extends BaseController {
 	// 警员执法办案风险查询
 	@RequestMapping(value = "/risk/case/index/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskCaseIndexItem(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+												@RequestParam(value = "dateTime", required = false) String dateTime,
+											   @RequestParam(value = "timeType", required = false) Integer timeType)
+			throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
+		String lastMonthTime = DateUtils.lastMonthTime();
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
@@ -212,11 +253,11 @@ public class RiskController extends BaseController {
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
 		// 警员执法办案风险指数查询
-		RiskCase item = riskService.riskCaseIndexItem(policeId, dateTime);
+		RiskCase item = riskService.riskCaseIndexItem(policeId, dateTime, lastMonthTime, timeType);
 		if (item != null) {
 			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
 			// 上个月警员接警执勤指数查询
-			RiskCase item2 = riskService.riskCaseIndexItem(policeId, lastDateTime);
+			RiskCase item2 = riskService.riskCaseIndexItem(policeId, lastDateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
 			itemChart2.setId(1);
 			itemChart2.setName("上月");
@@ -226,10 +267,16 @@ public class RiskController extends BaseController {
 				itemChart2.setValue(0.0);
 			}
 			list.add(itemChart2);
+			// 本月警员执法办案风险指数查询
+			RiskCase item3 = riskService.riskCaseIndexItem(policeId, dateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
 			itemChart1.setId(2);
 			itemChart1.setName("本月");
-			itemChart1.setValue(item.getIndexNum());
+			if (item3 != null) {
+				itemChart1.setValue(item3.getIndexNum());
+			} else {
+				itemChart1.setValue(0.0);
+			}
 			list.add(itemChart1);
 			item.setList(list);
 		} else {
@@ -257,7 +304,7 @@ public class RiskController extends BaseController {
 	}
 
 	// 警员执法管理风险查询
-	@RequestMapping(value = "/risk/case/law/enforcement/index/item", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/risk/case/law/enforcement/index/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskCaseLawEnforcementIndexItem(
 			@RequestParam(value = "policeId", required = false) String policeId,
 			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
@@ -299,13 +346,19 @@ public class RiskController extends BaseController {
 		dlr.setResult(item);
 		dlr.setCode(StatusCode.getSuccesscode());
 		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
-	}
+	}*/
 
 	// 警员接警执勤指数查询
 	@RequestMapping(value = "/risk/duty/index/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskDutyIndexItem(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+											   @RequestParam(value = "dateTime", required = false) String dateTime,
+											   @RequestParam(value = "timeType", required = false) Integer timeType)
+			throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
+		String lastMonthTime = DateUtils.lastMonthTime();
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
@@ -315,11 +368,19 @@ public class RiskController extends BaseController {
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
 		// 警员接警执勤指数查询
-		RiskDuty item = riskService.riskDutyIndexItem(policeId, dateTime);
+		RiskDuty item = riskService.riskDutyIndexItem(policeId, dateTime, lastMonthTime, timeType);
 		if (item != null) {
+			// 警员接警执勤数据列表查询
+			List<RiskDutyDealPoliceRecord> rList = riskService.riskDutyRecordList(policeId, dateTime, lastMonthTime,
+					timeType);
+			if (rList.size() > 0) {
+				item.setIsDisplay(1);
+			} else {
+				item.setIsDisplay(0);
+			}
 			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
 			// 上个月警员接警执勤指数查询
-			RiskDuty item2 = riskService.riskDutyIndexItem(policeId, lastDateTime);
+			RiskDuty item2 = riskService.riskDutyIndexItem(policeId, lastDateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
 			itemChart2.setId(1);
 			itemChart2.setName("上月");
@@ -329,10 +390,16 @@ public class RiskController extends BaseController {
 				itemChart2.setValue(0.0);
 			}
 			list.add(itemChart2);
+			// 本月警员接警执勤指数查询
+			RiskDuty item3 = riskService.riskDutyIndexItem(policeId, dateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
 			itemChart1.setId(2);
 			itemChart1.setName("本月");
-			itemChart1.setValue(item.getIndexNum());
+			if (item3 != null) {
+				itemChart1.setValue(item3.getIndexNum());
+			} else {
+				itemChart1.setValue(0.0);
+			}
 			list.add(itemChart1);
 			item.setList(list);
 		} else {
@@ -348,13 +415,20 @@ public class RiskController extends BaseController {
 	// 警员接警执勤数据列表查询
 	@RequestMapping(value = "/risk/duty/record/list", method = RequestMethod.GET)
 	public ResponseEntity<?> riskDutyRecordItem(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+												@RequestParam(value = "dateTime", required = false) String dateTime,
+												@RequestParam(value = "timeType", required = false) Integer timeType)
+			throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
+		String lastMonthTime = DateUtils.lastMonthTime();
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
 		// 警员接警执勤数据列表查询
-		List<RiskDutyDealPoliceRecord> list = riskService.riskDutyRecordList(policeId, dateTime);
+		List<RiskDutyDealPoliceRecord> list = riskService.riskDutyRecordList(policeId, dateTime, lastMonthTime,
+				timeType);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);

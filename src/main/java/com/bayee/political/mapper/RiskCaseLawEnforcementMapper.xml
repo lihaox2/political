@@ -143,4 +143,17 @@ where police_id=#{policeId,jdbcType=VARCHAR} GROUP BY DATE_FORMAT(creation_date,
 left join month c on c.num_name=right(a.year_month,2) 
 order by a.year_month
 </select>
+
+  <!-- 警员执法管理风险查询 -->
+  <select id="riskCaseLawEnforcementIndexItem" parameterType="com.bayee.political.domain.RiskCaseLawEnforcement" resultMap="BaseResultMap">
+    select police_id, sum(index_num) as index_num,
+    sum(total_deduction_score) as total_deduction_score, sum(total_deduction_count) as total_deduction_count from risk_case_law_enforcement
+    where police_id=#{policeId,jdbcType=VARCHAR}
+    <if test="timeType == 1">
+      and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+    </if>
+  </select>
 </mapper>

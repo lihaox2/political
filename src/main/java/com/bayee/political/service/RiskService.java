@@ -31,19 +31,20 @@ public interface RiskService {
 
 	// 警员风险分页查询
 	List<RiskReportRecord> riskPageList(String keyWords, Integer alarmType, String sortName, String dateTime,
-			String lastDateTime, Integer pageSize, Integer pageNum);
+										String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum);
 
 	// 警员风险列表总数
-	int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime);
+	int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime, String lastMonthTime);
 
 	// 警员预警类型查询
 	List<RiskAlarmType> riskAlarmTypeList(Integer id);
 
 	// 警员风险雷达图
-	List<ScreenDoubeChart> riskChartList(String policeId, String dateTime);
+	List<ScreenDoubeChart> riskChartList(String policeId, String dateTime, String lastMonthTime, Integer timeType);
 
 	// 警员风险详情查询
-	RiskReportRecord riskReportRecordItem(Integer id, String policeId, String dateTime, String lastDateTime);
+	RiskReportRecord riskReportRecordItem(Integer id, String policeId, String dateTime, String lastDateTime,
+										  String lastMonthTime, Integer timeType);
 
 	// 警员警务技能指数查询
 	RiskTrain riskTrainIndexItem(String policeId, String dateTime);
@@ -52,16 +53,17 @@ public interface RiskService {
 	List<ScreenChart> riskTrainFailChart(String policeId, String fieldName);
 
 	// 警员接警执勤指数查询
-	RiskDuty riskDutyIndexItem(String policeId, String dateTime);
+	RiskDuty riskDutyIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType);
 
 	// 半年内接警执勤风险指数
 	List<ScreenDoubeChart> riskDutyIndexChart(String policeId);
 
 	// 警员接警执勤数据列表查询
-	List<RiskDutyDealPoliceRecord> riskDutyRecordList(String policeId, String dateTime);
+	List<RiskDutyDealPoliceRecord> riskDutyRecordList(String policeId, String dateTime, String lastMonthTime,
+													  Integer timeType);
 
 	// 警员执法办案风险指数查询
-	RiskCase riskCaseIndexItem(String policeId, String dateTime);
+	RiskCase riskCaseIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType);
 
 	// 执法办案风险指数图例
 	List<ScreenDoubeChart> riskCaseIndexChart(String policeId);
@@ -111,8 +113,29 @@ public interface RiskService {
 	// 社交风险指数图例
 	List<ScreenDoubeChart> riskSocialContactIndexChart(String policeId, String tableName);
 
+	// 警员最新一条健康风险指数查询
+	RiskHealth riskHealthIndexNewestItem(String policeId);
+
 	// 社交详情记录
 	List<RiskSocialContactRecord> riskSocialContactRecordList(Integer socialContactId);
+
+	// 警员执法管理风险查询
+	RiskCaseLawEnforcement riskCaseLawEnforcementIndexItem(String policeId, String dateTime, String lastMonthTime,
+														   Integer timeType);
+
+	// 警员执法管理数据列表查询
+	List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordList(String policeId, String dateTime,
+																		String lastMonthTime, Integer timeType);
+
+	// 警员执法能力风险查询
+	RiskCaseAbility riskCaseAbilityIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType);
+
+	// 警员执法考试风险查询
+	RiskCaseTest riskCaseTestIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType);
+
+	// 警员执法考试数据列表查询
+	List<RiskCaseTestRecord> riskCaseTestRecordList(String policeId, String dateTime, String lastMonthTime,
+													Integer timeType);
 
 	/**
 	 * 查询局规计分

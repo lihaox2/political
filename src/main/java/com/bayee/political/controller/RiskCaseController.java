@@ -7,6 +7,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.bayee.political.domain.*;
+import com.bayee.political.service.*;
+import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,27 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.bayee.political.domain.RiskCaseAbility;
-import com.bayee.political.domain.RiskCaseLawEnforcement;
-import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
-import com.bayee.political.domain.RiskCaseTestRecord;
-import com.bayee.political.domain.RiskConduct;
-import com.bayee.political.domain.RiskConductTrafficViolation;
-import com.bayee.political.domain.RiskConductTrafficViolationRecord;
-import com.bayee.political.domain.RiskConductVisit;
-import com.bayee.political.domain.RiskConductVisitRecord;
-import com.bayee.political.domain.RiskFamilyEvaluation;
-import com.bayee.political.domain.ScreenDoubeChart;
-import com.bayee.political.service.RiskCaseAbilityService;
-import com.bayee.political.service.RiskCaseLawEnforcementRecordService;
-import com.bayee.political.service.RiskCaseLawEnforcementService;
-import com.bayee.political.service.RiskCaseTestRecordService;
-import com.bayee.political.service.RiskConductService;
-import com.bayee.political.service.RiskConductTrafficViolationRecordService;
-import com.bayee.political.service.RiskConductTrafficViolationService;
-import com.bayee.political.service.RiskConductVisitRecordService;
-import com.bayee.political.service.RiskConductVisitService;
-import com.bayee.political.service.RiskFamilyEvaluationService;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.StatusCode;
 import com.taobao.api.ApiException;
@@ -73,13 +55,22 @@ public class RiskCaseController extends BaseController {
 	@Autowired
 	private RiskConductService riskConductService;
 
+	@Autowired
+	private RiskService riskService;
+
 	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
 
 	// 警员执法能力风险查询
 	@RequestMapping(value = "/risk/case/Ability/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskCaseAbilityItem(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+												 @RequestParam(value = "dateTime", required = false) String dateTime,
+												 @RequestParam(value = "timeType", required = false) Integer timeType)
+			throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
+		String lastMonthTime = DateUtils.lastMonthTime();
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
@@ -88,12 +79,12 @@ public class RiskCaseController extends BaseController {
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
-		// 警员执法办案风险指数查询
-		RiskCaseAbility item = riskCaseAbilityService.riskCaseAbilityItem(policeId, dateTime);
+		// 警员执法能力风险查询
+		RiskCaseAbility item = riskService.riskCaseAbilityIndexItem(policeId, dateTime, lastMonthTime, timeType);
 		if (item != null) {
 			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
-			// 上个月警员接警执勤指数查询
-			RiskCaseAbility item2 = riskCaseAbilityService.riskCaseAbilityItem(policeId, lastDateTime);
+			// 上个月警员执法能力风险查询
+			RiskCaseAbility item2 = riskService.riskCaseAbilityIndexItem(policeId, lastDateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
 			itemChart2.setId(1);
 			itemChart2.setName("上月");
@@ -103,10 +94,16 @@ public class RiskCaseController extends BaseController {
 				itemChart2.setValue(0.0);
 			}
 			list.add(itemChart2);
+			// 本月警员执法能力风险查询
+			RiskCaseAbility item3 = riskService.riskCaseAbilityIndexItem(policeId, dateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
 			itemChart1.setId(2);
 			itemChart1.setName("本月");
-			itemChart1.setValue(item.getIndexNum());
+			if (item3 != null) {
+				itemChart1.setValue(item3.getIndexNum());
+			} else {
+				itemChart1.setValue(0.0);
+			}
 			list.add(itemChart1);
 			item.setList(list);
 		} else {
@@ -137,8 +134,13 @@ public class RiskCaseController extends BaseController {
 	@RequestMapping(value = "/risk/case/law/enforcement/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskCaseLawEnforcementItem(
 			@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
+		String lastMonthTime = DateUtils.lastMonthTime();
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
@@ -147,13 +149,22 @@ public class RiskCaseController extends BaseController {
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
-		// 警员执法办案风险指数查询
-		RiskCaseLawEnforcement item = riskCaseLawEnforcementService.riskCaseLawEnforcementItem(policeId, dateTime);
+		// 警员执法管理风险查询
+		RiskCaseLawEnforcement item = riskService.riskCaseLawEnforcementIndexItem(policeId, dateTime, lastMonthTime,
+				timeType);
 		if (item != null) {
+			// 警员执法管理数据列表查询
+			List<RiskCaseLawEnforcementRecord> rList = riskService.riskCaseLawEnforcementRecordList(policeId, dateTime,
+					lastMonthTime, timeType);
+			if (rList.size() > 0) {
+				item.setIsDisplay(1);
+			} else {
+				item.setIsDisplay(0);
+			}
 			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
-			// 上个月警员接警执勤指数查询
-			RiskCaseLawEnforcement item2 = riskCaseLawEnforcementService.riskCaseLawEnforcementItem(policeId,
-					lastDateTime);
+			// 上个月警员执法管理风险查询
+			RiskCaseLawEnforcement item2 = riskService.riskCaseLawEnforcementIndexItem(policeId, lastDateTime,
+					lastMonthTime, 2);
 			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
 			itemChart2.setId(1);
 			itemChart2.setName("上月");
@@ -163,10 +174,17 @@ public class RiskCaseController extends BaseController {
 				itemChart2.setValue(0.0);
 			}
 			list.add(itemChart2);
+			// 本月警员执法管理风险查询
+			RiskCaseLawEnforcement item3 = riskService.riskCaseLawEnforcementIndexItem(policeId, dateTime,
+					lastMonthTime, 2);
 			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
 			itemChart1.setId(2);
 			itemChart1.setName("本月");
-			itemChart1.setValue(item.getIndexNum());
+			if (item3 != null) {
+				itemChart1.setValue(item3.getIndexNum());
+			} else {
+				itemChart1.setValue(0.0);
+			}
 			list.add(itemChart1);
 			item.setList(list);
 		} else {
@@ -196,8 +214,14 @@ public class RiskCaseController extends BaseController {
 	// 警员执法考试风险查询
 	@RequestMapping(value = "/risk/case/Test/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskCaseTestItem(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+											  @RequestParam(value = "dateTime", required = false) String dateTime,
+											  @RequestParam(value = "timeType", required = false) Integer timeType)
+			throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		String lastMonthTime = DateUtils.lastMonthTime();
+		if (timeType == null) {
+			timeType = 1;
+		}
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
@@ -206,29 +230,52 @@ public class RiskCaseController extends BaseController {
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
-		// 警员执法办案风险指数查询
-		RiskCaseTestRecord item = riskCaseTestRecordService.riskCaseTestItem(policeId, dateTime);
+//		int month = Integer.valueOf(dateTime.substring(5, 7));
+//		int year = Integer.valueOf(dateTime.substring(0, 4));
+		// 警员执法考试风险查询
+		RiskCaseTest item = riskService.riskCaseTestIndexItem(policeId, dateTime, lastMonthTime, timeType);
 		if (item != null) {
+			// 警员执法考试数据列表查询
+			List<RiskCaseTestRecord> rList = riskService.riskCaseTestRecordList(policeId, dateTime, lastMonthTime,
+					timeType);
+			if (rList.size() > 0) {
+				item.setIsDisplay(1);
+			} else {
+				item.setIsDisplay(0);
+			}
+			if (item.getCumulativeNum() != null) {
+				if (item.getPassNum() != null) {
+					item.setFailNum(item.getCumulativeNum() - item.getPassNum());
+				} else {
+					item.setFailNum(item.getCumulativeNum());
+				}
+			}
 			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
-			// 上个月警员接警执勤指数查询
-			RiskCaseTestRecord item2 = riskCaseTestRecordService.riskCaseTestItem(policeId, lastDateTime);
+			// 上个月警员执法考试风险查询
+			RiskCaseTest item2 = riskService.riskCaseTestIndexItem(policeId, lastDateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
 			itemChart2.setId(1);
-			itemChart2.setName("上月");
+			itemChart2.setName("上期");
 			if (item2 != null) {
 				itemChart2.setValue(item2.getIndexNum());
 			} else {
 				itemChart2.setValue(0.0);
 			}
 			list.add(itemChart2);
+			// 警员执法考试风险查询
+			RiskCaseTest item3 = riskService.riskCaseTestIndexItem(policeId, dateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
 			itemChart1.setId(2);
-			itemChart1.setName("本月");
-			itemChart1.setValue(item.getIndexNum());
+			itemChart1.setName("本期");
+			if (item3 != null) {
+				itemChart1.setValue(item3.getIndexNum());
+			} else {
+				itemChart1.setValue(0.0);
+			}
 			list.add(itemChart1);
 			item.setList(list);
 		} else {
-			item = new RiskCaseTestRecord();
+			item = new RiskCaseTest();
 		}
 		dlr.setStatus(true);
 		dlr.setMessage("success");

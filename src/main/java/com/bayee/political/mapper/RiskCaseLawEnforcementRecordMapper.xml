@@ -130,8 +130,15 @@
   
   
   <select id="riskCaseLawEnforcementRecordList" resultMap="BaseResultMap">
-  	SELECT r.*,t.`name` FROM risk_case_law_enforcement_record r,risk_case_law_enforcement_type t WHERE
-  	 r.type=t.id AND r.police_id=#{policeId} and DATE_FORMAT(r.creation_date, '%Y-%m')=#{dateTime}
-	order by r.id desc
+    select a.id,a.police_id,a.type,a.content,a.input_time,a.creation_date,b.name as typeName,a.deduction_score from risk_case_law_enforcement_record a
+    left join risk_case_law_enforcement_type b on b.id=a.type
+    where a.police_id=#{policeId,jdbcType=VARCHAR}
+    <if test="timeType == 1">
+      and DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(a.creation_date, '%Y-%m')=#{dateTime}
+    </if>
+    order by a.id desc
   </select>
 </mapper>

@@ -107,6 +107,12 @@ public class RiskServiceImpl implements RiskService {
 	@Autowired
 	RiskDrinkRecordMapper riskDrinkRecordMapper;// 警员饮酒记录
 
+	@Autowired
+	RiskCaseAbilityMapper riskCaseAbilityMapper;// 警员执法能力风险
+
+	@Autowired
+	RiskCaseTestMapper riskCaseTestMapper;// 警员执法考试风险
+
 	// 警员健康风险指数查询
 	@Override
 	public RiskHealth riskHealthIndexItem(String policeId, String dateTime) {
@@ -140,15 +146,16 @@ public class RiskServiceImpl implements RiskService {
 	// 警员风险分页查询
 	@Override
 	public List<RiskReportRecord> riskPageList(String keyWords, Integer alarmType, String sortName, String dateTime,
-			String lastDateTime, Integer pageSize, Integer pageNum) {
-		return riskReportRecordMapper.riskPageList(keyWords, alarmType, sortName, dateTime, lastDateTime, pageSize,
-				pageNum);
+											   String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum) {
+		return riskReportRecordMapper.riskPageList(keyWords, alarmType, sortName, dateTime, lastDateTime, lastMonthTime,
+				pageSize, pageNum);
 	}
 
 	// 警员风险列表总数
 	@Override
-	public int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime) {
-		return riskReportRecordMapper.riskPageCount(keyWords, alarmType, dateTime, lastDateTime);
+	public int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime,
+							 String lastMonthTime) {
+		return riskReportRecordMapper.riskPageCount(keyWords, alarmType, dateTime, lastDateTime, lastMonthTime);
 	}
 
 	// 警员预警类型查询
@@ -159,14 +166,17 @@ public class RiskServiceImpl implements RiskService {
 
 	// 警员风险雷达图
 	@Override
-	public List<ScreenDoubeChart> riskChartList(String policeId, String dateTime) {
-		return riskReportRecordMapper.riskChartList(policeId, dateTime);
+	public List<ScreenDoubeChart> riskChartList(String policeId, String dateTime, String lastMonthTime,
+												Integer timeType) {
+		return riskReportRecordMapper.riskChartList(policeId, dateTime, lastMonthTime, timeType);
 	}
 
 	// 警员风险详情查询
 	@Override
-	public RiskReportRecord riskReportRecordItem(Integer id, String policeId, String dateTime, String lastDateTime) {
-		return riskReportRecordMapper.riskReportRecordItem(id, policeId, dateTime, lastDateTime);
+	public RiskReportRecord riskReportRecordItem(Integer id, String policeId, String dateTime, String lastDateTime,
+												 String lastMonthTime, Integer timeType) {
+		return riskReportRecordMapper.riskReportRecordItem(id, policeId, dateTime, lastDateTime, lastMonthTime,
+				timeType);
 	}
 
 	// 警员警务技能指数查询
@@ -183,8 +193,8 @@ public class RiskServiceImpl implements RiskService {
 
 	// 警员接警执勤指数查询
 	@Override
-	public RiskDuty riskDutyIndexItem(String policeId, String dateTime) {
-		return riskDutyMapper.riskDutyIndexItem(policeId, dateTime);
+	public RiskDuty riskDutyIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
+		return riskDutyMapper.riskDutyIndexItem(policeId, dateTime, lastMonthTime, timeType);
 	}
 
 	// 半年内接警执勤风险指数
@@ -195,14 +205,15 @@ public class RiskServiceImpl implements RiskService {
 
 	// 警员接警执勤数据列表查询
 	@Override
-	public List<RiskDutyDealPoliceRecord> riskDutyRecordList(String policeId, String dateTime) {
-		return riskDutyDealPoliceRecordMapper.riskDutyRecordList(policeId, dateTime);
+	public List<RiskDutyDealPoliceRecord> riskDutyRecordList(String policeId, String dateTime, String lastMonthTime,
+															 Integer timeType) {
+		return riskDutyDealPoliceRecordMapper.riskDutyRecordList(policeId, dateTime, lastMonthTime, timeType);
 	}
 
 	// 警员执法办案风险指数查询
 	@Override
-	public RiskCase riskCaseIndexItem(String policeId, String dateTime) {
-		return riskCaseMapper.riskCaseIndexItem(policeId, dateTime);
+	public RiskCase riskCaseIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
+		return riskCaseMapper.riskCaseIndexItem(policeId, dateTime, lastMonthTime, timeType);
 	}
 
 	// 执法办案风险指数图例
@@ -301,10 +312,51 @@ public class RiskServiceImpl implements RiskService {
 		return riskSocialContactMapper.riskSocialContactIndexChart(policeId, tableName);
 	}
 
+	@Override
+	public RiskHealth riskHealthIndexNewestItem(String policeId) {
+		return riskHealthMapper.riskHealthIndexNewestItem(policeId);
+	}
+
 	// 社交详情记录
 	@Override
 	public List<RiskSocialContactRecord> riskSocialContactRecordList(Integer socialContactId) {
 		return riskSocialContactRecordMapper.riskSocialContactRecordList(socialContactId);
+	}
+
+	// 警员执法管理风险查询
+	@Override
+	public RiskCaseLawEnforcement riskCaseLawEnforcementIndexItem(String policeId, String dateTime,
+																  String lastMonthTime, Integer timeType) {
+		return riskCaseLawEnforcementMapper.riskCaseLawEnforcementIndexItem(policeId, dateTime, lastMonthTime,
+				timeType);
+	}
+
+	// 警员执法管理数据列表查询
+	@Override
+	public List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordList(String policeId, String dateTime,
+																			   String lastMonthTime, Integer timeType) {
+		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordList(policeId, dateTime, lastMonthTime,
+				timeType);
+	}
+
+	// 警员执法能力风险查询
+	@Override
+	public RiskCaseAbility riskCaseAbilityIndexItem(String policeId, String dateTime, String lastMonthTime,
+													Integer timeType) {
+		return riskCaseAbilityMapper.riskCaseAbilityIndexItem(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	// 警员执法考试风险查询
+	@Override
+	public RiskCaseTest riskCaseTestIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
+		return riskCaseTestMapper.riskCaseTestIndexItem(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	// 警员执法考试数据列表查询
+	@Override
+	public List<RiskCaseTestRecord> riskCaseTestRecordList(String policeId, String dateTime, String lastMonthTime,
+														   Integer timeType) {
+		return riskCaseTestRecordMapper.riskCaseTestRecordList(policeId, dateTime, lastMonthTime, timeType);
 	}
 
 	@Override

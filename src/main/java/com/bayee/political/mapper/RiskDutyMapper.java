@@ -21,7 +21,8 @@ public interface RiskDutyMapper {
 	int updateByPrimaryKey(RiskDuty record);
 
 	// 警员接警执勤指数查询
-	RiskDuty riskDutyIndexItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
+	RiskDuty riskDutyIndexItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime,
+							   @Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
 
 	// 半年内接警执勤风险指数
 	List<ScreenDoubeChart> riskDutyIndexChart(@Param("policeId") String policeId);

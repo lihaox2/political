@@ -116,9 +116,15 @@
   </update>
   <!-- 警员接警执勤数据列表查询 -->
 <select id="riskDutyRecordList" parameterType="com.bayee.political.domain.RiskDutyDealPoliceRecord" resultMap="BaseResultMap">
-select a.*,b.name as typeName,b.deduction_score as deductionScore from risk_duty_deal_police_record a
-left join risk_case_law_enforcement_type b on b.id=a.type
-where a.police_id=#{policeId,jdbcType=VARCHAR} and DATE_FORMAT(a.creation_date, '%Y-%m')=#{dateTime}
-order by id desc
+  select a.*,b.name as typeName,a.deduction_score as deductionScore from risk_duty_deal_police_record a
+  left join risk_case_law_enforcement_type b on b.id=a.type
+  where a.police_id=#{policeId,jdbcType=VARCHAR}
+  <if test="timeType == 1">
+    and DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}
+  </if>
+  <if test="timeType == 2">
+    and DATE_FORMAT(a.creation_date, '%Y-%m')=#{dateTime}
+  </if>
+  order by id desc
 </select>
 </mapper>

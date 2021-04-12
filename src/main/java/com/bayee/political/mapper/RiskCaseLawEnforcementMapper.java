@@ -24,4 +24,9 @@ public interface RiskCaseLawEnforcementMapper {
     
     // 执法办案风险指数图例
  	List<ScreenDoubeChart> riskCaseLawEnforcementChart(@Param("policeId") String policeId);
+
+    // 警员执法管理风险查询
+    RiskCaseLawEnforcement riskCaseLawEnforcementIndexItem(@Param("policeId") String policeId,
+                                                           @Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime,
+                                                           @Param("timeType") Integer timeType);
 }

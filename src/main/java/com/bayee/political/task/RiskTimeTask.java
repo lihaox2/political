@@ -99,7 +99,7 @@ public class RiskTimeTask extends BaseController {
 		int num = 0;
 		for (int i = 0; i < userList.size(); i++) {
 			RiskReportRecord ritem = riskService.riskReportRecordItem(null, userList.get(i).getPoliceId(), dateTime,
-					lastDateTime);
+					lastDateTime, null, 2);
 			if (ritem == null) {
 				RiskReportRecord record = new RiskReportRecord();
 				record.setPoliceId(userList.get(i).getPoliceId());

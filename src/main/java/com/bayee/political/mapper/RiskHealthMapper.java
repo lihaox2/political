@@ -29,4 +29,7 @@ public interface RiskHealthMapper {
     List<RiskHealth> getByYear(@Param("year")String year);
     
     List<String> getAllByYear(@Param("year")String year);
+
+	// 警员最新一条健康风险指数查询
+	RiskHealth riskHealthIndexNewestItem(@Param("policeId") String policeId);
 }

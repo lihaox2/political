@@ -125,4 +125,35 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="riskCaseTestIndexItem" parameterType="com.bayee.political.domain.RiskCaseTest" resultMap="BaseResultMap">
+    select a.police_id,sum(a.index_num) as index_num,b.bnum as cumulativeNum,
+    c.cnum as passNum
+    from risk_case_test a
+    left join
+    (select count(*) as bnum,police_id from risk_case_test_record where police_id=#{policeId}
+    <if test="timeType == 1">
+      and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+    </if>)
+    b on b.police_id=a.police_id
+    left join
+    (select count(*) as cnum,police_id from risk_case_test_record where police_id=#{policeId} and score>=60
+    <if test="timeType == 1">
+      and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+    </if>)
+    c on c.police_id=a.police_id
+    where a.police_id=#{policeId}
+    <if test="timeType == 1">
+      and DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(a.creation_date, '%Y-%m')=#{dateTime}
+    </if>
+  </select>
 </mapper>

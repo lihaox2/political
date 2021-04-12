@@ -33,20 +33,23 @@ public interface RiskReportRecordMapper {
 
 	// 警员风险分页查询
 	List<RiskReportRecord> riskPageList(@Param("keyWords") String keyWords, @Param("alarmType") Integer alarmType,
-			@Param("sortName") String sortName, @Param("dateTime") String dateTime,
-			@Param("lastDateTime") String lastDateTime, @Param("pageSize") Integer pageSize,
-			@Param("pageNum") Integer pageNum);
+										@Param("sortName") String sortName, @Param("dateTime") String dateTime,
+										@Param("lastDateTime") String lastDateTime, @Param("lastMonthTime") String lastMonthTime,
+										@Param("pageSize") Integer pageSize, @Param("pageNum") Integer pageNum);
 
 	// 警员风险列表总数
 	int riskPageCount(@Param("keyWords") String keyWords, @Param("alarmType") Integer alarmType,
-			@Param("dateTime") String dateTime, @Param("lastDateTime") String lastDateTime);
+					  @Param("dateTime") String dateTime, @Param("lastDateTime") String lastDateTime,
+					  @Param("lastMonthTime") String lastMonthTime);
 
 	// 警员风险雷达图
-	List<ScreenDoubeChart> riskChartList(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
+	List<ScreenDoubeChart> riskChartList(@Param("policeId") String policeId, @Param("dateTime") String dateTime,
+										 @Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
 
 	// 警员风险详情查询
 	RiskReportRecord riskReportRecordItem(@Param("id") Integer id, @Param("policeId") String policeId,
-			@Param("dateTime") String dateTime, @Param("lastDateTime") String lastDateTime);
+										  @Param("dateTime") String dateTime, @Param("lastDateTime") String lastDateTime,
+										  @Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
 
 	// 综合指数风险
 	RiskIndexMonitorChild comprehensiveIndex(@Param("dateTime") String dateTime);

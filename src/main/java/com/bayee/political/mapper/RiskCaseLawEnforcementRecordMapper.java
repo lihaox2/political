@@ -18,6 +18,10 @@ public interface RiskCaseLawEnforcementRecordMapper {
     int updateByPrimaryKeySelective(RiskCaseLawEnforcementRecord record);
 
     int updateByPrimaryKey(RiskCaseLawEnforcementRecord record);
-    
-    List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordList(@Param("policeId")String policeId,@Param("dateTime")String dateTime);
+
+    // 警员执法管理数据列表查询
+    List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordList(@Param("policeId") String policeId,
+                                                                        @Param("dateTime") String dateTime,
+                                                                        @Param("lastMonthTime") String lastMonthTime,
+                                                                        @Param("timeType") Integer timeType);
 }

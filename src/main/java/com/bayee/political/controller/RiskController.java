@@ -2,9 +2,7 @@ package com.bayee.political.controller;
 
 import com.bayee.political.domain.*;
 import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
-import com.bayee.political.pojo.dto.RiskConductResultDTO;
 import com.bayee.political.pojo.json.RiskConductBureauRoleResult;
-import com.bayee.political.pojo.json.RiskConductResult;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

@@ -19,6 +19,8 @@ public class RiskConductVisit {
     private Date updateDate;
     
     private List<ScreenDoubeChart> list;
+    
+    private Integer isDisplay;
 
     public Integer getId() {
         return id;
@@ -82,5 +84,13 @@ public class RiskConductVisit {
 
 	public void setList(List<ScreenDoubeChart> list) {
 		this.list = list;
+	}
+
+	public Integer getIsDisplay() {
+		return isDisplay;
+	}
+
+	public void setIsDisplay(Integer isDisplay) {
+		this.isDisplay = isDisplay;
 	}
 }

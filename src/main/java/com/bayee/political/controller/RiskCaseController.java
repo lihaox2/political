@@ -401,6 +401,13 @@ public class RiskCaseController extends BaseController {
 		// 警员执法办案风险指数查询
 		RiskConductVisit item = riskConductVisitService.riskConductVisitItem(policeId, dateTime, lastMonthTime, timeType);
 		if (item != null) {
+			List<RiskDutyDealPoliceRecord> rList = riskService.riskDutyRecordList(policeId, dateTime, lastMonthTime,
+					timeType);
+			if (rList.size() > 0) {
+				item.setIsDisplay(1);
+			} else {
+				item.setIsDisplay(0);
+			}
 			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
 			// 上个月警员接警执勤指数查询
 			RiskConductVisit item2 = riskConductVisitService.riskConductVisitItem(policeId, lastDateTime, lastMonthTime, 2);
@@ -413,10 +420,15 @@ public class RiskCaseController extends BaseController {
 				itemChart2.setValue(0.0);
 			}
 			list.add(itemChart2);
+			RiskConductVisit item3 = riskConductVisitService.riskConductVisitItem(policeId, dateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
 			itemChart1.setId(2);
 			itemChart1.setName("本月");
-			itemChart1.setValue(item.getIndexNum());
+			if (item3 != null) {
+				itemChart1.setValue(item3.getIndexNum());
+			} else {
+				itemChart1.setValue(0.0);
+			}
 			list.add(itemChart1);
 			item.setList(list);
 		} else {

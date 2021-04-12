@@ -53,9 +53,9 @@ public class RiskConductServiceImpl implements RiskConductService{
 	}
 
 	@Override
-	public RiskConduct riskConductItem(String policeId, String dateTime) {
+	public RiskConduct riskConductItem(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
 		// TODO Auto-generated method stub
-		return riskConductMapper.riskConductItem(policeId, dateTime);
+		return riskConductMapper.riskConductItem(policeId, dateTime,lastMonthTime,timeType);
 	}
 
 	@Override

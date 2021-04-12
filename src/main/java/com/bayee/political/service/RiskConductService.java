@@ -20,7 +20,7 @@ public interface RiskConductService {
     int updateByPrimaryKey(RiskConduct record);
     
     //警员交通违章风险指数查询
-    RiskConduct riskConductItem(String policeId,String dateTime);
+    RiskConduct riskConductItem(String policeId,String dateTime, String lastMonthTime, Integer timeType);
     
     // 交通违章风险指数图例
  	List<ScreenDoubeChart> riskConductChart(String policeId);

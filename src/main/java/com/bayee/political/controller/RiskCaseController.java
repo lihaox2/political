@@ -562,7 +562,8 @@ public class RiskCaseController extends BaseController {
 	// 警员行为规范风险查询
 	@RequestMapping(value = "/risk/conduct/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskConductItem(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
@@ -572,12 +573,13 @@ public class RiskCaseController extends BaseController {
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
+		String lastMonthTime = DateUtils.lastMonthTime();
 		// 警员执法办案风险指数查询
-		RiskConduct item = riskConductService.riskConductItem(policeId, dateTime);
+		RiskConduct item = riskConductService.riskConductItem(policeId, dateTime, lastMonthTime, timeType);
 		if (item != null) {
 			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
 			// 上个月警员接警执勤指数查询
-			RiskConduct item2 = riskConductService.riskConductItem(policeId, lastDateTime);
+			RiskConduct item2 = riskConductService.riskConductItem(policeId, lastDateTime, lastMonthTime, timeType);
 			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
 			itemChart2.setId(1);
 			itemChart2.setName("上月");
@@ -587,10 +589,16 @@ public class RiskCaseController extends BaseController {
 				itemChart2.setValue(0.0);
 			}
 			list.add(itemChart2);
+			// 本月警员接警执勤指数查询
+			RiskConduct item3 = riskConductService.riskConductItem(policeId, lastDateTime, lastMonthTime, timeType);
 			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
 			itemChart1.setId(2);
 			itemChart1.setName("本月");
-			itemChart1.setValue(item.getIndexNum());
+			if (item3 != null) {
+				itemChart1.setValue(item3.getIndexNum());
+			} else {
+				itemChart1.setValue(0.0);
+			}
 			list.add(itemChart1);
 			item.setList(list);
 		} else {

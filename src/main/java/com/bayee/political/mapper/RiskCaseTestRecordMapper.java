@@ -9,7 +9,7 @@ import com.bayee.political.domain.ScreenDoubeChart;
 public interface RiskCaseTestRecordMapper {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(RiskCaseTestRecord record);
+    int insertTest(RiskCaseTestRecord record);
 
     int insertSelective(RiskCaseTestRecord record);
 
@@ -24,4 +24,18 @@ public interface RiskCaseTestRecordMapper {
     
     // 执法考试风险指数图例
  	List<ScreenDoubeChart> riskCaseTestChart(@Param("policeId") String policeId);
+ 	
+ 	Integer isExistence(@Param("policeId") String policeId, @Param("year") String year,
+			@Param("semester") Integer semester);
+ 	
+ 	/**
+	 * 查询警员执法数据
+	 * 
+	 * @param policeId 警号
+	 * @param date     时间
+	 * @param semester 学期
+	 * @return
+	 */
+	RiskCaseTestRecord findPoliceCaseData(@Param("policeId") String policeId, @Param("date") String date,
+												@Param("semester") Integer semester);
 }

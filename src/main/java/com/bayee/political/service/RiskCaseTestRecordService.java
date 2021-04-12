@@ -9,8 +9,6 @@ public interface RiskCaseTestRecordService {
 	
 	 int deleteByPrimaryKey(Integer id);
 
-    int insert(RiskCaseTestRecord record);
-
     int insertSelective(RiskCaseTestRecord record);
 
     RiskCaseTestRecord selectByPrimaryKey(Integer id);
@@ -24,5 +22,9 @@ public interface RiskCaseTestRecordService {
     
     // 执法考试风险指数图例
  	List<ScreenDoubeChart> riskCaseTestChart(String policeId);
+ 	
+ 	int insertTest(RiskCaseTestRecord record);
+	
+	Integer isExistence( String policeId,String year, Integer semester);
 
 }

@@ -10,6 +10,8 @@ public class RiskDrinkRecord {
     private String policeId;
 
     private Integer isWorkDay;
+    
+    private Date drinkDate;
 
     private Date creationDate;
 
@@ -62,4 +64,13 @@ public class RiskDrinkRecord {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+
+	public Date getDrinkDate() {
+		return drinkDate;
+	}
+
+	public void setDrinkDate(Date drinkDate) {
+		this.drinkDate = drinkDate;
+	}
+    
 }

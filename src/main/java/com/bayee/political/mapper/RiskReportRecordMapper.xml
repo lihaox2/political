@@ -172,7 +172,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskReportRecord" >
+  <update id="riskReportRecordUpdate" parameterType="com.bayee.political.domain.RiskReportRecord" >
     update risk_report_record
     <set >
       <if test="policeId != null" >
@@ -350,6 +350,22 @@ join
 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
 </select>
 <!-- 行为规范风险 -->
+<select id="drinkIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultMap="RiskIndexMonitorChildMap">
+select ifnull(a.anum,0) as indexPoliceNum,
+ifnull(b.bnum,0) as alarmPoliceNum,
+round(ifnull(b.bnum/a.anum,0)*100,2) as alarmPoliceRate,
+(case when round(ifnull(b.bnum/a.anum,0)*100,2)>=50 then 1 else 0 end) as isDisplay,
+ifnull(c.cnum,0) as talkPoliceNum from 
+(SELECT count(*) as anum FROM risk_drink 
+where DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) a
+join
+(SELECT count(*) as bnum FROM risk_alarm 
+where alarm_type=11002 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) b
+join
+(select count(*) as cnum from risk_alarm where alarm_type=11002 and is_talk=1
+and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
+</select>
+<!-- 纪律作风风险 -->
 <select id="conductIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultMap="RiskIndexMonitorChildMap">
 select ifnull(a.anum,0) as indexPoliceNum,
 ifnull(b.bnum,0) as alarmPoliceNum,
@@ -360,9 +376,9 @@ ifnull(c.cnum,0) as talkPoliceNum from
 where DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) a
 join
 (SELECT count(*) as bnum FROM risk_alarm 
-where alarm_type=11002 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) b
+where alarm_type=11003 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) b
 join
-(select count(*) as cnum from risk_alarm where alarm_type=11002 and is_talk=1
+(select count(*) as cnum from risk_alarm where alarm_type=11003 and is_talk=1
 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
 </select>
 <!-- 执法办案风险 -->
@@ -473,5 +489,28 @@ order by b.id desc
   <select id="findRiskReportRecord" resultMap="BaseResultMap">
     select * from risk_report_record where police_id = #{policeId} and year = #{year} and month = #{month}
   </select>
+  
+  <select id="getByPoliceIdMonth" resultMap="BaseResultMap">
+	SELECT * FROM risk_report_record r WHERE r.`year`=#{year} AND r.`month`=#{month} AND r.police_id=#{policeId}
+</select>
+
+  <insert id="insertRiskReportRecords" parameterType="List">
+    insert into risk_report_record (id, police_id, year,
+          month, total_num, conduct_num,
+          handling_case_num, duty_num, train_num,
+          social_contact_num, amily_evaluation_num, health_num,
+          drink_num,study_num,
+          creation_date, update_date)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (null, #{item.policeId,jdbcType=VARCHAR}, #{item.year,jdbcType=VARCHAR},
+      #{item.month,jdbcType=VARCHAR}, #{item.totalNum,jdbcType=DOUBLE}, #{item.conductNum,jdbcType=DOUBLE},
+      #{item.handlingCaseNum,jdbcType=DOUBLE}, #{item.dutyNum,jdbcType=DOUBLE}, #{item.trainNum,jdbcType=DOUBLE},
+      #{item.socialContactNum,jdbcType=DOUBLE}, #{item.amilyEvaluationNum,jdbcType=DOUBLE},
+      #{item.healthNum,jdbcType=DOUBLE}, #{item.drinkNum,jdbcType=DOUBLE},
+      #{item.studyNum,jdbcType=DOUBLE},
+      #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
 
 </mapper>

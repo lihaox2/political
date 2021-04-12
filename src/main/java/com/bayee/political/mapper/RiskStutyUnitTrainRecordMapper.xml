@@ -139,4 +139,24 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 警员机关单位培训风险查询 -->
+<select id="riskStutyUnitTrainIndexItem" parameterType="com.bayee.political.domain.RiskStutyUnitTrainRecord" resultMap="BaseResultMap">
+select a.*, round(ifnull(a.over_train/a.need_train*100,0),2) as overTrainRate,
+b.is_city_train, b.is_police_system, b.is_education_rectification, b.is_party_style_construction, 
+b.total_count from risk_stuty_unit_train a
+left join risk_stuty_unit_train_record b on b.police_id=a.police_id 
+and DATE_FORMAT(b.creation_date, '%Y-%m')=DATE_FORMAT(a.creation_date, '%Y-%m')
+where a.police_id=#{policeId,jdbcType=VARCHAR} and DATE_FORMAT(a.creation_date, '%Y-%m')=#{dateTime}
+order by id desc limit 1
+</select>
+
+  <select id="findRiskStutyUnitTrainRecordByPoliceIdAndDate" resultMap="BaseResultMap">
+    select * from risk_stuty_unit_train_record
+    where police_id = #{policeId} and creation_date BETWEEN date_add(#{date},interval -day(#{date}) + 1 day) and LAST_DAY(#{date})
+  </select>
+
+<select id="getByIdAndYearMonth" resultType="Integer">
+	select * from risk_stuty_unit_train_record WHERE creation_date like CONCAT('%',#{yearMonth},'%') AND police_id=#{policeId}
+</select>
 </mapper>

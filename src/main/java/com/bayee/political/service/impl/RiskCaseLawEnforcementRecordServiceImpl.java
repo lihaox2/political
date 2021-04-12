@@ -20,4 +20,10 @@ public class RiskCaseLawEnforcementRecordServiceImpl implements RiskCaseLawEnfor
 		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordList(policeId,dateTime);
 	}
 
+	@Override
+	public int insertSelective(RiskCaseLawEnforcementRecord record) {
+		// TODO Auto-generated method stub
+		return riskCaseLawEnforcementRecordMapper.insertSelective(record);
+	}
+
 }

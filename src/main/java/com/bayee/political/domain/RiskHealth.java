@@ -54,6 +54,8 @@ public class RiskHealth {
     private Date creationDate;
 
     private Date updateDate;
+    
+    private Double healthTotal;
 
     public Integer getId() {
         return id;
@@ -298,5 +300,15 @@ public class RiskHealth {
 	public void setOrthopaedicsDescribe(String orthopaedicsDescribe) {
 		this.orthopaedicsDescribe = orthopaedicsDescribe;
 	}
+
+	public Double getHealthTotal() {
+		return healthTotal;
+	}
+
+	public void setHealthTotal(Double healthTotal) {
+		this.healthTotal = healthTotal;
+	}
+	
+	
     
 }

@@ -145,4 +145,20 @@ where 1=1 and a.alarm_type=11001
 	</if>
 GROUP BY a.police_id) as t
 </select>
+
+<select id="findByPoliceIdAndTypeAndDate" resultMap="BaseResultMap">
+    select * from risk_alarm where police_id = #{policeId} and alarm_type = #{type}
+                               and DATE_FORMAT(creation_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m')
+  </select>
+
+  <insert id="insertRiskAlarms" parameterType="java.util.List">
+    insert into risk_alarm (id, police_id, alarm_type,alarm_score,is_talk, creation_date, update_date)
+    values
+    <foreach collection ="list" item="item" index= "index" separator =",">
+      (null,#{item.policeId,jdbcType=VARCHAR}, #{item.alarmType,jdbcType=INTEGER},
+      #{item.alarmScore,jdbcType=DOUBLE}, 0,
+      #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP}
+      )
+    </foreach >
+  </insert>
 </mapper>

@@ -137,5 +137,13 @@ public interface RiskService {
 	 * @return
 	 */
 	List<RiskConductBureauRuleRecord> findRiskConductBureauRuleRecord(String policeId, String dateTime);
+	
+	int insertInpromt(RiskDrinkRecord riskDrinkRecord);
+	
+	List<RiskHealth> getByYear(String year);
+	
+	Double fraction(Integer id);
+	
+	int updateRiskReportRecord(RiskReportRecord record);
 
 }

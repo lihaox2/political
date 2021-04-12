@@ -27,6 +27,7 @@
     <result column="orthopaedics_describe" property="orthopaedicsDescribe" jdbcType="VARCHAR" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="healthTotal" property="healthTotal" jdbcType="DOUBLE" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, police_id, year, height, weight,index_num, bmi, bmi_id, blood, overweight_num, hyperlipidemia_num, 
@@ -160,5 +161,27 @@ left join risk_health_bmi_standard b on b.id=a.bmi_id
 left join risk_health_record c on c.year=a.year and c.police_id=a.police_id
 where a.police_id=#{policeId,jdbcType=VARCHAR} and a.year=#{dateTime}
 order by a.id desc limit 1
+</select>
+
+<select id="getByIdAndYear" resultType="Integer">
+	select id from risk_health r where r.year=#{year} AND r.police_id=#{policeId}
+</select>
+
+<select id="getAllByYear" resultType="String">
+	select police_id from risk_health r where r.year=#{year}
+</select>
+
+ <select id="getByYear" resultMap="BaseResultMap">
+	select id,police_id,(overweight_num+hyperlipidemia_num+hypertension_num+hyperglycemia_num+hyperuricemia_num+prostate_num+major_diseases_num+heart_num+tumor_antigen_num+orthopaedics_num) AS healthTotal
+ from risk_health r where r.year=#{year}
+ </select>
+
+<select id="selectTotalNum" resultType="Double">
+	SELECT overweight_num+hyperlipidemia_num+hypertension_num+hyperglycemia_num+hyperuricemia_num+prostate_num+major_diseases_num+heart_num+tumor_antigen_num+orthopaedics_num FROM
+risk_health WHERE id=#{id}
+</select>
+
+<select id="fraction" resultType="Double">
+	SELECT conduct_num+handling_case_num+duty_num+train_num+drink_num+study_num FROM risk_report_record r WHERE r.id=#{id}
 </select>
 </mapper>

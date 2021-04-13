@@ -850,7 +850,8 @@ public class RiskController extends BaseController {
 			dateTime = sd.format(new Date());
 		}
 		// 警员局规计分数据列表查询
-		List<AlarmEvaluation> list = alarmService.riskConductBureauRuleRecordList(policeId, dateTime, lastMonthTime,
+		
+		List<RiskConductBureauRuleRecord>  list = riskService.findRiskConductBureauRuleRecord(policeId, dateTime, lastMonthTime,
 				timeType);
 		dlr.setStatus(true);
 		dlr.setMessage("success");

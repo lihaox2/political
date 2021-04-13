@@ -23,6 +23,11 @@
     <result column="name" property="name" />
     <result column="value" property="value" />
   </resultMap>
+   <resultMap id="RiskHistoryReportTimeMap" type="com.bayee.political.domain.RiskHistoryReportTime" >
+    <id column="id" property="id" />
+    <result column="year" property="year" />
+    <result column="timeType" property="timeType" />
+  </resultMap>
    <resultMap id="RiskIndexMonitorChildMap" type="com.bayee.political.domain.RiskIndexMonitorChild" >
     <result column="indexPoliceNum" property="indexPoliceNum" />
     <result column="alarmPoliceNum" property="alarmPoliceNum" />

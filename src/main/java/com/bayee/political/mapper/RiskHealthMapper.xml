@@ -62,6 +62,139 @@
       #{tumorAntigenNum,jdbcType=DOUBLE}, #{orthopaedicsNum,jdbcType=DOUBLE}, #{creationDate,jdbcType=TIMESTAMP}, 
       #{updateDate,jdbcType=TIMESTAMP})
   </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.RiskHealth" useGeneratedKeys="true">
+    insert into risk_health
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="year != null" >
+        year,
+      </if>
+      <if test="height != null" >
+        height,
+      </if>
+      <if test="weight != null" >
+        weight,
+      </if>
+      <if test="indexNum != null" >
+        index_num,
+      </if>
+      <if test="bmi != null" >
+        bmi,
+      </if>
+      <if test="bmiId != null" >
+        bmi_id,
+      </if>
+      <if test="blood != null" >
+        blood,
+      </if>
+      <if test="overweightNum != null" >
+        overweight_num,
+      </if>
+      <if test="hyperlipidemiaNum != null" >
+        hyperlipidemia_num,
+      </if>
+      <if test="hypertensionNum != null" >
+        hypertension_num,
+      </if>
+      <if test="hyperglycemiaNum != null" >
+        hyperglycemia_num,
+      </if>
+      <if test="hyperuricemiaNum != null" >
+        hyperuricemia_num,
+      </if>
+      <if test="prostateNum != null" >
+        prostate_num,
+      </if>
+      <if test="majorDiseasesNum != null" >
+        major_diseases_num,
+      </if>
+      <if test="heartNum != null" >
+        heart_num,
+      </if>
+      <if test="tumorAntigenNum != null" >
+        tumor_antigen_num,
+      </if>
+      <if test="orthopaedicsNum != null" >
+        orthopaedics_num,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null" >
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null" >
+        #{height,jdbcType=DOUBLE},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=DOUBLE},
+      </if>
+      <if test="indexNum != null" >
+        #{indexNum,jdbcType=DOUBLE},
+      </if>
+      <if test="bmi != null" >
+        #{bmi,jdbcType=DOUBLE},
+      </if>
+      <if test="bmiId != null" >
+        #{bmiId,jdbcType=INTEGER},
+      </if>
+      <if test="blood != null" >
+        #{blood,jdbcType=VARCHAR},
+      </if>
+      <if test="overweightNum != null" >
+        #{overweightNum,jdbcType=DOUBLE},
+      </if>
+      <if test="hyperlipidemiaNum != null" >
+        #{hyperlipidemiaNum,jdbcType=DOUBLE},
+      </if>
+      <if test="hypertensionNum != null" >
+        #{hypertensionNum,jdbcType=DOUBLE},
+      </if>
+      <if test="hyperglycemiaNum != null" >
+        #{hyperglycemiaNum,jdbcType=DOUBLE},
+      </if>
+      <if test="hyperuricemiaNum != null" >
+        #{hyperuricemiaNum,jdbcType=DOUBLE},
+      </if>
+      <if test="prostateNum != null" >
+        #{prostateNum,jdbcType=DOUBLE},
+      </if>
+      <if test="majorDiseasesNum != null" >
+        #{majorDiseasesNum,jdbcType=DOUBLE},
+      </if>
+      <if test="heartNum != null" >
+        #{heartNum,jdbcType=DOUBLE},
+      </if>
+      <if test="tumorAntigenNum != null" >
+        #{tumorAntigenNum,jdbcType=DOUBLE},
+      </if>
+      <if test="orthopaedicsNum != null" >
+        #{orthopaedicsNum,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
   <!-- 警员健康风险指数修改 -->
   <update id="riskHealthUpdate" parameterType="com.bayee.political.domain.RiskHealth" >
     update risk_health

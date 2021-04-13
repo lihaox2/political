@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface RiskService {
+	
+	int insertSelective(RiskHealth record);
 
 	// 警员健康风险指数新增
 	int riskHealthCreat(RiskHealth record);
@@ -178,5 +180,13 @@ public interface RiskService {
 	int updateRiskReportRecord(RiskReportRecord record);
 	
 	List<RiskHistoryReportTime> riskHistoryReportTimeList(String policeId);
+	
+	Integer getByIdAndYear(String policeId, String year);
+	
+	Double selectTotalNum(Integer id);
+	
+	Integer insertRiskReportRecord(RiskReportRecord record);
+	
+	List<String> getAllByYear(String year);
 
 }

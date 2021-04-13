@@ -117,6 +117,11 @@ public class RiskServiceImpl implements RiskService {
 
 	@Autowired
 	RiskConductTrafficViolationRecordMapper riskConductTrafficViolationRecordMapper;
+	
+	@Override
+	public int insertSelective(RiskHealth record) {
+		return riskHealthMapper.insertSelective(record);
+	}
 
 	// 警员健康风险指数查询
 	@Override
@@ -443,5 +448,25 @@ public class RiskServiceImpl implements RiskService {
 	public List<RiskHistoryReportTime> riskHistoryReportTimeList(String policeId) {
 		// TODO Auto-generated method stub
 		return riskReportRecordMapper.riskHistoryReportTimeList(policeId);
+	}
+	
+	@Override
+	public Integer getByIdAndYear(String policeId, String year) {
+		return riskHealthMapper.getByIdAndYear(policeId, year);
+	}
+	
+	@Override
+	public Double selectTotalNum(Integer id) {
+		return riskHealthMapper.selectTotalNum(id);
+	}
+	
+	@Override
+	public Integer insertRiskReportRecord(RiskReportRecord record) {
+		return riskReportRecordMapper.insertSelective(record);
+	}
+	
+	@Override
+	public List<String> getAllByYear(String year) {
+		return riskHealthMapper.getAllByYear(year);
 	}
 }

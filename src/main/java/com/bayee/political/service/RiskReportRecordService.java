@@ -38,5 +38,8 @@ public interface RiskReportRecordService {
      * @return
      */
     RiskReportRecord getByPoliceIdMonth(String year,String month, String policeId);
+    
+    
+    void health();
 
 }

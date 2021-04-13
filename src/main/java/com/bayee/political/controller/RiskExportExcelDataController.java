@@ -39,6 +39,7 @@ import com.bayee.political.service.RiskConductBureauRuleRecordService;
 import com.bayee.political.service.RiskConductVisitRecordService;
 import com.bayee.political.service.RiskDutyDealPoliceRecordService;
 import com.bayee.political.service.RiskHealthRecordService;
+import com.bayee.political.service.RiskReportRecordService;
 import com.bayee.political.service.RiskService;
 import com.bayee.political.service.RiskStutyActivitiesPartyRecordService;
 import com.bayee.political.service.RiskStutyPalmSchoolRecordService;
@@ -95,6 +96,9 @@ public class RiskExportExcelDataController {
 	
 	@Autowired
 	RiskConductVisitRecordService riskConductVisitRecordService;
+	
+	@Autowired
+	RiskReportRecordService riskReportRecordService;
 	
 
 	/**
@@ -171,20 +175,26 @@ public class RiskExportExcelDataController {
 				}
 				
 				if(!excel.get(14).isEmpty() &&  !excel.get(14).equals("弃检")) {
-					if(Double.valueOf(excel.get(14))>=140) {
+					if(Double.valueOf(excel.get(14))>140) {
 						riskHealthRecord.setIsHypertension(1);
 					}
 				}
 				
 				if(!excel.get(15).isEmpty() &&  !excel.get(15).equals("弃检")) {
-					if(Double.valueOf(excel.get(15))>=90) {
+					if(Double.valueOf(excel.get(15))>90) {
 						riskHealthRecord.setIsHypertension(1);
 					}
 				}
 				
 				if(!excel.get(16).isEmpty()) {
-					if(Double.valueOf(excel.get(16))>=6.1) {
-						riskHealthRecord.setIsHypertension(1);
+					if(Double.valueOf(excel.get(16))>6.1) {
+						riskHealthRecord.setIsHyperglycemia(1);
+					}
+				}
+				
+				if(!excel.get(17).isEmpty()) {
+					if(Double.valueOf(excel.get(17))>420) {
+						riskHealthRecord.setIsHyperuricemia(1);
 					}
 				}
 				
@@ -939,5 +949,10 @@ public class RiskExportExcelDataController {
 			
 		}
 		System.out.println("结束");
+	}
+	
+	@RequestMapping("/test")
+	public void test() {
+		riskReportRecordService.health();
 	}
 }

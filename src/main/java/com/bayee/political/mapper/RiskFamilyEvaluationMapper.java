@@ -25,4 +25,10 @@ public interface RiskFamilyEvaluationMapper {
     
     // 家属评价风险指数图例
  	List<ScreenDoubeChart> riskFamilyEvaluationChart(@Param("policeId")String policeId);
+ 	
+ 	Integer findByPoliceIdOrYearMonth(@Param("policeId")String policeId,@Param("year")String year,@Param("month")String month);
+ 	
+ 	Double findByPoliceIdOrYearTotalNum(@Param("policeId")String policeId,@Param("year")String year);
+ 	
+ 	List<String> findPoliceIdALlByYearOrMonth(@Param("year")String year,@Param("month")String month);
 }

@@ -5,6 +5,8 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="police_id" jdbcType="VARCHAR" property="policeId" />
     <result column="index_num" jdbcType="DOUBLE" property="indexNum" />
+    <result column="year" jdbcType="VARCHAR" property="year" />
+    <result column="month" jdbcType="VARCHAR" property="month" />
     <result column="rank_id" jdbcType="INTEGER" property="rankId" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
@@ -17,7 +19,7 @@
     <result column="value" property="value" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, police_id, index_num, rank_id, comment, creation_date, update_date
+    id, police_id, index_num, year, month, rank_id, comment, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -30,10 +32,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskFamilyEvaluation">
-    insert into risk_family_evaluation (id, police_id, index_num, 
+    insert into risk_family_evaluation (id, police_id, index_num, year, month, 
       rank_id, comment, creation_date, 
       update_date)
-    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, #{year,jdbcType=VARCHAR}, #{month,jdbcType=VARCHAR},
       #{rankId,jdbcType=INTEGER}, #{comment,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, 
       #{updateDate,jdbcType=TIMESTAMP})
   </insert>
@@ -48,6 +50,12 @@
       </if>
       <if test="indexNum != null">
         index_num,
+      </if>
+       <if test="year != null">
+        year,
+      </if>
+      <if test="month != null">
+        month,
       </if>
       <if test="rankId != null">
         rank_id,
@@ -72,6 +80,12 @@
       <if test="indexNum != null">
         #{indexNum,jdbcType=DOUBLE},
       </if>
+      <if test="year != null">
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        #{month,jdbcType=VARCHAR},
+      </if>
       <if test="rankId != null">
         #{rankId,jdbcType=INTEGER},
       </if>
@@ -95,6 +109,12 @@
       <if test="indexNum != null">
         index_num = #{indexNum,jdbcType=DOUBLE},
       </if>
+      <if test="year != null">
+        year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        month = #{month,jdbcType=VARCHAR},
+      </if>
       <if test="rankId != null">
         rank_id = #{rankId,jdbcType=INTEGER},
       </if>
@@ -114,6 +134,8 @@
     update risk_family_evaluation
     set police_id = #{policeId,jdbcType=VARCHAR},
       index_num = #{indexNum,jdbcType=DOUBLE},
+       year = #{year,jdbcType=VARCHAR},
+      month = #{month,jdbcType=VARCHAR},
       rank_id = #{rankId,jdbcType=INTEGER},
       comment = #{comment,jdbcType=VARCHAR},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -141,5 +163,17 @@
 	where police_id=#{policeId,jdbcType=VARCHAR} GROUP BY DATE_FORMAT(creation_date, '%Y-%m')) b on b.name=a.year_month
 	left join month c on c.num_name=right(a.year_month,2) 
 	order by a.year_month
+	</select>
+	
+	<select id="findByPoliceIdOrYearMonth" resultType="Integer">
+		select id from risk_family_evaluation where police_id=#{policeId} and year=#{year} and month=#{month}
+	</select>
+	
+	<select id="findByPoliceIdOrYearTotalNum" resultType="Double">
+		select sum(index_num) from risk_family_evaluation where police_id=#{policeId} and year=#{year}
+	</select>
+	
+	<select id="findPoliceIdALlByYearOrMonth" resultType="String">
+		select police_id from risk_family_evaluation where  year=#{year} and month=#{month}
 	</select>
 </mapper>

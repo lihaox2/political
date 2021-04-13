@@ -99,4 +99,6 @@ public interface RiskReportRecordMapper {
 	List<RiskHistoryReportTime> riskHistoryReportTimeList(@Param("policeId") String policeId);
 	
 	Double findPoliceHealthScoreByYear(@Param("policeId") String policeId,@Param("year") String year);
+	
+	Double findNotFamilyTotalNum(@Param("id")Integer id);
 }

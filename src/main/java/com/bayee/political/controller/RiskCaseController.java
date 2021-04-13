@@ -297,6 +297,27 @@ public class RiskCaseController extends BaseController {
 		dlr.setCode(StatusCode.getSuccesscode());
 		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/risk/case/test/record/list", method = RequestMethod.GET)
+	public ResponseEntity<?> riskCaseTestRecordList(@RequestParam(value = "policeId", required = false) String policeId,
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
+		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
+		String lastMonthTime = DateUtils.lastMonthTime();
+		if (dateTime == null) {
+			dateTime = sd.format(new Date());
+		}
+		
+		List<RiskCaseTestRecord> list = riskService.riskCaseTestRecordList(policeId, dateTime, lastMonthTime, timeType);
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(list);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+	}
 
 	// 警员家属评价风险查询
 	@RequestMapping(value = "/risk/family/evaluation/item", method = RequestMethod.GET)

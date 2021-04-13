@@ -41,5 +41,7 @@ public interface RiskReportRecordService {
     
     
     void health();
+    
+    void family();
 
 }

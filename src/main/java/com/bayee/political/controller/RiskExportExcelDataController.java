@@ -953,6 +953,6 @@ public class RiskExportExcelDataController {
 	
 	@RequestMapping("/test")
 	public void test() {
-		riskReportRecordService.health();
+		riskReportRecordService.family();
 	}
 }

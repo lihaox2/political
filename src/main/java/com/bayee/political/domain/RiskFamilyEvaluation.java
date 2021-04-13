@@ -9,6 +9,10 @@ public class RiskFamilyEvaluation {
     private String policeId;
 
     private Double indexNum;
+    
+    private String year;
+    
+    private String month;
 
     private Integer rankId;
 
@@ -83,4 +87,22 @@ public class RiskFamilyEvaluation {
 	public void setList(List<ScreenDoubeChart> list) {
 		this.list = list;
 	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+	
+	
 }

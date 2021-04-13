@@ -138,4 +138,8 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="findByYearAndMonth" resultMap="BaseResultMap">
+  		select * from risk_family_evaluation_record where year=#{year} and month=#{month}
+  </select>
 </mapper>

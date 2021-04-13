@@ -613,4 +613,8 @@ GROUP BY DATE_FORMAT(creation_date, '%Y') order by DATE_FORMAT(creation_date, '%
 <select id="findPoliceHealthScoreByYear" resultType="Double">
     select health_num from risk_report_record where police_id = #{policeId} and year = #{year} and health_num > 0 limit 1
   </select>
+  
+  <select id="findNotFamilyTotalNum" resultType="Double">
+  	select conduct_num+handling_case_num+duty_num+train_num+social_contact_num+health_num+drink_num+study_num+work_num FROM risk_report_record WHERE id=#{id}
+  </select>
 </mapper>

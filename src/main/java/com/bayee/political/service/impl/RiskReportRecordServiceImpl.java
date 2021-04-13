@@ -8,10 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bayee.political.domain.RiskAlarm;
+import com.bayee.political.domain.RiskFamilyEvaluation;
+import com.bayee.political.domain.RiskFamilyEvaluationRecord;
 import com.bayee.political.domain.RiskHealth;
 import com.bayee.political.domain.RiskHealthRecord;
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.User;
+import com.bayee.political.mapper.RiskFamilyEvaluationMapper;
+import com.bayee.political.mapper.RiskFamilyEvaluationRecordMapper;
 import com.bayee.political.mapper.RiskHealthRecordMapper;
 import com.bayee.political.mapper.RiskReportRecordMapper;
 import com.bayee.political.service.RiskAlarmService;
@@ -44,6 +48,12 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	RiskFamilyEvaluationRecordMapper riskFamilyEvaluationRecordMapper;
+	
+	@Autowired
+	RiskFamilyEvaluationMapper riskFamilyEvaluationMapper;
 
 
     @Override
@@ -271,4 +281,146 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 		
 		}
 	}
+    
+    
+    public void family() {
+    	Calendar cal = Calendar.getInstance();
+		Integer year = cal.get(Calendar.YEAR);
+		Integer month=cal.get(Calendar.MONTH)+1;
+		String yearStr=year.toString();
+		String monthStr=month.toString();
+
+		if(month<10) {
+			monthStr="0"+monthStr;
+		}
+		
+		List<RiskFamilyEvaluationRecord> riskFamilyEvaluationRecordList= riskFamilyEvaluationRecordMapper.findByYearAndMonth(yearStr,monthStr);
+    	
+		for(RiskFamilyEvaluationRecord r:riskFamilyEvaluationRecordList) {
+			
+			Integer id=riskFamilyEvaluationMapper.findByPoliceIdOrYearMonth(r.getPoliceId(),yearStr,monthStr);
+			
+			RiskReportRecord riskReportRecord= riskHealthRecordService.getByPoliceIdMonth(yearStr, monthStr, r.getPoliceId());
+
+			if(riskReportRecord==null) {
+				riskReportRecord=new RiskReportRecord();
+				riskReportRecord.setYear(yearStr);
+				riskReportRecord.setMonth(monthStr);
+			}
+			
+			RiskFamilyEvaluation riskFamilyEvaluation=new RiskFamilyEvaluation();
+			
+			riskFamilyEvaluation.setPoliceId(r.getPoliceId());
+			riskFamilyEvaluation.setYear(yearStr);
+			riskFamilyEvaluation.setMonth(monthStr);
+			riskFamilyEvaluation.setRankId(r.getRankId());
+			Double indexNum=0.0;
+			if(r.getRankId()==2) {
+				indexNum=1.0;
+			}else if(r.getRankId()==3) {
+				indexNum=2.0;
+			}else if(r.getRankId()==4) {
+				indexNum=3.0;
+			}
+			riskFamilyEvaluation.setIndexNum(indexNum);
+			
+			riskFamilyEvaluation.setComment(r.getComment());
+			
+			if(id!=null) {
+				riskFamilyEvaluation.setId(id);
+				riskFamilyEvaluation.setUpdateDate(new Date());
+				riskFamilyEvaluationMapper.updateByPrimaryKeySelective(riskFamilyEvaluation);
+			}else {
+				riskFamilyEvaluation.setCreationDate(new Date());
+				riskFamilyEvaluationMapper.insertSelective(riskFamilyEvaluation);
+			}
+			
+			riskReportRecord.setAmilyEvaluationNum(indexNum);;
+			if(riskReportRecord != null  &&  riskReportRecord.getId()!=null) {
+				Double fraction= riskReportRecordMapper.findNotFamilyTotalNum(riskReportRecord.getId());
+				riskReportRecord.setTotalNum(indexNum+fraction);
+				riskReportRecord.setId(riskReportRecord.getId());
+				riskReportRecord.setUpdateDate(new Date());
+				riskService.updateRiskReportRecord(riskReportRecord);
+			}else {
+				riskReportRecord.setTotalNum(indexNum);
+				riskReportRecord.setPoliceId(r.getPoliceId());
+				riskReportRecord.setCreationDate(new Date());
+				riskService.insertRiskReportRecord(riskReportRecord);
+			}
+			
+			Double yeartotal=riskFamilyEvaluationMapper.findByPoliceIdOrYearTotalNum(r.getPoliceId(), yearStr);
+			
+			if(yeartotal>3 || indexNum==3) {
+				RiskAlarm riskAlarm=new RiskAlarm();
+				riskAlarm.setPoliceId(r.getPoliceId());
+				riskAlarm.setAlarmType(11007);
+				riskAlarm.setAlarmScore(yeartotal);
+				riskAlarm.setCreationDate(new Date());
+				riskAlarm.setIsTalk(0);
+				riskAlarmService.insert(riskAlarm);
+			}
+			
+		}
+		
+		List<User> usersList=userService.userInfoAllList();	
+		List<String> policeIds=riskFamilyEvaluationMapper.findPoliceIdALlByYearOrMonth(yearStr, monthStr);
+		for(int i=0;i<usersList.size();i++) {
+			
+			for(String p : policeIds) {
+				
+				if(usersList.get(i).getPoliceId().equals(p)) {
+					usersList.remove(i);
+					i--;
+					break;
+				}
+				
+			}
+			
+		}
+		
+		for(User u:usersList) {
+
+			Integer id=riskFamilyEvaluationMapper.findByPoliceIdOrYearMonth(u.getPoliceId(),yearStr,monthStr);
+			
+			RiskReportRecord riskReportRecord= riskHealthRecordService.getByPoliceIdMonth(yearStr, monthStr,u.getPoliceId());
+			
+			RiskFamilyEvaluation riskFamilyEvaluation=new RiskFamilyEvaluation();
+			if(riskReportRecord==null) {
+				riskReportRecord=new RiskReportRecord();
+				riskReportRecord.setYear(yearStr);
+				riskReportRecord.setMonth(monthStr);
+			}
+			
+			riskFamilyEvaluation.setYear(yearStr);
+			riskFamilyEvaluation.setMonth(monthStr);
+			riskFamilyEvaluation.setRankId(1);
+			if(id!=null) {
+				riskFamilyEvaluation.setId(id);
+				riskFamilyEvaluation.setPoliceId(u.getPoliceId());
+				riskFamilyEvaluation.setUpdateDate(new Date());
+				riskFamilyEvaluationMapper.updateByPrimaryKeySelective(riskFamilyEvaluation);
+			}else {
+				riskFamilyEvaluation.setPoliceId(u.getPoliceId());
+				riskFamilyEvaluation.setIndexNum(0.0);
+				riskFamilyEvaluation.setCreationDate(new Date());
+				riskFamilyEvaluationMapper.insertSelective(riskFamilyEvaluation);
+			}
+			
+			riskReportRecord.setAmilyEvaluationNum(0.0);;
+			if(riskReportRecord != null  &&  riskReportRecord.getId()!=null) {
+				Double fraction= riskReportRecordMapper.findNotFamilyTotalNum(riskReportRecord.getId());
+				riskReportRecord.setTotalNum(0.0+fraction);
+				riskReportRecord.setId(riskReportRecord.getId());
+				riskReportRecord.setUpdateDate(new Date());
+				riskService.updateRiskReportRecord(riskReportRecord);
+			}else {
+				riskReportRecord.setTotalNum(0.0);
+				riskReportRecord.setPoliceId(u.getPoliceId());
+				riskReportRecord.setCreationDate(new Date());
+				riskService.insertRiskReportRecord(riskReportRecord);
+			}
+		
+		}
+    }
 }

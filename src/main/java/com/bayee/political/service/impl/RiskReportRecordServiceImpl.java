@@ -6,6 +6,8 @@ import com.bayee.political.service.RiskReportRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author xxl
  * @date 2021/4/6
@@ -27,7 +29,17 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
     }
 
     @Override
+    public void insertRiskReportRecordList(List<RiskReportRecord> reportRecords) {
+        riskReportRecordMapper.insertRiskReportRecords(reportRecords);
+    }
+
+    @Override
     public RiskReportRecord findRiskReportRecord(String policeId, String year, String month) {
         return riskReportRecordMapper.findRiskReportRecord(policeId, year, month);
+    }
+
+    @Override
+    public RiskReportRecord getByPoliceIdMonth(String year, String month, String policeId) {
+        return riskReportRecordMapper.getByPoliceIdMonth(year, month, policeId);
     }
 }

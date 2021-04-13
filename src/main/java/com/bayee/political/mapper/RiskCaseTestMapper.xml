@@ -156,4 +156,10 @@
       and DATE_FORMAT(a.creation_date, '%Y-%m')=#{dateTime}
     </if>
   </select>
+
+  <select id="findPoliceRiskCaseTest" resultMap="BaseResultMap">
+    select * from risk_case_test
+    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
 </mapper>

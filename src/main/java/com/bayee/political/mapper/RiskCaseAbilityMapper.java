@@ -29,4 +29,28 @@ public interface RiskCaseAbilityMapper {
     // 警员执法能力风险查询
     RiskCaseAbility riskCaseAbilityIndexItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime,
                                              @Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
+
+    /**
+     * 添加执法报备数据
+     *
+     * @param riskCaseAbility
+     */
+    void insertRiskCaseAbility(RiskCaseAbility riskCaseAbility);
+
+    /**
+     * 通过警号和时间查询警员执法报备数据
+     *
+     * @param policeId
+     * @param date
+     * @return
+     */
+    RiskCaseAbility findRiskCaseAbilityByPoliceIdAndDate(@Param("policeId") String policeId, @Param("date") String date);
+
+    /**
+     * 修改执法报备数据
+     *
+     * @param riskCaseAbility
+     */
+    void updateRiskCaseAbility(RiskCaseAbility riskCaseAbility);
+
 }

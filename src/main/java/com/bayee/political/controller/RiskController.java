@@ -99,10 +99,9 @@ public class RiskController extends BaseController {
 			} else {
 				list.get(i).setHealthNum(0.0);
 			}
-			Double totalNum = list.get(i).getConductNum() + list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum()
-					+ list.get(i).getTrainNum() + list.get(i).getSocialContactNum()
-					+ list.get(i).getAmilyEvaluationNum() + list.get(i).getDrinkNum() + list.get(i).getStudyNum()
-					+ list.get(i).getWorkNum() + list.get(i).getHealthNum();
+			Double totalNum = list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum() + list.get(i).getTrainNum() +
+					list.get(i).getSocialContactNum() + list.get(i).getAmilyEvaluationNum() + list.get(i).getHealthNum() +
+					list.get(i).getConductNum();
 			list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));
 			// 警员风险雷达图
 			List<ScreenDoubeChart> list2 = riskService.riskChartList(list.get(i).getPoliceId(), dateTime, lastMonthTime,
@@ -162,8 +161,7 @@ public class RiskController extends BaseController {
 					item.getHandlingCaseNum() + 
 					item.getDutyNum() + 
 					item.getTrainNum()
-					+ item.getSocialContactNum() + item.getAmilyEvaluationNum() + item.getDrinkNum()
-					+ item.getStudyNum() + item.getWorkNum() + item.getHealthNum();
+					+ item.getSocialContactNum() + item.getAmilyEvaluationNum()+ item.getHealthNum();
 			item.setTotalNum(Double.valueOf(df.format(totalNum)));
 			// 警员风险雷达图
 			List<ScreenDoubeChart> list2 = riskService.riskChartList(item.getPoliceId(), dateTime, lastMonthTime,

@@ -141,4 +141,23 @@
     </if>
     order by a.id desc
   </select>
+
+  <select id="countPoliceCaseData" resultType="Integer">
+    select count(1) from risk_case_law_enforcement_record
+    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
+  <select id="findPoliceAvgDeductionScoreByDate" resultType="Double">
+    select
+           ifnull(TRUNCATE((sum(deduction_score) * 10) / (select count(1) from risk_case_law_enforcement
+                where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')), 2), 0) as avg_score
+    from risk_case_law_enforcement_record
+    where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m');
+  </select>
+
+  <select id="findPoliceCaseData" resultMap="BaseResultMap">
+    select * from risk_case_law_enforcement_record
+    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
 </mapper>

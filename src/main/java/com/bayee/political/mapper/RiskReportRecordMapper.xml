@@ -259,8 +259,11 @@
   from (select police_id,sum(total_num) as total_num,sum(conduct_num) as conduct_num,
   round(sum(handling_case_num),2) as handling_case_num, sum(duty_num) as duty_num,
   sum(train_num) as train_num, sum(social_contact_num) as social_contact_num,
-  sum(amily_evaluation_num) as amily_evaluation_num, sum(drink_num) as drink_num,
-  sum(study_num) as study_num,sum(health_num) as health_num,sum(work_num) as work_num
+  sum(amily_evaluation_num) as amily_evaluation_num,
+  /*sum(drink_num) as drink_num,
+  sum(study_num) as study_num,
+  sum(work_num) as work_num,*/
+  sum(health_num) as health_num
   from risk_report_record where DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime}
   and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
   GROUP BY police_id) a
@@ -295,8 +298,11 @@
   from (select police_id,sum(total_num) as total_num,sum(conduct_num) as conduct_num,
   sum(handling_case_num) as handling_case_num, sum(duty_num) as duty_num,
   sum(train_num) as train_num, sum(social_contact_num) as social_contact_num,
-  sum(amily_evaluation_num) as amily_evaluation_num, sum(drink_num) as drink_num,
-  sum(study_num) as study_num,sum(health_num) as health_num,sum(work_num) as work_num
+  sum(amily_evaluation_num) as amily_evaluation_num,
+  sum(drink_num) as drink_num,
+  sum(study_num) as study_num,
+  sum(work_num) as work_num,
+  sum(health_num) as health_num
   from risk_report_record where DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime}
   and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
   GROUP BY police_id) a
@@ -321,72 +327,64 @@
 </select>
   <!-- 警员风险雷达图 -->
 <select id="riskChartList" parameterType="com.bayee.political.domain.ScreenDoubeChart" resultMap="ScreenDoubeChartMap">
-  select '行为规范' as name,round(sum(drink_num),2) as value from risk_report_record
-  where police_id=#{policeId}
-  <if test="timeType == 1">
-    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
-  </if>
-  <if test="timeType == 2">
-    and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
-  </if>
-  UNION ALL
-  select '纪律作风' as name,round(sum(conduct_num),2) as value from risk_report_record
-  where police_id=#{policeId}
-  <if test="timeType == 1">
-    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
-  </if>
-  <if test="timeType == 2">
-    and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
-  </if>
-  UNION ALL
-  select '执法办案' as name,round(sum(handling_case_num),2) as value from risk_report_record
-  where police_id=#{policeId}
-  <if test="timeType == 1">
-    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
-  </if>
-  <if test="timeType == 2">
-    and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
-  </if>
-  UNION ALL
-  select '接警执勤' as name,round(sum(duty_num),2) as value from risk_report_record
-  where police_id=#{policeId}
-  <if test="timeType == 1">
-    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
-  </if>
-  <if test="timeType == 2">
-    and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
-  </if>
-  UNION ALL
-  select '警务技能' as name,round(sum(train_num),2) as value from risk_report_record
-  where police_id=#{policeId}
-  <if test="timeType == 1">
-    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
-  </if>
-  <if test="timeType == 2">
-    and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
-  </if>
-  UNION ALL
-  select '学习培训' as name,round(sum(study_num),2) as value from risk_report_record
-  where police_id=#{policeId}
-  <if test="timeType == 1">
-    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
-  </if>
-  <if test="timeType == 2">
-    and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
-  </if>
-  UNION ALL
-  select '健康' as name,round(index_num,2) as value from
-  (select * from risk_health where police_id=#{policeId,jdbcType=VARCHAR}
-  order by creation_date desc limit 1) as t
-  UNION ALL
-  select '工作量' as name,round(sum(work_num),2) as value from risk_report_record
-  where police_id=#{policeId}
-  <if test="timeType == 1">
-    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
-  </if>
-  <if test="timeType == 2">
-    and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
-  </if>
+    select '行为规范' as name,round(sum(conduct_num),2) as value from risk_report_record
+    where police_id=#{policeId}
+      <if test="timeType == 1">
+        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+      </if>
+      <if test="timeType == 2">
+        and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+      </if>
+    UNION ALL
+    select '执法办案' as name,round(sum(handling_case_num),2) as value from risk_report_record
+    where police_id=#{policeId}
+      <if test="timeType == 1">
+        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+      </if>
+      <if test="timeType == 2">
+        and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+      </if>
+    UNION ALL
+    select '接警执勤' as name,round(sum(duty_num),2) as value from risk_report_record
+    where police_id=#{policeId}
+      <if test="timeType == 1">
+        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+      </if>
+      <if test="timeType == 2">
+        and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+      </if>
+    UNION ALL
+    select '警务技能' as name,round(sum(train_num),2) as value from risk_report_record
+    where police_id=#{policeId}
+      <if test="timeType == 1">
+        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+      </if>
+      <if test="timeType == 2">
+        and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+      </if>
+    UNION ALL
+    select '社交' as name,round(sum(social_contact_num),2) as value from risk_report_record
+    where police_id=#{policeId}
+      <if test="timeType == 1">
+        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+      </if>
+      <if test="timeType == 2">
+        and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+      </if>
+    UNION ALL
+    select '家属评价' as name,round(sum(amily_evaluation_num),2) as value from risk_report_record
+    where police_id=#{policeId}
+      <if test="timeType == 1">
+        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+      </if>
+      <if test="timeType == 2">
+        and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+      </if>
+    UNION ALL
+    select '健康' as name,round(index_num,2) as value from
+    (select * from risk_health where police_id=#{policeId,jdbcType=VARCHAR}
+    order by creation_date desc limit 1) as t
+    where police_id=#{policeId} and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
 </select>
 <!-- 警员风险详情查询 -->
 <select id="riskReportRecordItem" parameterType="com.bayee.political.domain.RiskReportRecord" resultMap="BaseResultMap">
@@ -395,11 +393,13 @@
   g.total_num as currentTotalNum,
   round(ifnull((g.total_num-e.total_num)/e.total_num*100,0),2) as riskRate,
   e.total_num as lastTotalNum,f.alarmTypes
-  from (select police_id,sum(conduct_num) as conduct_num,
-  round(sum(handling_case_num),2) as handling_case_num, sum(duty_num) as duty_num,
-  sum(train_num) as train_num, sum(social_contact_num) as social_contact_num,
-  sum(amily_evaluation_num) as amily_evaluation_num, sum(drink_num) as drink_num,
-  sum(study_num) as study_num,sum(work_num) as work_num
+  from (select police_id,ifnull(sum(conduct_num), 0) as conduct_num,
+  ifnull(round(sum(handling_case_num),2), 0) as handling_case_num, ifnull(sum(duty_num), 0) as duty_num,
+  ifnull(sum(train_num), 0) as train_num, ifnull(sum(social_contact_num), 0) as social_contact_num,
+  ifnull(sum(amily_evaluation_num), 0) as amily_evaluation_num,
+    sum(drink_num) as drink_num,
+    sum(study_num) as study_num,
+    sum(work_num) as work_num
   from risk_report_record where 1=1 and police_id = #{policeId}
   <if test="timeType == 1">
     and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}

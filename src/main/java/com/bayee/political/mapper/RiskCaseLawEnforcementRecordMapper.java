@@ -24,4 +24,32 @@ public interface RiskCaseLawEnforcementRecordMapper {
                                                                         @Param("dateTime") String dateTime,
                                                                         @Param("lastMonthTime") String lastMonthTime,
                                                                         @Param("timeType") Integer timeType);
+
+    /**
+     * 统计警员办案量
+     *
+     * @param policeId
+     * @param date
+     * @return
+     */
+    Integer countPoliceCaseData(@Param("policeId") String policeId, @Param("date") String date);
+
+    /**
+     * 查询某个月警员的平均扣分
+     *
+     * @param date
+     * @return
+     */
+    Double findPoliceAvgDeductionScoreByDate(@Param("date") String date);
+
+    /**
+     * 查询警员执法数据
+     *
+     * @param policeId 警号
+     * @param date     时间
+     * @return
+     */
+    List<RiskCaseLawEnforcementRecord> findPoliceCaseData(@Param("policeId") String policeId,
+                                                          @Param("date") String date);
+
 }

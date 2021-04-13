@@ -3,6 +3,7 @@ package com.bayee.political.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.bayee.political.enums.AlarmTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,7 @@ public class RiskAlarmServiceImpl implements RiskAlarmService {
     }
 
     @Override
-    public RiskAlarm generateRiskAlarm(String policeId, AlarmType alarmType, String date, Double score) {
+    public RiskAlarm generateRiskAlarm(String policeId, AlarmTypeEnum alarmType, String date, Double score) {
         RiskAlarm riskAlarm = new RiskAlarm();
         riskAlarm.setPoliceId(policeId);
         riskAlarm.setAlarmType(alarmType.getId());

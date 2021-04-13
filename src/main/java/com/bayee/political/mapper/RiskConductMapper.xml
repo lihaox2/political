@@ -140,7 +140,7 @@
 <!-- 警员行为规范风险指数查询 -->
 	<select id="riskConductItem"  resultMap="BaseResultMap">
 		select id, police_id, sum(index_num) as index_num, sum(bureau_rule_score) as bureau_rule_score ,sum(visit_score) visit_score 
-,sum(traffic_violation_score) traffic_violation_score FROM risk_conduct
+,sum(traffic_violation_score) traffic_violation_score FROM risk_conduct a
 where a.police_id=#{policeId,jdbcType=VARCHAR} 
     <if test="timeType == 1">
 	    and DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}

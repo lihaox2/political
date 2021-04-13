@@ -29,4 +29,15 @@ public interface RiskCaseLawEnforcementMapper {
     RiskCaseLawEnforcement riskCaseLawEnforcementIndexItem(@Param("policeId") String policeId,
                                                            @Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime,
                                                            @Param("timeType") Integer timeType);
+
+    /**
+     * 查询已产生的警员执法报备数据
+     *
+     * @param policeId
+     * @param date
+     * @return
+     */
+    RiskCaseLawEnforcement findRiskCaseLawEnforcementByPoliceIdAndDate(@Param("policeId") String policeId,
+                                                                       @Param("date") String date);
+
 }

@@ -26,4 +26,20 @@ public interface RiskDutyMapper {
 
 	// 半年内接警执勤风险指数
 	List<ScreenDoubeChart> riskDutyIndexChart(@Param("policeId") String policeId);
+
+	/**
+	 * 查询警员接警执勤指数数据
+	 * @param policeId
+	 * @param date
+	 * @return
+	 */
+	RiskDuty findPoliceRiskDuty(@Param("policeId") String policeId, @Param("date") String date);
+
+	/**
+	 * 批量添加执勤报备数据
+	 *
+	 * @param riskDutyList
+	 */
+	void insertRiskDutys(List<RiskDuty> riskDutyList);
+
 }

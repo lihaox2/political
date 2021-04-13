@@ -181,4 +181,32 @@ order by a.year_month
       and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
     </if>
   </select>
+
+  <insert id="insertRiskCaseAbility" parameterType="com.bayee.political.domain.RiskCaseAbility">
+    insert into risk_case_ability (id, police_id, index_num, reconsideration_litigation_score,
+                                   letter_visit_score, law_enforcement_fault_score, judicial_supervision_score, creation_date, update_date)
+    values
+    (null, #{policeId}, #{indexNum}, #{reconsiderationLitigationScore}, #{letterVisitScore},
+     #{lawEnforcementFaultScore}, #{judicialSupervisionScore}, #{creationDate}, #{updateDate})
+  </insert>
+
+  <select id="findRiskCaseAbilityByPoliceIdAndDate" resultMap="BaseResultMap">
+    select * from risk_case_ability
+    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+    order by id desc limit 1
+  </select>
+
+  <update id="updateRiskCaseAbility" parameterType="com.bayee.political.domain.RiskCaseAbility">
+    update risk_case_ability set
+         police_id = #{policeId},
+         index_num = #{indexNum},
+         reconsideration_litigation_score = #{reconsiderationLitigationScore},
+         letter_visit_score = #{letterVisitScore},
+         law_enforcement_fault_score = #{lawEnforcementFaultScore},
+         judicial_supervision_score = #{judicialSupervisionScore},
+         creation_date = #{creationDate},
+         update_date = #{updateDate}
+    where id = #{id}
+  </update>
+
 </mapper>

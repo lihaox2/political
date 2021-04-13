@@ -20,4 +20,13 @@ public interface RiskCaseTestMapper {
     RiskCaseTest riskCaseTestIndexItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime,
                                        @Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
 
+    /**
+     * 查询警员执法考试风险信息
+     *
+     * @param policeId
+     * @param date
+     * @return
+     */
+    RiskCaseTest findPoliceRiskCaseTest(@Param("policeId") String policeId,@Param("date") String date);
+
 }

@@ -26,4 +26,20 @@ public interface RiskCaseMapper {
 
 	// 执法办案风险指数图例
 	List<ScreenDoubeChart> riskCaseIndexChart(@Param("policeId") String policeId);
+
+	/**
+	 * 查询警员办案风险指数数据
+	 * @param policeId
+	 * @param date
+	 * @return
+	 */
+	RiskCase findPoliceRiskCase(@Param("policeId") String policeId, @Param("date") String date);
+
+	/**
+	 * 批量添加执法报备数据
+	 *
+	 * @param riskCaseList
+	 */
+	void insertRiskCases(List<RiskCase> riskCaseList);
+
 }

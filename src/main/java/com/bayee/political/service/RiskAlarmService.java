@@ -2,6 +2,7 @@ package com.bayee.political.service;
 
 import java.util.List;
 
+import com.bayee.political.enums.AlarmTypeEnum;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.AlarmType;
@@ -41,6 +42,6 @@ public interface RiskAlarmService {
      * @param score 预警值
      * @return
      */
-    RiskAlarm generateRiskAlarm(String policeId, AlarmType alarmType, String date, Double score);
+    RiskAlarm generateRiskAlarm(String policeId, AlarmTypeEnum alarmType, String date, Double score);
 
 }

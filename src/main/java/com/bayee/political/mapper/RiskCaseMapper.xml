@@ -157,4 +157,22 @@ where police_id=#{policeId,jdbcType=VARCHAR} GROUP BY DATE_FORMAT(creation_date,
 left join month c on c.num_name=right(a.year_month,2) 
 order by a.year_month
 </select>
+
+  <select id="findPoliceRiskCase" resultMap="BaseResultMap">
+    select * from risk_case
+    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m') limit 1
+  </select>
+
+  <insert id="insertRiskCases" parameterType="List">
+    insert into risk_case (id, police_id, index_num,
+    ability_num, law_enforcement_num, test_num,
+    creation_date, update_date)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (null, #{item.policeId,jdbcType=VARCHAR}, #{item.indexNum,jdbcType=DOUBLE},
+      #{item.abilityNum,jdbcType=DOUBLE}, #{item.lawEnforcementNum,jdbcType=DOUBLE}, #{item.testNum,jdbcType=DOUBLE},
+      #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+
 </mapper>

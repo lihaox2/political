@@ -407,8 +407,8 @@ public class RiskCaseController extends BaseController {
 		// 警员执法办案风险指数查询
 		RiskConductVisit item = riskConductVisitService.riskConductVisitItem(policeId, dateTime, lastMonthTime, timeType);
 		if (item != null) {
-			List<RiskDutyDealPoliceRecord> rList = riskService.riskDutyRecordList(policeId, dateTime, lastMonthTime,
-					timeType);
+			List<RiskConductVisitRecord> rList = riskConductVisitRecordService.riskConductVisitRecordList(policeId,
+					dateTime,lastMonthTime,timeType);
 			if (rList.size() > 0) {
 				item.setIsDisplay(1);
 			} else {

@@ -40,7 +40,7 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
         LocalDate localDate = LocalDate.now();
         String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
-        List<RiskConductBureauRuleRecord> recordList = riskConductBureauRuleRecordMapper.findByPoliceIdAndDate(user.getPoliceId(), date);
+        List<RiskConductBureauRuleRecord> recordList = riskConductBureauRuleRecordMapper.findByPoliceIdAndDate(user.getPoliceId(), date,null,0);
         RiskConductBureauRule riskConductBureauRule = new RiskConductBureauRule();
         RiskConduct riskConduct = new RiskConduct();
 

@@ -8,6 +8,8 @@ import com.bayee.political.domain.*;
 import com.bayee.political.mapper.*;
 import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
 import com.bayee.political.pojo.dto.RiskConductResultDTO;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -409,8 +411,8 @@ public class RiskServiceImpl implements RiskService {
 	}
 
 	@Override
-	public List<RiskConductBureauRuleRecord> findRiskConductBureauRuleRecord(String policeId, String dateTime) {
-		return riskConductBureauRuleRecordMapper.findByPoliceIdAndDate(policeId, dateTime);
+	public List<RiskConductBureauRuleRecord> findRiskConductBureauRuleRecord(String policeId, String dateTime,String lastMonthTime,Integer timeType) {
+		return riskConductBureauRuleRecordMapper.findByPoliceIdAndDate(policeId, dateTime,lastMonthTime,timeType);
 	}
 
 	@Override

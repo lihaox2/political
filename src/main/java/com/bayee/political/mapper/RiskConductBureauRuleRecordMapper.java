@@ -24,5 +24,6 @@ public interface RiskConductBureauRuleRecordMapper {
      * @param dateTime
      * @return
      */
-    List<RiskConductBureauRuleRecord> findByPoliceIdAndDate(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
+    List<RiskConductBureauRuleRecord> findByPoliceIdAndDate(@Param("policeId") String policeId, @Param("dateTime") String dateTime,
+			 @Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
 }

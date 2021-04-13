@@ -167,7 +167,7 @@ public interface RiskService {
 	 * @param dateTime
 	 * @return
 	 */
-	List<RiskConductBureauRuleRecord> findRiskConductBureauRuleRecord(String policeId, String dateTime);
+	List<RiskConductBureauRuleRecord> findRiskConductBureauRuleRecord(String policeId, String dateTime,String lastMonthTime,Integer timeType);
 	
 	int insertInpromt(RiskDrinkRecord riskDrinkRecord);
 	

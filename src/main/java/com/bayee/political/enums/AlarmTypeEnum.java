@@ -18,39 +18,24 @@ public enum AlarmTypeEnum {
     BEHAVIOR_RISK(11002),
 
     /**
-     * 纪律作风
-     */
-    DISCIPLINE_RISK(11003),
-
-    /**
      * 执法办案风险
      */
-    HANDLING_CASES_RISK(11004),
+    HANDLING_CASES_RISK(11003),
 
     /**
      * 接警执勤风险
      */
-    DUTY_RISK(11005),
+    DUTY_RISK(11004),
 
     /**
      * 警务技能风险
      */
-    SKILL_RISK(11006),
-
-    /**
-     * 学习
-     */
-    LEARN_RISK(11007),
+    SKILL_RISK(11005),
 
     /**
      * 健康风险
      */
-    HEALTHY_RISK(11008),
-
-    /**
-     * 饮酒风险
-     */
-    DRINK_RISK(11002);
+    HEALTHY_RISK(11008);
 
     Integer id;
 

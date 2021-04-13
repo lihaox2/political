@@ -25,4 +25,10 @@ public interface RiskConductService {
     // 交通违章风险指数图例
  	List<ScreenDoubeChart> riskConductChart(String policeId);
 
+    /**
+     * 批量添加
+     * @param riskConductList
+     */
+ 	void insertRiskConductList(List<RiskConduct> riskConductList);
+
 }

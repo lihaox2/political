@@ -951,8 +951,8 @@ public class RiskExportExcelDataController {
 		System.out.println("结束");
 	}
 	
-	@RequestMapping("/test")
-	public void test() {
-		riskReportRecordService.family();
-	}
+//	@RequestMapping("/test")
+//	public void test() {
+//		riskReportRecordService.family();
+//	}
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public interface RiskConductBureauRuleService {
 
     /**
-     * 局规计分计算
+     * 行为规范计算
      * @param user
      * @return
      */

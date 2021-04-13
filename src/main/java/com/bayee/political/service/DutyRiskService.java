@@ -17,19 +17,19 @@ public interface DutyRiskService {
     /**
      * 接警执勤报备处理
      * @param user
-     * @param localDate
+     * @param date
      * @return
      */
-    RiskDuty dutyRiskDetails(User user, LocalDate localDate);
+    RiskDuty dutyRiskDetails(User user, String date);
 
     /**
      * 处理无接处警的警员扣分信息
      * @param user
-     * @param localDate
+     * @param date
      * @param avgScore
      * @return
      */
-    RiskDuty dutyRiskNoDeductionScoreCountDetails(User user, LocalDate localDate, Double avgScore);
+    RiskDuty dutyRiskNoDeductionScoreCountDetails(User user, String date, Double avgScore);
 
     /**
      * 批量添加执勤报备数据

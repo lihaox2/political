@@ -64,4 +64,9 @@ public class RiskConductServiceImpl implements RiskConductService{
 		return riskConductMapper.riskConductChart(policeId);
 	}
 
+	@Override
+	public void insertRiskConductList(List<RiskConduct> riskConductList) {
+
+	}
+
 }

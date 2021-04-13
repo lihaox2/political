@@ -1,9 +1,15 @@
 package com.bayee.political.service.impl;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.bayee.political.domain.*;
+import com.bayee.political.service.*;
+import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +24,6 @@ import com.bayee.political.mapper.RiskFamilyEvaluationMapper;
 import com.bayee.political.mapper.RiskFamilyEvaluationRecordMapper;
 import com.bayee.political.mapper.RiskHealthRecordMapper;
 import com.bayee.political.mapper.RiskReportRecordMapper;
-import com.bayee.political.service.RiskAlarmService;
-import com.bayee.political.service.RiskHealthRecordService;
-import com.bayee.political.service.RiskReportRecordService;
-import com.bayee.political.service.RiskService;
-import com.bayee.political.service.UserService;
 
 /**
  * @author xxl
@@ -50,11 +51,169 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 	UserService userService;
 	
 	@Autowired
+	RiskSkillService riskSkillService;
+
+	@Autowired
+	RiskConductBureauRuleService riskConductBureauRuleService;
+
+	@Autowired
 	RiskFamilyEvaluationRecordMapper riskFamilyEvaluationRecordMapper;
 	
 	@Autowired
+	RiskReportRecordService riskReportRecordService;
+
+	@Autowired
+	DutyRiskService dutyRiskService;
+
+	@Autowired
+	HandlingCasesRiskService handlingCasesRiskService;
+
+	@Autowired
+	RiskConductService riskConductService;
+
+	@Autowired
 	RiskFamilyEvaluationMapper riskFamilyEvaluationMapper;
 
+	@Override
+	public void policeRiskDetails(List<User> userList, LocalDate localDate) {
+		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
+		String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
+
+		List<RiskReportRecord> riskReportRecordList = new ArrayList<>();
+		List<RiskCase> riskCaseList = new ArrayList<>();
+		List<RiskDuty> riskDutyList = new ArrayList<>();
+		List<RiskConduct> riskConductList = new ArrayList<>();
+
+		for (User user : userList) {
+			RiskReportRecord record = new RiskReportRecord();
+			record.setPoliceId(user.getPoliceId());
+			record.setYear(year);
+			record.setMonth(month);
+
+			record.setHandlingCaseNum(0d);
+			record.setDutyNum(0d);
+			record.setSocialContactNum(0d);
+			record.setAmilyEvaluationNum(0d);
+			record.setHealthNum(0d);
+			record.setDrinkNum(0d);
+			record.setStudyNum(0d);
+			record.setConductNum(0d);
+			record.setTrainNum(0d);
+
+			//执法办案
+			RiskCase riskCase = handlingCasesRiskService.handlingCasesRiskDetails(user, date);
+			if (riskCase != null) {
+				if (riskCase.getId() == null) {
+					riskCaseList.add(riskCase);
+				}
+				record.setHandlingCaseNum(riskCase.getIndexNum());
+			}
+
+			//接警执勤
+			RiskDuty riskDuty = dutyRiskService.dutyRiskDetails(user, date);
+			if (riskDuty != null) {
+				if (riskDuty.getId() == null) {
+					riskDutyList.add(riskDuty);
+				}
+				record.setDutyNum(riskDuty.getIndexNum());
+			}
+
+			//警务技能
+			RiskTrain riskTrain = riskSkillService.riskSkillDetails(user);
+			if (riskTrain != null && riskTrain.getIndexNum() != null) {
+				record.setTrainNum(riskTrain.getIndexNum());
+			}
+
+			//行为规范
+			RiskConduct riskConduct = riskConductBureauRuleService.riskConductBureauRuleDetails(user);
+			if (riskConduct != null) {
+				if (riskConduct.getId() == null) {
+					riskConductList.add(riskConduct);
+				}
+				record.setConductNum(riskConduct.getIndexNum());
+			}
+			Double healthScore = riskReportRecordMapper.findPoliceHealthScoreByYear(user.getPoliceId(), year);
+			record.setHealthNum(healthScore != null ? healthScore : 0d);
+
+			record.setTotalNum(Math.min(record.getConductNum() + record.getHandlingCaseNum() + record.getDutyNum()
+					+ record.getTrainNum(), 100));
+			record.setCreationDate(new Date());
+
+			RiskReportRecord oldRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
+			if (oldRecord != null && oldRecord.getId() != null) {
+				oldRecord.setTrainNum(record.getTrainNum());
+				oldRecord.setConductNum(record.getConductNum());
+				oldRecord.setHandlingCaseNum(record.getHandlingCaseNum());
+				oldRecord.setDutyNum(record.getDutyNum());
+				oldRecord.setHealthNum(oldRecord.getHealthNum() == 0 ? record.getHealthNum() : oldRecord.getHealthNum());
+
+				oldRecord.setTotalNum(Math.min(record.getTotalNum() + oldRecord.getHealthNum() +
+						oldRecord.getAmilyEvaluationNum() + oldRecord.getSocialContactNum(), 100));
+				oldRecord.setUpdateDate(new Date());
+
+				riskReportRecordService.updateByPrimaryKey(oldRecord);
+			} else {
+				record.setTotalNum(Math.min(record.getTotalNum() + record.getHealthNum(), 100));
+
+				riskReportRecordList.add(record);
+			}
+		}
+
+		//批量添加数据
+		if (riskCaseList.size() > 0) {
+			handlingCasesRiskService.addRiskCaseList(riskCaseList);
+		}
+		if (riskDutyList.size() > 0) {
+			dutyRiskService.addRiskDutyList(riskDutyList);
+		}
+		if (riskConductList.size() > 0) {
+			riskConductService.insertRiskConductList(riskConductList);
+		}
+		if (riskReportRecordList.size() > 0) {
+			riskReportRecordService.insertRiskReportRecordList(riskReportRecordList);
+		}
+
+		double casesManageRiskAvgScore = handlingCasesRiskService.findPoliceAvgDeductionScoreByDate(date);
+		double dutyRiskAvgScore = dutyRiskService.findPoliceAvgDeductionScoreByDate(date);
+
+		//处理 无办案量和无接处警的警员数据
+		for (User user : userList) {
+			RiskReportRecord oldRiskReportRecord = riskReportRecordService.getByPoliceIdMonth(year, month, user.getPoliceId());
+			if (oldRiskReportRecord == null || oldRiskReportRecord.getId() == null
+					|| (dutyRiskAvgScore <= 0 && casesManageRiskAvgScore <= 0)) {
+				continue;
+			}
+
+			//处理无办案的警员信息
+			if (casesManageRiskAvgScore > 0) {
+				RiskCase riskCase = handlingCasesRiskService.handlingCasesRiskDetailsByCasesManageRisk(user, date, casesManageRiskAvgScore);
+				if (riskCase != null) {
+					oldRiskReportRecord.setHandlingCaseNum(riskCase.getIndexNum());
+				}
+			}
+
+			//处理无接警的警员数据
+			if (dutyRiskAvgScore > 0) {
+				RiskDuty riskDuty = dutyRiskService.dutyRiskNoDeductionScoreCountDetails(user, date, dutyRiskAvgScore);
+				if (riskDuty != null) {
+					oldRiskReportRecord.setDutyNum(riskDuty.getIndexNum());
+				}
+			}
+
+			oldRiskReportRecord.setTotalNum(Math.min(oldRiskReportRecord.getConductNum() + oldRiskReportRecord.getHandlingCaseNum() +
+					oldRiskReportRecord.getDutyNum() + oldRiskReportRecord.getTrainNum() + oldRiskReportRecord.getStudyNum() +
+					oldRiskReportRecord.getSocialContactNum() + oldRiskReportRecord.getAmilyEvaluationNum() +
+					oldRiskReportRecord.getHealthNum() + oldRiskReportRecord.getDrinkNum(), 100));
+			oldRiskReportRecord.setUpdateDate(new Date());
+
+			riskReportRecordMapper.updateByPrimaryKey(oldRiskReportRecord);
+		}
+
+		health(localDate);
+
+		family(localDate);
+	}
 
     @Override
     public int updateByPrimaryKey(RiskReportRecord record) {
@@ -82,16 +241,10 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
     }
     
     @Override
-    public void health() {
-		Calendar cal = Calendar.getInstance();
-		Integer year = cal.get(Calendar.YEAR);
-		Integer month=cal.get(Calendar.MONTH)+1;
-		String yearStr=year.toString();
-		String monthStr=month.toString();
-
-		if(month<10) {
-			monthStr="0"+monthStr;
-		}
+    public void health(LocalDate localDate) {
+		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String yearStr = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
+		String monthStr = localDate.format(DateTimeFormatter.ofPattern("MM"));
 		
 		List<RiskHealthRecord> riskHealthRecordList=riskHealthRecordMapper.selectYearAll(yearStr);
 		
@@ -184,7 +337,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				riskHealth.setUpdateDate(new Date());
 				riskService.riskHealthUpdate(riskHealth);
 			}else {
-				riskHealth.setCreationDate(new Date());
+				riskHealth.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskService.insertSelective(riskHealth);
 			}
 			
@@ -201,7 +354,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			}else {
 				riskReportRecord.setTotalNum(healthNum);
 				riskReportRecord.setPoliceId(r.getPoliceId());
-				riskReportRecord.setCreationDate(new Date());
+				riskReportRecord.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskService.insertRiskReportRecord(riskReportRecord);
 			}
 			
@@ -212,7 +365,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				riskAlarm.setPoliceId(r.getPoliceId());
 				riskAlarm.setAlarmType(11008);
 				riskAlarm.setAlarmScore(healthNum);
-				riskAlarm.setCreationDate(new Date());
+				riskAlarm.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskAlarm.setIsTalk(0);
 				riskAlarmService.insert(riskAlarm);
 			}
@@ -258,7 +411,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			}else {
 				riskHealth.setYear(yearStr);
 				riskHealth.setPoliceId(u.getPoliceId());
-				riskHealth.setCreationDate(new Date());
+				riskHealth.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskHealth.setBmiId(1);
 				riskService.insertSelective(riskHealth);
 			}
@@ -275,24 +428,18 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			}else {
 				riskReportRecord.setTotalNum(healthNum);
 				riskReportRecord.setPoliceId(u.getPoliceId());
-				riskReportRecord.setCreationDate(new Date());
+				riskReportRecord.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskService.insertRiskReportRecord(riskReportRecord);
 			}
 		
 		}
 	}
     
-    
-    public void family() {
-    	Calendar cal = Calendar.getInstance();
-		Integer year = cal.get(Calendar.YEAR);
-		Integer month=cal.get(Calendar.MONTH)+1;
-		String yearStr=year.toString();
-		String monthStr=month.toString();
-
-		if(month<10) {
-			monthStr="0"+monthStr;
-		}
+    @Override
+    public void family(LocalDate localDate) {
+		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String yearStr = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
+		String monthStr = localDate.format(DateTimeFormatter.ofPattern("MM"));
 		
 		List<RiskFamilyEvaluationRecord> riskFamilyEvaluationRecordList= riskFamilyEvaluationRecordMapper.findByYearAndMonth(yearStr,monthStr);
     	

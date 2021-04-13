@@ -1,8 +1,10 @@
 package com.bayee.political.service;
 
 import com.bayee.political.domain.RiskReportRecord;
+import com.bayee.political.domain.User;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -10,6 +12,13 @@ import java.util.List;
  * @date 2021/4/6
  */
 public interface RiskReportRecordService {
+
+    /**
+     * 警员风险指数处理
+     * @param userList
+     * @param localDate
+     */
+    void policeRiskDetails(List<User> userList, LocalDate localDate);
 
     int updateByPrimaryKey(RiskReportRecord record);
 
@@ -40,8 +49,8 @@ public interface RiskReportRecordService {
     RiskReportRecord getByPoliceIdMonth(String year,String month, String policeId);
     
     
-    void health();
+    void health(LocalDate localDate);
     
-    void family();
+    void family(LocalDate localDate);
 
 }

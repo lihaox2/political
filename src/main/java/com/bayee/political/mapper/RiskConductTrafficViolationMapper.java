@@ -28,4 +28,13 @@ public interface RiskConductTrafficViolationMapper {
     
     // 交通违章风险指数图例
  	List<ScreenDoubeChart> riskConductTrafficViolationChart(@Param("policeId") String policeId);
+
+    /**
+     * 查询警员指数数据
+     * @param policeId
+     * @param date
+     * @return
+     */
+    RiskConductTrafficViolation findPoliceRiskConductTrafficViolation(@Param("policeId") String policeId,
+                                                                      @Param("date") String date);
 }

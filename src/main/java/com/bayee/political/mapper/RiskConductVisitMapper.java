@@ -25,4 +25,13 @@ public interface RiskConductVisitMapper {
     
     // 信访投诉风险指数图例
  	List<ScreenDoubeChart> riskConductVisitChart(@Param("policeId") String policeId);
+
+    /**
+     * 查询警员风险指数
+     * @param policeId
+     * @param date
+     * @return
+     */
+    RiskConductVisit findRiskConductVisit(@Param("policeId") String policeId, @Param("date") String date);
+
 }

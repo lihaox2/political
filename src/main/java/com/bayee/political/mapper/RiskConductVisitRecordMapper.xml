@@ -147,4 +147,10 @@
 	</if>
 	 ORDER BY id desc
   </select>
+
+  <select id="findRiskConductVisitRecordList" resultMap="BaseResultMap">
+    select * from risk_conduct_visit_record
+    where police_id=#{policeId} and DATE_FORMAT(creation_date, '%Y-%m')=DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
 </mapper>

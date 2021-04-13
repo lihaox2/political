@@ -46,8 +46,7 @@ public class DutyRiskServiceImpl implements DutyRiskService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public RiskDuty dutyRiskDetails(User user, LocalDate localDate) {
-		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+	public RiskDuty dutyRiskDetails(User user, String date) {
 
 		// 校验规则
 		// 扣分规则
@@ -57,8 +56,7 @@ public class DutyRiskServiceImpl implements DutyRiskService {
 		riskDuty.setDeductionScoreCount(0);
 		riskDuty.setTotalDeductionScore(0d);
 		riskDuty.setPoliceId(user.getPoliceId());
-		riskDuty.setCreationDate(
-				DateUtils.parseDate(localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), "yyyy-MM-dd"));
+		riskDuty.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 
 		List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordList = riskDutyDealPoliceRecordMapper.
 				findRiskDutyDealPoliceRecordList(user.getPoliceId(), date);
@@ -109,9 +107,7 @@ public class DutyRiskServiceImpl implements DutyRiskService {
 	}
 
 	@Override
-	public RiskDuty dutyRiskNoDeductionScoreCountDetails(User user, LocalDate localDate, Double avgScore) {
-		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
+	public RiskDuty dutyRiskNoDeductionScoreCountDetails(User user, String date, Double avgScore) {
 		Integer recordCount = riskDutyDealPoliceRecordMapper.countPoliceCaseData(user.getPoliceId(), date);
 		if (recordCount != null && recordCount > 0) {
 			return null;

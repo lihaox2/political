@@ -149,4 +149,10 @@ where police_id=#{policeId,jdbcType=VARCHAR} GROUP BY DATE_FORMAT(creation_date,
 left join month c on c.num_name=right(a.year_month,2) 
 order by a.year_month
 </select>
+
+  <select id="findPoliceRiskConductTrafficViolation" resultMap="BaseResultMap">
+    select * from risk_conduct_traffic_violation
+    where police_id = #{policeId,jdbcType=VARCHAR} and DATE_FORMAT(creation_date, '%Y-%m')=DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
 </mapper>

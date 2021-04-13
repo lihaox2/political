@@ -21,4 +21,13 @@ public interface RiskConductVisitRecordMapper {
     
     List<RiskConductVisitRecord> riskConductVisitRecordList(@Param("policeId")String policeId,@Param("dateTime")String dateTime,
 			@Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
+
+    /**
+     * 查询扣分详情
+     * @param policeId
+     * @param date
+     * @return
+     */
+    List<RiskConductVisitRecord> findRiskConductVisitRecordList(@Param("policeId") String policeId,@Param("date") String date);
+
 }

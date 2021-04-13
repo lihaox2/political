@@ -17,19 +17,19 @@ public interface HandlingCasesRiskService {
     /**
      * 执法办案报备处理
      * @param user
-     * @param localDate
+     * @param date
      * @return
      */
-    RiskCase handlingCasesRiskDetails(User user, LocalDate localDate);
+    RiskCase handlingCasesRiskDetails(User user, String date);
 
     /**
      * 处理无办案的警员扣分信息
      * @param user
-     * @param localDate
+     * @param date
      * @param avgScore
      * @return
      */
-    RiskCase handlingCasesRiskDetailsByCasesManageRisk(User user, LocalDate localDate, Double avgScore);
+    RiskCase handlingCasesRiskDetailsByCasesManageRisk(User user, String date, Double avgScore);
 
     /**
      * 批量添加执法报备数据

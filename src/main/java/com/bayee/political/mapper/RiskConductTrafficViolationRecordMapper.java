@@ -26,4 +26,13 @@ public interface RiskConductTrafficViolationRecordMapper {
                                                                                       @Param("lastMonthTime") String lastMonthTime,
                                                                                       @Param("timeType") Integer timeType);
 
+    /**
+     * 查询交通违章详情
+     * @param policeId
+     * @param date
+     * @return
+     */
+    List<RiskConductTrafficViolationRecord> findPoliceRiskConductTrafficViolationRecordList(@Param("policeId")String policeId,
+                                                                                      @Param("date")String date);
+
 }

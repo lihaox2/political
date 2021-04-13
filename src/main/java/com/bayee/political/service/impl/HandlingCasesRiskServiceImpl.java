@@ -57,9 +57,7 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public RiskCase handlingCasesRiskDetails(User user, LocalDate localDate) {
-		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
+	public RiskCase handlingCasesRiskDetails(User user, String date) {
 		RiskCase riskCase = new RiskCase();
 		riskCase.setIndexNum(0d);
 		riskCase.setAbilityNum(0d);
@@ -109,8 +107,7 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 			riskCaseMapper.updateByPrimaryKeySelective(olsRiskCase);
 		}
 		riskCase.setPoliceId(user.getPoliceId());
-		riskCase.setCreationDate(
-				DateUtils.parseDate(localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), "yyyy-MM-dd"));
+		riskCase.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 
 		// 预警处理
 		if (riskCase.getIndexNum() >= alarmScore) {
@@ -126,8 +123,7 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 	}
 
 	@Override
-	public RiskCase handlingCasesRiskDetailsByCasesManageRisk(User user, LocalDate localDate, Double avgScore) {
-		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+	public RiskCase handlingCasesRiskDetailsByCasesManageRisk(User user, String date, Double avgScore) {
 
 		Integer recordCount = riskCaseLawEnforcementRecordMapper.countPoliceCaseData(user.getPoliceId(), date);
 		if (recordCount != null && recordCount > 0) {

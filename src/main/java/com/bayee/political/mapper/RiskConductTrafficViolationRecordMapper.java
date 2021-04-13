@@ -20,4 +20,10 @@ public interface RiskConductTrafficViolationRecordMapper {
     int updateByPrimaryKey(RiskConductTrafficViolationRecord record);
     
     List<RiskConductTrafficViolationRecord> riskConductTrafficViolationRecordList(@Param("policeId")String policeId,@Param("dateTime")String dateTime);
+
+    List<RiskConductTrafficViolationRecord> findRiskConductTrafficViolationRecordList(@Param("policeId") String policeId,
+                                                                                      @Param("dateTime") String dateTime,
+                                                                                      @Param("lastMonthTime") String lastMonthTime,
+                                                                                      @Param("timeType") Integer timeType);
+
 }

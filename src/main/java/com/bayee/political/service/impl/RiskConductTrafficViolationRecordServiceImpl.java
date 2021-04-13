@@ -57,4 +57,10 @@ public class RiskConductTrafficViolationRecordServiceImpl implements RiskConduct
 		return riskConductTrafficViolationRecordMapper.riskConductTrafficViolationRecordList(policeId, dateTime);
 	}
 
+	@Override
+	public List<RiskConductTrafficViolationRecord> riskConductTrafficViolationRecordList(String policeId, String dateTime,
+																						 String lastMonthTime, Integer timeType) {
+		return riskConductTrafficViolationRecordMapper.findRiskConductTrafficViolationRecordList(policeId, dateTime, lastMonthTime, timeType);
+	}
+
 }

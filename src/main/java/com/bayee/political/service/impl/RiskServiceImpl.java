@@ -113,6 +113,9 @@ public class RiskServiceImpl implements RiskService {
 	@Autowired
 	RiskCaseTestMapper riskCaseTestMapper;// 警员执法考试风险
 
+	@Autowired
+	RiskConductTrafficViolationRecordMapper riskConductTrafficViolationRecordMapper;
+
 	// 警员健康风险指数查询
 	@Override
 	public RiskHealth riskHealthIndexItem(String policeId, String dateTime) {
@@ -208,6 +211,14 @@ public class RiskServiceImpl implements RiskService {
 	public List<RiskDutyDealPoliceRecord> riskDutyRecordList(String policeId, String dateTime, String lastMonthTime,
 															 Integer timeType) {
 		return riskDutyDealPoliceRecordMapper.riskDutyRecordList(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	@Override
+	public List<RiskConductTrafficViolationRecord> riskConductTrafficViolationRecordList(String policeId, String dateTime,
+																						 String lastMonthTime, Integer timeType) {
+
+		return riskConductTrafficViolationRecordMapper.findRiskConductTrafficViolationRecordList(policeId, dateTime,
+				lastMonthTime, timeType);
 	}
 
 	// 警员执法办案风险指数查询

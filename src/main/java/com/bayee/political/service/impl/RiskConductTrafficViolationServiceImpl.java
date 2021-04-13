@@ -53,9 +53,10 @@ public class RiskConductTrafficViolationServiceImpl implements RiskConductTraffi
 	}
 
 	@Override
-	public RiskConductTrafficViolation riskConductTrafficViolationItem(String policeId, String dateTime) {
+	public RiskConductTrafficViolation riskConductTrafficViolationItem(String policeId, String dateTime, String lastMonthTime,
+																			 Integer timeType) {
 		// TODO Auto-generated method stub
-		return riskConductTrafficViolationMapper.riskConductTrafficViolationItem(policeId, dateTime);
+		return riskConductTrafficViolationMapper.riskConductTrafficViolationItem(policeId, dateTime, lastMonthTime, timeType);
 	}
 
 	@Override

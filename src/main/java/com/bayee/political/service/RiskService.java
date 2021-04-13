@@ -62,6 +62,10 @@ public interface RiskService {
 	List<RiskDutyDealPoliceRecord> riskDutyRecordList(String policeId, String dateTime, String lastMonthTime,
 													  Integer timeType);
 
+
+	List<RiskConductTrafficViolationRecord> riskConductTrafficViolationRecordList(String policeId, String dateTime,
+																				  String lastMonthTime, Integer timeType);
+
 	// 警员执法办案风险指数查询
 	RiskCase riskCaseIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType);
 

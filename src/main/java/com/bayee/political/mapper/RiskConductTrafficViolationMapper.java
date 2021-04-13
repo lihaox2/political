@@ -21,7 +21,10 @@ public interface RiskConductTrafficViolationMapper {
     int updateByPrimaryKey(RiskConductTrafficViolation record);
     
     //警员交通违章风险指数查询
-    RiskConductTrafficViolation riskConductTrafficViolationItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
+    RiskConductTrafficViolation riskConductTrafficViolationItem(@Param("policeId") String policeId,
+                                                                @Param("dateTime") String dateTime,
+                                                                @Param("lastMonthTime") String lastMonthTime,
+                                                                @Param("timeType") Integer timeType);
     
     // 交通违章风险指数图例
  	List<ScreenDoubeChart> riskConductTrafficViolationChart(@Param("policeId") String policeId);

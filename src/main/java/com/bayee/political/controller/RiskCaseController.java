@@ -365,14 +365,20 @@ public class RiskCaseController extends BaseController {
 	// 警员执法管理扣分详情
 	@RequestMapping(value = "/risk/law/enforcement/list", method = RequestMethod.GET)
 	public ResponseEntity<?> riskDutyRecordItem(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+												@RequestParam(value = "dateTime", required = false) String dateTime,
+												@RequestParam(value = "timeType", required = false) Integer timeType)
+			throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
+		String lastMonthTime = DateUtils.lastMonthTime();
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
-		// 警员执法管理扣分详情查询
-		List<RiskCaseLawEnforcementRecord> list = riskCaseLawEnforcementRecordService
-				.riskCaseLawEnforcementRecordList(policeId, dateTime);
+		// 警员执法管理数据列表查询
+		List<RiskCaseLawEnforcementRecord> list = riskService.riskCaseLawEnforcementRecordList(policeId, dateTime,
+				lastMonthTime, timeType);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);
@@ -483,8 +489,12 @@ public class RiskCaseController extends BaseController {
 	@RequestMapping(value = "/risk/traffic/violation/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskTrafficViolationItem(
 			@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
@@ -493,14 +503,23 @@ public class RiskCaseController extends BaseController {
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
+		String lastMonthTime = DateUtils.lastMonthTime();
 		// 警员执法办案风险指数查询
 		RiskConductTrafficViolation item = riskConductTrafficViolationService.riskConductTrafficViolationItem(policeId,
-				dateTime);
+				dateTime, lastMonthTime, timeType);
 		if (item != null) {
+			List<RiskConductTrafficViolationRecord> violationRecordList =
+					riskService.riskConductTrafficViolationRecordList(policeId, dateTime, lastMonthTime, timeType);
+			if (violationRecordList.size() > 0) {
+				item.setIsDisplay(1);
+			} else {
+				item.setIsDisplay(0);
+			}
+
 			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
 			// 上个月警员接警执勤指数查询
 			RiskConductTrafficViolation item2 = riskConductTrafficViolationService
-					.riskConductTrafficViolationItem(policeId, lastDateTime);
+					.riskConductTrafficViolationItem(policeId, lastDateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
 			itemChart2.setId(1);
 			itemChart2.setName("上月");
@@ -510,11 +529,16 @@ public class RiskCaseController extends BaseController {
 				itemChart2.setValue(0.0);
 			}
 			list.add(itemChart2);
+
+			// 本月警员接警执勤指数查询
+			RiskConductTrafficViolation item3 = riskConductTrafficViolationService
+					.riskConductTrafficViolationItem(policeId, dateTime, lastMonthTime, 2);
 			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
 			itemChart1.setId(2);
 			itemChart1.setName("本月");
-			itemChart1.setValue(item.getIndexNum());
+			itemChart1.setValue(item3.getIndexNum());
 			list.add(itemChart1);
+
 			item.setList(list);
 		} else {
 			item = new RiskConductTrafficViolation();
@@ -544,14 +568,19 @@ public class RiskCaseController extends BaseController {
 	@RequestMapping(value = "/risk/traffic/violation/list", method = RequestMethod.GET)
 	public ResponseEntity<?> riskTrafficViolationList(
 			@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
+		if (timeType == null) {
+			timeType = 1;
+		}
+		String lastMonthTime = DateUtils.lastMonthTime();
 		if (dateTime == null) {
 			dateTime = sd.format(new Date());
 		}
 		// 警员执法管理扣分详情查询
-		List<RiskConductTrafficViolationRecord> list = riskConductTrafficViolationRecordService
-				.riskConductTrafficViolationRecordList(policeId, dateTime);
+		List<RiskConductTrafficViolationRecord> list =
+				riskConductTrafficViolationRecordService.riskConductTrafficViolationRecordList(policeId, dateTime, lastMonthTime, timeType);
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(list);

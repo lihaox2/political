@@ -19,4 +19,8 @@ public interface RiskConductTrafficViolationRecordService {
     int updateByPrimaryKey(RiskConductTrafficViolationRecord record);
     
     List<RiskConductTrafficViolationRecord> riskConductTrafficViolationRecordList(String policeId,String dateTime);
+
+    List<RiskConductTrafficViolationRecord> riskConductTrafficViolationRecordList(String policeId, String dateTime,
+                                                                                  String lastMonthTime, Integer timeType);
+
 }

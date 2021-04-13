@@ -17,8 +17,18 @@ public class RiskConductTrafficViolation {
     private Date creationDate;
 
     private Date updateDate;
+
+    private Integer isDisplay;// 是否显示详情（0否1是）
     
     private List<ScreenDoubeChart> list;
+
+    public Integer getIsDisplay() {
+        return isDisplay;
+    }
+
+    public void setIsDisplay(Integer isDisplay) {
+        this.isDisplay = isDisplay;
+    }
 
     public Integer getId() {
         return id;

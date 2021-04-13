@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bayee.political.mapper.RiskReportRecordMapper" >
   <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskReportRecord" >
+  	<id column="id" property="id" jdbcType="INTEGER" />
     <result column="police_id" property="policeId" jdbcType="VARCHAR" />
     <result column="year" property="year" jdbcType="VARCHAR" />
     <result column="month" property="month" jdbcType="VARCHAR" />
@@ -15,6 +16,7 @@
     <result column="health_num" property="healthNum" jdbcType="DOUBLE" />
     <result column="drink_num" property="drinkNum" jdbcType="DOUBLE" />
     <result column="study_num" property="studyNum" jdbcType="DOUBLE" />
+    <result column="work_num" property="workNum" jdbcType="DOUBLE" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>

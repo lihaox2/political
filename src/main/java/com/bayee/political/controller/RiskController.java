@@ -158,7 +158,10 @@ public class RiskController extends BaseController {
 			} else {
 				item.setHealthNum(0.0);
 			}
-			Double totalNum = item.getConductNum() + item.getHandlingCaseNum() + item.getDutyNum() + item.getTrainNum()
+			Double totalNum = item.getConductNum() + 
+					item.getHandlingCaseNum() + 
+					item.getDutyNum() + 
+					item.getTrainNum()
 					+ item.getSocialContactNum() + item.getAmilyEvaluationNum() + item.getDrinkNum()
 					+ item.getStudyNum() + item.getWorkNum() + item.getHealthNum();
 			item.setTotalNum(Double.valueOf(df.format(totalNum)));

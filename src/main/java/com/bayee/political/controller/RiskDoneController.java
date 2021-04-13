@@ -92,7 +92,7 @@ public class RiskDoneController {
                 record.setTrainNum(riskTrain.getIndexNum());
             }
 
-            //局规计分
+            //行为规范
             RiskConduct riskConduct = riskConductBureauRuleService.riskConductBureauRuleDetails(user);
             if (riskConduct != null && riskConduct.getIndexNum() != null) {
                 record.setConductNum(riskConduct.getIndexNum());

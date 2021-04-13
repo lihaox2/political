@@ -380,11 +380,9 @@
       <if test="timeType == 2">
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
-    UNION ALL
-    select '健康' as name,round(index_num,2) as value from
-    (select * from risk_health where police_id=#{policeId,jdbcType=VARCHAR}
-    order by creation_date desc limit 1) as t
-    where police_id=#{policeId} and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+  UNION ALL
+  select '健康' as name,(select index_num from risk_health where police_id=#{policeId,jdbcType=VARCHAR}
+  order by creation_date desc limit 1)
 </select>
 <!-- 警员风险详情查询 -->
 <select id="riskReportRecordItem" parameterType="com.bayee.political.domain.RiskReportRecord" resultMap="BaseResultMap">

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
@@ -19,6 +20,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -81,9 +84,15 @@ public class AppConfiguration {
 	}
 
 	@Bean
+	public Resource getMybatisConfig() {
+		return new ClassPathResource("mybatis-config.xml");
+	}
+
+	@Bean
 	public SqlSessionFactory sqlSessionFactory() throws Exception {
 		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
 		sqlSessionFactory.setDataSource(dataSource());
+		sqlSessionFactory.setConfigLocation(getMybatisConfig());
 		sqlSessionFactory.getObject().getConfiguration().addMapper(DepartmentMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(HomePageMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(LeaveProcessCodeMapper.class);

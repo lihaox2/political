@@ -21,4 +21,13 @@ public interface RiskSocialContactRecordMapper {
 
 	// 社交详情记录
 	List<RiskSocialContactRecord> riskSocialContactRecordList(@Param("socialContactId") Integer socialContactId);
+
+	/**
+	 * 查询警员社交详情
+	 * @param policeId
+	 * @param date
+	 * @return
+	 */
+	List<RiskSocialContactRecord> findPoliceRiskSocialContactRecordList(@Param("policeId") String policeId,@Param("date") String date);
+
 }

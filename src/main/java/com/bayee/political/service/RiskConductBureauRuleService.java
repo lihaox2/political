@@ -16,9 +16,10 @@ public interface RiskConductBureauRuleService {
     /**
      * 行为规范计算
      * @param user
+     * @param date
      * @return
      */
-    RiskConduct riskConductBureauRuleDetails(User user);
+    RiskConduct riskConductBureauRuleDetails(User user, String date);
 
     /**
      * 批量添加局规计分风险指数数据

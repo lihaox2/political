@@ -50,10 +50,7 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RiskConduct riskConductBureauRuleDetails(User user) {
-        LocalDate localDate = LocalDate.now();
-        String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
-
+    public RiskConduct riskConductBureauRuleDetails(User user, String date) {
         RiskConduct riskConduct = new RiskConduct();
 
         double alarmScore = 12;
@@ -75,7 +72,7 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
         riskConduct.setTrafficViolationScore(riskConductTrafficViolation.getIndexNum());
         riskConduct.setIndexNum(Math.min(riskConduct.getVisitScore() + riskConduct.getTrafficViolationScore() +
                 riskConduct.getBureauRuleScore(), riskConductMaxScore));
-        riskConduct.setCreationDate(DateUtils.parseDate(localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), "yyyy-MM-dd"));
+        riskConduct.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 
         //处理旧的总行为规范数据
         RiskConduct oldRiskConduct = riskConductMapper.findRiskConductByPoliceIdAndDate(user.getPoliceId(), date);

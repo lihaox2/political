@@ -315,10 +315,7 @@ and achievement_grade >1 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) d
   </insert>
   
   <select id="findRiskTrainByPoliceIdAndDate" resultMap="BaseResultMap">
-    select id, police_id, sum(index_num) as index_num, sum(physical_num) as physical_num,
-           sum(physical_pass_num) as physical_pass_num, sum(physical_fail_num) as physical_fail_num,
-           physical_standard_status, sum(firearm_num) as firearm_num, sum(firearm_pass_num) as firearm_pass_num,
-           sum(firearm_fail_num) as firearm_fail_num, firearm_standard_status, creation_date, update_date
+    select *
     from risk_train
     where police_id=#{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
   </select>

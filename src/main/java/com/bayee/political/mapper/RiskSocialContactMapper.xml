@@ -133,4 +133,20 @@ where police_id=#{policeId,jdbcType=VARCHAR} GROUP BY DATE_FORMAT(creation_date,
 left join month c on c.num_name=right(a.year_month,2) 
 order by a.year_month
 </select>
+
+  <select id="findPoliceRiskSocialContact" resultMap="BaseResultMap">
+    select * from risk_social_contact
+    where police_id=#{policeId,jdbcType=VARCHAR} and DATE_FORMAT(creation_date, '%Y-%m')=DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
+  <insert id="insertRiskSocialContactList" parameterType="List">
+    insert into risk_social_contact (id, police_id, index_num, num, creation_date, update_date)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (null, #{item.policeId,jdbcType=VARCHAR}, #{item.indexNum,jdbcType=DOUBLE},
+      #{item.num,jdbcType=INTEGER}, #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP}
+      )
+    </foreach>
+  </insert>
+
 </mapper>

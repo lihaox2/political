@@ -28,4 +28,19 @@ public interface RiskSocialContactMapper {
 	// 社交风险指数图例
 	List<ScreenDoubeChart> riskSocialContactIndexChart(@Param("policeId") String policeId,
 			@Param("tableName") String tableName);
+
+	/**
+	 * 查询警员社交风险
+	 * @param policeId
+	 * @param date
+	 * @return
+	 */
+	RiskSocialContact findPoliceRiskSocialContact(@Param("policeId") String policeId,@Param("date") String date);
+
+	/**
+	 * 批量添加风险指数数据
+	 * @param riskSocialContactList
+	 */
+	void insertRiskSocialContactList(List<RiskSocialContact> riskSocialContactList);
+
 }

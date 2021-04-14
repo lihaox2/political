@@ -74,6 +74,9 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 	@Autowired
 	RiskFamilyEvaluationMapper riskFamilyEvaluationMapper;
 
+	@Autowired
+	RiskSocialContactService riskSocialContactService;
+
 	@Override
 	public void policeRiskDetails(List<User> userList, LocalDate localDate) {
 		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -84,6 +87,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 		List<RiskCase> riskCaseList = new ArrayList<>();
 		List<RiskDuty> riskDutyList = new ArrayList<>();
 		List<RiskConduct> riskConductList = new ArrayList<>();
+		List<RiskSocialContact> riskSocialContactList = new ArrayList<>();
 
 		for (User user : userList) {
 			RiskReportRecord record = new RiskReportRecord();
@@ -120,25 +124,35 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			}
 
 			//警务技能
-			RiskTrain riskTrain = riskSkillService.riskSkillDetails(user);
+			RiskTrain riskTrain = riskSkillService.riskSkillDetails(user, date);
 			if (riskTrain != null && riskTrain.getIndexNum() != null) {
 				record.setTrainNum(riskTrain.getIndexNum());
 			}
 
 			//行为规范
-			RiskConduct riskConduct = riskConductBureauRuleService.riskConductBureauRuleDetails(user);
+			RiskConduct riskConduct = riskConductBureauRuleService.riskConductBureauRuleDetails(user, date);
 			if (riskConduct != null) {
 				if (riskConduct.getId() == null) {
 					riskConductList.add(riskConduct);
 				}
 				record.setConductNum(riskConduct.getIndexNum());
 			}
+
+			//社交风险
+			RiskSocialContact riskSocialContact = riskSocialContactService.riskSocialContactDetails(user, date);
+			if (riskSocialContact != null) {
+				if (riskSocialContact.getId() == null) {
+					riskSocialContactList.add(riskSocialContact);
+				}
+				record.setSocialContactNum(riskSocialContact.getIndexNum());
+			}
+
 			Double healthScore = riskReportRecordMapper.findPoliceHealthScoreByYear(user.getPoliceId(), year);
 			record.setHealthNum(healthScore != null ? healthScore : 0d);
 
 			record.setTotalNum(Math.min(record.getConductNum() + record.getHandlingCaseNum() + record.getDutyNum()
-					+ record.getTrainNum(), 100));
-			record.setCreationDate(new Date());
+					+ record.getTrainNum() + record.getSocialContactNum(), 100));
+			record.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 
 			RiskReportRecord oldRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
 			if (oldRecord != null && oldRecord.getId() != null) {
@@ -146,10 +160,11 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				oldRecord.setConductNum(record.getConductNum());
 				oldRecord.setHandlingCaseNum(record.getHandlingCaseNum());
 				oldRecord.setDutyNum(record.getDutyNum());
+				oldRecord.setSocialContactNum(record.getSocialContactNum());
 				oldRecord.setHealthNum(oldRecord.getHealthNum() == 0 ? record.getHealthNum() : oldRecord.getHealthNum());
 
 				oldRecord.setTotalNum(Math.min(record.getTotalNum() + oldRecord.getHealthNum() +
-						oldRecord.getAmilyEvaluationNum() + oldRecord.getSocialContactNum(), 100));
+						oldRecord.getAmilyEvaluationNum(), 100));
 				oldRecord.setUpdateDate(new Date());
 
 				riskReportRecordService.updateByPrimaryKey(oldRecord);
@@ -169,6 +184,9 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 		}
 		if (riskConductList.size() > 0) {
 			riskConductService.insertRiskConductList(riskConductList);
+		}
+		if (riskSocialContactList.size() > 0) {
+			riskSocialContactService.addRiskSocialContactList(riskSocialContactList);
 		}
 		if (riskReportRecordList.size() > 0) {
 			riskReportRecordService.insertRiskReportRecordList(riskReportRecordList);

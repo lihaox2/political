@@ -33,6 +33,11 @@ public enum AlarmTypeEnum {
     SKILL_RISK(11005),
 
     /**
+     * 社交风险
+     */
+    SOCIAL_CONTACT(11006),
+
+    /**
      * 健康风险
      */
     HEALTHY_RISK(11008);

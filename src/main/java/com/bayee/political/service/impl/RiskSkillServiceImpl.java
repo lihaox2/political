@@ -30,9 +30,7 @@ public class RiskSkillServiceImpl implements RiskSkillService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RiskTrain riskSkillDetails(User user) {
-        LocalDate localDate = LocalDate.now();
-        String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+    public RiskTrain riskSkillDetails(User user, String date) {
         RiskTrain riskTrain = riskTrainMapper.findRiskTrainByPoliceIdAndDate(user.getPoliceId(), date);
 
         double comprehensiveScore = 5d;

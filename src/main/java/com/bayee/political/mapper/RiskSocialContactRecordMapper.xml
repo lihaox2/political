@@ -132,4 +132,10 @@ select * from risk_social_contact_record
 where social_contact_id = #{socialContactId,jdbcType=INTEGER}
 order by id desc
 </select>
+
+  <select id="findPoliceRiskSocialContactRecordList" resultMap="BaseResultMap">
+    select * from risk_social_contact_record
+    where police_id = #{policeId,jdbcType=VARCHAR} and DATE_FORMAT(creation_date, '%Y-%m')=DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
 </mapper>

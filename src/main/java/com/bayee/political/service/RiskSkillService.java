@@ -15,8 +15,9 @@ public interface RiskSkillService {
     /**
      * 警务技能计算
      * @param user
+     * @param date
      * @return
      */
-    RiskTrain riskSkillDetails(User user);
+    RiskTrain riskSkillDetails(User user, String date);
 
 }

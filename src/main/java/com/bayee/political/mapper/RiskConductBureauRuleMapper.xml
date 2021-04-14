@@ -117,7 +117,8 @@
   </update>
 
   <select id="findRiskConductBureauRole" resultMap="BaseResultMap">
-    select * from risk_conduct_bureau_rule where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = #{dateTime}
+    select * from risk_conduct_bureau_rule
+    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{dateTime}, '%Y-%m')
   </select>
 
   <select id="findRiskConductBureauRoleChart" resultType="com.bayee.political.domain.ScreenDoubeChart">

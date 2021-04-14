@@ -66,7 +66,7 @@ public class RiskConductServiceImpl implements RiskConductService{
 
 	@Override
 	public void insertRiskConductList(List<RiskConduct> riskConductList) {
-
+		riskConductMapper.insertRiskConductList(riskConductList);
 	}
 
 }

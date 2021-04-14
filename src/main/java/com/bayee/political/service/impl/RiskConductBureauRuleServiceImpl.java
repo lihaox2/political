@@ -80,7 +80,9 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
             //表示该riskConduct不用添加
             riskConduct.setId(oldRiskConduct.getId());
 
-            oldRiskConduct.setBureauRuleScore(riskConductBureauRule.getIndexNum());
+            oldRiskConduct.setBureauRuleScore(riskConduct.getBureauRuleScore());
+            oldRiskConduct.setVisitScore(riskConduct.getVisitScore());
+            oldRiskConduct.setTrafficViolationScore(riskConduct.getTrafficViolationScore());
             oldRiskConduct.setIndexNum(Math.min(riskConduct.getVisitScore() + riskConduct.getTrafficViolationScore() +
                     riskConduct.getBureauRuleScore(), riskConductMaxScore));
             oldRiskConduct.setUpdateDate(new Date());

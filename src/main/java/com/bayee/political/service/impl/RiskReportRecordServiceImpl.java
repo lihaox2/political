@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.bayee.political.domain.*;
+import com.bayee.political.enums.AlarmTypeEnum;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import com.bayee.political.mapper.RiskFamilyEvaluationMapper;
 import com.bayee.political.mapper.RiskFamilyEvaluationRecordMapper;
 import com.bayee.political.mapper.RiskHealthRecordMapper;
 import com.bayee.political.mapper.RiskReportRecordMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author xxl
@@ -78,6 +80,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 	RiskSocialContactService riskSocialContactService;
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void policeRiskDetails(List<User> userList, LocalDate localDate) {
 		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
@@ -220,9 +223,8 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			}
 
 			oldRiskReportRecord.setTotalNum(Math.min(oldRiskReportRecord.getConductNum() + oldRiskReportRecord.getHandlingCaseNum() +
-					oldRiskReportRecord.getDutyNum() + oldRiskReportRecord.getTrainNum() + oldRiskReportRecord.getStudyNum() +
-					oldRiskReportRecord.getSocialContactNum() + oldRiskReportRecord.getAmilyEvaluationNum() +
-					oldRiskReportRecord.getHealthNum() + oldRiskReportRecord.getDrinkNum(), 100));
+					oldRiskReportRecord.getDutyNum() + oldRiskReportRecord.getTrainNum() + oldRiskReportRecord.getSocialContactNum() +
+					oldRiskReportRecord.getAmilyEvaluationNum() + oldRiskReportRecord.getHealthNum(), 100));
 			oldRiskReportRecord.setUpdateDate(new Date());
 
 			riskReportRecordMapper.updateByPrimaryKey(oldRiskReportRecord);
@@ -259,6 +261,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
     }
     
     @Override
+	@Transactional(rollbackFor = Exception.class)
     public void health(LocalDate localDate) {
 		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		String yearStr = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
@@ -375,17 +378,15 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				riskReportRecord.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskService.insertRiskReportRecord(riskReportRecord);
 			}
-			
 
-			
-			if(healthNum!=null  &&  healthNum>=3) {
-				RiskAlarm riskAlarm=new RiskAlarm();
-				riskAlarm.setPoliceId(r.getPoliceId());
-				riskAlarm.setAlarmType(11008);
-				riskAlarm.setAlarmScore(healthNum);
-				riskAlarm.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
-				riskAlarm.setIsTalk(0);
-				riskAlarmService.insert(riskAlarm);
+			//产生预警数据
+			if (healthNum != null && healthNum >= 3) {
+				RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(r.getPoliceId(), AlarmTypeEnum.HEALTHY_RISK, date,
+						healthNum);
+
+				if (riskAlarm != null) {
+					riskAlarmService.insert(riskAlarm);
+				}
 			}
 			
 		}
@@ -454,6 +455,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 	}
     
     @Override
+	@Transactional(rollbackFor = Exception.class)
     public void family(LocalDate localDate) {
 		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		String yearStr = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
@@ -496,7 +498,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				riskFamilyEvaluation.setUpdateDate(new Date());
 				riskFamilyEvaluationMapper.updateByPrimaryKeySelective(riskFamilyEvaluation);
 			}else {
-				riskFamilyEvaluation.setCreationDate(new Date());
+				riskFamilyEvaluation.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskFamilyEvaluationMapper.insertSelective(riskFamilyEvaluation);
 			}
 			
@@ -510,20 +512,20 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			}else {
 				riskReportRecord.setTotalNum(indexNum);
 				riskReportRecord.setPoliceId(r.getPoliceId());
-				riskReportRecord.setCreationDate(new Date());
+				riskReportRecord.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskService.insertRiskReportRecord(riskReportRecord);
 			}
 			
 			Double yeartotal=riskFamilyEvaluationMapper.findByPoliceIdOrYearTotalNum(r.getPoliceId(), yearStr);
-			
-			if(yeartotal>3 || indexNum==3) {
-				RiskAlarm riskAlarm=new RiskAlarm();
-				riskAlarm.setPoliceId(r.getPoliceId());
-				riskAlarm.setAlarmType(11007);
-				riskAlarm.setAlarmScore(yeartotal);
-				riskAlarm.setCreationDate(new Date());
-				riskAlarm.setIsTalk(0);
-				riskAlarmService.insert(riskAlarm);
+
+			//产生预警数据
+			if (yeartotal>3 || indexNum==3) {
+				RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(r.getPoliceId(), AlarmTypeEnum.FAMILY_RISK, date,
+						yeartotal);
+
+				if (riskAlarm != null) {
+					riskAlarmService.insert(riskAlarm);
+				}
 			}
 			
 		}
@@ -568,7 +570,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			}else {
 				riskFamilyEvaluation.setPoliceId(u.getPoliceId());
 				riskFamilyEvaluation.setIndexNum(0.0);
-				riskFamilyEvaluation.setCreationDate(new Date());
+				riskFamilyEvaluation.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskFamilyEvaluationMapper.insertSelective(riskFamilyEvaluation);
 			}
 			
@@ -582,7 +584,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			}else {
 				riskReportRecord.setTotalNum(0.0);
 				riskReportRecord.setPoliceId(u.getPoliceId());
-				riskReportRecord.setCreationDate(new Date());
+				riskReportRecord.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskService.insertRiskReportRecord(riskReportRecord);
 			}
 		

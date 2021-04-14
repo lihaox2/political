@@ -47,10 +47,6 @@ public class DutyRiskServiceImpl implements DutyRiskService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public RiskDuty dutyRiskDetails(User user, String date) {
-
-		// 校验规则
-		// 扣分规则
-
 		RiskDuty riskDuty = new RiskDuty();
 		riskDuty.setIndexNum(0d);
 		riskDuty.setDeductionScoreCount(0);
@@ -60,28 +56,21 @@ public class DutyRiskServiceImpl implements DutyRiskService {
 
 		List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordList = riskDutyDealPoliceRecordMapper.
 				findRiskDutyDealPoliceRecordList(user.getPoliceId(), date);
+		if (riskDutyDealPoliceRecordList.size() > 0) {
+			int count = 0;
+			double totalScore = 0d;
+			for (RiskDutyDealPoliceRecord record : riskDutyDealPoliceRecordList) {
+				if (record != null && record.getDeductionScore() > 0) {
+					count++;
+					totalScore += (record.getDeductionScore() * 10);
+				}
+			}
+			riskDuty.setIndexNum(Math.min(maxScore, totalScore));
+			riskDuty.setDeductionScoreCount(count);
+			riskDuty.setTotalDeductionScore(totalScore);
+		}
+
 		RiskDuty oldRiskDuty = riskDutyMapper.findPoliceRiskDuty(user.getPoliceId(), date);
-		// 数据不处理操作
-		if (riskDutyDealPoliceRecordList == null || riskDutyDealPoliceRecordList.size() <= 0) {
-			// 校验这个月是否已产生过数据
-			if (oldRiskDuty == null || oldRiskDuty.getId() == null) {
-				return riskDuty;
-			}
-			return null;
-		}
-
-		int count = 0;
-		double totalScore = 0d;
-		for (RiskDutyDealPoliceRecord record : riskDutyDealPoliceRecordList) {
-			if (record != null && record.getDeductionScore() > 0) {
-				count++;
-				totalScore += (record.getDeductionScore() * 10);
-			}
-		}
-		riskDuty.setIndexNum(Math.min(maxScore, totalScore));
-		riskDuty.setDeductionScoreCount(count);
-		riskDuty.setTotalDeductionScore(totalScore);
-
 		if (oldRiskDuty != null && oldRiskDuty.getId() != null) {
 			// 表示该riskDuty不用新增
 			riskDuty.setId(oldRiskDuty.getId());

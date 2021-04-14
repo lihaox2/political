@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.bayee.political.enums.AlarmTypeEnum;
+import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,7 @@ public class RiskAlarmServiceImpl implements RiskAlarmService {
         riskAlarm.setAlarmType(alarmType.getId());
         riskAlarm.setAlarmScore(score);
         riskAlarm.setIsTalk(0);
-        riskAlarm.setCreationDate(new Date());
+        riskAlarm.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 
         RiskAlarm oldRiskAlarm = riskAlarmMapper.findByPoliceIdAndTypeAndDate(policeId, alarmType.getId(), date);
         if (oldRiskAlarm != null && oldRiskAlarm.getId() != null) {

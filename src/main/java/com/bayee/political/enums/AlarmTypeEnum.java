@@ -38,6 +38,11 @@ public enum AlarmTypeEnum {
     SOCIAL_CONTACT(11006),
 
     /**
+     * 家属评价
+     */
+    FAMILY_RISK(11007),
+
+    /**
      * 健康风险
      */
     HEALTHY_RISK(11008);

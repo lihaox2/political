@@ -22,7 +22,9 @@ public class RiskReportRecord {
 
     private Double totalNum;
     
-    private double lastTotalNum;
+    private double currentTotalNum;// 本月总风险值
+    
+    private double lastTotalNum;// 上月总风险值
     
     private Double riskRate;
 
@@ -43,8 +45,8 @@ public class RiskReportRecord {
     private Double drinkNum;
 
     private Double studyNum;
-
-	private Double workNum;
+    
+    private Double workNum;
     
     private List<ScreenDoubeChart> chartList;
 
@@ -67,15 +69,6 @@ public class RiskReportRecord {
     	this.healthNum = initValue;
     	this.studyNum = initValue;
     	this.drinkNum = initValue;
-	}
-
-//	public Double getTotalScore(){
-//    	return this.conductNum + this.handlingCaseNum + this.dutyNum + this.trainNum + this.socialContactNum
-//				+ this.amilyEvaluationNum + this.healthNum + this.studyNum + this.drinkNum;
-//	}
-	
-	public Double getTotalScore(){
-    	return 0.0;
 	}
 
     public Integer getId() {
@@ -249,14 +242,14 @@ public class RiskReportRecord {
 	/**
 	 * @return the lastTotalNum
 	 */
-	public Double getLastTotalNum() {
+	public double getLastTotalNum() {
 		return lastTotalNum;
 	}
 
 	/**
 	 * @param lastTotalNum the lastTotalNum to set
 	 */
-	public void setLastTotalNum(Double lastTotalNum) {
+	public void setLastTotalNum(double lastTotalNum) {
 		this.lastTotalNum = lastTotalNum;
 	}
 
@@ -316,11 +309,32 @@ public class RiskReportRecord {
 		this.studyNum = studyNum;
 	}
 
+	/**
+	 * @return the workNum
+	 */
 	public Double getWorkNum() {
 		return workNum;
 	}
 
+	/**
+	 * @param workNum the workNum to set
+	 */
 	public void setWorkNum(Double workNum) {
 		this.workNum = workNum;
 	}
+
+	/**
+	 * @return the currentTotalNum
+	 */
+	public double getCurrentTotalNum() {
+		return currentTotalNum;
+	}
+
+	/**
+	 * @param currentTotalNum the currentTotalNum to set
+	 */
+	public void setCurrentTotalNum(double currentTotalNum) {
+		this.currentTotalNum = currentTotalNum;
+	}
+	
 }

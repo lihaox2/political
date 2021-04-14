@@ -103,10 +103,10 @@ public class RiskController extends BaseController {
 			} else {
 				list.get(i).setHealthNum(0.0);
 			}
-			Double totalNum = list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum() + list.get(i).getTrainNum()
-					+ list.get(i).getSocialContactNum() + list.get(i).getAmilyEvaluationNum()
-					+ list.get(i).getHealthNum() + list.get(i).getConductNum();
-			list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));
+//			Double totalNum = list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum() + list.get(i).getTrainNum()
+//					+ list.get(i).getSocialContactNum() + list.get(i).getAmilyEvaluationNum()
+//					+ list.get(i).getHealthNum() + list.get(i).getConductNum();
+//			list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));
 			// 警员风险雷达图
 			List<ScreenDoubeChart> list2 = riskService.riskChartList(list.get(i).getPoliceId(), dateTime, lastMonthTime,
 					1);
@@ -554,11 +554,10 @@ public class RiskController extends BaseController {
 			dateTime = sd.format(new Date());
 		}
 		dateTime = dateTime.substring(0, 4);
-		// 警员历史风险报告查询
+		// 警员历史风险报告年份查询
 		List<RiskHistoryReportTime> list = riskService.riskHistoryReportTimeList(policeId);
-		// List<RiskHistoryReport> list = riskService.riskHistoryReportList(policeId,
-		// dateTime);
 		for (int i = 0; i < list.size(); i++) {
+			// 警员历史风险报告月份查询
 			List<RiskHistoryReport> list2 = riskService.riskHistoryReportList(policeId,
 					String.valueOf(list.get(i).getId()));
 			list.get(i).setMonthList(list2);

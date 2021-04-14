@@ -41,6 +41,12 @@
     <result column="achievement_str" property="achievementStr" jdbcType="VARCHAR" />
     <result column="is_submit" property="isSubmit" jdbcType="INTEGER" />
   </resultMap>
+   <resultMap id="RiskTrainPhysicalRecordMap" type="com.bayee.political.domain.RiskTrainPhysicalRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="achievement_grade" property="achievementGrade" jdbcType="INTEGER" />
+    <result column="achievementGradeStr" property="achievementGradeStr" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, police_id, registration_date, achievement_date, train_physical_id, train_group_id, 
     qr_code,is_sign, creation_date, update_date
@@ -440,4 +446,21 @@ DATE_FORMAT(MIN(creation_date),'%Y-%m') as startTime from ${tableName}
    <select id="updateGradeList" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" resultMap="BaseResultMap">
 select * from train_physical_achievement where train_physical_id=#{trainPhysicalId}
 </select>
+<!-- 警员警务技能综合训练数据列表查询 -->
+	<select id="riskTrainPhysicalRecordList" parameterType="com.bayee.political.domain.RiskTrainPhysicalRecord" resultMap="RiskTrainPhysicalRecordMap">
+select b.id,a.achievement_grade,
+(case when a.achievement_grade=2 then '合格'
+when a.achievement_grade=3 then '良好'
+when a.achievement_grade=4 then '优秀' else '不合格' end) as achievementGradeStr
+,a.creation_date from train_physical_achievement a
+left join train_physical b on b.id=a.train_physical_id
+where a.police_id=#{policeId}
+	 <if test="timeType == 1">
+	    and DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}
+	</if>
+    <if test="timeType == 2">
+	    and DATE_FORMAT(a.creation_date, '%Y-%m')=#{dateTime}
+	</if>
+order by a.creation_date desc
+	</select>
 </mapper>

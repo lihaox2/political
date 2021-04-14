@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import com.bayee.political.domain.CalculationChart;
 import com.bayee.political.domain.LeaveChart;
 import com.bayee.political.domain.ReportDataFillTime;
+import com.bayee.political.domain.RiskTrainFirearmRecord;
+import com.bayee.political.domain.RiskTrainPhysicalAchievementDetails;
+import com.bayee.political.domain.RiskTrainPhysicalRecord;
 import com.bayee.political.domain.TrainAchievementTemplate;
 import com.bayee.political.domain.TrainActivityStyle;
 import com.bayee.political.domain.TrainChartStatistics;
@@ -1753,4 +1756,25 @@ public class TrainServiceImpl implements TrainService {
 
 	}
 
+	// 警员警务技能枪械数据列表查询
+	@Override
+	public List<RiskTrainFirearmRecord> riskTrainFirearmRecordList(String policeId, String dateTime,
+			String lastMonthTime, Integer timeType) {
+		return trainFirearmAchievementMapper.riskTrainFirearmRecordList(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	// 警员警务技能综合训练数据列表查询
+	@Override
+	public List<RiskTrainPhysicalRecord> riskTrainPhysicalRecordList(String policeId, String dateTime,
+			String lastMonthTime, Integer timeType) {
+		return trainPhysicalAchievementMapper.riskTrainPhysicalRecordList(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	// 查询警员风险当前训练下的项目
+	@Override
+	public List<RiskTrainPhysicalAchievementDetails> riskTrainSignInProjectList(Integer trainPhysicalId,
+			Integer trainPhysicalAchievementId, String policeId, Integer isSign) {
+		return trainPhysicalAchievementDetailsMapper.riskTrainSignInProjectList(trainPhysicalId,
+				trainPhysicalAchievementId, policeId, isSign);
+	}
 }

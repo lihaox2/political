@@ -25,6 +25,14 @@
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
+   <resultMap id="RiskTrainFirearmRecordMap" type="com.bayee.political.domain.RiskTrainFirearmRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="achievement_grade" property="achievementGrade" jdbcType="INTEGER" />
+    <result column="achievementGradeStr" property="achievementGradeStr" jdbcType="VARCHAR" />
+    <result column="achievement_str" property="achievementStr" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, police_id, registration_date, achievement_date, train_firearm_id, train_project_type, 
     achievement,shoot_time, achievement_grade,achievement_str, is_sign,is_submit, creation_date, update_date
@@ -446,5 +454,23 @@ and a.train_firearm_id = #{trainFirearmId}
     </set>
     where train_firearm_id = #{trainFirearmId,jdbcType=INTEGER} and police_id = #{policeId,jdbcType=INTEGER} 
   </update>
-
+	<!-- 警员警务技能枪械数据列表查询 -->
+	<select id="riskTrainFirearmRecordList" parameterType="com.bayee.political.domain.RiskTrainFirearmRecord" resultMap="RiskTrainFirearmRecordMap">
+select b.id,c.name as projectName,a.achievement_grade,
+a.achievement_str as achievementStr,
+(case when a.achievement_grade=2 then '合格'
+when a.achievement_grade=3 then '良好'
+when a.achievement_grade=4 then '优秀' else '不合格' end) as achievementGradeStr
+,a.creation_date from train_firearm_achievement a
+left join train_firearm b on b.id=a.train_firearm_id
+left join train_project c on c.id=a.train_project_type
+where a.police_id=#{policeId}
+	 <if test="timeType == 1">
+	    and DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}
+	</if>
+    <if test="timeType == 2">
+	    and DATE_FORMAT(a.creation_date, '%Y-%m')=#{dateTime}
+	</if>
+order by a.creation_date desc
+	</select>
 </mapper>

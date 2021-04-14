@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
 import com.bayee.political.pojo.json.RiskConductBureauRoleResult;
 import com.bayee.political.service.RiskService;
+import com.bayee.political.service.TrainService;
 import com.bayee.political.utils.DataListPage;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
@@ -42,6 +43,9 @@ public class RiskController extends BaseController {
 
 	@Autowired
 	private AlarmService alarmService;
+	
+	@Autowired
+	private TrainService trainService;
 
 	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
 
@@ -99,9 +103,9 @@ public class RiskController extends BaseController {
 			} else {
 				list.get(i).setHealthNum(0.0);
 			}
-			Double totalNum = list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum() + list.get(i).getTrainNum() +
-					list.get(i).getSocialContactNum() + list.get(i).getAmilyEvaluationNum() + list.get(i).getHealthNum() +
-					list.get(i).getConductNum();
+			Double totalNum = list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum() + list.get(i).getTrainNum()
+					+ list.get(i).getSocialContactNum() + list.get(i).getAmilyEvaluationNum()
+					+ list.get(i).getHealthNum() + list.get(i).getConductNum();
 			list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));
 			// 警员风险雷达图
 			List<ScreenDoubeChart> list2 = riskService.riskChartList(list.get(i).getPoliceId(), dateTime, lastMonthTime,
@@ -157,11 +161,8 @@ public class RiskController extends BaseController {
 			} else {
 				item.setHealthNum(0.0);
 			}
-			Double totalNum = item.getConductNum() + 
-					item.getHandlingCaseNum() + 
-					item.getDutyNum() + 
-					item.getTrainNum()
-					+ item.getSocialContactNum() + item.getAmilyEvaluationNum()+ item.getHealthNum();
+			Double totalNum = item.getConductNum() + item.getHandlingCaseNum() + item.getDutyNum() + item.getTrainNum()
+					+ item.getSocialContactNum() + item.getAmilyEvaluationNum() + item.getHealthNum();
 			item.setTotalNum(Double.valueOf(df.format(totalNum)));
 			// 警员风险雷达图
 			List<ScreenDoubeChart> list2 = riskService.riskChartList(item.getPoliceId(), dateTime, lastMonthTime,
@@ -240,9 +241,8 @@ public class RiskController extends BaseController {
 	// 警员执法办案风险查询
 	@RequestMapping(value = "/risk/case/index/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskCaseIndexItem(@RequestParam(value = "policeId", required = false) String policeId,
-												@RequestParam(value = "dateTime", required = false) String dateTime,
-											   @RequestParam(value = "timeType", required = false) Integer timeType)
-			throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
 		if (timeType == null) {
 			timeType = 1;
@@ -308,56 +308,39 @@ public class RiskController extends BaseController {
 	}
 
 	// 警员执法管理风险查询
-	/*@RequestMapping(value = "/risk/case/law/enforcement/index/item", method = RequestMethod.GET)
-	public ResponseEntity<?> riskCaseLawEnforcementIndexItem(
-			@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException, ParseException {
-		DataListReturn dlr = new DataListReturn();
-		if (dateTime == null) {
-			dateTime = sd.format(new Date());
-		}
-		Date currdate = sd.parse(dateTime);
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(currdate);
-		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
-		String lastDateTime = sd.format(calendar.getTime());
-		// 警员执法办案风险指数查询
-		RiskCase item = riskService.riskCaseIndexItem(policeId, dateTime);
-		if (item != null) {
-			List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>();
-			// 上个月警员接警执勤指数查询
-			RiskCase item2 = riskService.riskCaseIndexItem(policeId, lastDateTime);
-			ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
-			itemChart2.setId(1);
-			itemChart2.setName("上月");
-			if (item2 != null) {
-				itemChart2.setValue(item2.getIndexNum());
-			} else {
-				itemChart2.setValue(0.0);
-			}
-			list.add(itemChart2);
-			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
-			itemChart1.setId(2);
-			itemChart1.setName("本月");
-			itemChart1.setValue(item.getIndexNum());
-			list.add(itemChart1);
-			item.setList(list);
-		} else {
-			item = new RiskCase();
-		}
-		dlr.setStatus(true);
-		dlr.setMessage("success");
-		dlr.setResult(item);
-		dlr.setCode(StatusCode.getSuccesscode());
-		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
-	}*/
+	/*
+	 * @RequestMapping(value = "/risk/case/law/enforcement/index/item", method =
+	 * RequestMethod.GET) public ResponseEntity<?> riskCaseLawEnforcementIndexItem(
+	 * 
+	 * @RequestParam(value = "policeId", required = false) String policeId,
+	 * 
+	 * @RequestParam(value = "dateTime", required = false) String dateTime) throws
+	 * ApiException, ParseException { DataListReturn dlr = new DataListReturn(); if
+	 * (dateTime == null) { dateTime = sd.format(new Date()); } Date currdate =
+	 * sd.parse(dateTime); Calendar calendar = Calendar.getInstance();
+	 * calendar.setTime(currdate); calendar.set(Calendar.MONTH,
+	 * calendar.get(Calendar.MONTH) - 1); String lastDateTime =
+	 * sd.format(calendar.getTime()); // 警员执法办案风险指数查询 RiskCase item =
+	 * riskService.riskCaseIndexItem(policeId, dateTime); if (item != null) {
+	 * List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>(); //
+	 * 上个月警员接警执勤指数查询 RiskCase item2 = riskService.riskCaseIndexItem(policeId,
+	 * lastDateTime); ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
+	 * itemChart2.setId(1); itemChart2.setName("上月"); if (item2 != null) {
+	 * itemChart2.setValue(item2.getIndexNum()); } else { itemChart2.setValue(0.0);
+	 * } list.add(itemChart2); ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
+	 * itemChart1.setId(2); itemChart1.setName("本月");
+	 * itemChart1.setValue(item.getIndexNum()); list.add(itemChart1);
+	 * item.setList(list); } else { item = new RiskCase(); } dlr.setStatus(true);
+	 * dlr.setMessage("success"); dlr.setResult(item);
+	 * dlr.setCode(StatusCode.getSuccesscode()); return new
+	 * ResponseEntity<DataListReturn>(dlr, HttpStatus.OK); }
+	 */
 
 	// 警员接警执勤指数查询
 	@RequestMapping(value = "/risk/duty/index/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskDutyIndexItem(@RequestParam(value = "policeId", required = false) String policeId,
-											   @RequestParam(value = "dateTime", required = false) String dateTime,
-											   @RequestParam(value = "timeType", required = false) Integer timeType)
-			throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
 		if (timeType == null) {
 			timeType = 1;
@@ -419,9 +402,8 @@ public class RiskController extends BaseController {
 	// 警员接警执勤数据列表查询
 	@RequestMapping(value = "/risk/duty/record/list", method = RequestMethod.GET)
 	public ResponseEntity<?> riskDutyRecordItem(@RequestParam(value = "policeId", required = false) String policeId,
-												@RequestParam(value = "dateTime", required = false) String dateTime,
-												@RequestParam(value = "timeType", required = false) Integer timeType)
-			throws ApiException, ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
 		if (timeType == null) {
 			timeType = 1;
@@ -468,7 +450,7 @@ public class RiskController extends BaseController {
 			dateTime = sd.format(new Date());
 		}
 		// 警员警务技能指数查询
-		RiskTrain item = riskService.riskTrainIndexItem(policeId, dateTime,lastMonthTime,timeType);
+		RiskTrain item = riskService.riskTrainIndexItem(policeId, dateTime, lastMonthTime, timeType);
 		if (item == null) {
 			item = new RiskTrain();
 		}
@@ -574,7 +556,8 @@ public class RiskController extends BaseController {
 		dateTime = dateTime.substring(0, 4);
 		// 警员历史风险报告查询
 		List<RiskHistoryReportTime> list = riskService.riskHistoryReportTimeList(policeId);
-		//List<RiskHistoryReport> list = riskService.riskHistoryReportList(policeId, dateTime);
+		// List<RiskHistoryReport> list = riskService.riskHistoryReportList(policeId,
+		// dateTime);
 		for (int i = 0; i < list.size(); i++) {
 			List<RiskHistoryReport> list2 = riskService.riskHistoryReportList(policeId,
 					String.valueOf(list.get(i).getId()));
@@ -705,7 +688,7 @@ public class RiskController extends BaseController {
 			@RequestParam(value = "dateTime", required = false) String dateTime,
 			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
 		DataListReturn dlr = new DataListReturn();
-		if (timeType == null) {// 
+		if (timeType == null) {//
 			timeType = 1;
 		}
 		if (dateTime == null) {
@@ -767,9 +750,8 @@ public class RiskController extends BaseController {
 
 	@GetMapping("/risk/conduct/bureau/role/index")
 	public ResponseEntity<?> riskConductBureauRole(@RequestParam(value = "policeId", required = false) String policeId,
-												   @RequestParam(value = "dateTime", required = false) String dateTime,
-												   @RequestParam(value = "timeType", required = false) Integer timeType)
-			throws ParseException {
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ParseException {
 		DataListReturn dlr = new DataListReturn();
 		String lastMonthTime = DateUtils.lastMonthTime();
 		if (timeType == null) {// 1总计2月份
@@ -850,8 +832,63 @@ public class RiskController extends BaseController {
 			dateTime = sd.format(new Date());
 		}
 		// 警员局规计分数据列表查询
-		
-		List<RiskConductBureauRuleRecord>  list = riskService.findRiskConductBureauRuleRecord(policeId, dateTime, lastMonthTime,
+
+		List<RiskConductBureauRuleRecord> list = riskService.findRiskConductBureauRuleRecord(policeId, dateTime,
+				lastMonthTime, timeType);
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(list);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+	}
+
+	// 警员警务技能综合训练数据列表查询
+	@RequestMapping(value = "/risk/train/physical/record/list", method = RequestMethod.GET)
+	public ResponseEntity<?> riskTrainPhysicalRecordList(
+			@RequestParam(value = "policeId", required = false) String policeId,
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
+		DataListReturn dlr = new DataListReturn();
+		String lastMonthTime = DateUtils.lastMonthTime();
+		if (timeType == null) {// 1总计2月份
+			timeType = 1;
+		}
+		if (dateTime == null) {
+			dateTime = sd.format(new Date());
+		}
+		// 警员警务技能综合训练数据列表查询
+		List<RiskTrainPhysicalRecord> list = trainService.riskTrainPhysicalRecordList(policeId, dateTime, lastMonthTime,
+				timeType);
+		if (list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				List<RiskTrainPhysicalAchievementDetails> projectList = trainService
+						.riskTrainSignInProjectList(list.get(i).getId(), null, policeId, null);
+				list.get(i).setTrainList(projectList);
+			}
+		}
+		dlr.setStatus(true);
+		dlr.setMessage("success");
+		dlr.setResult(list);
+		dlr.setCode(StatusCode.getSuccesscode());
+		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+	}
+
+	// 警员警务技能枪械数据列表查询
+	@RequestMapping(value = "/risk/train/firearm/record/list", method = RequestMethod.GET)
+	public ResponseEntity<?> riskTrainFirearmRecordList(
+			@RequestParam(value = "policeId", required = false) String policeId,
+			@RequestParam(value = "dateTime", required = false) String dateTime,
+			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
+		DataListReturn dlr = new DataListReturn();
+		String lastMonthTime = DateUtils.lastMonthTime();
+		if (timeType == null) {// 1总计2月份
+			timeType = 1;
+		}
+		if (dateTime == null) {
+			dateTime = sd.format(new Date());
+		}
+		// 警员警务技能枪械数据列表查询
+		List<RiskTrainFirearmRecord> list = trainService.riskTrainFirearmRecordList(policeId, dateTime, lastMonthTime,
 				timeType);
 		dlr.setStatus(true);
 		dlr.setMessage("success");

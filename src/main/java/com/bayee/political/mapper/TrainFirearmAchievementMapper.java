@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.bayee.political.domain.RiskTrainFirearmRecord;
 import com.bayee.political.domain.TrainAchievementTemplate;
 import com.bayee.political.domain.TrainFirearmAchievement;
 
@@ -141,5 +142,10 @@ public interface TrainFirearmAchievementMapper {
 
 	// 批量修改警员枪械成绩
 	void trainFirearmAchievementUpdateBatch(List<TrainFirearmAchievement> finalList);
+
+	// 警员警务技能枪械数据列表查询
+	List<RiskTrainFirearmRecord> riskTrainFirearmRecordList(@Param("policeId") String policeId,
+			@Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime,
+			@Param("timeType") Integer timeType);
 
 }

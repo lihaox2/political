@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import com.bayee.political.domain.CalculationChart;
 import com.bayee.political.domain.LeaveChart;
 import com.bayee.political.domain.ReportDataFillTime;
+import com.bayee.political.domain.RiskTrainFirearmRecord;
+import com.bayee.political.domain.RiskTrainPhysicalAchievementDetails;
+import com.bayee.political.domain.RiskTrainPhysicalRecord;
 import com.bayee.political.domain.TrainAchievementTemplate;
 import com.bayee.political.domain.TrainActivityStyle;
 import com.bayee.political.domain.TrainChartStatistics;
@@ -1666,4 +1669,16 @@ public interface TrainService {
 
 	// 批量修改警员枪械成绩
 	void trainFirearmAchievementUpdateBatch(List<TrainFirearmAchievement> finalList);
+
+	// 查询警员风险当前训练下的项目
+	List<RiskTrainPhysicalAchievementDetails> riskTrainSignInProjectList(Integer trainPhysicalId,
+			Integer trainPhysicalAchievementId, String policeId, Integer isSign);
+
+	// 警员警务技能枪械数据列表查询
+	List<RiskTrainFirearmRecord> riskTrainFirearmRecordList(String policeId, String dateTime, String lastMonthTime,
+			Integer timeType);
+
+	// 警员警务技能综合训练数据列表查询
+	List<RiskTrainPhysicalRecord> riskTrainPhysicalRecordList(String policeId, String dateTime, String lastMonthTime,
+			Integer timeType);
 }

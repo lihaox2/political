@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.ReportDataFillTime;
+import com.bayee.political.domain.RiskTrainPhysicalRecord;
 import com.bayee.political.domain.TrainPhysicalAchievement;
 import com.bayee.political.domain.TrainRecordScore;
 
@@ -126,5 +127,10 @@ public interface TrainPhysicalAchievementMapper {
 
 	// 根据训练id查询报名人员list
 	List<TrainPhysicalAchievement> updateGradeList(@Param("trainPhysicalId") Integer trainPhysicalId);
+
+	// 警员警务技能综合训练数据列表查询
+	List<RiskTrainPhysicalRecord> riskTrainPhysicalRecordList(@Param("policeId") String policeId,
+			@Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime,
+			@Param("timeType") Integer timeType);
 
 }

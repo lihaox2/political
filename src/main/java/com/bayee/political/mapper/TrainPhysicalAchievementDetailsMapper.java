@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.bayee.political.domain.RiskTrainPhysicalAchievementDetails;
 import com.bayee.political.domain.TrainAchievementStatistics;
 import com.bayee.political.domain.TrainAchievementTemplate;
 import com.bayee.political.domain.TrainAchievementTotalList;
@@ -307,5 +308,11 @@ public interface TrainPhysicalAchievementDetailsMapper {
 
 	// 体能项目成批量修改
 	void trainPhysicalAchievementDetailsUpdateBatch(List<TrainPhysicalAchievementDetails> updateList);
+
+	// 查询警员风险当前训练下的项目
+	List<RiskTrainPhysicalAchievementDetails> riskTrainSignInProjectList(
+			@Param("trainPhysicalId") Integer trainPhysicalId,
+			@Param("trainPhysicalAchievementId") Integer trainPhysicalAchievementId, @Param("policeId") String policeId,
+			@Param("isSign") Integer isSign);
 
 }

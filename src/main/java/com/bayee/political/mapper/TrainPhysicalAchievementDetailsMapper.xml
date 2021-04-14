@@ -86,6 +86,13 @@
     <result column="achievementGradeStr" property="achievementGradeStr" />
     <result column="creation_date" property="creationDate" />
   </resultMap>
+  <resultMap id="RiskTrainPhysicalAchievementDetailsMap" type="com.bayee.political.domain.RiskTrainPhysicalAchievementDetails" >
+    <result column="id" property="id" />
+    <result column="projectName" property="projectName" />
+    <result column="achievement_str" property="achievementStr"/>
+    <result column="achievement_grade" property="achievementGrade"/>
+    <result column="achievementGradeStr" property="achievementGradeStr" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, train_physical_id, train_physical_achievement_id,police_id, project_id,is_entry, 
     achievement, achievement_grade,achievement_str, 
@@ -1193,5 +1200,28 @@ where type=#{type}
 	and DATE_FORMAT(creation_date,'%Y-%m')=#{dateTime}
 </if>
 order by creation_date desc
+</select>
+ <!-- 查询警员风险当前训练下的项目 -->
+<select id="riskTrainSignInProjectList" parameterType="com.bayee.political.domain.RiskTrainPhysicalAchievementDetails" resultMap="RiskTrainPhysicalAchievementDetailsMap">
+select a.*,b.name as projectName,
+(case when a.achievement_grade=2 then '合格'
+when a.achievement_grade=3 then '良好'
+when a.achievement_grade=4 then '优秀' else '不合格' end) as achievementGradeStr
+from train_physical_achievement_details a
+left join train_project b on b.id=a.project_id
+where 1=1 
+        <if test="trainPhysicalId != null and trainPhysicalId !=''">
+			and a.train_physical_id=#{trainPhysicalId,jdbcType=INTEGER}
+		</if>
+		<if test="trainPhysicalAchievementId != null and trainPhysicalAchievementId !=''">
+			and a.train_physical_achievement_id=#{trainPhysicalAchievementId,jdbcType=INTEGER}
+		</if>
+		<if test="policeId != null and policeId !=''">
+			and a.police_id = #{policeId,jdbcType=VARCHAR}
+		</if>
+		<if test="isSign != null and isSign !=''">
+			and a.is_sign = #{isSign,jdbcType=VARCHAR}
+		</if>
+order by a.is_sign desc,a.project_id asc
 </select>
 </mapper>

@@ -38,11 +38,11 @@ public class DutyRiskServiceImpl implements DutyRiskService {
 	/**
 	 * 预警分数值
 	 */
-	private double alarmScore = 8d;
+	private double alarmScore = 10d;
 	/**
 	 * 最大扣分值
 	 */
-	private double maxScore = 15d;
+	private double maxScore = 20d;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

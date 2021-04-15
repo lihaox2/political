@@ -75,7 +75,6 @@ public class RiskSocialContactServiceImpl implements RiskSocialContactService {
                 riskAlarmService.insert(riskAlarm);
             }
         }
-
         return riskSocialContact;
     }
 

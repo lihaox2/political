@@ -3,8 +3,10 @@ package com.bayee.political.service.impl;
 import com.bayee.political.domain.RiskAlarm;
 import com.bayee.political.domain.RiskTrain;
 import com.bayee.political.domain.User;
+import com.bayee.political.enums.AlarmTypeEnum;
 import com.bayee.political.mapper.RiskAlarmMapper;
 import com.bayee.political.mapper.RiskTrainMapper;
+import com.bayee.political.service.RiskAlarmService;
 import com.bayee.political.service.RiskSkillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ public class RiskSkillServiceImpl implements RiskSkillService {
     RiskTrainMapper riskTrainMapper;
 
     @Autowired
-    RiskAlarmMapper riskAlarmMapper;
+    RiskAlarmService riskAlarmService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -49,15 +51,14 @@ public class RiskSkillServiceImpl implements RiskSkillService {
             }
             riskTrain.setIndexNum(Math.min(totalScore, maxScore));
 
-            //生成预警数据
+            // 产生预警数据
             if (totalScore >= alarmScore) {
-                RiskAlarm riskAlarm = new RiskAlarm();
-                riskAlarm.setPoliceId(user.getPoliceId());
-                riskAlarm.setAlarmType(11005);
-                riskAlarm.setAlarmScore(totalScore);
-                riskAlarm.setCreationDate(new Date());
-                riskAlarm.setIsTalk(0);
-                riskAlarmMapper.insertSelective(riskAlarm);
+                RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(user.getPoliceId(), AlarmTypeEnum.SKILL_RISK, date,
+                        totalScore);
+
+                if (riskAlarm != null) {
+                    riskAlarmService.insert(riskAlarm);
+                }
             }
             riskTrainMapper.updateByPrimaryKey(riskTrain);
 

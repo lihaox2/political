@@ -97,7 +97,6 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			record.setPoliceId(user.getPoliceId());
 			record.setYear(year);
 			record.setMonth(month);
-
 			record.setHandlingCaseNum(0d);
 			record.setDutyNum(0d);
 			record.setSocialContactNum(0d);
@@ -157,6 +156,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 					+ record.getTrainNum() + record.getSocialContactNum(), 100));
 			record.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 
+			//处理产生过的风险报备数据
 			RiskReportRecord oldRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
 			if (oldRecord != null && oldRecord.getId() != null) {
 				oldRecord.setTrainNum(record.getTrainNum());
@@ -195,7 +195,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			riskReportRecordService.insertRiskReportRecordList(riskReportRecordList);
 		}
 
-		double casesManageRiskAvgScore = handlingCasesRiskService.findPoliceAvgDeductionScoreByDate(date);
+		/*double casesManageRiskAvgScore = handlingCasesRiskService.findPoliceAvgDeductionScoreByDate(date);
 		double dutyRiskAvgScore = dutyRiskService.findPoliceAvgDeductionScoreByDate(date);
 
 		//处理 无办案量和无接处警的警员数据
@@ -228,7 +228,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			oldRiskReportRecord.setUpdateDate(new Date());
 
 			riskReportRecordMapper.updateByPrimaryKey(oldRiskReportRecord);
-		}
+		}*/
 
 		health(localDate);
 

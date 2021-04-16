@@ -151,9 +151,9 @@ public class RiskExportExcelDataController {
 					riskHealthRecord.setBmi(bmi);
 					if(bmi<=18.40) {
 						riskHealthRecord.setBmiId(1);
-					}else if(bmi>=18.50 && bmi<=23.9) {
+					}else if(bmi>=18.41 && bmi<=23.99) {
 						riskHealthRecord.setBmiId(2);
-					}else if(bmi>=24.00 && bmi<=27.9) {
+					}else if(bmi>=24 && bmi<=27.99) {
 						riskHealthRecord.setBmiId(3);
 					}else if(bmi>=28 && bmi<=100.00) {
 						riskHealthRecord.setBmiId(4);

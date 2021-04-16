@@ -301,7 +301,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			
 			double indexNum=0;
 
-			if(r.getIsOverweight()==1) {
+			if(r.getBmiId()==3 ||  r.getBmiId()==4) {
 				riskHealth.setOverweightNum(0.5);
 				indexNum+=0.5;
 			}

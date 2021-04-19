@@ -26,17 +26,17 @@ public interface RiskService {
 	RiskHealth riskHealthIndexItem(String policeId, String dateTime);
 
 	// 警员预警分页查询
-	List<RiskAlarm> riskAlarmPageList(String startTime, String endTime, Integer pageSize, Integer pageNum);
+	List<RiskAlarm> riskAlarmPageList(String startTime, String endTime, Integer pageSize, Integer pageNum,String dateTime);
 
 	// 警员预警列表总数
-	int riskAlarmPageCount(String startTime, String endTime);
+	int riskAlarmPageCount(String startTime, String endTime,String dateTime);
 
 	// 警员风险分页查询
 	List<RiskReportRecord> riskPageList(String keyWords, Integer alarmType, String sortName, String dateTime,
-										String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum);
+			String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum,Integer num,String orderName);
 
 	// 警员风险列表总数
-	int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime, String lastMonthTime);
+	int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime, String lastMonthTime,Integer num,String orderName);
 
 	// 警员预警类型查询
 	List<RiskAlarmType> riskAlarmTypeList(Integer id);
@@ -75,28 +75,28 @@ public interface RiskService {
 	List<ScreenDoubeChart> riskCaseIndexChart(String policeId);
 
 	// 综合指数风险
-	RiskIndexMonitorChild comprehensiveIndex(String dateTime);
+	RiskIndexMonitorChild comprehensiveIndex(String dateTime,Integer num);
 
 	// 行为规范风险
-	RiskIndexMonitorChild conductIndex(String dateTime);
+	RiskIndexMonitorChild conductIndex(String dateTime,Integer num);
 
 	// 执法办案风险
-	RiskIndexMonitorChild caseIndex(String dateTime);
+	RiskIndexMonitorChild caseIndex(String dateTime,Integer num);
 
 	// 接警执勤风险
-	RiskIndexMonitorChild dutyIndex(String dateTime);
+	RiskIndexMonitorChild dutyIndex(String dateTime,Integer num);
 
 	// 警务技能风险
-	RiskIndexMonitorChild trainIndex(String dateTime);
+	RiskIndexMonitorChild trainIndex(String dateTime,Integer num);
 
 	// 社交风险
-	RiskIndexMonitorChild socialContactIndex(String dateTime);
+	RiskIndexMonitorChild socialContactIndex(String dateTime,Integer num);
 
 	// 家属评价风险
-	RiskIndexMonitorChild familyEvaluationIndex(String dateTime);
+	RiskIndexMonitorChild familyEvaluationIndex(String dateTime,Integer num);
 
 	// 健康风险
-	RiskIndexMonitorChild healthIndex(String year, String dateTime);
+	RiskIndexMonitorChild healthIndex(String year, String dateTime,Integer num);
 
 	// 警员历史风险报告查询
 	List<RiskHistoryReport> riskHistoryReportList(String policeId, String dateTime);

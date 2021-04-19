@@ -117,12 +117,15 @@ left join department c on c.id=b.department_id
 left join police_position d on d.id=b.position_id
 left join(select police_id,MAX(creation_date) as creation_date 
 from risk_alarm GROUP BY police_id) e on e.police_id=a.police_id
-where 1=1 and a.alarm_type=11001
-    <if test="startTime != null and startTime !=''">
+where 1=1 
+    <!-- <if test="startTime != null and startTime !=''">
 	    and a.creation_date &gt;=#{startTime} 
 	</if>
 	 <if test="endTime != null and endTime !=''">
 	    and a.creation_date &lt;=#{endTime}
+	</if> -->
+	<if test="dateTime != null and dateTime !=''">
+	    and DATE_FORMAT(e.creation_date,'%Y-%m')=#{dateTime}
 	</if>
 GROUP BY a.police_id order by count(*) desc limit #{pageNum},#{pageSize}
 </select>
@@ -136,12 +139,15 @@ left join department c on c.id=b.department_id
 left join police_position d on d.id=b.position_id
 left join(select police_id,MAX(creation_date) as creation_date 
 from risk_alarm GROUP BY police_id) e on e.police_id=a.police_id
-where 1=1 and a.alarm_type=11001
-    <if test="startTime != null and startTime !=''">
+where 1=1
+    <!-- <if test="startTime != null and startTime !=''">
 	    and a.creation_date &gt;=#{startTime} 
 	</if>
 	 <if test="endTime != null and endTime !=''">
 	    and a.creation_date &lt;=#{endTime}
+	</if> -->
+	<if test="dateTime != null and dateTime !=''">
+	    and DATE_FORMAT(e.creation_date,'%Y-%m')=#{dateTime}
 	</if>
 GROUP BY a.police_id) as t
 </select>

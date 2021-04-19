@@ -143,29 +143,29 @@ public class RiskServiceImpl implements RiskService {
 
 	// 警员预警分页查询
 	@Override
-	public List<RiskAlarm> riskAlarmPageList(String startTime, String endTime, Integer pageSize, Integer pageNum) {
-		return riskAlarmMapper.riskAlarmPageList(startTime, endTime, pageSize, pageNum);
+	public List<RiskAlarm> riskAlarmPageList(String startTime, String endTime, Integer pageSize, Integer pageNum,String dateTime) {
+		return riskAlarmMapper.riskAlarmPageList(startTime, endTime, pageSize, pageNum,dateTime);
 	}
 
 	// 警员预警列表总数
 	@Override
-	public int riskAlarmPageCount(String startTime, String endTime) {
-		return riskAlarmMapper.riskAlarmPageCount(startTime, endTime);
+	public int riskAlarmPageCount(String startTime, String endTime,String dateTime) {
+		return riskAlarmMapper.riskAlarmPageCount(startTime, endTime,dateTime);
 	}
 
 	// 警员风险分页查询
 	@Override
 	public List<RiskReportRecord> riskPageList(String keyWords, Integer alarmType, String sortName, String dateTime,
-											   String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum) {
+			String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum,Integer num,String orderName) {
 		return riskReportRecordMapper.riskPageList(keyWords, alarmType, sortName, dateTime, lastDateTime, lastMonthTime,
-				pageSize, pageNum);
+				pageSize, pageNum,num,orderName);
 	}
 
 	// 警员风险列表总数
 	@Override
 	public int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime,
-							 String lastMonthTime) {
-		return riskReportRecordMapper.riskPageCount(keyWords, alarmType, dateTime, lastDateTime, lastMonthTime);
+							 String lastMonthTime,Integer num,String orderName) {
+		return riskReportRecordMapper.riskPageCount(keyWords, alarmType, dateTime, lastDateTime, lastMonthTime,num,orderName);
 	}
 
 	// 警员预警类型查询
@@ -242,50 +242,50 @@ public class RiskServiceImpl implements RiskService {
 
 	// 综合指数风险
 	@Override
-	public RiskIndexMonitorChild comprehensiveIndex(String dateTime) {
-		return riskReportRecordMapper.comprehensiveIndex(dateTime);
+	public RiskIndexMonitorChild comprehensiveIndex(String dateTime,Integer num) {
+		return riskReportRecordMapper.comprehensiveIndex(dateTime,num);
 	}
 
 	// 行为规范风险
 	@Override
-	public RiskIndexMonitorChild conductIndex(String dateTime) {
-		return riskReportRecordMapper.conductIndex(dateTime);
+	public RiskIndexMonitorChild conductIndex(String dateTime,Integer num) {
+		return riskReportRecordMapper.conductIndex(dateTime,num);
 	}
 
 	// 执法办案风险
 	@Override
-	public RiskIndexMonitorChild caseIndex(String dateTime) {
-		return riskReportRecordMapper.caseIndex(dateTime);
+	public RiskIndexMonitorChild caseIndex(String dateTime,Integer num) {
+		return riskReportRecordMapper.caseIndex(dateTime,num);
 	}
 
 	// 接警执勤风险
 	@Override
-	public RiskIndexMonitorChild dutyIndex(String dateTime) {
-		return riskReportRecordMapper.dutyIndex(dateTime);
+	public RiskIndexMonitorChild dutyIndex(String dateTime,Integer num) {
+		return riskReportRecordMapper.dutyIndex(dateTime,num);
 	}
 
 	// 警务技能风险
 	@Override
-	public RiskIndexMonitorChild trainIndex(String dateTime) {
-		return riskReportRecordMapper.trainIndex(dateTime);
+	public RiskIndexMonitorChild trainIndex(String dateTime,Integer num) {
+		return riskReportRecordMapper.trainIndex(dateTime,num);
 	}
 
 	// 社交风险
 	@Override
-	public RiskIndexMonitorChild socialContactIndex(String dateTime) {
-		return riskReportRecordMapper.socialContactIndex(dateTime);
+	public RiskIndexMonitorChild socialContactIndex(String dateTime,Integer num) {
+		return riskReportRecordMapper.socialContactIndex(dateTime,num);
 	}
 
 	// 家属评价风险
 	@Override
-	public RiskIndexMonitorChild familyEvaluationIndex(String dateTime) {
-		return riskReportRecordMapper.familyEvaluationIndex(dateTime);
+	public RiskIndexMonitorChild familyEvaluationIndex(String dateTime,Integer num) {
+		return riskReportRecordMapper.familyEvaluationIndex(dateTime,num);
 	}
 
 	// 健康风险
 	@Override
-	public RiskIndexMonitorChild healthIndex(String year, String dateTime) {
-		return riskReportRecordMapper.healthIndex(year, dateTime);
+	public RiskIndexMonitorChild healthIndex(String year, String dateTime,Integer num) {
+		return riskReportRecordMapper.healthIndex(year, dateTime,num);
 	}
 
 	// 警员历史风险报告查询

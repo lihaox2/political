@@ -20,10 +20,10 @@ public interface RiskAlarmMapper {
 
 	// 警员预警分页查询
 	List<RiskAlarm> riskAlarmPageList(@Param("startTime") String startTime, @Param("endTime") String endTime,
-			@Param("pageSize") Integer pageSize, @Param("pageNum") Integer pageNum);
+			@Param("pageSize") Integer pageSize, @Param("pageNum") Integer pageNum,@Param("dateTime") String dateTime);
 
 	// 警员预警列表总数
-	int riskAlarmPageCount(@Param("startTime") String startTime, @Param("endTime") String endTime);
+	int riskAlarmPageCount(@Param("startTime") String startTime, @Param("endTime") String endTime,@Param("dateTime") String dateTime);
 
 	/**
 	 * 查询本月已产生的预警数据

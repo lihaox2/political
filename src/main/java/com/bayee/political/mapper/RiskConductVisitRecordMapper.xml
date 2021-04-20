@@ -8,6 +8,7 @@
     <result column="input_time" jdbcType="TIMESTAMP" property="inputTime" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="type_name" jdbcType="VARCHAR" property="typeName" />
     <result column="deduction_score" jdbcType="DOUBLE" property="deductionScore" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -137,15 +138,15 @@
   </update>
   
   <select id="riskConductVisitRecordList" resultMap="BaseResultMap">
-  	SELECT * FROM risk_conduct_visit_record r WHERE
-	 r.police_id=#{policeId} 
+  	SELECT r.*,t.name as type_name FROM risk_conduct_visit_record r,risk_conduct_visit_type t WHERE
+	 r.police_id=#{policeId} and r.type=t.id
 	 <if test="timeType == 1">
-	    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+	    and DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{dateTime}
 	</if>
     <if test="timeType == 2">
-	    and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+	    and DATE_FORMAT(r.creation_date, '%Y-%m')=#{dateTime}
 	</if>
-	 ORDER BY id desc
+	 ORDER BY r.id desc
   </select>
 
   <select id="findRiskConductVisitRecordList" resultMap="BaseResultMap">

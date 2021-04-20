@@ -1037,9 +1037,17 @@ public class RiskController extends BaseController {
 				timeType);
 		if (list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
+				boolean flag = true;
 				List<RiskTrainPhysicalAchievementDetails> projectList = trainService
 						.riskTrainSignInProjectList(list.get(i).getId(), null, policeId, null);
 				list.get(i).setTrainList(projectList);
+				for (int j= 0; j < projectList.size(); j++) {
+					if (projectList.get(j).getAchievementStr() != null){
+						flag = false;
+						break;
+					}
+				}
+				list.get(i).setAchievementGradeStr(flag ? "未参加" : list.get(i).getAchievementGradeStr());
 			}
 		}
 		dlr.setStatus(true);

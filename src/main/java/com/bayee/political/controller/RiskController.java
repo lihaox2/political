@@ -157,7 +157,13 @@ public class RiskController extends BaseController {
 			int total = riskService.riskPageCount(keyWords, alarmType, dateTime, lastDateTime, lastMonthTime,(int)(userNum*num),orderName);
 			dlr.setStatus(true);
 			dlr.setMessage("success");
-			dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getTotalNum).reversed()).collect(Collectors.toList()));
+			if(sortType!=null) {
+				dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getTotalNum).reversed()).collect(Collectors.toList()));
+			}else {
+				dlr.setResult(list);
+			}
+			
+			
 			dlr.setCode(StatusCode.getSuccesscode());
 			dlr.setTotal(total);
 			dlr.setPageNum(pageNums);
@@ -245,7 +251,12 @@ public class RiskController extends BaseController {
 					list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));
 				}
 				dlr.setMessage("success");
-				dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getTotalNum).reversed()).collect(Collectors.toList()));
+				if(sortType!=null) {
+					dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getTotalNum).reversed()).collect(Collectors.toList()));
+				}else {
+					dlr.setResult(list);
+				}
+
 				dlr.setCode(StatusCode.getSuccesscode());
 				dlr.setPageNext(0);
 				return new ResponseEntity<DataListPage>(dlr, HttpStatus.OK);

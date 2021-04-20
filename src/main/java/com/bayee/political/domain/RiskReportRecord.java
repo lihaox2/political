@@ -112,7 +112,7 @@ public class RiskReportRecord {
     }
 
     public Double getConductNum() {
-        return conductNum;
+        return Math.min(conductNum, 25);
     }
 
     public void setConductNum(Double conductNum) {
@@ -120,7 +120,7 @@ public class RiskReportRecord {
     }
 
     public Double getHandlingCaseNum() {
-        return handlingCaseNum;
+        return Math.min(handlingCaseNum, 20);
     }
 
     public void setHandlingCaseNum(Double handlingCaseNum) {
@@ -128,7 +128,7 @@ public class RiskReportRecord {
     }
 
     public Double getDutyNum() {
-        return dutyNum;
+        return Math.min(dutyNum, 20);
     }
 
     public void setDutyNum(Double dutyNum) {
@@ -136,7 +136,7 @@ public class RiskReportRecord {
     }
 
     public Double getTrainNum() {
-        return trainNum;
+        return Math.min(trainNum, 10);
     }
 
     public void setTrainNum(Double trainNum) {
@@ -144,7 +144,7 @@ public class RiskReportRecord {
     }
 
     public Double getSocialContactNum() {
-        return socialContactNum;
+        return Math.min(socialContactNum, 15);
     }
 
     public void setSocialContactNum(Double socialContactNum) {
@@ -152,7 +152,7 @@ public class RiskReportRecord {
     }
 
     public Double getAmilyEvaluationNum() {
-        return amilyEvaluationNum;
+        return Math.min(amilyEvaluationNum, 5);
     }
 
     public void setAmilyEvaluationNum(Double amilyEvaluationNum) {
@@ -160,7 +160,7 @@ public class RiskReportRecord {
     }
 
     public Double getHealthNum() {
-        return healthNum;
+        return Math.min(healthNum, 5);
     }
 
     public void setHealthNum(Double healthNum) {

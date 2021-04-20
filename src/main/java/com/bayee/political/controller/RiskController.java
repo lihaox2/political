@@ -95,28 +95,28 @@ public class RiskController extends BaseController {
 			String orderName = null;
 			if (sortType == null || sortType == 11001) {
 				sortName = "a.total_num";
-				orderName="total_num";
+				orderName = "total_num";
 			} else if (sortType == 11002) {
-				sortName = "a.drink_num";
-				orderName="drink_num";
-			} else if (sortType == 11003) {
 				sortName = "a.conduct_num";
-				orderName="conduct_num";
-			} else if (sortType == 11004) {
+				orderName = "conduct_num";
+			} else if (sortType == 11003) {
 				sortName = "a.handling_case_num";
-				orderName="handling_case_num";
-			} else if (sortType == 11005) {
+				orderName = "handling_case_num";
+			} else if (sortType == 11004) {
 				sortName = "a.duty_num";
-				orderName="duty_num";
-			} else if (sortType == 11006) {
+				orderName = "duty_num";
+			} else if (sortType == 11005) {
 				sortName = "a.train_num";
-				orderName="train_num";
+				orderName = "train_num";
+			} else if (sortType == 11006) {
+				sortName = "a.social_contact_num";
+				orderName = "social_contact_num";
 			} else if (sortType == 11007) {
-				sortName = "a.study_num";
-				orderName="study_num";
+				sortName = "a.amily_evaluation_num";
+				orderName = "amily_evaluation_num";
 			} else if (sortType == 11008) {
 				sortName = "a.health_num";
-				orderName="health_num";
+				orderName = "health_num";
 			}
 			if (dateTime == null) {
 				dateTime = sd.format(new Date());
@@ -147,7 +147,7 @@ public class RiskController extends BaseController {
 						+ list.get(i).getTrainNum() + list.get(i).getSocialContactNum()
 						+ list.get(i).getAmilyEvaluationNum() + list.get(i).getDrinkNum() + list.get(i).getStudyNum()
 						+ list.get(i).getWorkNum() + list.get(i).getHealthNum();
-				list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));
+				list.get(i).setTotalNum(Double.valueOf(df.format(Math.min(totalNum, 100))));
 				// 警员风险雷达图
 				List<ScreenDoubeChart> list2 = riskService.riskChartList(list.get(i).getPoliceId(), dateTime, lastMonthTime,
 						1);
@@ -157,7 +157,7 @@ public class RiskController extends BaseController {
 			int total = riskService.riskPageCount(keyWords, alarmType, dateTime, lastDateTime, lastMonthTime,(int)(userNum*num),orderName);
 			dlr.setStatus(true);
 			dlr.setMessage("success");
-			if(sortType!=null) {
+			if(sortType == null || sortType == 11001) {
 				dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getTotalNum).reversed()).collect(Collectors.toList()));
 			}else {
 				dlr.setResult(list);
@@ -197,31 +197,30 @@ public class RiskController extends BaseController {
 				int userNum=userService.countTotal();
 				String sortName = null;
 				String orderName = null;
-				sortType=11001;
 				if (sortType == null || sortType == 11001) {
 					sortName = "a.total_num";
-					orderName="total_num";
+					orderName = "total_num";
 				} else if (sortType == 11002) {
-					sortName = "a.drink_num";
-					orderName="drink_num";
-				} else if (sortType == 11003) {
 					sortName = "a.conduct_num";
-					orderName="conduct_num";
-				} else if (sortType == 11004) {
+					orderName = "conduct_num";
+				} else if (sortType == 11003) {
 					sortName = "a.handling_case_num";
-					orderName="handling_case_num";
-				} else if (sortType == 11005) {
+					orderName = "handling_case_num";
+				} else if (sortType == 11004) {
 					sortName = "a.duty_num";
-					orderName="duty_num";
-				} else if (sortType == 11006) {
+					orderName = "duty_num";
+				} else if (sortType == 11005) {
 					sortName = "a.train_num";
-					orderName="train_num";
+					orderName = "train_num";
+				} else if (sortType == 11006) {
+					sortName = "a.social_contact_num";
+					orderName = "social_contact_num";
 				} else if (sortType == 11007) {
-					sortName = "a.study_num";
-					orderName="study_num";
+					sortName = "a.amily_evaluation_num";
+					orderName = "amily_evaluation_num";
 				} else if (sortType == 11008) {
 					sortName = "a.health_num";
-					orderName="health_num";
+					orderName = "health_num";
 				}
 				if (dateTime == null) {
 					dateTime = sd.format(new Date());
@@ -251,7 +250,7 @@ public class RiskController extends BaseController {
 					list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));
 				}
 				dlr.setMessage("success");
-				if(sortType!=null) {
+				if(sortType == null || sortType == 11001) {
 					dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getTotalNum).reversed()).collect(Collectors.toList()));
 				}else {
 					dlr.setResult(list);

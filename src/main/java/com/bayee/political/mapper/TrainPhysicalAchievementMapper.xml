@@ -463,4 +463,10 @@ where a.police_id=#{policeId}
 	</if>
 order by a.creation_date desc
 	</select>
+
+    <select id="findTrainPhysicalAchievementByPolice" resultMap="BaseResultMap">
+        select * from train_physical_achievement
+        where train_physical_id = #{physicalId} and police_id = #{policeId}
+    </select>
+
 </mapper>

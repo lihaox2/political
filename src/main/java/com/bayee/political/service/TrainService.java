@@ -1681,4 +1681,19 @@ public interface TrainService {
 	// 警员警务技能综合训练数据列表查询
 	List<RiskTrainPhysicalRecord> riskTrainPhysicalRecordList(String policeId, String dateTime, String lastMonthTime,
 			Integer timeType);
+
+	/**
+	 * 查询报名记录
+	 * @param physicalId
+	 * @param policeId
+	 * @return
+	 */
+	TrainPhysicalAchievement findTrainPhysicalAchievementByPolice(Integer physicalId, String policeId);
+
+	/**
+	 * 添加报名记录
+	 * @param trainPhysicalAchievement
+	 */
+	void addTrainPhysicalAchievement(TrainPhysicalAchievement trainPhysicalAchievement);
+
 }

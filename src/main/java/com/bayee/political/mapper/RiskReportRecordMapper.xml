@@ -321,7 +321,7 @@ where 1=1
 </select>
   <!-- 警员风险雷达图 -->
 <select id="riskChartList" parameterType="com.bayee.political.domain.ScreenDoubeChart" resultMap="ScreenDoubeChartMap">
-    select '行为规范' as name,round(sum(conduct_num),2) as value from risk_report_record
+    select '行为规范' as name,(case when round(sum(conduct_num),2) >= 25 then 25 else round(sum(conduct_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -330,7 +330,7 @@ where 1=1
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
     UNION ALL
-    select '执法办案' as name,round(sum(handling_case_num),2) as value from risk_report_record
+    select '执法办案' as name,(case when round(sum(handling_case_num),2) >= 20 then 20 else round(sum(handling_case_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -339,7 +339,7 @@ where 1=1
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
     UNION ALL
-    select '接警执勤' as name,round(sum(duty_num),2) as value from risk_report_record
+    select '接警执勤' as name,(case when round(sum(duty_num),2) >= 20 then 20 else round(sum(duty_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -348,7 +348,7 @@ where 1=1
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
     UNION ALL
-    select '警务技能' as name,round(sum(train_num),2) as value from risk_report_record
+    select '警务技能' as name,(case when round(sum(train_num),2) >= 10 then 10 else round(sum(train_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -357,7 +357,7 @@ where 1=1
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
     UNION ALL
-    select '社交' as name,round(sum(social_contact_num),2) as value from risk_report_record
+    select '社交' as name,(case when round(sum(social_contact_num),2) >= 15 then 15 else round(sum(social_contact_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -366,7 +366,7 @@ where 1=1
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
     UNION ALL
-    select '家属评价' as name,round(sum(amily_evaluation_num),2) as value from risk_report_record
+    select '家属评价' as name,(case when round(sum(amily_evaluation_num),2) >= 5 then 5 else round(sum(amily_evaluation_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}

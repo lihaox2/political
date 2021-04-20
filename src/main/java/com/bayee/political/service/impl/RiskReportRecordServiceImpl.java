@@ -336,9 +336,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				riskHealth.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskService.insertSelective(riskHealth);
 			}
-			
 
-			
 			Double healthNum=riskService.selectTotalNum(riskHealth.getId());
 			riskReportRecord.setHealthNum(healthNum);
 			if(riskReportRecord != null  &&  riskReportRecord.getId()!=null) {
@@ -352,18 +350,18 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				riskReportRecord.setPoliceId(r.getPoliceId());
 				riskReportRecord.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 				riskService.insertRiskReportRecord(riskReportRecord);
-			}
 
-			//产生预警数据
-			if (healthNum != null && healthNum >= 3) {
-				RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(r.getPoliceId(), AlarmTypeEnum.HEALTHY_RISK, date,
-						healthNum);
+				//产生预警数据
+				if (healthNum != null && healthNum >= 3) {
+					RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(r.getPoliceId(), AlarmTypeEnum.HEALTHY_RISK, date,
+							healthNum);
 
-				if (riskAlarm != null) {
-					riskAlarmService.insert(riskAlarm);
+					if (riskAlarm != null) {
+						riskAlarmService.insert(riskAlarm);
+					}
 				}
 			}
-			
+
 		}
 
 		List<User> usersList=userService.userInfoAllList();	

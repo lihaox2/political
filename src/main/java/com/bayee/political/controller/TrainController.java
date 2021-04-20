@@ -19,6 +19,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bayee.political.enums.TrainProjectType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -6685,26 +6683,21 @@ public class TrainController extends BaseController {
 
 	// 导入综合训练成绩并新增综合训练
 	@RequestMapping(value = "/import/train/physical", method = RequestMethod.POST)
-	public ResponseEntity<?> importAddTrainPhysical(@Param("name") String name, @Param("place") String place,
-			@Param("registrationStartDate") String registrationStartDate, @Param("trainContent") String trainContent,
+	public ResponseEntity<?> importAddTrainPhysical(@Param("name") String name,
+			@Param("registrationStartDate") String registrationStartDate,
 			@Param("json") String json, @Param("file") MultipartFile file, HttpServletRequest request)
 			throws Exception {
 		System.out.println("开始: " + DateUtils.formatDate(new Date(), "HH:mm:ss"));
 		TrainPhysical physical = new TrainPhysical();
-		name = "测试";
-		place = "分局";
-		registrationStartDate = "2021-03-25 11:54";
-		trainContent = "测试";
-		json = "{\"1\":\"6,8,18,19,20,4\",\"2\":\"19,20,18,8,6,4\",\"3\":\"4,6,8,18,19,20\",\"4\":\"18,20,19,8,6,4\",\"5\":\"4,7,8,18,19,20\",\"6\":\"7,20,19,18,8,4\",\"7\":\"7,8,19,20\",\"8\":\"20,19,7,8\",\"9\":\"5,8,18,19,20,4\",\"10\":\"19,20,18,8,5,4\",\"11\":\"4,5,8,18,19,20\",\"12\":\"20,19,8,5,4,18\",\"13\":\"4,5,8,18,19,20\",\"14\":\"8,20,19,18,5,4\",\"15\":\"8,19,20\",\"16\":\"5,8,19,20\"}";
 		physical.setName(name);
-		physical.setPlace(place);
-		physical.setRegistrationStartDate(DateUtil.parseDateTime(registrationStartDate + ":00"));
-		physical.setRegistrationEndDate(DateUtil.parseDateTime(registrationStartDate + ":00"));
-		physical.setTrainStartDate(DateUtil.parseDateTime(registrationStartDate + ":00"));
-		physical.setTrainEndDate(DateUtil.parseDateTime(registrationStartDate + ":00"));
+		physical.setPlace("分局");
+		physical.setRegistrationStartDate(DateUtil.parseDateTime(registrationStartDate));
+		physical.setRegistrationEndDate(DateUtil.parseDateTime(registrationStartDate));
+		physical.setTrainStartDate(DateUtil.parseDateTime(registrationStartDate));
+		physical.setTrainEndDate(DateUtil.parseDateTime(registrationStartDate));
 		physical.setType(2);
 		physical.setCoverImg("/template-image/physical-template-2.jpg");
-		physical.setTrainContent(trainContent);
+		physical.setTrainContent(name);
 		physical.setTrainImg("/template-image/physical-template-2.jpg");
 		physical.setCreationDate(new Date());
 		physical.setStatus(3);
@@ -7043,24 +7036,23 @@ public class TrainController extends BaseController {
 
 	// 枪械新增并导入成绩
 	@RequestMapping(value = "/import/train/firearm", method = RequestMethod.POST)
-	public ResponseEntity<?> importAddTrainFirearm(@Param("name") String name, @Param("place") String place,
-			@Param("registrationStartDate") String registrationStartDate, @Param("trainContent") String trainContent,
+	public ResponseEntity<?> importAddTrainFirearm(@Param("name") String name,
+			@Param("registrationStartDate") String registrationStartDate, @Param("type") Integer type,
 			@Param("file") MultipartFile file, HttpServletRequest request) {
-		registrationStartDate = "2021-04-06 17:54";
 		TrainFirearm trainFirearm = new TrainFirearm();
-		trainFirearm.setType(2);
-		trainFirearm.setName("测试" + sdf.format(new Date()));
+		trainFirearm.setType(type);
+		trainFirearm.setName(name);
 		trainFirearm.setPlace("分局");
-		trainFirearm.setRegistrationStartDate(DateUtil.parseDateTime(registrationStartDate + ":00"));
-		trainFirearm.setRegistrationEndDate(DateUtil.parseDateTime(registrationStartDate + ":00"));
-		trainFirearm.setTrainStartDate(DateUtil.parseDateTime(registrationStartDate + ":00"));
-		trainFirearm.setTrainEndDate(DateUtil.parseDateTime(registrationStartDate + ":00"));
+		trainFirearm.setRegistrationStartDate(DateUtil.parseDateTime(registrationStartDate));
+		trainFirearm.setRegistrationEndDate(DateUtil.parseDateTime(registrationStartDate));
+		trainFirearm.setTrainStartDate(DateUtil.parseDateTime(registrationStartDate));
+		trainFirearm.setTrainEndDate(DateUtil.parseDateTime(registrationStartDate));
 		trainFirearm.setTrainFirearmType(2);
 		trainFirearm.setScorerPoliceId("117409");
 		trainFirearm.setSignUpStatus(3);
 		trainFirearm.setStatus(3);
 		trainFirearm.setCoverImg("train-content-img/nth-sj.jpg");
-		trainFirearm.setTrainContent("枪械训练");
+		trainFirearm.setTrainContent(name);
 		trainFirearm.setTrainImg("train-content-img/nth-sj.jpg");
 		trainFirearm.setIsSubmit(1);
 		trainFirearm.setSubmitDate(new Date());
@@ -7154,9 +7146,7 @@ public class TrainController extends BaseController {
 			}
 			// 批量修改警员枪械成绩
 			trainService.trainFirearmAchievementUpdateBatch(finalList);
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		System.out.println("结束: " + DateUtils.formatDate(new Date(), "HH:mm:ss"));
@@ -7168,4 +7158,363 @@ public class TrainController extends BaseController {
 		dataListReturn.setResult(null);
 		return new ResponseEntity<DataListReturn>(dataListReturn, HttpStatus.OK);
 	}
+
+	@PostMapping(value = "/import/exists/train/physical")
+	public ResponseEntity<?> importExistsPhysical(@Param("id") Integer id, @Param("file") MultipartFile file) {
+		TrainPhysical physical = trainService.getTrainPhysicalDetails(id);
+		if (physical == null) {
+			throw new RuntimeException("导入异常!");
+		}
+		physical.setUpdateDate(new Date());
+
+		List<List<String>> readExcel = null;
+		try {
+			readExcel = GetExcel.ReadExcel(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// 最终获取的数据
+		List<TrainPhysicalAchievementDetails> finalList = new ArrayList<TrainPhysicalAchievementDetails>();
+		List<TrainPhysicalAchievementDetails> insertList = new ArrayList<>();
+
+		// 记录错误行
+		try {
+			for (List<String> excel : readExcel) {
+				// 累计错误行
+				String policeId = excel.get(1).toString().replaceAll("\\s*", "");
+
+				//添加报名记录
+				TrainPhysicalAchievement trainPhysicalAchievement = trainService.findTrainPhysicalAchievementByPolice(physical.getId(), policeId);
+				if (trainPhysicalAchievement == null || trainPhysicalAchievement.getId() == null) {
+					trainPhysicalAchievement = new TrainPhysicalAchievement();
+					trainPhysicalAchievement.setTrainPhysicalId(physical.getId());
+					trainPhysicalAchievement.setPoliceId(policeId);
+					trainPhysicalAchievement.setRegistrationDate(new Date());
+					trainPhysicalAchievement.setAchievementDate(new Date());
+					trainPhysicalAchievement.setSignDate(new Date());
+					// 查询组别民警
+					List<TrainGroupPolice> groupList = trainService.trainGroupPoliceList(policeId);
+					trainPhysicalAchievement.setTrainGroupId(groupList.get(0).getId());
+					trainPhysicalAchievement.setQrCode("/train-qrcode/physical-870c515b-6d06-445f-bf11-c143bdc6a878.jpg");
+					trainPhysicalAchievement.setAchievementGrade(1);
+					trainPhysicalAchievement.setIsSign(2);
+					trainPhysicalAchievement.setCreationDate(new Date());
+
+					trainService.addTrainPhysicalAchievement(trainPhysicalAchievement);
+				}
+
+				String projectName1 = excel.get(2).toString().replaceAll("\\s*", "");
+				double score1 = 0.0;
+				if (StringUtils.isEmpty(projectName1) == false
+						&& excel.get(3).toString().replaceAll("\\s*", "") != null) {
+					score1 = Double.valueOf(excel.get(3).toString().replaceAll("\\s*", ""));
+					TrainPhysicalAchievementDetails detailsItem1 = detailsItem(physical.getId(), policeId,
+							projectName1);
+					if (detailsItem1 != null) {
+						detailsItem1.setAchievement(score1);
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, detailsItem1.getProjectId(),
+								score1);
+						TrainPhysicalAchievementDetails train1 = updateItem(detailsItem1.getId(), score1,
+								achievementGrade, projectName1, detailsItem1.getProjectId());
+						finalList.add(train1);
+					}else {
+						//查询项目信息
+						TrainProject pItem = trainService.trainProjectIdItem(projectName1);
+						//判断是否合格
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, pItem.getId(), score1);
+						//生成比赛信息
+						detailsItem1 = updateItem(null, score1, achievementGrade, projectName1, pItem.getId());
+						detailsItem1.setPoliceId(policeId);
+						detailsItem1.setTrainPhysicalId(physical.getId());
+						detailsItem1.setTrainPhysicalAchievementId(trainPhysicalAchievement.getId());
+						detailsItem1.setProjectId(pItem.getId());
+						detailsItem1.setCreationDate(new Date());
+						detailsItem1.setUpdateDate(null);
+						detailsItem1.setIsEntry(2);
+						detailsItem1.setIsSign(2);
+						detailsItem1.setSignDate(new Date());
+						insertList.add(detailsItem1);
+					}
+				}
+				String projectName2 = excel.get(4).toString().replaceAll("\\s*", "");
+				double score2 = 0.0;
+				if (StringUtils.isEmpty(projectName2) == false
+						&& excel.get(5).toString().replaceAll("\\s*", "") != null) {
+					score2 = Double.valueOf(excel.get(5).toString().replaceAll("\\s*", ""));
+					TrainPhysicalAchievementDetails detailsItem2 = detailsItem(physical.getId(), policeId,
+							projectName2);
+					if (detailsItem2 != null) {
+						detailsItem2.setAchievement(score2);
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, detailsItem2.getProjectId(),
+								score2);
+						TrainPhysicalAchievementDetails train2 = updateItem(detailsItem2.getId(), score2,
+								achievementGrade, projectName2, detailsItem2.getProjectId());
+						finalList.add(train2);
+					}
+				}
+				String projectName3 = excel.get(6).toString().replaceAll("\\s*", "");
+				double score3 = 0.0;
+				if (StringUtils.isEmpty(projectName3) == false
+						&& excel.get(7).toString().replaceAll("\\s*", "") != null) {
+					score3 = Double.valueOf(excel.get(7).toString().replaceAll("\\s*", ""));
+					TrainPhysicalAchievementDetails detailsItem3 = detailsItem(physical.getId(), policeId,
+							projectName3);
+					if (detailsItem3 != null) {
+						detailsItem3.setAchievement(score3);
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, detailsItem3.getProjectId(),
+								score3);
+						TrainPhysicalAchievementDetails train3 = updateItem(detailsItem3.getId(), score3,
+								achievementGrade, projectName3, detailsItem3.getProjectId());
+						finalList.add(train3);
+					}
+				}
+				String projectName4 = excel.get(8).toString().replaceAll("\\s*", "");
+				double score4 = 0.0;
+				if (StringUtils.isEmpty(projectName4) == false
+						&& excel.get(9).toString().replaceAll("\\s*", "") != null) {
+					score4 = Double.valueOf(excel.get(9).toString().replaceAll("\\s*", ""));
+					TrainPhysicalAchievementDetails detailsItem4 = detailsItem(physical.getId(), policeId,
+							projectName4);
+					if (detailsItem4 != null) {
+						detailsItem4.setAchievement(score4);
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, detailsItem4.getProjectId(),
+								score4);
+						TrainPhysicalAchievementDetails train4 = updateItem(detailsItem4.getId(), score4,
+								achievementGrade, projectName4, detailsItem4.getProjectId());
+						finalList.add(train4);
+					}
+				}
+				String projectName5 = excel.get(10).toString().replaceAll("\\s*", "");
+				double score5 = 0.0;
+				if (StringUtils.isEmpty(projectName5) == false
+						&& excel.get(11).toString().replaceAll("\\s*", "") != null) {
+					score5 = Double.valueOf(excel.get(11).toString().replaceAll("\\s*", ""));
+					TrainPhysicalAchievementDetails detailsItem5 = detailsItem(physical.getId(), policeId,
+							projectName5);
+					if (detailsItem5 != null) {
+						detailsItem5.setAchievement(score5);
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, detailsItem5.getProjectId(),
+								score5);
+						TrainPhysicalAchievementDetails train5 = updateItem(detailsItem5.getId(), score5,
+								achievementGrade, projectName5, detailsItem5.getProjectId());
+						finalList.add(train5);
+					}
+				}
+				String projectName6 = excel.get(12).toString().replaceAll("\\s*", "");
+				double score6 = 0.0;
+				if (StringUtils.isEmpty(projectName6) == false
+						&& excel.get(13).toString().replaceAll("\\s*", "") != null) {
+					score6 = Double.valueOf(excel.get(13).toString().replaceAll("\\s*", ""));
+					TrainPhysicalAchievementDetails detailsItem6 = detailsItem(physical.getId(), policeId,
+							projectName6);
+					if (detailsItem6 != null) {
+						detailsItem6.setAchievement(score6);
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, detailsItem6.getProjectId(),
+								score6);
+						TrainPhysicalAchievementDetails train6 = updateItem(detailsItem6.getId(), score6,
+								achievementGrade, projectName6, detailsItem6.getProjectId());
+						finalList.add(train6);
+					}
+				}
+				String projectName7 = excel.get(14).toString().replaceAll("\\s*", "");
+				double score7 = 0.0;
+				if (StringUtils.isEmpty(projectName7) == false
+						&& excel.get(15).toString().replaceAll("\\s*", "") != null) {
+					score7 = Double.valueOf(excel.get(15).toString().replaceAll("\\s*", ""));
+					TrainPhysicalAchievementDetails detailsItem7 = detailsItem(physical.getId(), policeId,
+							projectName7);
+					if (detailsItem7 != null) {
+						detailsItem7.setAchievement(score7);
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, detailsItem7.getProjectId(),
+								score7);
+						TrainPhysicalAchievementDetails train7 = updateItem(detailsItem7.getId(), score7,
+								achievementGrade, projectName7, detailsItem7.getProjectId());
+						finalList.add(train7);
+					}
+				}
+				String projectName8 = excel.get(16).toString().replaceAll("\\s*", "");
+				double score8 = 0.0;
+				if (StringUtils.isEmpty(projectName8) == false
+						&& excel.get(17).toString().replaceAll("\\s*", "") != null) {
+					score8 = Double.valueOf(excel.get(17).toString().replaceAll("\\s*", ""));
+					TrainPhysicalAchievementDetails detailsItem8 = detailsItem(physical.getId(), policeId,
+							projectName8);
+					if (detailsItem8 != null) {
+						detailsItem8.setAchievement(score8);
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, detailsItem8.getProjectId(),
+								score8);
+						TrainPhysicalAchievementDetails train8 = updateItem(detailsItem8.getId(), score8,
+								achievementGrade, projectName8, detailsItem8.getProjectId());
+						finalList.add(train8);
+					}
+				}
+			}
+			// 批量修改警员成绩
+			if (finalList.size() > 0) {
+				trainService.trainPhysicalAchievementDetailsUpdateBatch(finalList);
+			}
+			//批量添加警员成绩
+			if (insertList.size() > 0) {
+				trainService.trainPhysicalAchievementDetailsCreatBatch(insertList);
+			}
+			// 根据训练id查询报名人员list
+			List<TrainPhysicalAchievement> updateGradeList = trainService.updateGradeList(physical.getId());
+			if (updateGradeList.size() > 0) {
+				for (int i = 0; i < updateGradeList.size(); i++) {
+					achievementItem(physical.getId(), updateGradeList.get(i).getPoliceId());
+				}
+			}
+
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		DataListReturn dataListReturn = new DataListReturn();
+		dataListReturn.setCode(StatusCode.getSuccesscode());
+		dataListReturn.setMessage("success");
+		dataListReturn.setStatus(true);
+		dataListReturn.setResult(1);
+		return new ResponseEntity<DataListReturn>(dataListReturn, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/import/exists/train/firearm")
+	public ResponseEntity<?> importExistsFirearm(@Param("id") Integer id, @Param("file") MultipartFile file) {
+		TrainFirearm trainFirearm = trainService.getTrainFirearmById(id);
+		if (trainFirearm == null) {
+			throw new RuntimeException("导入异常");
+		}
+		trainFirearm.setUpdateDate(new Date());
+
+		List<List<String>> readExcel = null;
+		try {
+			readExcel = GetExcel.ReadExcel(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			List<TrainFirearmAchievement> finalList = new ArrayList<TrainFirearmAchievement>();
+			List<TrainFirearmAchievement> insertList = new ArrayList<>();
+			for (List<String> excel : readExcel) {
+				String policeId = null;
+				if (!StringUtils.isEmpty(excel.get(1))) {
+					policeId = excel.get(1).toString().replaceAll("\\s*", "").substring(0, 6);
+				}
+				double score1 = 0.0;
+				if (!StringUtils.isEmpty(excel.get(2))) {
+					score1 = Double.valueOf(excel.get(2).toString().replaceAll("\\s*", ""));
+				}
+				if (StringUtils.isEmpty(excel.get(1)) == false
+						&& StringUtils.isEmpty(excel.get(2).toString().replaceAll("\\s*", "")) == false) {
+					score1 = Double.valueOf(excel.get(2).toString().replaceAll("\\s*", ""));
+					// 枪械项目报名详情
+					TrainFirearmAchievement fItem = trainService.trainFirearmAchievementItem(null, trainFirearm.getId(),
+							policeId);
+					if (fItem != null) {
+						fItem.setAchievement(score1);
+						fItem.setAchievementStr(score1 + "环");
+						fItem.setUpdateDate(new Date());
+						fItem.setAchievementDate(new Date());
+						// 根据项目id/组别查询算分规则
+						TrainProjectRule ruleItem = trainService.trainProjectPoliceRuleItem(2, null);
+						if (ruleItem.getSymbol() == 1) {// 1>= 2> 3<= 4< 5=
+							if (score1 >= ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 2) {
+							if (score1 > ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 3) {
+							if (score1 <= ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 4) {
+							if (score1 < ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 5) {
+							if (score1 == ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						}
+						finalList.add(fItem);
+					}else {
+						fItem = new TrainFirearmAchievement();
+						fItem.setPoliceId(policeId);
+						fItem.setTrainFirearmId(id);
+						fItem.setRegistrationDate(new Date());
+						fItem.setAchievementDate(new Date());
+						fItem.setIsSign(2);
+						fItem.setSignDate(new Date());
+						fItem.setTrainProjectType(id);
+						fItem.setAchievement(score1);
+						fItem.setAchievementStr(score1 + "环");
+						fItem.setIsSubmit(1);
+						fItem.setQrCode("/train-qrcode/physical-870c515b-6d06-445f-bf11-c143bdc6a878.jpg");
+						// 根据项目id/组别查询算分规则
+						TrainProjectRule ruleItem = trainService.trainProjectPoliceRuleItem(2, null);
+						if (ruleItem.getSymbol() == 1) {// 1>= 2> 3<= 4< 5=
+							if (score1 >= ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 2) {
+							if (score1 > ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 3) {
+							if (score1 <= ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 4) {
+							if (score1 < ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						} else if (ruleItem.getSymbol() == 5) {
+							if (score1 == ruleItem.getQualifiedFirearmA()) {
+								fItem.setAchievementGrade(2);
+							} else {
+								fItem.setAchievementGrade(1);
+							}
+						}
+						insertList.add(fItem);
+					}
+				}
+			}
+			// 批量修改警员枪械成绩
+			if(finalList.size() > 0) {
+				trainService.trainFirearmAchievementUpdateBatch(finalList);
+			}
+			//批量添加警员枪械成绩
+			if (insertList.size() > 0) {
+				trainService.trainFirearmAchievementCreatBatch(insertList);
+			}
+			trainService.trainFirearmUpdate(trainFirearm);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		DataListReturn dataListReturn = new DataListReturn();
+		dataListReturn.setCode(StatusCode.getSuccesscode());
+		dataListReturn.setMessage("success");
+		dataListReturn.setStatus(true);
+		dataListReturn.setResult(null);
+		return new ResponseEntity<DataListReturn>(dataListReturn, HttpStatus.OK);
+	}
+
 }

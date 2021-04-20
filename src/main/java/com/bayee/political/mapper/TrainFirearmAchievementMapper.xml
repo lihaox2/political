@@ -47,6 +47,26 @@
     delete from train_firearm_achievement
     where id = #{id,jdbcType=INTEGER}
   </delete>
+    <!-- 训练报名批量新增 -->
+    <insert id="trainFirearmAchievementCreatBatch" keyProperty="id" parameterType="com.bayee.political.domain.TrainFirearmAchievement" useGeneratedKeys="true">
+        insert into train_firearm_achievement (police_id, registration_date,
+        achievement_date,sign_date, train_firearm_id, train_project_type,
+        achievement,achievement_first,achievement_second, shoot_time,achievement_grade,achievement_str,qr_code,is_sign,is_submit,
+        creation_date, update_date)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.policeId,jdbcType=VARCHAR}, #{item.registrationDate,jdbcType=TIMESTAMP},
+            #{item.achievementDate,jdbcType=TIMESTAMP}, #{item.signDate,jdbcType=TIMESTAMP},
+            #{item.trainFirearmId,jdbcType=INTEGER}, #{item.trainProjectType,jdbcType=INTEGER},
+            #{item.achievement,jdbcType=DOUBLE},#{item.achievementFirst,jdbcType=INTEGER},
+            #{item.achievementSecond,jdbcType=DOUBLE},
+            #{item.shootTime,jdbcType=DOUBLE},
+            #{item.achievementGrade,jdbcType=INTEGER}, #{item.achievementStr,jdbcType=VARCHAR},
+            #{item.qrCode,jdbcType=VARCHAR},#{item.isSign,jdbcType=INTEGER},
+            #{item.isSubmit,jdbcType=INTEGER},
+            #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
   <!-- 枪械报名新增 -->
   <insert id="trainFirearmAchievementCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.TrainFirearmAchievement" useGeneratedKeys="true">
     insert into train_firearm_achievement (police_id, registration_date, 

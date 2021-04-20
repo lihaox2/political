@@ -133,4 +133,13 @@ public interface TrainPhysicalAchievementMapper {
 			@Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime,
 			@Param("timeType") Integer timeType);
 
+	/**
+	 * 查询报名记录
+	 * @param physicalId
+	 * @param policeId
+	 * @return
+	 */
+	TrainPhysicalAchievement findTrainPhysicalAchievementByPolice(@Param("physicalId") Integer physicalId,
+																  @Param("policeId") String policeId);
+
 }

@@ -1777,4 +1777,15 @@ public class TrainServiceImpl implements TrainService {
 		return trainPhysicalAchievementDetailsMapper.riskTrainSignInProjectList(trainPhysicalId,
 				trainPhysicalAchievementId, policeId, isSign);
 	}
+
+	@Override
+	public TrainPhysicalAchievement findTrainPhysicalAchievementByPolice(Integer physicalId, String policeId) {
+		return trainPhysicalAchievementMapper.findTrainPhysicalAchievementByPolice(physicalId, policeId);
+	}
+
+	@Override
+	public void addTrainPhysicalAchievement(TrainPhysicalAchievement trainPhysicalAchievement) {
+		trainPhysicalAchievementMapper.trainPhysicalAchievementCreat(trainPhysicalAchievement);
+	}
+
 }

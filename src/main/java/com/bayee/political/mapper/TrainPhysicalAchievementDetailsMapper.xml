@@ -351,7 +351,7 @@ GROUP BY a.project_id
 <!-- 查询当前用户成绩是否合格 -->
     <select id="detailsFailList" parameterType="com.bayee.political.domain.TrainPhysicalAchievementDetails" resultMap="BaseResultMap">
 select * from train_physical_achievement_details where train_physical_id=#{trainPhysicalId,jdbcType=INTEGER} 
-and police_id=#{policeId,jdbcType=VARCHAR} and (achievement_grade=1 or achievement_grade is null)
+and police_id=#{policeId,jdbcType=VARCHAR} and (achievement_grade=1)
 </select>
 <!-- 根据年龄组和训练项目排名 -->
      <select id="trainPersonalRankList" parameterType="com.bayee.political.domain.TrainRank" resultMap="TrainRankMap">

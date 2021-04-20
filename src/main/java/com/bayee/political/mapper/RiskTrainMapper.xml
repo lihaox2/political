@@ -286,15 +286,19 @@ ifnull(d.dnum,0) as firearmPassNum,
 ifnull(c.cnum-ifnull(d.dnum,0),0) as firearmFailNum
 from 
 (select count(*) as anum from train_physical_achievement where police_id=#{policeId,jdbcType=VARCHAR}
+and (select count(1) from train_physical_achievement_details where achievement is not null and police_id=#{policeId,jdbcType=VARCHAR}) >0
 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) a
 join
-(select count(*) as bnum from train_physical_achievement where police_id=#{policeId,jdbcType=VARCHAR} 
+(select count(*) as bnum from train_physical_achievement where police_id=#{policeId,jdbcType=VARCHAR}
+and (select count(1) from train_physical_achievement_details where achievement is not null and police_id=#{policeId,jdbcType=VARCHAR}) >0
 and achievement_grade =2 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) b
 join
-(select count(*) as cnum from train_firearm_achievement where police_id=#{policeId,jdbcType=VARCHAR} 
+(select count(*) as cnum from train_firearm_achievement where police_id=#{policeId,jdbcType=VARCHAR}
+and achievement is not null and achievement > 0
 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
 join
-(select count(*) as dnum from train_firearm_achievement where police_id=#{policeId,jdbcType=VARCHAR} 
+(select count(*) as dnum from train_firearm_achievement where police_id=#{policeId,jdbcType=VARCHAR}
+and achievement is not null and achievement > 0
 and achievement_grade >1 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) d
 </select>
 

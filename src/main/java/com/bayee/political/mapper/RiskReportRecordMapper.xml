@@ -458,7 +458,7 @@ ifnull(c.cnum,0) as talkPoliceNum from
 where DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) a
 join
 (SELECT count(*) as bnum FROM risk_alarm 
-where alarm_type=11003 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) b
+where alarm_type=11002 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) b
 join
 (select count(*) as cnum from risk_alarm where alarm_type=11003 and is_talk=1
 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c

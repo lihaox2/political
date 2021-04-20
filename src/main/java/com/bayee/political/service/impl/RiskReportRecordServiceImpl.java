@@ -176,6 +176,16 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 
 				riskReportRecordList.add(record);
 			}
+
+			// 产生预警数据
+			if (record.getTotalNum() >= 60) {
+				RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(user.getPoliceId(), AlarmTypeEnum.COMPREHENSIVE_RISK, date,
+						record.getTotalNum());
+
+				if (riskAlarm != null) {
+					riskAlarmService.insert(riskAlarm);
+				}
+			}
 		}
 
 		//批量添加数据
@@ -194,41 +204,6 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 		if (riskReportRecordList.size() > 0) {
 			riskReportRecordService.insertRiskReportRecordList(riskReportRecordList);
 		}
-
-		/*double casesManageRiskAvgScore = handlingCasesRiskService.findPoliceAvgDeductionScoreByDate(date);
-		double dutyRiskAvgScore = dutyRiskService.findPoliceAvgDeductionScoreByDate(date);
-
-		//处理 无办案量和无接处警的警员数据
-		for (User user : userList) {
-			RiskReportRecord oldRiskReportRecord = riskReportRecordService.getByPoliceIdMonth(year, month, user.getPoliceId());
-			if (oldRiskReportRecord == null || oldRiskReportRecord.getId() == null
-					|| (dutyRiskAvgScore <= 0 && casesManageRiskAvgScore <= 0)) {
-				continue;
-			}
-
-			//处理无办案的警员信息
-			if (casesManageRiskAvgScore > 0) {
-				RiskCase riskCase = handlingCasesRiskService.handlingCasesRiskDetailsByCasesManageRisk(user, date, casesManageRiskAvgScore);
-				if (riskCase != null) {
-					oldRiskReportRecord.setHandlingCaseNum(riskCase.getIndexNum());
-				}
-			}
-
-			//处理无接警的警员数据
-			if (dutyRiskAvgScore > 0) {
-				RiskDuty riskDuty = dutyRiskService.dutyRiskNoDeductionScoreCountDetails(user, date, dutyRiskAvgScore);
-				if (riskDuty != null) {
-					oldRiskReportRecord.setDutyNum(riskDuty.getIndexNum());
-				}
-			}
-
-			oldRiskReportRecord.setTotalNum(Math.min(oldRiskReportRecord.getConductNum() + oldRiskReportRecord.getHandlingCaseNum() +
-					oldRiskReportRecord.getDutyNum() + oldRiskReportRecord.getTrainNum() + oldRiskReportRecord.getSocialContactNum() +
-					oldRiskReportRecord.getAmilyEvaluationNum() + oldRiskReportRecord.getHealthNum(), 100));
-			oldRiskReportRecord.setUpdateDate(new Date());
-
-			riskReportRecordMapper.updateByPrimaryKey(oldRiskReportRecord);
-		}*/
 
 		health(localDate);
 

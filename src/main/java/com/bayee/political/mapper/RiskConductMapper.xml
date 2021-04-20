@@ -134,7 +134,7 @@
   </update>
 
   <select id="findRiskConductByPoliceIdAndDate" resultMap="BaseResultMap">
-    select * from risk_conduct where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = #{dateTime}
+    select * from risk_conduct where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{dateTime}, '%Y-%m')
   </select>
 
 <!-- 警员行为规范风险指数查询 -->

@@ -769,7 +769,12 @@ public class RiskController extends BaseController {
 		if (item1 != null) {
 			item1.setId(11001);
 			item1.setName("综合指数风险");
-			item1.setAlarmPoliceNum((int) (userNum*num1));
+			if(item1.getAlarmPoliceRate()==0) {
+				item1.setAlarmPoliceNum(0);
+			}else {
+				item1.setAlarmPoliceNum((int) (userNum*num1));
+			}
+			
 			list.add(item1);
 		} else {
 			item0.setId(11001);
@@ -781,7 +786,11 @@ public class RiskController extends BaseController {
 		if (item2 != null) {
 			item2.setId(11002);
 			item2.setName("行为规范风险");
-			item2.setAlarmPoliceNum((int) (userNum*num2));
+			if(item2.getAlarmPoliceRate()==0) {
+				item2.setAlarmPoliceNum(0);
+			}else {
+				item2.setAlarmPoliceNum((int) (userNum*num2));
+			}
 			list.add(item2);
 		} else {
 			item0.setId(11002);
@@ -793,7 +802,11 @@ public class RiskController extends BaseController {
 		if (item3 != null) {
 			item3.setId(11003);
 			item3.setName("执法办案风险");
-			item3.setAlarmPoliceNum((int) (userNum*num3));
+			if(item3.getAlarmPoliceRate()==0) {
+				item3.setAlarmPoliceNum(0);
+			}else {
+				item3.setAlarmPoliceNum((int) (userNum*num3));
+			}
 			list.add(item3);
 		} else {
 			item0.setId(11003);
@@ -805,7 +818,11 @@ public class RiskController extends BaseController {
 		if (item4 != null) {
 			item4.setId(11004);
 			item4.setName("接警执勤风险");
-			item4.setAlarmPoliceNum((int) (userNum*num4));
+			if(item4.getAlarmPoliceRate()==0) {
+				item4.setAlarmPoliceNum(0);
+			}else {
+				item4.setAlarmPoliceNum((int) (userNum*num4));
+			}
 			list.add(item4);
 		} else {
 			item0.setId(11004);
@@ -817,7 +834,11 @@ public class RiskController extends BaseController {
 		if (item5 != null) {
 			item5.setId(11005);
 			item5.setName("警务技能风险");
-			item5.setAlarmPoliceNum((int) (userNum*num5));
+			if(item5.getAlarmPoliceRate()==0) {
+				item5.setAlarmPoliceNum(0);
+			}else {
+				item5.setAlarmPoliceNum((int) (userNum*num5));
+			}
 			list.add(item5);
 		} else {
 			item0.setId(11005);
@@ -829,7 +850,11 @@ public class RiskController extends BaseController {
 		if (item6 != null) {
 			item6.setId(11006);
 			item6.setName("社交风险");
-			item6.setAlarmPoliceNum((int) (userNum*num6));
+			if(item6.getAlarmPoliceRate()==0) {
+				item6.setAlarmPoliceNum(0);
+			}else {
+				item6.setAlarmPoliceNum((int) (userNum*num6));
+			}
 			list.add(item6);
 		} else {
 			item0.setId(11006);
@@ -841,7 +866,11 @@ public class RiskController extends BaseController {
 		if (item7 != null) {
 			item7.setId(11007);
 			item7.setName("家属评价风险");
-			item7.setAlarmPoliceNum((int) (userNum*num7));
+			if(item7.getAlarmPoliceRate()==0) {
+				item7.setAlarmPoliceNum(0);
+			}else {
+				item7.setAlarmPoliceNum((int) (userNum*num7));
+			}
 			list.add(item7);
 		} else {
 			item0.setId(11007);
@@ -853,7 +882,11 @@ public class RiskController extends BaseController {
 		if (item8 != null) {
 			item8.setId(11008);
 			item8.setName("健康风险");
-			item8.setAlarmPoliceNum((int) (userNum*num8));
+			if(item8.getAlarmPoliceRate()==0) {
+				item8.setAlarmPoliceNum(0);
+			}else {
+				item8.setAlarmPoliceNum((int) (userNum*num8));
+			}
 			list.add(item8);
 		} else {
 			item0.setId(11008);

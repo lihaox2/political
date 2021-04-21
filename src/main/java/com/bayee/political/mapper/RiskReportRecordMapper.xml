@@ -262,7 +262,7 @@ sum(train_num) as train_num, sum(social_contact_num) as social_contact_num,
 sum(amily_evaluation_num) as amily_evaluation_num, sum(drink_num) as drink_num,
 sum(study_num) as study_num,sum(health_num) as health_num,sum(work_num) as work_num
 from risk_report_record where DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime}
-and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime} 
 GROUP BY police_id order by ${orderName} desc limit #{num}) a
 left join user b on b.police_id=a.police_id
 left join department c on c.id=b.department_id
@@ -298,7 +298,7 @@ sum(train_num) as train_num, sum(social_contact_num) as social_contact_num,
 sum(amily_evaluation_num) as amily_evaluation_num, sum(drink_num) as drink_num,
 sum(study_num) as study_num,sum(health_num) as health_num,sum(work_num) as work_num
 from risk_report_record where DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime}
-and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime} 
 GROUP BY police_id limit #{num}) a
 left join user b on b.police_id=a.police_id
 left join department c on c.id=b.department_id
@@ -419,7 +419,11 @@ where 1=1
 <select id="comprehensiveIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultMap="RiskIndexMonitorChildMap">
 select ifnull(a.anum,0) as indexPoliceNum,
 ifnull(b.bnum,0) as alarmPoliceNum,
-round(ifnull(#{num}/a.anum,0)*100,2) as alarmPoliceRate,
+
+(case when (select count(1) from risk_report_record where total_num >0) &lt;= 0 then 0
+else round(ifnull(#{num}/a.anum,0)*100,2)  end)
+as alarmPoliceRate,
+
 (case when round(ifnull(b.bnum/a.anum,0)*100,2)>=50 then 1 else 0 end) as isDisplay,
 ifnull(c.cnum,0) as talkPoliceNum from 
 (SELECT count(*) as anum FROM risk_report_record 
@@ -451,7 +455,11 @@ and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
 <select id="conductIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultMap="RiskIndexMonitorChildMap">
 select ifnull(a.anum,0) as indexPoliceNum,
 ifnull(b.bnum,0) as alarmPoliceNum,
-round(ifnull(#{num}/a.anum,0)*100,2) as alarmPoliceRate,
+
+(case when (select count(1) from risk_conduct where index_num >0) &lt;= 0 then 0
+else round(ifnull(#{num}/a.anum,0)*100,2)  end)
+as alarmPoliceRate,
+
 (case when round(ifnull(b.bnum/a.anum,0)*100,2)>=50 then 1 else 0 end) as isDisplay,
 ifnull(c.cnum,0) as talkPoliceNum from 
 (SELECT count(*) as anum FROM risk_conduct 
@@ -467,7 +475,11 @@ and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
 <select id="caseIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultMap="RiskIndexMonitorChildMap">
 select ifnull(a.anum,0) as indexPoliceNum,
 ifnull(b.bnum,0) as alarmPoliceNum,
-round(ifnull(#{num}/a.anum,0)*100,2) as alarmPoliceRate,
+
+(case when (select count(1) from risk_case where index_num >0) &lt;= 0 then 0
+else round(ifnull(#{num}/a.anum,0)*100,2)  end)
+as alarmPoliceRate,
+
 (case when round(ifnull(b.bnum/a.anum,0)*100,2)>=50 then 1 else 0 end) as isDisplay,
 ifnull(c.cnum,0) as talkPoliceNum from 
 (SELECT count(*) as anum FROM risk_case 
@@ -483,7 +495,11 @@ and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
 <select id="dutyIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultMap="RiskIndexMonitorChildMap">
 select ifnull(a.anum,0) as indexPoliceNum,
 ifnull(b.bnum,0) as alarmPoliceNum,
-round(ifnull(#{num}/a.anum,0)*100,2) as alarmPoliceRate,
+
+(case when (select count(1) from risk_duty where index_num >0) &lt;= 0 then 0
+else round(ifnull(#{num}/a.anum,0)*100,2)  end)
+as alarmPoliceRate,
+
 (case when round(ifnull(b.bnum/a.anum,0)*100,2)>=50 then 1 else 0 end) as isDisplay,
 ifnull(c.cnum,0) as talkPoliceNum from 
 (SELECT count(*) as anum FROM risk_duty 
@@ -499,7 +515,11 @@ and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
 <select id="trainIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultMap="RiskIndexMonitorChildMap">
 select ifnull(a.anum,0) as indexPoliceNum,
 ifnull(b.bnum,0) as alarmPoliceNum,
-round(ifnull(#{num}/a.anum,0)*100,2) as alarmPoliceRate,
+
+(case when (select count(1) from risk_train where index_num >0) &lt;= 0 then 0
+else round(ifnull(#{num}/a.anum,0)*100,2)  end)
+as alarmPoliceRate,
+
 (case when round(ifnull(b.bnum/a.anum,0)*100,2)>=50 then 1 else 0 end) as isDisplay,
 ifnull(c.cnum,0) as talkPoliceNum from 
 (SELECT count(*) as anum FROM risk_train 
@@ -515,7 +535,12 @@ and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
 <select id="socialContactIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultMap="RiskIndexMonitorChildMap">
 select ifnull(a.anum,0) as indexPoliceNum,
 ifnull(b.bnum,0) as alarmPoliceNum,
-round(ifnull(#{num}/a.anum,0)*100,2) as alarmPoliceRate,
+
+
+(case when (select count(1) from risk_social_contact where index_num >0) &lt;= 0 then 0
+else round(ifnull(#{num}/a.anum,0)*100,2)  end)
+as alarmPoliceRate,
+
 (case when round(ifnull(b.bnum/a.anum,0)*100,2)>=50 then 1 else 0 end) as isDisplay,
 ifnull(c.cnum,0) as talkPoliceNum from 
 (SELECT count(*) as anum FROM risk_social_contact 
@@ -531,7 +556,12 @@ and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
 <select id="familyEvaluationIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultMap="RiskIndexMonitorChildMap">
 select ifnull(a.anum,0) as indexPoliceNum,
 ifnull(b.bnum,0) as alarmPoliceNum,
-round(ifnull(#{num}/a.anum,0)*100,2) as alarmPoliceRate,
+
+(case when (select count(1) from risk_family_evaluation where index_num >0) &lt;= 0 then 0
+else round(ifnull(#{num}/a.anum,0)*100,2)  end)
+as alarmPoliceRate,
+
+
 (case when round(ifnull(b.bnum/a.anum,0)*100,2)>=50 then 1 else 0 end) as isDisplay,
 ifnull(c.cnum,0) as talkPoliceNum from 
 (SELECT count(*) as anum FROM risk_family_evaluation 
@@ -547,7 +577,11 @@ and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
 <select id="healthIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultMap="RiskIndexMonitorChildMap">
 select ifnull(a.anum,0) as indexPoliceNum,
 ifnull(b.bnum,0) as alarmPoliceNum,
-round(ifnull(#{num}/a.anum,0)*100,2) as alarmPoliceRate,
+
+(case when (select count(1) from risk_health where index_num >0) &lt;= 0 then 0
+else round(ifnull(#{num}/a.anum,0)*100,2)  end)
+as alarmPoliceRate,
+
 (case when round(ifnull(b.bnum/a.anum,0)*100,2)>=50 then 1 else 0 end) as isDisplay,
 ifnull(c.cnum,0) as talkPoliceNum from 
 (SELECT count(*) as anum FROM risk_health 

@@ -41,7 +41,7 @@ public class RiskFamilyEvaluation {
     }
 
     public Double getIndexNum() {
-        return indexNum;
+        return Math.min(indexNum, 5);
     }
 
     public void setIndexNum(Double indexNum) {

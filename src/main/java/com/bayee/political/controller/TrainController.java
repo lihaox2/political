@@ -6691,10 +6691,10 @@ public class TrainController extends BaseController {
 		TrainPhysical physical = new TrainPhysical();
 		physical.setName(name);
 		physical.setPlace("分局");
-		physical.setRegistrationStartDate(DateUtil.parseDateTime(registrationStartDate));
-		physical.setRegistrationEndDate(DateUtil.parseDateTime(registrationStartDate));
-		physical.setTrainStartDate(DateUtil.parseDateTime(registrationStartDate));
-		physical.setTrainEndDate(DateUtil.parseDateTime(registrationStartDate));
+		physical.setRegistrationStartDate(DateUtil.parseDateTime(registrationStartDate +":00"));
+		physical.setRegistrationEndDate(DateUtil.parseDateTime(registrationStartDate +":00"));
+		physical.setTrainStartDate(DateUtil.parseDateTime(registrationStartDate +":00"));
+		physical.setTrainEndDate(DateUtil.parseDateTime(registrationStartDate +":00"));
 		physical.setType(2);
 		physical.setCoverImg("/template-image/physical-template-2.jpg");
 		physical.setTrainContent(name);
@@ -7043,10 +7043,10 @@ public class TrainController extends BaseController {
 		trainFirearm.setType(type);
 		trainFirearm.setName(name);
 		trainFirearm.setPlace("分局");
-		trainFirearm.setRegistrationStartDate(DateUtil.parseDateTime(registrationStartDate));
-		trainFirearm.setRegistrationEndDate(DateUtil.parseDateTime(registrationStartDate));
-		trainFirearm.setTrainStartDate(DateUtil.parseDateTime(registrationStartDate));
-		trainFirearm.setTrainEndDate(DateUtil.parseDateTime(registrationStartDate));
+		trainFirearm.setRegistrationStartDate(DateUtil.parseDateTime(registrationStartDate +":00"));
+		trainFirearm.setRegistrationEndDate(DateUtil.parseDateTime(registrationStartDate +":00"));
+		trainFirearm.setTrainStartDate(DateUtil.parseDateTime(registrationStartDate +":00"));
+		trainFirearm.setTrainEndDate(DateUtil.parseDateTime(registrationStartDate +":00"));
 		trainFirearm.setTrainFirearmType(2);
 		trainFirearm.setScorerPoliceId("117409");
 		trainFirearm.setSignUpStatus(3);
@@ -7250,6 +7250,23 @@ public class TrainController extends BaseController {
 						TrainPhysicalAchievementDetails train2 = updateItem(detailsItem2.getId(), score2,
 								achievementGrade, projectName2, detailsItem2.getProjectId());
 						finalList.add(train2);
+					}else {
+						//查询项目信息
+						TrainProject pItem = trainService.trainProjectIdItem(projectName2);
+						//判断是否合格
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, pItem.getId(), score2);
+						//生成比赛信息
+						detailsItem2 = updateItem(null, score2, achievementGrade, projectName2, pItem.getId());
+						detailsItem2.setPoliceId(policeId);
+						detailsItem2.setTrainPhysicalId(physical.getId());
+						detailsItem2.setTrainPhysicalAchievementId(trainPhysicalAchievement.getId());
+						detailsItem2.setProjectId(pItem.getId());
+						detailsItem2.setCreationDate(new Date());
+						detailsItem2.setUpdateDate(null);
+						detailsItem2.setIsEntry(2);
+						detailsItem2.setIsSign(2);
+						detailsItem2.setSignDate(new Date());
+						insertList.add(detailsItem2);
 					}
 				}
 				String projectName3 = excel.get(6).toString().replaceAll("\\s*", "");
@@ -7266,6 +7283,23 @@ public class TrainController extends BaseController {
 						TrainPhysicalAchievementDetails train3 = updateItem(detailsItem3.getId(), score3,
 								achievementGrade, projectName3, detailsItem3.getProjectId());
 						finalList.add(train3);
+					}else {
+						//查询项目信息
+						TrainProject pItem = trainService.trainProjectIdItem(projectName3);
+						//判断是否合格
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, pItem.getId(), score3);
+						//生成比赛信息
+						detailsItem3 = updateItem(null, score3, achievementGrade, projectName3, pItem.getId());
+						detailsItem3.setPoliceId(policeId);
+						detailsItem3.setTrainPhysicalId(physical.getId());
+						detailsItem3.setTrainPhysicalAchievementId(trainPhysicalAchievement.getId());
+						detailsItem3.setProjectId(pItem.getId());
+						detailsItem3.setCreationDate(new Date());
+						detailsItem3.setUpdateDate(null);
+						detailsItem3.setIsEntry(2);
+						detailsItem3.setIsSign(2);
+						detailsItem3.setSignDate(new Date());
+						insertList.add(detailsItem3);
 					}
 				}
 				String projectName4 = excel.get(8).toString().replaceAll("\\s*", "");
@@ -7282,6 +7316,23 @@ public class TrainController extends BaseController {
 						TrainPhysicalAchievementDetails train4 = updateItem(detailsItem4.getId(), score4,
 								achievementGrade, projectName4, detailsItem4.getProjectId());
 						finalList.add(train4);
+					}else {
+						//查询项目信息
+						TrainProject pItem = trainService.trainProjectIdItem(projectName4);
+						//判断是否合格
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, pItem.getId(), score4);
+						//生成比赛信息
+						detailsItem4 = updateItem(null, score4, achievementGrade, projectName4, pItem.getId());
+						detailsItem4.setPoliceId(policeId);
+						detailsItem4.setTrainPhysicalId(physical.getId());
+						detailsItem4.setTrainPhysicalAchievementId(trainPhysicalAchievement.getId());
+						detailsItem4.setProjectId(pItem.getId());
+						detailsItem4.setCreationDate(new Date());
+						detailsItem4.setUpdateDate(null);
+						detailsItem4.setIsEntry(2);
+						detailsItem4.setIsSign(2);
+						detailsItem4.setSignDate(new Date());
+						insertList.add(detailsItem4);
 					}
 				}
 				String projectName5 = excel.get(10).toString().replaceAll("\\s*", "");
@@ -7298,6 +7349,23 @@ public class TrainController extends BaseController {
 						TrainPhysicalAchievementDetails train5 = updateItem(detailsItem5.getId(), score5,
 								achievementGrade, projectName5, detailsItem5.getProjectId());
 						finalList.add(train5);
+					}else {
+						//查询项目信息
+						TrainProject pItem = trainService.trainProjectIdItem(projectName5);
+						//判断是否合格
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, pItem.getId(), score5);
+						//生成比赛信息
+						detailsItem5 = updateItem(null, score5, achievementGrade, projectName5, pItem.getId());
+						detailsItem5.setPoliceId(policeId);
+						detailsItem5.setTrainPhysicalId(physical.getId());
+						detailsItem5.setTrainPhysicalAchievementId(trainPhysicalAchievement.getId());
+						detailsItem5.setProjectId(pItem.getId());
+						detailsItem5.setCreationDate(new Date());
+						detailsItem5.setUpdateDate(null);
+						detailsItem5.setIsEntry(2);
+						detailsItem5.setIsSign(2);
+						detailsItem5.setSignDate(new Date());
+						insertList.add(detailsItem5);
 					}
 				}
 				String projectName6 = excel.get(12).toString().replaceAll("\\s*", "");
@@ -7314,6 +7382,23 @@ public class TrainController extends BaseController {
 						TrainPhysicalAchievementDetails train6 = updateItem(detailsItem6.getId(), score6,
 								achievementGrade, projectName6, detailsItem6.getProjectId());
 						finalList.add(train6);
+					}else {
+						//查询项目信息
+						TrainProject pItem = trainService.trainProjectIdItem(projectName6);
+						//判断是否合格
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, pItem.getId(), score6);
+						//生成比赛信息
+						detailsItem6 = updateItem(null, score6, achievementGrade, projectName6, pItem.getId());
+						detailsItem6.setPoliceId(policeId);
+						detailsItem6.setTrainPhysicalId(physical.getId());
+						detailsItem6.setTrainPhysicalAchievementId(trainPhysicalAchievement.getId());
+						detailsItem6.setProjectId(pItem.getId());
+						detailsItem6.setCreationDate(new Date());
+						detailsItem6.setUpdateDate(null);
+						detailsItem6.setIsEntry(2);
+						detailsItem6.setIsSign(2);
+						detailsItem6.setSignDate(new Date());
+						insertList.add(detailsItem6);
 					}
 				}
 				String projectName7 = excel.get(14).toString().replaceAll("\\s*", "");
@@ -7330,6 +7415,23 @@ public class TrainController extends BaseController {
 						TrainPhysicalAchievementDetails train7 = updateItem(detailsItem7.getId(), score7,
 								achievementGrade, projectName7, detailsItem7.getProjectId());
 						finalList.add(train7);
+					}else {
+						//查询项目信息
+						TrainProject pItem = trainService.trainProjectIdItem(projectName7);
+						//判断是否合格
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, pItem.getId(), score7);
+						//生成比赛信息
+						detailsItem7 = updateItem(null, score7, achievementGrade, projectName7, pItem.getId());
+						detailsItem7.setPoliceId(policeId);
+						detailsItem7.setTrainPhysicalId(physical.getId());
+						detailsItem7.setTrainPhysicalAchievementId(trainPhysicalAchievement.getId());
+						detailsItem7.setProjectId(pItem.getId());
+						detailsItem7.setCreationDate(new Date());
+						detailsItem7.setUpdateDate(null);
+						detailsItem7.setIsEntry(2);
+						detailsItem7.setIsSign(2);
+						detailsItem7.setSignDate(new Date());
+						insertList.add(detailsItem7);
 					}
 				}
 				String projectName8 = excel.get(16).toString().replaceAll("\\s*", "");
@@ -7346,6 +7448,23 @@ public class TrainController extends BaseController {
 						TrainPhysicalAchievementDetails train8 = updateItem(detailsItem8.getId(), score8,
 								achievementGrade, projectName8, detailsItem8.getProjectId());
 						finalList.add(train8);
+					}else {
+						//查询项目信息
+						TrainProject pItem = trainService.trainProjectIdItem(projectName8);
+						//判断是否合格
+						Integer achievementGrade = detailsGrade(physical.getId(), policeId, pItem.getId(), score8);
+						//生成比赛信息
+						detailsItem8 = updateItem(null, score8, achievementGrade, projectName8, pItem.getId());
+						detailsItem8.setPoliceId(policeId);
+						detailsItem8.setTrainPhysicalId(physical.getId());
+						detailsItem8.setTrainPhysicalAchievementId(trainPhysicalAchievement.getId());
+						detailsItem8.setProjectId(pItem.getId());
+						detailsItem8.setCreationDate(new Date());
+						detailsItem8.setUpdateDate(null);
+						detailsItem8.setIsEntry(2);
+						detailsItem8.setIsSign(2);
+						detailsItem8.setSignDate(new Date());
+						insertList.add(detailsItem8);
 					}
 				}
 			}

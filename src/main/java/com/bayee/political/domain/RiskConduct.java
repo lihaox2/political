@@ -39,7 +39,7 @@ public class RiskConduct {
     }
 
     public Double getIndexNum() {
-        return indexNum;
+        return Math.min(indexNum, 25);
     }
 
     public void setIndexNum(Double indexNum) {

@@ -46,7 +46,7 @@ public class RiskTrain {
     }
 
     public Double getIndexNum() {
-        return indexNum;
+        return Math.min(indexNum, 10);
     }
 
     public void setIndexNum(Double indexNum) {

@@ -39,7 +39,7 @@ public class RiskCase {
     }
 
     public Double getIndexNum() {
-        return indexNum;
+        return Math.min(indexNum, 20);
     }
 
     public void setIndexNum(Double indexNum) {

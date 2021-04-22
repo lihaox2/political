@@ -221,6 +221,9 @@ public class RiskHealth {
 	 * @return the indexNum
 	 */
 	public Double getIndexNum() {
+        if (null == indexNum) {
+            return null;
+        }
 		return Math.min(indexNum, 5);
 	}
 

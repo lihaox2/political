@@ -315,4 +315,13 @@ public interface TrainPhysicalAchievementDetailsMapper {
 			@Param("trainPhysicalAchievementId") Integer trainPhysicalAchievementId, @Param("policeId") String policeId,
 			@Param("isSign") Integer isSign);
 
+
+	/**
+	 * 查询警员综合训练应扣除的分数
+	 * @param policeId
+	 * @param date
+	 * @return
+	 */
+	Double getPolicePhysicalDeductionScore(@Param("policeId") String policeId,@Param("date") String date);
+
 }

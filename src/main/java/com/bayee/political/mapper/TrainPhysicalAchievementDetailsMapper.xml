@@ -1224,4 +1224,13 @@ where 1=1
 		</if>
 order by a.is_sign desc,a.project_id asc
 </select>
+
+    <select id="getPolicePhysicalDeductionScore" resultType="Double">
+        select ifnull((physical_train.b_count / physical_train.a_count) * 5, 0) as physical_score from (
+           select (select count(1) from train_physical_achievement_details
+                   where achievement_grade is not null and police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m')) as a_count,
+                  (select count(1) from train_physical_achievement_details
+                   where achievement_grade = 1 and  police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m'))  as b_count) physical_train
+    </select>
+
 </mapper>

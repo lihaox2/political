@@ -6734,15 +6734,15 @@ public class TrainController extends BaseController {
 			TrainPhysicalAchievement item = new TrainPhysicalAchievement();
 			item.setTrainPhysicalId(physical.getId());
 			item.setPoliceId(userList.get(i).getPoliceId());
-			item.setRegistrationDate(new Date());
+			item.setRegistrationDate(physical.getRegistrationStartDate());
 			// 查询组别民警
 			List<TrainGroupPolice> groupList = trainService.trainGroupPoliceList(userList.get(i).getPoliceId());
 			item.setTrainGroupId(groupList.get(0).getId());
-			item.setSignDate(new Date());
 			item.setQrCode("/train-qrcode/physical-870c515b-6d06-445f-bf11-c143bdc6a878.jpg");
 			item.setIsSign(2);
 			item.setAchievementGrade(1);
 			item.setCreationDate(new Date());
+			item.setSignDate(physical.getRegistrationStartDate());
 			trainService.trainPhysicalAchievementCreat(item);
 			List<TrainProject> projectList = trainService.trainPoliceBelongToList(physical.getId(),
 					groupList.get(0).getId());
@@ -6755,7 +6755,7 @@ public class TrainController extends BaseController {
 				deItem.setProjectId(projectList.get(j).getId());
 				deItem.setIsEntry(2);
 				deItem.setIsSign(2);
-				deItem.setSignDate(new Date());
+				deItem.setSignDate(physical.getRegistrationStartDate());
 				deItem.setCreationDate(new Date());
 				deItemList.add(deItem);
 //				trainService.trainPhysicalAchievementDetailsCreat(deItem);
@@ -6791,6 +6791,7 @@ public class TrainController extends BaseController {
 								score1);
 						TrainPhysicalAchievementDetails train1 = updateItem(detailsItem1.getId(), score1,
 								achievementGrade, projectName1, detailsItem1.getProjectId());
+						train1.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train1);
 					}
 				}
@@ -6807,6 +6808,7 @@ public class TrainController extends BaseController {
 								score2);
 						TrainPhysicalAchievementDetails train2 = updateItem(detailsItem2.getId(), score2,
 								achievementGrade, projectName2, detailsItem2.getProjectId());
+						train2.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train2);
 					}
 				}
@@ -6823,6 +6825,7 @@ public class TrainController extends BaseController {
 								score3);
 						TrainPhysicalAchievementDetails train3 = updateItem(detailsItem3.getId(), score3,
 								achievementGrade, projectName3, detailsItem3.getProjectId());
+						train3.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train3);
 					}
 				}
@@ -6839,6 +6842,7 @@ public class TrainController extends BaseController {
 								score4);
 						TrainPhysicalAchievementDetails train4 = updateItem(detailsItem4.getId(), score4,
 								achievementGrade, projectName4, detailsItem4.getProjectId());
+						train4.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train4);
 					}
 				}
@@ -6855,6 +6859,7 @@ public class TrainController extends BaseController {
 								score5);
 						TrainPhysicalAchievementDetails train5 = updateItem(detailsItem5.getId(), score5,
 								achievementGrade, projectName5, detailsItem5.getProjectId());
+						train5.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train5);
 					}
 				}
@@ -6871,6 +6876,7 @@ public class TrainController extends BaseController {
 								score6);
 						TrainPhysicalAchievementDetails train6 = updateItem(detailsItem6.getId(), score6,
 								achievementGrade, projectName6, detailsItem6.getProjectId());
+						train6.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train6);
 					}
 				}
@@ -6887,6 +6893,7 @@ public class TrainController extends BaseController {
 								score7);
 						TrainPhysicalAchievementDetails train7 = updateItem(detailsItem7.getId(), score7,
 								achievementGrade, projectName7, detailsItem7.getProjectId());
+						train7.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train7);
 					}
 				}
@@ -6903,6 +6910,7 @@ public class TrainController extends BaseController {
 								score8);
 						TrainPhysicalAchievementDetails train8 = updateItem(detailsItem8.getId(), score8,
 								achievementGrade, projectName8, detailsItem8.getProjectId());
+						train8.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train8);
 					}
 				}
@@ -7067,8 +7075,8 @@ public class TrainController extends BaseController {
 			TrainFirearmAchievement item = new TrainFirearmAchievement();
 			item.setTrainFirearmId(trainFirearm.getId());
 			item.setPoliceId(userList.get(i).getPoliceId());
-			item.setRegistrationDate(new Date());
-			item.setSignDate(new Date());
+			item.setRegistrationDate(trainFirearm.getRegistrationStartDate());
+			item.setSignDate(trainFirearm.getRegistrationStartDate());
 			item.setIsSign(2);
 			item.setIsSubmit(1);
 			item.setQrCode("/train-qrcode/physical-870c515b-6d06-445f-bf11-c143bdc6a878.jpg\"");
@@ -7140,6 +7148,7 @@ public class TrainController extends BaseController {
 								fItem.setAchievementGrade(1);
 							}
 						}
+						fItem.setSignDate(trainFirearm.getRegistrationStartDate());
 						finalList.add(fItem);
 					}
 				}
@@ -7189,9 +7198,9 @@ public class TrainController extends BaseController {
 					trainPhysicalAchievement = new TrainPhysicalAchievement();
 					trainPhysicalAchievement.setTrainPhysicalId(physical.getId());
 					trainPhysicalAchievement.setPoliceId(policeId);
-					trainPhysicalAchievement.setRegistrationDate(new Date());
-					trainPhysicalAchievement.setAchievementDate(new Date());
-					trainPhysicalAchievement.setSignDate(new Date());
+					trainPhysicalAchievement.setRegistrationDate(physical.getRegistrationStartDate());
+					trainPhysicalAchievement.setAchievementDate(physical.getTrainStartDate());
+					trainPhysicalAchievement.setSignDate(physical.getRegistrationStartDate());
 					// 查询组别民警
 					List<TrainGroupPolice> groupList = trainService.trainGroupPoliceList(policeId);
 					trainPhysicalAchievement.setTrainGroupId(groupList.get(0).getId());
@@ -7216,6 +7225,7 @@ public class TrainController extends BaseController {
 								score1);
 						TrainPhysicalAchievementDetails train1 = updateItem(detailsItem1.getId(), score1,
 								achievementGrade, projectName1, detailsItem1.getProjectId());
+						train1.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train1);
 					}else {
 						//查询项目信息
@@ -7232,7 +7242,7 @@ public class TrainController extends BaseController {
 						detailsItem1.setUpdateDate(null);
 						detailsItem1.setIsEntry(2);
 						detailsItem1.setIsSign(2);
-						detailsItem1.setSignDate(new Date());
+						detailsItem1.setSignDate(physical.getRegistrationStartDate());
 						insertList.add(detailsItem1);
 					}
 				}
@@ -7249,6 +7259,7 @@ public class TrainController extends BaseController {
 								score2);
 						TrainPhysicalAchievementDetails train2 = updateItem(detailsItem2.getId(), score2,
 								achievementGrade, projectName2, detailsItem2.getProjectId());
+						train2.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train2);
 					}else {
 						//查询项目信息
@@ -7265,7 +7276,7 @@ public class TrainController extends BaseController {
 						detailsItem2.setUpdateDate(null);
 						detailsItem2.setIsEntry(2);
 						detailsItem2.setIsSign(2);
-						detailsItem2.setSignDate(new Date());
+						detailsItem2.setSignDate(physical.getRegistrationStartDate());
 						insertList.add(detailsItem2);
 					}
 				}
@@ -7282,6 +7293,7 @@ public class TrainController extends BaseController {
 								score3);
 						TrainPhysicalAchievementDetails train3 = updateItem(detailsItem3.getId(), score3,
 								achievementGrade, projectName3, detailsItem3.getProjectId());
+						train3.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train3);
 					}else {
 						//查询项目信息
@@ -7298,7 +7310,7 @@ public class TrainController extends BaseController {
 						detailsItem3.setUpdateDate(null);
 						detailsItem3.setIsEntry(2);
 						detailsItem3.setIsSign(2);
-						detailsItem3.setSignDate(new Date());
+						detailsItem3.setSignDate(physical.getRegistrationStartDate());
 						insertList.add(detailsItem3);
 					}
 				}
@@ -7315,6 +7327,7 @@ public class TrainController extends BaseController {
 								score4);
 						TrainPhysicalAchievementDetails train4 = updateItem(detailsItem4.getId(), score4,
 								achievementGrade, projectName4, detailsItem4.getProjectId());
+						train4.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train4);
 					}else {
 						//查询项目信息
@@ -7331,7 +7344,7 @@ public class TrainController extends BaseController {
 						detailsItem4.setUpdateDate(null);
 						detailsItem4.setIsEntry(2);
 						detailsItem4.setIsSign(2);
-						detailsItem4.setSignDate(new Date());
+						detailsItem4.setSignDate(physical.getRegistrationStartDate());
 						insertList.add(detailsItem4);
 					}
 				}
@@ -7348,6 +7361,7 @@ public class TrainController extends BaseController {
 								score5);
 						TrainPhysicalAchievementDetails train5 = updateItem(detailsItem5.getId(), score5,
 								achievementGrade, projectName5, detailsItem5.getProjectId());
+						train5.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train5);
 					}else {
 						//查询项目信息
@@ -7364,7 +7378,7 @@ public class TrainController extends BaseController {
 						detailsItem5.setUpdateDate(null);
 						detailsItem5.setIsEntry(2);
 						detailsItem5.setIsSign(2);
-						detailsItem5.setSignDate(new Date());
+						detailsItem5.setSignDate(physical.getRegistrationStartDate());
 						insertList.add(detailsItem5);
 					}
 				}
@@ -7381,6 +7395,7 @@ public class TrainController extends BaseController {
 								score6);
 						TrainPhysicalAchievementDetails train6 = updateItem(detailsItem6.getId(), score6,
 								achievementGrade, projectName6, detailsItem6.getProjectId());
+						train6.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train6);
 					}else {
 						//查询项目信息
@@ -7397,7 +7412,7 @@ public class TrainController extends BaseController {
 						detailsItem6.setUpdateDate(null);
 						detailsItem6.setIsEntry(2);
 						detailsItem6.setIsSign(2);
-						detailsItem6.setSignDate(new Date());
+						detailsItem6.setSignDate(physical.getRegistrationStartDate());
 						insertList.add(detailsItem6);
 					}
 				}
@@ -7414,6 +7429,7 @@ public class TrainController extends BaseController {
 								score7);
 						TrainPhysicalAchievementDetails train7 = updateItem(detailsItem7.getId(), score7,
 								achievementGrade, projectName7, detailsItem7.getProjectId());
+						train7.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train7);
 					}else {
 						//查询项目信息
@@ -7430,7 +7446,7 @@ public class TrainController extends BaseController {
 						detailsItem7.setUpdateDate(null);
 						detailsItem7.setIsEntry(2);
 						detailsItem7.setIsSign(2);
-						detailsItem7.setSignDate(new Date());
+						detailsItem7.setSignDate(physical.getRegistrationStartDate());
 						insertList.add(detailsItem7);
 					}
 				}
@@ -7447,6 +7463,7 @@ public class TrainController extends BaseController {
 								score8);
 						TrainPhysicalAchievementDetails train8 = updateItem(detailsItem8.getId(), score8,
 								achievementGrade, projectName8, detailsItem8.getProjectId());
+						train8.setSignDate(physical.getRegistrationStartDate());
 						finalList.add(train8);
 					}else {
 						//查询项目信息
@@ -7463,7 +7480,7 @@ public class TrainController extends BaseController {
 						detailsItem8.setUpdateDate(null);
 						detailsItem8.setIsEntry(2);
 						detailsItem8.setIsSign(2);
-						detailsItem8.setSignDate(new Date());
+						detailsItem8.setSignDate(physical.getRegistrationStartDate());
 						insertList.add(detailsItem8);
 					}
 				}
@@ -7565,19 +7582,21 @@ public class TrainController extends BaseController {
 								fItem.setAchievementGrade(1);
 							}
 						}
+						fItem.setSignDate(trainFirearm.getRegistrationStartDate());
 						finalList.add(fItem);
 					}else {
 						fItem = new TrainFirearmAchievement();
 						fItem.setPoliceId(policeId);
 						fItem.setTrainFirearmId(id);
-						fItem.setRegistrationDate(new Date());
-						fItem.setAchievementDate(new Date());
+						fItem.setRegistrationDate(trainFirearm.getRegistrationStartDate());
+						fItem.setAchievementDate(trainFirearm.getTrainStartDate());
 						fItem.setIsSign(2);
-						fItem.setSignDate(new Date());
+						fItem.setSignDate(trainFirearm.getRegistrationStartDate());
 						fItem.setTrainProjectType(id);
 						fItem.setAchievement(score1);
 						fItem.setAchievementStr(score1 + "环");
 						fItem.setIsSubmit(1);
+						fItem.setCreationDate(new Date());
 						fItem.setQrCode("/train-qrcode/physical-870c515b-6d06-445f-bf11-c143bdc6a878.jpg");
 						// 根据项目id/组别查询算分规则
 						TrainProjectRule ruleItem = trainService.trainProjectPoliceRuleItem(2, null);

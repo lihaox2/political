@@ -41,6 +41,9 @@ public class RiskFamilyEvaluation {
     }
 
     public Double getIndexNum() {
+        if (null == indexNum) {
+            return null;
+        }
         return Math.min(indexNum, 5);
     }
 

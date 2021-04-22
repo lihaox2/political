@@ -46,6 +46,9 @@ public class RiskTrain {
     }
 
     public Double getIndexNum() {
+        if (null == indexNum) {
+            return null;
+        }
         return Math.min(indexNum, 10);
     }
 

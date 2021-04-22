@@ -112,6 +112,9 @@ public class RiskReportRecord {
     }
 
     public Double getConductNum() {
+		if (null == conductNum) {
+			return null;
+		}
         return Math.min(conductNum, 25);
     }
 
@@ -120,6 +123,9 @@ public class RiskReportRecord {
     }
 
     public Double getHandlingCaseNum() {
+		if (null == handlingCaseNum) {
+			return null;
+		}
         return Math.min(handlingCaseNum, 20);
     }
 
@@ -128,6 +134,9 @@ public class RiskReportRecord {
     }
 
     public Double getDutyNum() {
+		if (null == dutyNum) {
+			return null;
+		}
         return Math.min(dutyNum, 20);
     }
 
@@ -136,6 +145,9 @@ public class RiskReportRecord {
     }
 
     public Double getTrainNum() {
+		if (null == trainNum) {
+			return null;
+		}
         return Math.min(trainNum, 10);
     }
 
@@ -144,6 +156,9 @@ public class RiskReportRecord {
     }
 
     public Double getSocialContactNum() {
+		if (null == socialContactNum) {
+			return null;
+		}
         return Math.min(socialContactNum, 15);
     }
 
@@ -152,6 +167,9 @@ public class RiskReportRecord {
     }
 
     public Double getAmilyEvaluationNum() {
+		if (null == amilyEvaluationNum) {
+			return null;
+		}
         return Math.min(amilyEvaluationNum, 5);
     }
 
@@ -160,6 +178,9 @@ public class RiskReportRecord {
     }
 
     public Double getHealthNum() {
+		if (null == healthNum) {
+			return null;
+		}
         return Math.min(healthNum, 5);
     }
 

@@ -148,4 +148,12 @@ public interface TrainFirearmAchievementMapper {
 			@Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime,
 			@Param("timeType") Integer timeType);
 
+	/**
+	 * 查询警员枪械训练应扣除的分数
+	 * @param policeId
+	 * @param date
+	 * @return
+	 */
+	Double getPoliceFirearmDeductionScore(@Param("policeId") String policeId,@Param("date") String date);
+
 }

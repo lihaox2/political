@@ -37,7 +37,7 @@ public interface RiskReportRecordService {
      * @param month
      * @return
      */
-    RiskReportRecord findRiskReportRecord(@Param("policeId") String policeId, @Param("year") String year, @Param("month") String month);
+    RiskReportRecord findRiskReportRecord(String policeId, String year, String month);
 
     /**
      * 查询警员报备数据
@@ -52,5 +52,12 @@ public interface RiskReportRecordService {
     void health(LocalDate localDate);
     
     void family(LocalDate localDate);
+
+    /**
+     * 修改指数数据
+     *
+     * @param riskReportRecord
+     */
+    void updateRiskReportRecord(RiskReportRecord riskReportRecord);
 
 }

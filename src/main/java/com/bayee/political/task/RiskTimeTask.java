@@ -52,8 +52,8 @@ public class RiskTimeTask extends BaseController {
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");// 设置日期格式
 
 	// 警员警务技能数据录入
-//	@Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
-	@RequestMapping(value = "/risk/task", method = RequestMethod.GET)
+	@Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
+//	@RequestMapping(value = "/risk/task", method = RequestMethod.GET)
 	public void riskTrainTask() throws ParseException {
 //		System.out.println("任务开始: " + DateUtils.formatDate(new Date(), "HH:mm:ss"));
 		String dateTime = sdf.format(new Date());

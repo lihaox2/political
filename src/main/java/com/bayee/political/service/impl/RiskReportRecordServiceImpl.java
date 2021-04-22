@@ -563,4 +563,25 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 		
 		}
     }
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateRiskReportRecord(RiskReportRecord riskReportRecord) {
+		riskReportRecord.setUpdateDate(new Date());
+		riskReportRecord.setTotalNum(Math.min(riskReportRecord.getConductNum() + riskReportRecord.getHandlingCaseNum() +
+				riskReportRecord.getDutyNum() + riskReportRecord.getTrainNum() + riskReportRecord.getStudyNum() +
+				riskReportRecord.getSocialContactNum() + riskReportRecord.getAmilyEvaluationNum() +
+				riskReportRecord.getHealthNum() + riskReportRecord.getDrinkNum(), 100));
+		riskReportRecordMapper.updateByPrimaryKey(riskReportRecord);
+
+		// 产生预警数据
+		if (riskReportRecord.getTotalNum() >= 60) {
+			RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(riskReportRecord.getPoliceId(), AlarmTypeEnum.COMPREHENSIVE_RISK,
+					DateUtils.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"), riskReportRecord.getTotalNum());
+
+			if (riskAlarm != null) {
+				riskAlarmService.insert(riskAlarm);
+			}
+		}
+	}
 }

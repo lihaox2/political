@@ -43,7 +43,6 @@ public class DutyRiskTask {
         String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
         String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
 
-        List<RiskReportRecord> riskReportRecordList = new ArrayList<>();
         List<RiskDuty> riskDutyList = new ArrayList<>();
 
         for(User user : userList) {
@@ -63,18 +62,18 @@ public class DutyRiskTask {
                 riskReportRecordService.updateRiskReportRecord(reportRecord);
             }else {
                 reportRecord = new RiskReportRecord(0d);
+                reportRecord.setPoliceId(user.getPoliceId());
                 reportRecord.setCreationDate(new Date());
+                reportRecord.setYear(year);
+                reportRecord.setMonth(month);
                 reportRecord.setDutyNum(riskDuty.getIndexNum());
-                reportRecord.setTotalNum(reportRecord.getHandlingCaseNum());
-                riskReportRecordList.add(reportRecord);
+                reportRecord.setTotalNum(reportRecord.getDutyNum());
+                riskReportRecordService.insert(reportRecord);
             }
         }
 
         if (riskDutyList.size() > 0) {
             dutyRiskService.addRiskDutyList(riskDutyList);
-        }
-        if (riskReportRecordList.size() > 0) {
-            riskReportRecordService.insertRiskReportRecordList(riskReportRecordList);
         }
     }
 

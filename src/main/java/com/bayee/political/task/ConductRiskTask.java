@@ -47,7 +47,6 @@ public class ConductRiskTask {
         String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
         String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
 
-        List<RiskReportRecord> riskReportRecordList = new ArrayList<>();
         List<RiskConduct> riskConductList = new ArrayList<>();
 
         for (User user : userList) {
@@ -67,18 +66,18 @@ public class ConductRiskTask {
                 riskReportRecordService.updateRiskReportRecord(reportRecord);
             }else {
                 reportRecord = new RiskReportRecord(0d);
+                reportRecord.setPoliceId(user.getPoliceId());
                 reportRecord.setCreationDate(new Date());
+                reportRecord.setYear(year);
+                reportRecord.setMonth(month);
                 reportRecord.setConductNum(riskConduct.getIndexNum());
-                reportRecord.setTotalNum(reportRecord.getHandlingCaseNum());
-                riskReportRecordList.add(reportRecord);
+                reportRecord.setTotalNum(reportRecord.getConductNum());
+                riskReportRecordService.insert(reportRecord);
             }
         }
 
         if (riskConductList.size() > 0) {
             riskConductService.insertRiskConductList(riskConductList);
-        }
-        if (riskReportRecordList.size() > 0) {
-            riskReportRecordService.insertRiskReportRecordList(riskReportRecordList);
         }
     }
 

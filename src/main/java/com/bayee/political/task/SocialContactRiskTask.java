@@ -43,7 +43,6 @@ public class SocialContactRiskTask {
         String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
         String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
 
-        List<RiskReportRecord> riskReportRecordList = new ArrayList<>();
         List<RiskSocialContact> riskSocialContactList = new ArrayList<>();
 
         for (User user : userList) {
@@ -63,18 +62,18 @@ public class SocialContactRiskTask {
                 riskReportRecordService.updateRiskReportRecord(reportRecord);
             }else {
                 reportRecord = new RiskReportRecord(0d);
+                reportRecord.setPoliceId(user.getPoliceId());
                 reportRecord.setCreationDate(new Date());
+                reportRecord.setYear(year);
+                reportRecord.setMonth(month);
                 reportRecord.setSocialContactNum(riskSocialContact.getIndexNum());
-                reportRecord.setTotalNum(reportRecord.getHandlingCaseNum());
-                riskReportRecordList.add(reportRecord);
+                reportRecord.setTotalNum(reportRecord.getSocialContactNum());
+                riskReportRecordService.insert(reportRecord);
             }
         }
 
         if (riskSocialContactList.size() > 0) {
             riskSocialContactService.addRiskSocialContactList(riskSocialContactList);
-        }
-        if (riskReportRecordList.size() > 0) {
-            riskReportRecordService.insertRiskReportRecordList(riskReportRecordList);
         }
     }
 

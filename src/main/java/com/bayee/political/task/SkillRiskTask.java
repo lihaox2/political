@@ -43,8 +43,6 @@ public class SkillRiskTask {
         String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
         String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
 
-        List<RiskReportRecord> riskReportRecordList = new ArrayList<>();
-
         for (User user : userList) {
             RiskReportRecord reportRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
             //警务技能
@@ -58,15 +56,14 @@ public class SkillRiskTask {
                 riskReportRecordService.updateRiskReportRecord(reportRecord);
             }else {
                 reportRecord = new RiskReportRecord(0d);
+                reportRecord.setPoliceId(user.getPoliceId());
                 reportRecord.setCreationDate(new Date());
+                reportRecord.setYear(year);
+                reportRecord.setMonth(month);
                 reportRecord.setTrainNum(riskTrain.getIndexNum());
-                reportRecord.setTotalNum(reportRecord.getHandlingCaseNum());
-                riskReportRecordList.add(reportRecord);
+                reportRecord.setTotalNum(reportRecord.getTrainNum());
+                riskReportRecordService.insert(reportRecord);
             }
-        }
-
-        if (riskReportRecordList.size() > 0) {
-            riskReportRecordService.insertRiskReportRecordList(riskReportRecordList);
         }
     }
 }

@@ -497,8 +497,8 @@ order by a.creation_date desc
     <select id="getPoliceFirearmDeductionScore" resultType="Double">
         select ifnull(firearm_train.b_count / firearm_train.a_count * 5, 0) as firearm_score from (
           select (select count(1) from train_firearm_achievement
-                  where achievement_grade is not null and police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m')) as a_count,
+                  where achievement_grade is not null achievement > 0 and police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m')) as a_count,
                  (select count(1) from train_firearm_achievement
-                  where achievement_grade = 1 and police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m')) as b_count) firearm_train
+                  where achievement_grade = 1 and achievement > 0 and police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m')) as b_count) firearm_train
     </select>
 </mapper>

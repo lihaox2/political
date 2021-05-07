@@ -14,6 +14,20 @@ public class DataListReturn {
 	Object result;
 
 	/**
+	 * 成功返回
+	 * @param result
+	 * @return
+	 */
+	public static DataListReturn ok(Object result) {
+		DataListReturn data = new DataListReturn();
+		data.setCode(200);
+		data.setMessage("success");
+		data.setStatus(true);
+		data.setResult(result);
+		return data;
+	}
+
+	/**
 	 * @return the code
 	 */
 	public int getCode() {

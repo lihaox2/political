@@ -619,4 +619,9 @@ where 1=1 and department_id!=47
   <select id="userInfoAllList" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
    select * from user where department_id!=47 order by id 
   </select>
+
+    <select id="findByPoliceId" resultMap="userResult">
+        select * from user where police_id = #{policeId} limit 1
+    </select>
+
 </mapper>

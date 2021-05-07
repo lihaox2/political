@@ -69,7 +69,20 @@ public class RiskCaseTestRecordServiceImpl implements RiskCaseTestRecordService{
 		// TODO Auto-generated method stub
 		return riskCaseTestRecordMapper.isExistence(policeId, year, semester);
 	}
-	
-	
+
+	@Override
+	public List<RiskCaseTestRecord> riskCaseTestRecordPage(Integer pageIndex, Integer pageSize) {
+		if (pageIndex < 1) {
+			pageIndex = 1;
+		}
+		pageIndex = (pageIndex - 1) * pageSize;
+		return riskCaseTestRecordMapper.riskCaseTestRecordPage(pageIndex, pageSize);
+	}
+
+	@Override
+	public Integer riskCaseTestRecordPageCount() {
+		return riskCaseTestRecordMapper.riskCaseTestRecordPageCount();
+	}
+
 
 }

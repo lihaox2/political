@@ -197,4 +197,11 @@ public interface UserService {
 	// 查询全部警员详细信息数据
 	List<User> userInfoAllList();
 
+	/**
+	 * 根据警员编号查询警员
+	 * @param policeId
+	 * @return
+	 */
+	User findByPoliceId(String policeId);
+
 }

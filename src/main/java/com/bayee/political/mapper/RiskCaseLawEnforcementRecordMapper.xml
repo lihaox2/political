@@ -160,4 +160,15 @@
     where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
   </select>
 
+  <select id="riskCaseLawEnforcementRecordPage" resultMap="BaseResultMap">
+    select a.*,b.name as typeName from risk_case_law_enforcement_record a
+    left join risk_case_law_enforcement_type b on b.id = a.type
+        limit #{pageIndex}, #{pageSize}
+    order by creation_date desc
+  </select>
+
+  <select id="riskCaseLawEnforcementRecordPageCount" resultType="Integer">
+    select COUNT(1) from risk_case_law_enforcement_record
+  </select>
+
 </mapper>

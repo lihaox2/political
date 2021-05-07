@@ -43,4 +43,19 @@ public interface RiskCaseTestRecordMapper {
 	List<RiskCaseTestRecord> riskCaseTestRecordList(@Param("policeId") String policeId,
 													@Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime,
 													@Param("timeType") Integer timeType);
+
+	/**
+	 * 分页查询执法考试数据
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	List<RiskCaseTestRecord> riskCaseTestRecordPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize);
+
+	/**
+	 * 统计数据条数
+	 * @return
+	 */
+	Integer riskCaseTestRecordPageCount();
+
 }

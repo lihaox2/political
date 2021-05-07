@@ -256,4 +256,9 @@ public class UserServiceImpl implements UserService {
 		return userMapper.userInfoAllList();
 	}
 
+	@Override
+	public User findByPoliceId(String policeId) {
+		return userMapper.findByPoliceId(policeId);
+	}
+
 }

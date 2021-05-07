@@ -200,4 +200,14 @@
     order by id desc limit 1
   </select>
 
+  <select id="riskCaseTestRecordPage" resultMap="BaseResultMap">
+    select * from risk_case_test_record
+    limit #{pageIndex}, #{pageSize}
+    order by creation_date desc
+  </select>
+
+  <select id="riskCaseTestRecordPageCount" resultType="Integer">
+    select count(1) from risk_case_test_record
+  </select>
+
 </mapper>

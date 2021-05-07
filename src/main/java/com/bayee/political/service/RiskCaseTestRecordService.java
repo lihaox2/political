@@ -27,4 +27,18 @@ public interface RiskCaseTestRecordService {
 	
 	Integer isExistence( String policeId,String year, Integer semester);
 
+    /**
+     * 分页查询执法考试数据
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+	List<RiskCaseTestRecord> riskCaseTestRecordPage(Integer pageIndex, Integer pageSize);
+
+    /**
+     * 统计数据条数
+     * @return
+     */
+	Integer riskCaseTestRecordPageCount();
+
 }

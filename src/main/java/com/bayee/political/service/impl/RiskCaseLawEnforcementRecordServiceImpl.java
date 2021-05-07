@@ -26,4 +26,39 @@ public class RiskCaseLawEnforcementRecordServiceImpl implements RiskCaseLawEnfor
 		return riskCaseLawEnforcementRecordMapper.insertSelective(record);
 	}
 
+	@Override
+	public int deleteByPrimaryKey(Integer id) {
+		return riskCaseLawEnforcementRecordMapper.deleteByPrimaryKey(id);
+	}
+
+	@Override
+	public int insert(RiskCaseLawEnforcementRecord record) {
+		return riskCaseLawEnforcementRecordMapper.insert(record);
+	}
+
+	@Override
+	public RiskCaseLawEnforcementRecord selectByPrimaryKey(Integer id) {
+		return riskCaseLawEnforcementRecordMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(RiskCaseLawEnforcementRecord record) {
+		return riskCaseLawEnforcementRecordMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize) {
+		if (pageIndex < 1) {
+			pageIndex = 1;
+		}
+		pageIndex = (pageIndex - 1) * pageSize;
+
+		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPage(pageIndex, pageSize);
+	}
+
+	@Override
+	public Integer riskCaseLawEnforcementRecordPageCount() {
+		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPageCount();
+	}
+
 }

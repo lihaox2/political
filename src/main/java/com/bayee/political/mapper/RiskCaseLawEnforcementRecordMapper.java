@@ -52,4 +52,19 @@ public interface RiskCaseLawEnforcementRecordMapper {
     List<RiskCaseLawEnforcementRecord> findPoliceCaseData(@Param("policeId") String policeId,
                                                           @Param("date") String date);
 
+    /**
+     * 分页查询执法管理数据
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordPage(@Param("pageIndex") Integer pageIndex,
+                                                                        @Param("pageSize") Integer pageSize);
+
+    /**
+     * 统计分页数据条数
+     * @return
+     */
+    Integer riskCaseLawEnforcementRecordPageCount();
+
 }

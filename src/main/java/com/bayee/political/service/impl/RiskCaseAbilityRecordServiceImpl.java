@@ -30,4 +30,14 @@ public class RiskCaseAbilityRecordServiceImpl implements RiskCaseAbilityRecordSe
 		return riskCaseAbilityRecordMapper.insertSelective(record);
 	}
 
+	@Override
+	public int deleteByPrimaryKey(Integer id) {
+		return riskCaseAbilityRecordMapper.deleteByPrimaryKey(id);
+	}
+
+	@Override
+	public RiskCaseAbilityRecord selectByPrimaryKey(Integer id) {
+		return riskCaseAbilityRecordMapper.selectByPrimaryKey(id);
+	}
+
 }

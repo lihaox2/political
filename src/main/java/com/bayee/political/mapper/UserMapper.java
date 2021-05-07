@@ -49,6 +49,13 @@ public interface UserMapper {
 
 	User findByResidentId(@Param("residentId") String residentId);
 
+	/**
+	 * 根据警员编号查询警员
+	 * @param policeId
+	 * @return
+	 */
+	User findByPoliceId(@Param("policeId") String policeId);
+
 	// 人员列表查询
 	List<User> userList(@Param("departmentId") Integer departmentId, @Param("positionId") Integer positionId,
 			@Param("isUnitLeader") Integer isUnitLeader, @Param("isCadre") Integer isCadre,

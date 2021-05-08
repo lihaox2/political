@@ -163,8 +163,8 @@
   <select id="riskCaseLawEnforcementRecordPage" resultMap="BaseResultMap">
     select a.*,b.name as typeName from risk_case_law_enforcement_record a
     left join risk_case_law_enforcement_type b on b.id = a.type
-        limit #{pageIndex}, #{pageSize}
-    order by creation_date desc
+    order by id desc
+    limit #{pageIndex}, #{pageSize}
   </select>
 
   <select id="riskCaseLawEnforcementRecordPageCount" resultType="Integer">

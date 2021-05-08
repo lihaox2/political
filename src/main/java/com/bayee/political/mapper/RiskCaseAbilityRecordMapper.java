@@ -29,4 +29,19 @@ public interface RiskCaseAbilityRecordMapper {
     
     
     Integer getByYearAndPoliceId(@Param("year")String year,@Param("policeId") String policeId);
+
+    /**
+     * 分页查询执法能力数据
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    List<RiskCaseAbilityRecord> riskCaseAbilityRecordPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize);
+
+    /**
+     * 统计数据条数
+     * @return
+     */
+    Integer getRiskCaseAbilityRecordPageCount();
+
 }

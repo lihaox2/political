@@ -207,5 +207,15 @@
   <select id="getByYearAndPoliceId" resultType="Integer">
   	select id from risk_case_ability_record where year=#{year} and police_id = #{policeId};
   </select>
+
+  <select id="riskCaseAbilityRecordPage" resultMap="BaseResultMap">
+    select * from risk_case_ability_record
+    order by id desc
+    limit #{pageIndex}, #{pageSize}
+  </select>
+
+  <select id="getRiskCaseAbilityRecordPageCount" resultType="Integer">
+    select count(1) from risk_case_ability_record
+  </select>
   
 </mapper>

@@ -202,8 +202,8 @@
 
   <select id="riskCaseTestRecordPage" resultMap="BaseResultMap">
     select * from risk_case_test_record
+    order by id desc
     limit #{pageIndex}, #{pageSize}
-    order by creation_date desc
   </select>
 
   <select id="riskCaseTestRecordPageCount" resultType="Integer">

@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import com.bayee.political.domain.RiskCaseAbilityRecord;
 import com.bayee.political.mapper.RiskCaseAbilityRecordMapper;
 import com.bayee.political.service.RiskCaseAbilityRecordService;
+
+import java.util.List;
+
 @Service
 public class RiskCaseAbilityRecordServiceImpl implements RiskCaseAbilityRecordService{
 	
@@ -38,6 +41,20 @@ public class RiskCaseAbilityRecordServiceImpl implements RiskCaseAbilityRecordSe
 	@Override
 	public RiskCaseAbilityRecord selectByPrimaryKey(Integer id) {
 		return riskCaseAbilityRecordMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public List<RiskCaseAbilityRecord> riskCaseAbilityRecordPage(Integer pageIndex, Integer pageSize) {
+		if (pageIndex < 1) {
+			pageIndex = 1;
+		}
+		pageIndex = (pageIndex - 1) * pageSize;
+		return riskCaseAbilityRecordMapper.riskCaseAbilityRecordPage(pageIndex, pageSize);
+	}
+
+	@Override
+	public Integer getRiskCaseAbilityRecordPageCount() {
+		return riskCaseAbilityRecordMapper.getRiskCaseAbilityRecordPageCount();
 	}
 
 }

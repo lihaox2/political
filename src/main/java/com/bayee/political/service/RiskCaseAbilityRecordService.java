@@ -17,4 +17,18 @@ public interface RiskCaseAbilityRecordService {
 
 	RiskCaseAbilityRecord selectByPrimaryKey(Integer id);
 
+	/**
+	 * 分页查询执法能力数据
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	List<RiskCaseAbilityRecord> riskCaseAbilityRecordPage(Integer pageIndex, Integer pageSize);
+
+	/**
+	 * 统计数据条数
+	 * @return
+	 */
+	Integer getRiskCaseAbilityRecordPageCount();
+
 }

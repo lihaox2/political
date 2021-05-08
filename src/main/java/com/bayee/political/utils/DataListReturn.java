@@ -28,6 +28,31 @@ public class DataListReturn {
 	}
 
 	/**
+	 * 成功返回
+	 * @return
+	 */
+	public static DataListReturn ok() {
+		DataListReturn data = new DataListReturn();
+		data.setCode(200);
+		data.setMessage("success");
+		data.setStatus(true);
+		return data;
+	}
+
+	/**
+	 * 成功返回
+	 * @return
+	 */
+	public static DataListReturn error(String desc) {
+		DataListReturn data = new DataListReturn();
+		data.setCode(500);
+		data.setMessage("error");
+		data.setStatus(false);
+		data.setResult(desc);
+		return data;
+	}
+
+	/**
 	 * @return the code
 	 */
 	public int getCode() {

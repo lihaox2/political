@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import com.bayee.political.domain.RiskConductBureauRuleRecord;
 import com.bayee.political.mapper.RiskConductBureauRuleRecordMapper;
 import com.bayee.political.service.RiskConductBureauRuleRecordService;
+
+import java.util.List;
+
 @Service
 public class RiskConductBureauRuleRecordServiceImpl implements RiskConductBureauRuleRecordService{
 	
@@ -46,6 +49,26 @@ public class RiskConductBureauRuleRecordServiceImpl implements RiskConductBureau
 	public int updateByPrimaryKey(RiskConductBureauRuleRecord record) {
 		// TODO Auto-generated method stub
 		return riskConductBureauRuleRecordMapper.updateByPrimaryKey(record);
+	}
+
+	@Override
+	public List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(Integer pageIndex, Integer pageSize) {
+		if (pageIndex < 1) {
+			pageIndex = 1;
+		}
+		pageIndex = (pageIndex - 1) * pageSize;
+
+		return riskConductBureauRuleRecordMapper.riskConductBureauRuleRecordPage(pageIndex, pageSize);
+	}
+
+	@Override
+	public Integer getRiskConductBureauRuleRecordPageCount() {
+		return riskConductBureauRuleRecordMapper.getRiskConductBureauRuleRecordPageCount();
+	}
+
+	@Override
+	public Integer countByBureauRuleType(Integer typeId) {
+		return riskConductBureauRuleRecordMapper.countByBureauRuleType(typeId);
 	}
 
 }

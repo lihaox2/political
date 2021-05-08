@@ -19,7 +19,7 @@ public class DutyDetailsResult {
     /**
      * 问题分类
      */
-    private String type;
+    private Integer typeId;
 
     /**
      * 问题描述
@@ -52,12 +52,12 @@ public class DutyDetailsResult {
         this.policeName = policeName;
     }
 
-    public String getType() {
-        return type;
+    public Integer getTypeId() {
+        return typeId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
     }
 
     public String getDesc() {

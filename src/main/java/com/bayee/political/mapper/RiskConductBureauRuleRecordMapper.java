@@ -34,4 +34,25 @@ public interface RiskConductBureauRuleRecordMapper {
      * @return
      */
     List<RiskConductBureauRuleRecord> findRiskConductBureauRuleRecord(@Param("policeId") String policeId, @Param("date") String date);
+
+    /**
+     * 分页查询局规计分数据
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(@Param("pageIndex") Integer pageIndex,@Param("pageSize") Integer pageSize);
+
+    /**
+     * 统计分页数据条数
+     * @return
+     */
+    Integer getRiskConductBureauRuleRecordPageCount();
+
+    /**
+     * 根据局规类型统计数据数据条数
+     * @param typeId
+     * @return
+     */
+    Integer countByBureauRuleType(@Param("typeId") Integer typeId);
 }

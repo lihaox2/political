@@ -1,5 +1,6 @@
 package com.bayee.political.controller.admin;
 
+import com.bayee.political.domain.RiskCaseAbilityRecord;
 import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
 import com.bayee.political.domain.RiskCaseTestRecord;
 import com.bayee.political.domain.User;
@@ -53,11 +54,49 @@ public class CaseController {
     @GetMapping("/ability/page")
     public ResponseEntity<?> caseAbilityPage(@RequestParam("pageIndex") Integer pageIndex,
                                              @RequestParam("pageSize") Integer pageSize) {
-        CaseAbilityPageResult pageResult = new CaseAbilityPageResult();
+        List<RiskCaseAbilityRecord> recordList = riskCaseAbilityRecordService.riskCaseAbilityRecordPage(pageIndex, pageSize);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("data", pageResult);
-        result.put("totalCount", 100);
+        result.put("data", recordList.stream().map(e -> {
+            Integer passCount = 0;
+            Integer errorCount = 0;
+            if (e.getReconsiderationLitigationStatus() != null && e.getReconsiderationLitigationStatus().equals(1)) {
+                passCount++;
+            }
+            if (e.getLetterVisitStatus() != null && e.getLetterVisitStatus().equals(1)) {
+                errorCount++;
+            }
+            if (e.getLawEnforcementFaultStatus() != null && e.getLawEnforcementFaultStatus().equals(1)) {
+                errorCount++;
+            }
+            if (e.getJudicialSupervisionStatus() != null && e.getJudicialSupervisionStatus().equals(1)) {
+                errorCount++;
+            }
+            if (e.getCaseExpertStatus() != null && e.getCaseExpertStatus().equals(1)) {
+                passCount++;
+            }
+            if (e.getExcellentLegalOfficerStatus() != null && e.getExcellentLegalOfficerStatus().equals(1)) {
+                passCount++;
+            }
+            if (e.getBasicTestStatus() != null && e.getBasicTestStatus().equals(1)) {
+                passCount++;
+            }
+            if (e.getHighTestStatus() != null && e.getHighTestStatus().equals(1)) {
+                passCount++;
+            }
+            if (e.getJudicialTestStatus() != null && e.getJudicialTestStatus().equals(1)) {
+                passCount++;
+            }
+
+            User user = userService.findByPoliceId(e.getPoliceId());
+            CaseAbilityPageResult pageResult = new CaseAbilityPageResult();
+            pageResult.setPoliceId(e.getPoliceId());
+            pageResult.setPoliceName(user.getName());
+            pageResult.setPassCount(passCount);
+            pageResult.setErrorCount(errorCount);
+            return pageResult;
+        }).collect(Collectors.toList()));
+        result.put("totalCount", riskCaseAbilityRecordService.getRiskCaseAbilityRecordPageCount());
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
@@ -65,28 +104,68 @@ public class CaseController {
 
     @PostMapping("/add/ability")
     public ResponseEntity<?> addCaseAbility(@RequestBody CaseAbilitySaveParam caseAbilitySaveParam) {
+        RiskCaseAbilityRecord record = new RiskCaseAbilityRecord();
+        record.setReconsiderationLitigationStatus(caseAbilitySaveParam.getReconsiderationLitigationStatus());
+        record.setLetterVisitStatus(caseAbilitySaveParam.getLetterVisitStatus());
+        record.setLawEnforcementFaultStatus(caseAbilitySaveParam.getLawEnforcementFaultStatus());
+        record.setJudicialSupervisionStatus(caseAbilitySaveParam.getJudicialSupervisionStatus());
+        record.setCaseExpertStatus(caseAbilitySaveParam.getCaseExpertStatus());
+        record.setExcellentLegalOfficerStatus(caseAbilitySaveParam.getExcellentLegalOfficerStatus());
+        record.setBasicTestStatus(caseAbilitySaveParam.getBasicTestStatus());
+        record.setHighTestStatus(caseAbilitySaveParam.getHighTestStatus());
+        record.setJudicialTestStatus(caseAbilitySaveParam.getJudicialTestStatus());
+        record.setYear(DateUtils.formatDate(DateUtils.parseDate(caseAbilitySaveParam.getDate(), "YYYY-MM-DD HH:mm:ss"), "YYYY"));
+        record.setCreationDate(DateUtils.parseDate(caseAbilitySaveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
 
-        return new ResponseEntity(HttpStatus.OK);
+        riskCaseAbilityRecordService.insertSelective(record);
+        return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/ability")
     public ResponseEntity<?> updateCaseAbility(@RequestParam("id") Integer id,
                                                @RequestBody CaseAbilitySaveParam caseAbilitySaveParam) {
+        RiskCaseAbilityRecord record = riskCaseAbilityRecordService.selectByPrimaryKey(id);
+        record.setReconsiderationLitigationStatus(caseAbilitySaveParam.getReconsiderationLitigationStatus());
+        record.setLetterVisitStatus(caseAbilitySaveParam.getLetterVisitStatus());
+        record.setLawEnforcementFaultStatus(caseAbilitySaveParam.getLawEnforcementFaultStatus());
+        record.setJudicialSupervisionStatus(caseAbilitySaveParam.getJudicialSupervisionStatus());
+        record.setCaseExpertStatus(caseAbilitySaveParam.getCaseExpertStatus());
+        record.setExcellentLegalOfficerStatus(caseAbilitySaveParam.getExcellentLegalOfficerStatus());
+        record.setBasicTestStatus(caseAbilitySaveParam.getBasicTestStatus());
+        record.setHighTestStatus(caseAbilitySaveParam.getHighTestStatus());
+        record.setJudicialTestStatus(caseAbilitySaveParam.getJudicialTestStatus());
+        record.setUpdateDate(new Date());
 
-        return new ResponseEntity(HttpStatus.OK);
+        riskCaseAbilityRecordService.updateByPrimaryKeySelective(record);
+        return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @GetMapping("/ability/details")
     public ResponseEntity<?> caseAbilityDetails(@RequestParam("id") Integer id) {
+        RiskCaseAbilityRecord record = riskCaseAbilityRecordService.selectByPrimaryKey(id);
         CaseAbilityDetailsResult result = new CaseAbilityDetailsResult();
+        User user = userService.findByPoliceId(record.getPoliceId());
+        result.setPoliceName(user.getName());
+        result.setPoliceId(record.getPoliceId());
+        result.setReconsiderationLitigationStatus(record.getReconsiderationLitigationStatus());
+        result.setLetterVisitStatus(record.getLetterVisitStatus());
+        result.setLawEnforcementFaultStatus(record.getLawEnforcementFaultStatus());
+        result.setJudicialSupervisionStatus(record.getJudicialSupervisionStatus());
+        result.setCaseExpertStatus(record.getCaseExpertStatus());
+        result.setExcellentLegalOfficerStatus(record.getExcellentLegalOfficerStatus());
+        result.setBasicTestStatus(record.getBasicTestStatus());
+        result.setHighTestStatus(record.getHighTestStatus());
+        result.setJudicialTestStatus(record.getJudicialTestStatus());
+        result.setDate(DateUtils.formatDate(record.getCreationDate(), "YYYY-MM-DD HH:mm:ss"));
 
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/ability")
     public ResponseEntity<?> deleteCaseAbility(@RequestParam("id") Integer id) {
+        riskCaseAbilityRecordService.deleteByPrimaryKey(id);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     /**
@@ -132,7 +211,7 @@ public class CaseController {
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
 
         riskCaseLawEnforcementRecordService.insert(record);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/law/enforcement")
@@ -146,7 +225,7 @@ public class CaseController {
         oldRecord.setUpdateDate(new Date());
 
         riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(oldRecord);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @GetMapping("/law/enforcement/details")
@@ -168,7 +247,7 @@ public class CaseController {
     public ResponseEntity<?> deleteCaseLawEnforcement(@RequestParam("id") Integer id) {
         riskCaseLawEnforcementRecordService.deleteByPrimaryKey(id);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     /**
@@ -212,7 +291,7 @@ public class CaseController {
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
 
         riskCaseTestRecordService.insertTest(record);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/test")
@@ -226,7 +305,7 @@ public class CaseController {
         oldRecord.setUpdateDate(new Date());
 
         riskCaseTestRecordService.updateByPrimaryKey(oldRecord);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @GetMapping("/test/details")
@@ -248,7 +327,7 @@ public class CaseController {
     public ResponseEntity<?> deleteCaseTest(@RequestParam("id") Integer id) {
         riskCaseTestRecordService.deleteByPrimaryKey(id);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
 }

@@ -50,4 +50,18 @@ public interface RiskDutyDealPoliceRecordMapper {
 	 */
 	Double findPoliceAvgDeductionScoreByDate(@Param("date") String date);
 
+	/**
+	 * 分页查询接警执勤信息
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize);
+
+	/**
+	 * 统计分页数据数据条数
+	 * @return
+	 */
+	Integer riskDutyDealPoliceRecordPageCount();
+
 }

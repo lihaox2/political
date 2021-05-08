@@ -158,4 +158,19 @@
     where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
   </select>
 
+  <select id="riskConductBureauRuleRecordPage" resultMap="BaseResultMap">
+    select r1.*, r2.name as type_name from risk_conduct_bureau_rule_record r1
+        left join risk_conduct_bureau_rule_type on r1.type = r2.id
+      order by id desc
+      limit #{pageIndex}, #{pageSize}
+  </select>
+
+  <select id="getRiskConductBureauRuleRecordPageCount" resultType="Integer">
+    select count(1) from risk_conduct_bureau_rule_record
+  </select>
+
+  <select id="countByBureauRuleType" resultType="Integer">
+    select count(1) from risk_conduct_bureau_rule_record where type = #{typeId}
+  </select>
+
 </mapper>

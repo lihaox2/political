@@ -116,6 +116,8 @@ public class HealthController {
 
     @GetMapping("/delete/health")
     public ResponseEntity<?> deleteHealth(@RequestParam("id") Integer id) {
+        riskHealthRecordService.deleteByPrimaryKey(id);
+        riskHealthRecordInfoService.deleteByRecordId(id);
 
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }

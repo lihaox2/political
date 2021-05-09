@@ -6,6 +6,8 @@ package com.bayee.political.pojo.json;
  */
 public class ConductBureauRulePageResult {
 
+    private Integer id;
+
     private String policeId;
 
     private String policeName;
@@ -29,6 +31,14 @@ public class ConductBureauRulePageResult {
      * 时间
      */
     private String date;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getPoliceId() {
         return policeId;

@@ -34,4 +34,19 @@ public interface RiskConductVisitTypeMapper {
      */
     Integer getRiskConductVisitTypePageCount();
 
+    /**
+     * 查询所有信访类型
+     * @return
+     */
+    List<RiskConductVisitType> getAllRiskConductVisitType();
+
+    /**
+     * 根绝名称和父级类型统计数据条数
+     * @param name
+     * @param parentId
+     * @param id
+     * @return
+     */
+    Integer countByNameAndParentId(@Param("name") String name,@Param("parentId") Integer parentId, @Param("id") Integer id);
+
 }

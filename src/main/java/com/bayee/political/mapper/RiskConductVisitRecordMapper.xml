@@ -154,4 +154,19 @@
     where police_id=#{policeId} and DATE_FORMAT(creation_date, '%Y-%m')=DATE_FORMAT(#{date}, '%Y-%m')
   </select>
 
+  <select id="countByTypeId" resultType="Integer">
+    select count(1) from risk_conduct_visit_record where type = #{typeId}
+  </select>
+
+  <select id="riskConductVisitRecordPage" resultMap="BaseResultMap">
+    select r.*,t.name as type_name from risk_conduct_visit_record r
+    left join risk_conduct_visit_type t on r.type = t.id
+    order by r.id desc
+    limit #{pageIndex}, #{pageSize}
+  </select>
+
+  <select id="getRiskConductVisitRecordPageCount" resultType="Integer">
+    select count(1) from risk_conduct_visit_record
+  </select>
+
 </mapper>

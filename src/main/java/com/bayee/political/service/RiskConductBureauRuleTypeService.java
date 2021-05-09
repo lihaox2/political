@@ -36,4 +36,19 @@ public interface RiskConductBureauRuleTypeService {
      */
     Integer getRiskConductBureauRuleTypePageCount();
 
+    /**
+     * 查询所有大于1级的类型
+     * @return
+     */
+    List<RiskConductBureauRuleType> getAllRiskConductBureauRuleType();
+
+    /**
+     * 根据名称和上级编号统计数据条数
+     * @param name
+     * @param parentId
+     * @param id
+     * @return
+     */
+    Integer countRuleTypeByNameAndRuleType(String name, Integer parentId, Integer id);
+
 }

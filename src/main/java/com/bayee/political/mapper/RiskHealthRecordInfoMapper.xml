@@ -87,7 +87,11 @@
   </select>
 
   <select id="findByRecordId" resultMap="BaseResultMap">
-    select * from risk_health_record_info where record_id = #{recordId}
+    select * from risk_health_record_info where record_id = #{recordId} limit 1
   </select>
+
+  <delete id="deleteByRecordId">
+    delete from risk_health_record_info where record_id = #{recordId}
+  </delete>
 
 </mapper>

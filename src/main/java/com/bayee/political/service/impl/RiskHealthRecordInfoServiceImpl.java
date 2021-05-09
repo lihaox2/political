@@ -47,4 +47,9 @@ public class RiskHealthRecordInfoServiceImpl implements RiskHealthRecordInfoServ
     public RiskHealthRecordInfo findByRecordId(Integer recordId) {
         return riskHealthRecordInfoMapper.findByRecordId(recordId);
     }
+
+    @Override
+    public void deleteByRecordId(Integer recordId) {
+        riskHealthRecordInfoMapper.deleteByRecordId(recordId);
+    }
 }

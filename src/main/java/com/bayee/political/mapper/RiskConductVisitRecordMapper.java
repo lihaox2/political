@@ -30,4 +30,25 @@ public interface RiskConductVisitRecordMapper {
      */
     List<RiskConductVisitRecord> findRiskConductVisitRecordList(@Param("policeId") String policeId,@Param("date") String date);
 
+    /**
+     * 根绝类型统计数据条数
+     * @param typeId
+     * @return
+     */
+    Integer countByTypeId(@Param("typeId") Integer typeId);
+
+    /**
+     * 分页查询
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    List<RiskConductVisitRecord> riskConductVisitRecordPage(@Param("pageIndex") Integer pageIndex,@Param("pageSize") Integer pageSize);
+
+    /**
+     * 统计分页数据条数
+     * @return
+     */
+    Integer getRiskConductVisitRecordPageCount();
+
 }

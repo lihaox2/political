@@ -119,4 +119,15 @@
     from risk_conduct_bureau_rule_type
   </select>
 
+  <select id="getAllRiskConductBureauRuleType" resultMap="BaseResultMap">
+    select * from risk_conduct_bureau_rule_type
+  </select>
+
+  <select id="countRuleTypeByNameAndRuleType" resultType="Integer">
+    select * from risk_conduct_bureau_rule_type where name = #{name} and parent_id = #{parentId}
+    <if test="id != null">
+      and id != #{id}
+    </if>
+  </select>
+
 </mapper>

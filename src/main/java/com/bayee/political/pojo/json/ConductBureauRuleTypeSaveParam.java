@@ -6,17 +6,15 @@ package com.bayee.political.pojo.json;
  */
 public class ConductBureauRuleTypeSaveParam {
 
+    /**
+     * 上级编号
+     */
     private Integer parentId;
 
     /**
      * 类型名称
      */
     private String name;
-
-    /**
-     * 问题来源
-     */
-    private String content;
 
     /**
      * 扣除分数
@@ -29,14 +27,6 @@ public class ConductBureauRuleTypeSaveParam {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public Double getDeductScore() {

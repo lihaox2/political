@@ -21,10 +21,16 @@ public interface RiskHealthRecordInfoService {
     int updateByPrimaryKey(RiskHealthRecordInfo record);
 
     /**
-     *
+     *根据recordId进行查询
      * @param recordId
      * @return
      */
     RiskHealthRecordInfo findByRecordId(Integer recordId);
+
+    /**
+     * 根据recordId进行删除
+     * @param recordId
+     */
+    void deleteByRecordId(Integer recordId);
 
 }

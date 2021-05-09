@@ -57,4 +57,14 @@ public class RiskConductBureauRuleTypeServiceImpl implements RiskConductBureauRu
     public Integer getRiskConductBureauRuleTypePageCount() {
         return riskConductBureauRuleTypeMapper.getRiskConductBureauRuleTypePageCount();
     }
+
+    @Override
+    public List<RiskConductBureauRuleType> getAllRiskConductBureauRuleType() {
+        return riskConductBureauRuleTypeMapper.getAllRiskConductBureauRuleType();
+    }
+
+    @Override
+    public Integer countRuleTypeByNameAndRuleType(String name, Integer parentId, Integer id) {
+        return riskConductBureauRuleTypeMapper.countRuleTypeByNameAndRuleType(name, parentId, id);
+    }
 }

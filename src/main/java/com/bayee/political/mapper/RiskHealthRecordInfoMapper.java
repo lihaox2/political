@@ -23,4 +23,10 @@ public interface RiskHealthRecordInfoMapper {
      */
     RiskHealthRecordInfo findByRecordId(@Param("recordId") Integer recordId);
 
+    /**
+     * 根据recordId进行删除
+     * @param recordId
+     */
+    void deleteByRecordId(@Param("recordId") Integer recordId);
+
 }

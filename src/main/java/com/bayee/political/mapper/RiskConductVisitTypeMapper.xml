@@ -131,4 +131,15 @@
     select count(1) from risk_conduct_visit_type
   </select>
 
+  <select id="getAllRiskConductVisitType" resultMap="BaseResultMap">
+    select * from risk_conduct_visit_type where `level` != 1
+  </select>
+
+  <select id="countByNameAndParentId" resultType="Integer">
+    select * from risk_conduct_visit_type where name = #{name} and parent_id = #{parentId}
+    <if test="id != null">
+      and id != #{id}
+    </if>
+  </select>
+
 </mapper>

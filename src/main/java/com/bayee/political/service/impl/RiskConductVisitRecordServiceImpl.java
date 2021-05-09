@@ -67,4 +67,23 @@ public class RiskConductVisitRecordServiceImpl implements RiskConductVisitRecord
 		return riskConductVisitTypeMapper.selectByName(name);
 	}
 
+	@Override
+	public List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize) {
+		if (pageIndex < 1) {
+			pageIndex = 1;
+		}
+		pageIndex = (pageIndex - 1) * pageSize;
+		return riskConductVisitRecordMapper.riskConductVisitRecordPage(pageIndex, pageSize);
+	}
+
+	@Override
+	public Integer getRiskConductVisitRecordPageCount() {
+		return riskConductVisitRecordMapper.getRiskConductVisitRecordPageCount();
+	}
+
+	@Override
+	public Integer countByTypeId(Integer typeId) {
+		return riskConductVisitRecordMapper.countByTypeId(typeId);
+	}
+
 }

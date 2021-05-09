@@ -41,7 +41,8 @@ public interface RiskConductBureauRuleRecordMapper {
      * @param pageSize
      * @return
      */
-    List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(@Param("pageIndex") Integer pageIndex,@Param("pageSize") Integer pageSize);
+    List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(@Param("pageIndex") Integer pageIndex,
+                                                                      @Param("pageSize") Integer pageSize);
 
     /**
      * 统计分页数据条数

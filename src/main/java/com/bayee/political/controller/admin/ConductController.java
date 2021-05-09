@@ -59,6 +59,7 @@ public class ConductController {
             if (user != null) {
                 pageResult.setPoliceName(user.getName());
             }
+            pageResult.setId(e.getId());
             pageResult.setType(e.getTypeName());
             pageResult.setContent(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
@@ -75,12 +76,13 @@ public class ConductController {
 
     @PostMapping("/add/bureau/rule")
     public ResponseEntity<?> addConductBureauRule(@RequestBody ConductBureauRuleSaveParam saveParam) {
+        RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductBureauRuleRecord record = new RiskConductBureauRuleRecord();
         record.setPoliceId(saveParam.getPoliceId());
         record.setType(saveParam.getTypeId());
         record.setInputTime(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
-        record.setContent(saveParam.getContent());
-        record.setDeductionScore(saveParam.getDeductScore());
+        record.setContent(ruleType.getName());
+        record.setDeductionScore(ruleType.getDeductScore());
         record.setRemarks(saveParam.getRemarks());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
 
@@ -91,10 +93,11 @@ public class ConductController {
     @PostMapping("/update/bureau/rule")
     public ResponseEntity<?> updateConductBureauRule(@RequestParam("id") Integer id,
                                                      @RequestBody ConductBureauRuleSaveParam saveParam) {
+        RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductBureauRuleRecord record = riskConductBureauRuleRecordService.selectByPrimaryKey(id);
         record.setType(saveParam.getTypeId());
-        record.setContent(saveParam.getContent());
-        record.setDeductionScore(saveParam.getDeductScore());
+        record.setContent(ruleType.getName());
+        record.setDeductionScore(ruleType.getDeductScore());
         record.setRemarks(saveParam.getRemarks());
         record.setUpdateDate(new Date());
 
@@ -136,11 +139,25 @@ public class ConductController {
     @GetMapping("/visit/page")
     public ResponseEntity<?> conductVisitPage(@RequestParam("pageIndex") Integer pageIndex,
                                               @RequestParam("pageSize") Integer pageSize) {
-        ConductVisitPageResult pageResult = new ConductVisitPageResult();
+        List<RiskConductVisitRecord> recordList = riskConductVisitRecordService.riskConductVisitRecordPage(pageIndex, pageSize);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("data", pageResult);
-        result.put("totalCount", 100);
+        result.put("data", recordList.stream().map(e -> {
+            ConductVisitPageResult pageResult = new ConductVisitPageResult();
+            User user = userService.findByPoliceId(e.getPoliceId());
+
+            pageResult.setId(e.getId());
+            pageResult.setPoliceId(e.getPoliceId());
+            if (user != null) {
+                pageResult.setPoliceName(user.getName());
+            }
+            pageResult.setType(e.getTypeName());
+            pageResult.setContent(e.getContent());
+            pageResult.setDeductScore(e.getDeductionScore());
+            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "YYYY-MM-DD HH:mm:ss"));
+            return pageResult;
+        }).collect(Collectors.toList()));
+        result.put("totalCount", riskConductVisitRecordService.getRiskConductVisitRecordPageCount());
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
@@ -148,14 +165,15 @@ public class ConductController {
 
     @PostMapping("/add/visit")
     public ResponseEntity<?> addConductVisit(@RequestBody ConductVisitSaveParam saveParam) {
+        RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductVisitRecord record = new RiskConductVisitRecord();
         record.setPoliceId(saveParam.getPoliceId());
         record.setType(saveParam.getTypeId());
         record.setInputTime(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
-        record.setContent(saveParam.getContent());
+        record.setContent(riskConductVisitType.getName());
         record.setRemarks(saveParam.getRemarks());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
-        record.setDeductionScore(saveParam.getDeductScore());
+        record.setDeductionScore(riskConductVisitType.getDeductScore());
 
         riskConductVisitRecordService.insert(record);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -164,11 +182,12 @@ public class ConductController {
     @PostMapping("/update/visit")
     public ResponseEntity<?> updateConductVisit(@RequestParam("id") Integer id,
                                                 @RequestBody ConductVisitSaveParam saveParam) {
+        RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductVisitRecord record = riskConductVisitRecordService.selectByPrimaryKey(id);
         record.setType(saveParam.getTypeId());
-        record.setContent(saveParam.getContent());
+        record.setContent(riskConductVisitType.getName());
         record.setRemarks(saveParam.getRemarks());
-        record.setDeductionScore(saveParam.getDeductScore());
+        record.setDeductionScore(riskConductVisitType.getDeductScore());
         record.setUpdateDate(new Date());
 
         riskConductVisitRecordService.updateByPrimaryKey(record);
@@ -228,7 +247,13 @@ public class ConductController {
 
     @PostMapping("/add/bureau/rule/type")
     public ResponseEntity<?> addConductBureauRuleType(@RequestBody ConductBureauRuleTypeSaveParam saveParam) {
+        if (riskConductBureauRuleTypeService.countRuleTypeByNameAndRuleType(saveParam.getName(), saveParam.getParentId(), null) >= 1) {
+            return new ResponseEntity<>(DataListReturn.error("该类型已存在！"), HttpStatus.OK);
+        }
         RiskConductBureauRuleType ruleType = new RiskConductBureauRuleType();
+        ruleType.setParentId(saveParam.getParentId());
+        ruleType.setName(saveParam.getName());
+        ruleType.setDeductScore(saveParam.getDeductScore());
         ruleType.setCreationDate(new Date());
 
         riskConductBureauRuleTypeService.insert(ruleType);
@@ -238,7 +263,13 @@ public class ConductController {
     @PostMapping("/update/bureau/rule/type")
     public ResponseEntity<?> updateConductBureauRuleType(@RequestParam("id") Integer id,
                                                          @RequestBody ConductBureauRuleTypeSaveParam saveParam) {
+        if (riskConductBureauRuleTypeService.countRuleTypeByNameAndRuleType(saveParam.getName(), saveParam.getParentId(), id) >= 1) {
+            return new ResponseEntity<>(DataListReturn.error("该类型已存在！"), HttpStatus.OK);
+        }
         RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(id);
+        ruleType.setParentId(saveParam.getParentId());
+        ruleType.setName(saveParam.getName());
+        ruleType.setDeductScore(saveParam.getDeductScore());
         ruleType.setUpdateDate(new Date());
 
         riskConductBureauRuleTypeService.updateByPrimaryKey(ruleType);
@@ -293,8 +324,13 @@ public class ConductController {
 
     @PostMapping("/add/visit/type")
     public ResponseEntity<?> addConductVisitType(@RequestBody ConductVisitTypeSaveParam saveParam) {
+        if (riskConductBureauRuleTypeService.countRuleTypeByNameAndRuleType(saveParam.getName(), saveParam.getParentId(), null) >= 1) {
+            return new ResponseEntity<>(DataListReturn.error("该类型已存在！"), HttpStatus.OK);
+        }
         RiskConductVisitType visitType = new RiskConductVisitType();
+        visitType.setParentId(saveParam.getParentId());
         visitType.setName(saveParam.getName());
+        visitType.setDeductScore(saveParam.getDeductScore());
         visitType.setCreationDate(new Date());
 
         riskConductVisitTypeService.insert(visitType);
@@ -304,8 +340,13 @@ public class ConductController {
     @PostMapping("/update/visit/type")
     public ResponseEntity<?> updateConductVisitType(@RequestParam("id") Integer id,
                                                     @RequestBody ConductVisitTypeSaveParam saveParam) {
+        if (riskConductBureauRuleTypeService.countRuleTypeByNameAndRuleType(saveParam.getName(), saveParam.getParentId(), id) >= 1) {
+            return new ResponseEntity<>(DataListReturn.error("该类型已存在！"), HttpStatus.OK);
+        }
         RiskConductVisitType visitType = riskConductVisitTypeService.selectByPrimaryKey(id);
+        visitType.setParentId(saveParam.getParentId());
         visitType.setName(saveParam.getName());
+        visitType.setDeductScore(saveParam.getDeductScore());
         visitType.setUpdateDate(new Date());
 
         riskConductVisitTypeService.updateByPrimaryKeySelective(visitType);
@@ -325,6 +366,9 @@ public class ConductController {
 
     @GetMapping("/delete/visit/type")
     public ResponseEntity<?> deleteConductVisitType(@RequestParam("id") Integer id) {
+        if (riskConductVisitRecordService.countByTypeId(id) >= 1) {
+            return new ResponseEntity<>(DataListReturn.error("删除失败！类型已被使用！"), HttpStatus.OK);
+        }
         riskConductVisitTypeService.deleteByPrimaryKey(id);
 
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);

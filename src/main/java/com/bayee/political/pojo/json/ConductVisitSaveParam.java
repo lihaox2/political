@@ -14,16 +14,6 @@ public class ConductVisitSaveParam {
     private Integer typeId;
 
     /**
-     * 问题情况和来源
-     */
-    private String content;
-
-    /**
-     * 扣除分数
-     */
-    private Double deductScore;
-
-    /**
      * 时间
      */
     private String date;
@@ -47,22 +37,6 @@ public class ConductVisitSaveParam {
 
     public void setTypeId(Integer typeId) {
         this.typeId = typeId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Double getDeductScore() {
-        return deductScore;
-    }
-
-    public void setDeductScore(Double deductScore) {
-        this.deductScore = deductScore;
     }
 
     public String getDate() {

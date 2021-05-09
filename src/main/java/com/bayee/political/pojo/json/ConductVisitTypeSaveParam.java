@@ -6,14 +6,15 @@ package com.bayee.political.pojo.json;
  */
 public class ConductVisitTypeSaveParam {
 
+    /**
+     * 上级编号
+     */
     private Integer parentId;
 
-    private String name;
-
     /**
-     * 问题情况和来源
+     * 名称
      */
-    private String content;
+    private String name;
 
     /**
      * 扣除分数
@@ -26,14 +27,6 @@ public class ConductVisitTypeSaveParam {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public Double getDeductScore() {

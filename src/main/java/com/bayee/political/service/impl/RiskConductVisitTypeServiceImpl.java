@@ -66,4 +66,14 @@ public class RiskConductVisitTypeServiceImpl implements RiskConductVisitTypeServ
     public Integer getRiskConductVisitTypePageCount() {
         return riskConductVisitTypeMapper.getRiskConductVisitTypePageCount();
     }
+
+    @Override
+    public List<RiskConductVisitType> getAllRiskConductVisitType() {
+        return riskConductVisitTypeMapper.getAllRiskConductVisitType();
+    }
+
+    @Override
+    public Integer countByNameAndParentId(String name, Integer parentId, Integer id) {
+        return riskConductVisitTypeMapper.countByNameAndParentId(name, parentId, id);
+    }
 }

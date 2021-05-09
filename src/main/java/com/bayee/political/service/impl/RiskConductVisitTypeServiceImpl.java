@@ -6,6 +6,8 @@ import com.bayee.political.service.RiskConductVisitTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author xxl
  * @date 2021/5/8
@@ -49,5 +51,19 @@ public class RiskConductVisitTypeServiceImpl implements RiskConductVisitTypeServ
     @Override
     public Integer selectByName(String name) {
         return riskConductVisitTypeMapper.selectByName(name);
+    }
+
+    @Override
+    public List<RiskConductVisitType> riskConductVisitTypePage(Integer pageIndex, Integer pageSize) {
+        if (pageIndex < 1) {
+            pageIndex = 1;
+        }
+        pageIndex = (pageIndex - 1) * pageSize;
+        return riskConductVisitTypeMapper.riskConductVisitTypePage(pageIndex, pageSize);
+    }
+
+    @Override
+    public Integer getRiskConductVisitTypePageCount() {
+        return riskConductVisitTypeMapper.getRiskConductVisitTypePageCount();
     }
 }

@@ -6,6 +6,8 @@ package com.bayee.political.pojo.json;
  */
 public class CaseAbilityPageResult {
 
+    private Integer id;
+
     /**
      * 警员编号
      */
@@ -25,6 +27,14 @@ public class CaseAbilityPageResult {
      * 负面执法
      */
     private Integer errorCount;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getPoliceId() {
         return policeId;

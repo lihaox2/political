@@ -2,6 +2,8 @@ package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskCaseLawEnforcementType;
 
+import java.util.List;
+
 public interface RiskCaseLawEnforcementTypeMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,17 @@ public interface RiskCaseLawEnforcementTypeMapper {
     int updateByPrimaryKeySelective(RiskCaseLawEnforcementType record);
 
     int updateByPrimaryKey(RiskCaseLawEnforcementType record);
+
+    /**
+     * 获取执法管理类型
+     * @return
+     */
+    List<RiskCaseLawEnforcementType> getLawEnforcementType();
+
+    /**
+     * 获取接处警类型
+     * @return
+     */
+    List<RiskCaseLawEnforcementType> getDutyType();
+
 }

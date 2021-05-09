@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.domain.RiskReportRecord;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskHealthRecord;
@@ -22,4 +23,19 @@ public interface RiskHealthRecordMapper {
     Integer getByIdAndYear(@Param("policeId") String policeId,@Param("year")String year);
     
     List<RiskHealthRecord> selectYearAll(@Param("year")String year);
+
+    /**
+     * 分页查询健康数据
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    List<RiskHealthRecord> riskRiskHealthRecordPage(@Param("pageIndex") Integer pageIndex,@Param("pageSize") Integer pageSize);
+
+    /**
+     * 统计分页数据条数
+     * @return
+     */
+    Integer getRiskReportRecordPageCount();
+
 }

@@ -4,11 +4,14 @@
   <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskConductBureauRuleType">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="typeName" jdbcType="VARCHAR" property="typeName" />
+    <result column="deduct_score" jdbcType="DOUBLE" property="deductScore" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, creation_date, update_date
+    id, name, content, deduct_score, parent_id, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -21,9 +24,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductBureauRuleType">
-    insert into risk_conduct_bureau_rule_type (id, name, creation_date, update_date
+    insert into risk_conduct_bureau_rule_type (id, name, deduct_score, parent_id, creation_date, update_date
       )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{deductScore}, #{parentId}
             #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -35,6 +38,12 @@
       </if>
       <if test="name != null">
         name,
+      </if>
+      <if test="deductScore != null">
+        deduct_score,
+      </if>
+      <if test="parentId != null">
+        parent_id,
       </if>
       <if test="creationDate != null">
         creation_date,
@@ -50,11 +59,11 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
+      <if test="deductScore != null">
+        #{deductScore},
+      </if>
       <if test="parentId != null">
         #{parentId,jdbcType=INTEGER},
-      </if>
-      <if test="level != null">
-        #{level,jdbcType=INTEGER},
       </if>
       <if test="creationDate != null">
         #{creationDate,jdbcType=TIMESTAMP},
@@ -70,6 +79,15 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="content != null">
+        content = #{content},
+      </if>
+      <if test="deductScore != null">
+        deduct_score = #{deductScore},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId}
+      </if>
       <if test="creationDate != null">
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -82,14 +100,16 @@
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskConductBureauRuleType">
     update risk_conduct_bureau_rule_type
     set name = #{name,jdbcType=VARCHAR},
+        deduct_score = #{deductScore},
+        parent_id = #{parentId},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
   <select id="riskConductBureauRuleTypePage" resultMap="BaseResultMap">
-    select *
-    from risk_conduct_bureau_rule_type
+    select t1.*, t2.`name` typeName from risk_conduct_bureau_rule_type t1,
+                                         risk_conduct_bureau_rule_type t2 where t1.parent_id = t2.id
     order by id desc
     limit #{pageIndex}, #{pageSize}
   </select>

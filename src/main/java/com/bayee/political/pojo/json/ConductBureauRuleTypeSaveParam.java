@@ -6,10 +6,22 @@ package com.bayee.political.pojo.json;
  */
 public class ConductBureauRuleTypeSaveParam {
 
+    private Integer parentId;
+
     /**
      * 类型名称
      */
     private String name;
+
+    /**
+     * 问题来源
+     */
+    private String content;
+
+    /**
+     * 扣除分数
+     */
+    private Double deductScore;
 
     public String getName() {
         return name;
@@ -17,5 +29,29 @@ public class ConductBureauRuleTypeSaveParam {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Double getDeductScore() {
+        return deductScore;
+    }
+
+    public void setDeductScore(Double deductScore) {
+        this.deductScore = deductScore;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

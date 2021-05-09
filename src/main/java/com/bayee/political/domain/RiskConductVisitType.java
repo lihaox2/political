@@ -7,6 +7,11 @@ public class RiskConductVisitType {
 
     private String name;
 
+    /**
+     * 扣除分数
+     */
+    private Double deductScore;
+
     private Integer parentId;
 
     private Integer level;
@@ -14,6 +19,16 @@ public class RiskConductVisitType {
     private Date creationDate;
 
     private Date updateDate;
+
+    private String typeName;
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 
     public Integer getId() {
         return id;
@@ -61,5 +76,13 @@ public class RiskConductVisitType {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Double getDeductScore() {
+        return deductScore;
+    }
+
+    public void setDeductScore(Double deductScore) {
+        this.deductScore = deductScore;
     }
 }

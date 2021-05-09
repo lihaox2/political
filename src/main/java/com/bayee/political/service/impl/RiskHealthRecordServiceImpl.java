@@ -9,6 +9,8 @@ import com.bayee.political.mapper.RiskHealthRecordMapper;
 import com.bayee.political.mapper.RiskReportRecordMapper;
 import com.bayee.political.service.RiskHealthRecordService;
 
+import java.util.List;
+
 @Service
 public class RiskHealthRecordServiceImpl implements RiskHealthRecordService{
 	
@@ -64,6 +66,20 @@ public class RiskHealthRecordServiceImpl implements RiskHealthRecordService{
 	public RiskReportRecord getByPoliceIdMonth(String year, String month, String policeId) {
 		// TODO Auto-generated method stub
 		return riskReportRecordMapper.getByPoliceIdMonth(year, month, policeId);
+	}
+
+	@Override
+	public List<RiskHealthRecord> riskRiskHealthRecordPage(Integer pageIndex, Integer pageSize) {
+		if (pageIndex < 1) {
+			pageIndex = 1;
+		}
+		pageIndex = (pageIndex - 1) * pageSize;
+		return riskHealthRecordMapper.riskRiskHealthRecordPage(pageIndex, pageSize);
+	}
+
+	@Override
+	public Integer getRiskReportRecordPageCount() {
+		return riskHealthRecordMapper.getRiskReportRecordPageCount();
 	}
 
 }

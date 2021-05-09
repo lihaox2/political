@@ -47,7 +47,9 @@ public class DutyController {
             User user = userService.findByPoliceId(e.getPoliceId());
             pageResult.setId(e.getId());
             pageResult.setPoliceId(e.getPoliceId());
-            pageResult.setPoliceName(user.getName());
+            if (user != null) {
+                pageResult.setPoliceName(user.getName());
+            }
             pageResult.setTypeName(e.getTypeName());
             pageResult.setDesc(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
@@ -94,7 +96,9 @@ public class DutyController {
         DutyDetailsResult result = new DutyDetailsResult();
         User user = userService.findByPoliceId(record.getPoliceId());
         result.setPoliceId(record.getPoliceId());
-        result.setPoliceName(user.getName());
+        if (user != null) {
+            result.setPoliceName(user.getName());
+        }
         result.setTypeId(record.getType());
         result.setDesc(record.getContent());
         result.setDeductScore(record.getDeductionScore());

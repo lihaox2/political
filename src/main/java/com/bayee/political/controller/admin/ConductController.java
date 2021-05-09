@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author xxl
@@ -55,7 +56,9 @@ public class ConductController {
             ConductBureauRulePageResult pageResult = new ConductBureauRulePageResult();
             User user = userService.findByPoliceId(e.getPoliceId());
             pageResult.setPoliceId(e.getPoliceId());
-            pageResult.setPoliceName(user.getName());
+            if (user != null) {
+                pageResult.setPoliceName(user.getName());
+            }
             pageResult.setType(e.getTypeName());
             pageResult.setContent(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
@@ -105,7 +108,9 @@ public class ConductController {
         ConductBureauRuleDetailsResult result = new ConductBureauRuleDetailsResult();
         User user = userService.findByPoliceId(record.getPoliceId());
         result.setPoliceId(record.getPoliceId());
-        result.setPoliceName(user.getName());
+        if (user != null) {
+            result.setPoliceName(user.getName());
+        }
         result.setTypeId(record.getType());
         result.setContent(record.getContent());
         result.setDeductScore(record.getDeductionScore());
@@ -176,7 +181,9 @@ public class ConductController {
         ConductVisitDetailsResult result = new ConductVisitDetailsResult();
         User user = userService.findByPoliceId(record.getPoliceId());
         result.setPoliceId(record.getPoliceId());
-        result.setPoliceName(user.getName());
+        if (user != null) {
+            result.setPoliceName(user.getName());
+        }
         result.setTypeId(record.getType());
         result.setContent(record.getContent());
         result.setDeductScore(record.getDeductionScore());
@@ -205,17 +212,23 @@ public class ConductController {
         List<RiskConductBureauRuleType> ruleTypeList = riskConductBureauRuleTypeService.riskConductBureauRuleTypePage(pageIndex, pageSize);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("data", ruleTypeList);
+        result.put("data", ruleTypeList.stream().map(e -> {
+            ConductBureauRuleTypePageResult pageResult = new ConductBureauRuleTypePageResult();
+            pageResult.setId(e.getId());
+            pageResult.setTypeName(e.getTypeName());
+            pageResult.setName(e.getName());
+            pageResult.setDeductScore(e.getDeductScore());
+            return pageResult;
+        }).collect(Collectors.toList()));
         result.put("totalCount", riskConductBureauRuleTypeService.getRiskConductBureauRuleTypePageCount());
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
     }
 
-    @PostMapping("/add/conduct/bureau/rule/type")
+    @PostMapping("/add/bureau/rule/type")
     public ResponseEntity<?> addConductBureauRuleType(@RequestBody ConductBureauRuleTypeSaveParam saveParam) {
         RiskConductBureauRuleType ruleType = new RiskConductBureauRuleType();
-        ruleType.setName(saveParam.getName());
         ruleType.setCreationDate(new Date());
 
         riskConductBureauRuleTypeService.insert(ruleType);
@@ -226,7 +239,6 @@ public class ConductController {
     public ResponseEntity<?> updateConductBureauRuleType(@RequestParam("id") Integer id,
                                                          @RequestBody ConductBureauRuleTypeSaveParam saveParam) {
         RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(id);
-        ruleType.setName(saveParam.getName());
         ruleType.setUpdateDate(new Date());
 
         riskConductBureauRuleTypeService.updateByPrimaryKey(ruleType);
@@ -236,8 +248,12 @@ public class ConductController {
     @GetMapping("/bureau/rule/type/details")
     public ResponseEntity<?> conductBureauRuleTypeDetails(@RequestParam("id") Integer id) {
         RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(id);
+        ConductBureauRuleTypeDetailsResult result = new ConductBureauRuleTypeDetailsResult();
+        result.setParentId(ruleType.getParentId());
+        result.setName(ruleType.getName());
+        result.setDeductScore(ruleType.getDeductScore());
 
-        return new ResponseEntity<>(DataListReturn.ok(ruleType), HttpStatus.OK);
+        return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
 
     @GetMapping("/delete/bureau/rule/type")
@@ -258,12 +274,18 @@ public class ConductController {
     @GetMapping("/visit/type/page")
     public ResponseEntity<?> conductVisitTypePage(@RequestParam("pageIndex") Integer pageIndex,
                                                   @RequestParam("pageSize") Integer pageSize) {
-
-        HealthPageResult pageResult = new HealthPageResult();
+        List<RiskConductVisitType> visitTypes = riskConductVisitTypeService.riskConductVisitTypePage(pageIndex, pageSize);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("data", pageResult);
-        result.put("totalCount", 100);
+        result.put("data", visitTypes.stream().map(e -> {
+            ConductVisitTypePageResult pageResult = new ConductVisitTypePageResult();
+            pageResult.setId(e.getId());
+            pageResult.setTypeName(e.getTypeName());
+            pageResult.setName(e.getName());
+            pageResult.setDeductScore(e.getDeductScore());
+            return pageResult;
+        }).collect(Collectors.toList()));
+        result.put("totalCount", riskConductVisitTypeService.getRiskConductVisitTypePageCount());
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
@@ -293,8 +315,12 @@ public class ConductController {
     @GetMapping("/visit/type/details")
     public ResponseEntity<?> conductVisitTypeDetails(@RequestParam("id") Integer id) {
         RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(id);
+        ConductVisitTypeDetailsResult result = new ConductVisitTypeDetailsResult();
+        result.setParentId(riskConductVisitType.getParentId());
+        result.setName(riskConductVisitType.getName());
+        result.setDeductScore(riskConductVisitType.getDeductScore());
 
-        return new ResponseEntity<>(DataListReturn.ok(riskConductVisitType), HttpStatus.OK);
+        return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
 
     @GetMapping("/delete/visit/type")

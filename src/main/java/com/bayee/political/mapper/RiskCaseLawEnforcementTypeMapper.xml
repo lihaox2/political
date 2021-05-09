@@ -103,4 +103,13 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getLawEnforcementType" resultMap="BaseResultMap">
+    select * from risk_case_law_enforcement_type where code not in('jcj')
+  </select>
+
+  <select id="getDutyType" resultMap="BaseResultMap">
+    select * from risk_case_law_enforcement_type where code in('jcj')
+  </select>
+
 </mapper>

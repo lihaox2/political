@@ -4,13 +4,15 @@
   <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskConductVisitType">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="typeName" jdbcType="VARCHAR" property="typeName" />
+    <result column="deduct_score" jdbcType="DOUBLE" property="deductScore" />
     <result column="parent_id" jdbcType="INTEGER" property="parentId" />
     <result column="level" jdbcType="INTEGER" property="level" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, parent_id, level, creation_date, update_date
+    id, name, parent_id, deduct_score, level, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -23,10 +25,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductVisitType">
-    insert into risk_conduct_visit_type (id, name, parent_id, 
+    insert into risk_conduct_visit_type (id, name, parent_id, deduct_score
       level, creation_date, update_date
       )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, #{deductScore},
       #{level,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -38,6 +40,9 @@
       </if>
       <if test="name != null">
         name,
+      </if>
+      <if test="deductScore != null">
+        deduct_score,
       </if>
       <if test="parentId != null">
         parent_id,
@@ -59,6 +64,9 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
+      <if test="deductScore != null">
+        #{deductScore},
+      </if>
       <if test="parentId != null">
         #{parentId,jdbcType=INTEGER},
       </if>
@@ -79,6 +87,9 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="deductScore != null">
+        deduct_score = #{deductScore},
+      </if>
       <if test="parentId != null">
         parent_id = #{parentId,jdbcType=INTEGER},
       </if>
@@ -97,6 +108,7 @@
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskConductVisitType">
     update risk_conduct_visit_type
     set name = #{name,jdbcType=VARCHAR},
+        deduct_score = #{deductScore},
       parent_id = #{parentId,jdbcType=INTEGER},
       level = #{level,jdbcType=INTEGER},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -107,4 +119,16 @@
   <select id="selectByName" resultType="Integer">
   	select id from	risk_conduct_visit_type where name = #{name}
   </select>
+
+  <select id="riskConductVisitTypePage" resultMap="BaseResultMap">
+    select t1.*, t2.`name` typeName from risk_conduct_visit_type t1,
+                                         risk_conduct_visit_type t2 where t1.parent_id = t2.id and t2.`level` = 2
+    order by creation_date desc
+    limit #{pageIndex}, #{pageSize}
+  </select>
+
+  <select id="getRiskConductVisitTypePageCount" resultType="Integer">
+    select count(1) from risk_conduct_visit_type
+  </select>
+
 </mapper>

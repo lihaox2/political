@@ -16,6 +16,16 @@ public class RiskConductBureauRuleType {
     private String name;
 
     /**
+     * 扣除分数
+     */
+    private Double deductScore;
+
+    /**
+     * 上级id
+     */
+    private Integer parentId;
+
+    /**
      * 创建时间
      */
     private Date creationDate;
@@ -24,6 +34,16 @@ public class RiskConductBureauRuleType {
      * 修改时间
      */
     private Date updateDate;
+
+    private String typeName;
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 
     public Integer getId() {
         return id;
@@ -55,5 +75,21 @@ public class RiskConductBureauRuleType {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Double getDeductScore() {
+        return deductScore;
+    }
+
+    public void setDeductScore(Double deductScore) {
+        this.deductScore = deductScore;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

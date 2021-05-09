@@ -90,8 +90,11 @@ public class CaseController {
 
             User user = userService.findByPoliceId(e.getPoliceId());
             CaseAbilityPageResult pageResult = new CaseAbilityPageResult();
+            pageResult.setId(e.getId());
             pageResult.setPoliceId(e.getPoliceId());
-            pageResult.setPoliceName(user.getName());
+            if (user != null) {
+                pageResult.setPoliceName(user.getName());
+            }
             pageResult.setPassCount(passCount);
             pageResult.setErrorCount(errorCount);
             return pageResult;
@@ -105,6 +108,7 @@ public class CaseController {
     @PostMapping("/add/ability")
     public ResponseEntity<?> addCaseAbility(@RequestBody CaseAbilitySaveParam caseAbilitySaveParam) {
         RiskCaseAbilityRecord record = new RiskCaseAbilityRecord();
+        record.setPoliceId(caseAbilitySaveParam.getPoliceId());
         record.setReconsiderationLitigationStatus(caseAbilitySaveParam.getReconsiderationLitigationStatus());
         record.setLetterVisitStatus(caseAbilitySaveParam.getLetterVisitStatus());
         record.setLawEnforcementFaultStatus(caseAbilitySaveParam.getLawEnforcementFaultStatus());
@@ -145,7 +149,9 @@ public class CaseController {
         RiskCaseAbilityRecord record = riskCaseAbilityRecordService.selectByPrimaryKey(id);
         CaseAbilityDetailsResult result = new CaseAbilityDetailsResult();
         User user = userService.findByPoliceId(record.getPoliceId());
-        result.setPoliceName(user.getName());
+        if (user != null) {
+            result.setPoliceName(user.getName());
+        }
         result.setPoliceId(record.getPoliceId());
         result.setReconsiderationLitigationStatus(record.getReconsiderationLitigationStatus());
         result.setLetterVisitStatus(record.getLetterVisitStatus());
@@ -186,7 +192,9 @@ public class CaseController {
             User user = userService.findByPoliceId(e.getPoliceId());
             pageResult.setId(e.getId());
             pageResult.setPoliceId(e.getPoliceId());
-            pageResult.setPoliceName(user.getName());
+            if (user != null) {
+                pageResult.setPoliceName(user.getName());
+            }
             pageResult.setTypeName(e.getTypeName());
             pageResult.setDesc(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
@@ -234,7 +242,9 @@ public class CaseController {
         CaseLawEnforcementDetailsResult result = new CaseLawEnforcementDetailsResult();
         User user = userService.findByPoliceId(record.getPoliceId());
         result.setPoliceId(record.getPoliceId());
-        result.setPoliceName(user.getName());
+        if (user != null) {
+            result.setPoliceName(user.getName());
+        }
         result.setType(record.getType());
         result.setDesc(record.getContent());
         result.setDeductScore(record.getDeductionScore());
@@ -265,9 +275,11 @@ public class CaseController {
         result.put("data", recordList.stream().map(e -> {
             CaseTestPageResult pageResult = new CaseTestPageResult();
             User user = userService.findByPoliceId(e.getPoliceId());
+            if (user != null) {
+                pageResult.setPoliceName(user.getName());
+            }
             pageResult.setId(e.getId());
             pageResult.setPoliceId(e.getPoliceId());
-            pageResult.setPoliceName(user.getName());
             pageResult.setTestName(e.getName());
             pageResult.setScore(e.getScore());
             pageResult.setYear(e.getYear());
@@ -314,7 +326,9 @@ public class CaseController {
         CaseTestDetailsResult result = new CaseTestDetailsResult();
         User user = userService.findByPoliceId(record.getPoliceId());
         result.setPoliceId(record.getPoliceId());
-        result.setPoliceName(user.getName());
+        if (user != null) {
+            result.setPoliceName(user.getName());
+        }
         result.setTestName(record.getName());
         result.setScore(record.getScore());
         result.setYear(record.getYear());

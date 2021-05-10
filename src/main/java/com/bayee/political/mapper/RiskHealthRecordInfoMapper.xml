@@ -19,6 +19,10 @@
     <result column="prostate_desc" jdbcType="VARCHAR" property="prostateDesc" />
     <result column="is_major_diseases" jdbcType="INTEGER" property="isMajorDiseases" />
     <result column="is_heart" jdbcType="INTEGER" property="isHeart" />
+    <result column="major_diseases_desc" jdbcType="VARCHAR" property="majorDiseasesDesc" />
+    <result column="heart_desc" jdbcType="VARCHAR" property="heartDesc" />
+    <result column="tumor_antigen_desc" jdbcType="VARCHAR" property="tumorAntigenDesc" />
+    <result column="orthopaedics_desc" jdbcType="VARCHAR" property="orthopaedicsDesc" />
     <result column="is_tumor_antigen" jdbcType="INTEGER" property="isTumorAntigen" />
     <result column="is_orthopaedics" jdbcType="INTEGER" property="isOrthopaedics" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
@@ -35,7 +39,7 @@
       receive_compression, diastolic_pressure, blood_sugar, 
       serum_uric_acid, is_prostate, prostate_desc, 
       is_major_diseases, is_heart, is_tumor_antigen, 
-      is_orthopaedics, creation_date, update_date
+      is_orthopaedics, creation_date, update_date, major_diseases_desc, heart_desc, tumor_antigen_desc, orthopaedics_desc
       )
     values (#{id,jdbcType=INTEGER}, #{recordId,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
       #{height,jdbcType=DOUBLE}, #{weight,jdbcType=DOUBLE}, #{highDensityLipoprotein,jdbcType=DOUBLE}, 
@@ -43,7 +47,8 @@
       #{receiveCompression,jdbcType=DOUBLE}, #{diastolicPressure,jdbcType=DOUBLE}, #{bloodSugar,jdbcType=DOUBLE}, 
       #{serumUricAcid,jdbcType=DOUBLE}, #{isProstate,jdbcType=INTEGER}, #{prostateDesc,jdbcType=VARCHAR}, 
       #{isMajorDiseases,jdbcType=INTEGER}, #{isHeart,jdbcType=INTEGER}, #{isTumorAntigen,jdbcType=INTEGER}, 
-      #{isOrthopaedics,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      #{isOrthopaedics,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},
+      #{majorDiseasesDesc}, #{heartDesc}, #{tumorAntigenDesc}, #{orthopaedicsDesc}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskHealthRecordInfo">
@@ -67,14 +72,18 @@
       is_tumor_antigen = #{isTumorAntigen,jdbcType=INTEGER},
       is_orthopaedics = #{isOrthopaedics,jdbcType=INTEGER},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
-      update_date = #{updateDate,jdbcType=TIMESTAMP}
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      major_diseases_desc = #{majorDiseasesDesc},
+      heart_desc = #{heartDesc},
+      tumor_antigen_desc = #{tumorAntigenDesc},
+      orthopaedics_desc = #{orthopaedicsDesc}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, record_id, police_id, height, weight, high_density_lipoprotein, low_density_lipoprotein, 
     triglyceride, cholesterol, receive_compression, diastolic_pressure, blood_sugar, 
     serum_uric_acid, is_prostate, prostate_desc, is_major_diseases, is_heart, is_tumor_antigen, 
-    is_orthopaedics, creation_date, update_date
+    is_orthopaedics, creation_date, update_date, major_diseases_desc, heart_desc, tumor_antigen_desc, orthopaedics_desc
     from risk_health_record_info
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -82,7 +91,7 @@
     select id, record_id, police_id, height, weight, high_density_lipoprotein, low_density_lipoprotein, 
     triglyceride, cholesterol, receive_compression, diastolic_pressure, blood_sugar, 
     serum_uric_acid, is_prostate, prostate_desc, is_major_diseases, is_heart, is_tumor_antigen, 
-    is_orthopaedics, creation_date, update_date
+    is_orthopaedics, creation_date, update_date, major_diseases_desc, heart_desc, tumor_antigen_desc, orthopaedics_desc
     from risk_health_record_info
   </select>
 

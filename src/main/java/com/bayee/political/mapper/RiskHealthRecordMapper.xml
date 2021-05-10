@@ -323,7 +323,7 @@
   	select * from risk_health_record r where r.year=#{year}
   </select>
 
-  <select id="riskReportRecordPage" resultMap="BaseResultMap">
+  <select id="riskRiskHealthRecordPage" resultMap="BaseResultMap">
     select * from risk_health_record
     order by id desc
     limit #{pageIndex}, #{pageSize}

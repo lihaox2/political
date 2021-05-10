@@ -118,8 +118,8 @@ public class CaseController {
         record.setBasicTestStatus(caseAbilitySaveParam.getBasicTestStatus());
         record.setHighTestStatus(caseAbilitySaveParam.getHighTestStatus());
         record.setJudicialTestStatus(caseAbilitySaveParam.getJudicialTestStatus());
-        record.setYear(DateUtils.formatDate(DateUtils.parseDate(caseAbilitySaveParam.getDate(), "YYYY-MM-DD HH:mm:ss"), "YYYY"));
-        record.setCreationDate(DateUtils.parseDate(caseAbilitySaveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
+        record.setYear(DateUtils.formatDate(DateUtils.parseDate(caseAbilitySaveParam.getDate(), "yyyy-MM-dd HH:mm:ss"), "YYYY"));
+        record.setCreationDate(DateUtils.parseDate(caseAbilitySaveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
 
         riskCaseAbilityRecordService.insertSelective(record);
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
@@ -162,7 +162,7 @@ public class CaseController {
         result.setBasicTestStatus(record.getBasicTestStatus());
         result.setHighTestStatus(record.getHighTestStatus());
         result.setJudicialTestStatus(record.getJudicialTestStatus());
-        result.setDate(DateUtils.formatDate(record.getCreationDate(), "YYYY-MM-DD HH:mm:ss"));
+        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
 
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
     }
@@ -198,7 +198,7 @@ public class CaseController {
             pageResult.setTypeName(e.getTypeName());
             pageResult.setDesc(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
-            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "YYYY-MM-DD HH:mm:ss"));
+            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
             return pageResult;
         }).collect(Collectors.toList()));
 
@@ -297,10 +297,10 @@ public class CaseController {
     public ResponseEntity<?> addCaseTest(@RequestBody CaseTestSaveParam saveParam) {
         RiskCaseTestRecord record = new RiskCaseTestRecord();
         record.setPoliceId(saveParam.getPoliceId());
-        record.setYear(DateUtils.formatDate(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"), "YYYY"));
+        record.setYear(DateUtils.formatDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"), "YYYY"));
         record.setSemester(saveParam.getSemester());
         record.setScore(saveParam.getScore());
-        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
+        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
 
         riskCaseTestRecordService.insertTest(record);
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);

@@ -82,9 +82,19 @@ public class HealthDetailsResult {
     private Integer isMajorDiseases;
 
     /**
+     * 术后或重大病史描述
+     */
+    private String majorDiseasesDesc;
+
+    /**
      * 心脏指标异常（0否，1是）
      */
     private Integer isHeart;
+
+    /**
+     * 心脏指标异常描述
+     */
+    private String heartDesc;
 
     /**
      * 肿瘤抗原指标增高0否1是）
@@ -92,9 +102,51 @@ public class HealthDetailsResult {
     private Integer isTumorAntigen;
 
     /**
+     * 肿瘤指标描述
+     */
+    private String tumorAntigenDesc;
+
+    /**
      * 骨科指标异常（0否1是
      */
     private Integer isOrthopaedics;
+
+    /**
+     * 骨科指标异常
+     */
+    private String orthopaedicsDesc;
+
+    public String getMajorDiseasesDesc() {
+        return majorDiseasesDesc;
+    }
+
+    public void setMajorDiseasesDesc(String majorDiseasesDesc) {
+        this.majorDiseasesDesc = majorDiseasesDesc;
+    }
+
+    public String getHeartDesc() {
+        return heartDesc;
+    }
+
+    public void setHeartDesc(String heartDesc) {
+        this.heartDesc = heartDesc;
+    }
+
+    public String getTumorAntigenDesc() {
+        return tumorAntigenDesc;
+    }
+
+    public void setTumorAntigenDesc(String tumorAntigenDesc) {
+        this.tumorAntigenDesc = tumorAntigenDesc;
+    }
+
+    public String getOrthopaedicsDesc() {
+        return orthopaedicsDesc;
+    }
+
+    public void setOrthopaedicsDesc(String orthopaedicsDesc) {
+        this.orthopaedicsDesc = orthopaedicsDesc;
+    }
 
     public String getPoliceId() {
         return policeId;

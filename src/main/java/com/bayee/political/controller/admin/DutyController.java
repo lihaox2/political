@@ -53,7 +53,7 @@ public class DutyController {
             pageResult.setTypeName(e.getTypeName());
             pageResult.setDesc(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
-            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "YYYY-MM-DD HH:mm:ss"));
+            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
 
             return pageResult;
         }).collect(Collectors.toList()));
@@ -71,8 +71,8 @@ public class DutyController {
         record.setType(saveParam.getTypeId());
         record.setContent(saveParam.getDesc());
         record.setDeductionScore(saveParam.getDeductScore());
-        record.setInputTime(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
-        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
+        record.setInputTime(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
+        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
 
         riskDutyDealPoliceRecordService.insert(record);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -102,7 +102,7 @@ public class DutyController {
         result.setTypeId(record.getType());
         result.setDesc(record.getContent());
         result.setDeductScore(record.getDeductionScore());
-        result.setDate(DateUtils.formatDate(record.getCreationDate(), "YYYY-MM-DD HH:mm:ss"));
+        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }

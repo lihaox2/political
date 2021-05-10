@@ -63,7 +63,7 @@ public class ConductController {
             pageResult.setType(e.getTypeName());
             pageResult.setContent(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
-            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "YYYY-MM-DD HH:mm:ss"));
+            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
 
             return pageResult;
         }));
@@ -80,11 +80,11 @@ public class ConductController {
         RiskConductBureauRuleRecord record = new RiskConductBureauRuleRecord();
         record.setPoliceId(saveParam.getPoliceId());
         record.setType(saveParam.getTypeId());
-        record.setInputTime(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
+        record.setInputTime(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
         record.setContent(ruleType.getName());
         record.setDeductionScore(ruleType.getDeductScore());
         record.setRemarks(saveParam.getRemarks());
-        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
+        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
 
         riskConductBureauRuleRecordService.insert(record);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -117,7 +117,7 @@ public class ConductController {
         result.setTypeId(record.getType());
         result.setContent(record.getContent());
         result.setDeductScore(record.getDeductionScore());
-        result.setDate(DateUtils.formatDate(record.getCreationDate(), "YYYY-MM-DD HH:mm:ss"));
+        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
         result.setRemarks(record.getRemarks());
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
@@ -154,7 +154,7 @@ public class ConductController {
             pageResult.setType(e.getTypeName());
             pageResult.setContent(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
-            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "YYYY-MM-DD HH:mm:ss"));
+            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
             return pageResult;
         }).collect(Collectors.toList()));
         result.put("totalCount", riskConductVisitRecordService.getRiskConductVisitRecordPageCount());
@@ -169,10 +169,10 @@ public class ConductController {
         RiskConductVisitRecord record = new RiskConductVisitRecord();
         record.setPoliceId(saveParam.getPoliceId());
         record.setType(saveParam.getTypeId());
-        record.setInputTime(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
+        record.setInputTime(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
         record.setContent(riskConductVisitType.getName());
         record.setRemarks(saveParam.getRemarks());
-        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "YYYY-MM-DD HH:mm:ss"));
+        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
         record.setDeductionScore(riskConductVisitType.getDeductScore());
 
         riskConductVisitRecordService.insert(record);
@@ -206,7 +206,7 @@ public class ConductController {
         result.setTypeId(record.getType());
         result.setContent(record.getContent());
         result.setDeductScore(record.getDeductionScore());
-        result.setDate(DateUtils.formatDate(record.getCreationDate(), "YYYY-MM-DD HH:mm:ss"));
+        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
         result.setRemarks(record.getRemarks());
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);

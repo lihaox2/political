@@ -246,7 +246,7 @@ public class ConductController {
                                                        @RequestParam("pageSize") Integer pageSize,
                                                        @RequestParam("type") Integer type,
                                                        @RequestParam("key") String key) {
-        List<RiskConductBureauRuleType> ruleTypeList = riskConductBureauRuleTypeService.riskConductBureauRuleTypePage(pageIndex, pageSize);
+        List<RiskConductBureauRuleType> ruleTypeList = riskConductBureauRuleTypeService.riskConductBureauRuleTypePage(pageIndex, pageSize,type,key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", ruleTypeList.stream().map(e -> {
@@ -257,7 +257,7 @@ public class ConductController {
             pageResult.setDeductScore(e.getDeductScore());
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskConductBureauRuleTypeService.getRiskConductBureauRuleTypePageCount());
+        result.put("totalCount", riskConductBureauRuleTypeService.getRiskConductBureauRuleTypePageCount(type,key));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);

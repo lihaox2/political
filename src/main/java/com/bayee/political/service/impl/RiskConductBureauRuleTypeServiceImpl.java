@@ -3,6 +3,8 @@ package com.bayee.political.service.impl;
 import com.bayee.political.domain.RiskConductBureauRuleType;
 import com.bayee.political.mapper.RiskConductBureauRuleTypeMapper;
 import com.bayee.political.service.RiskConductBureauRuleTypeService;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,17 +51,17 @@ public class RiskConductBureauRuleTypeServiceImpl implements RiskConductBureauRu
     }
 
     @Override
-    public List<RiskConductBureauRuleType> riskConductBureauRuleTypePage(Integer pageIndex, Integer pageSize) {
+    public List<RiskConductBureauRuleType> riskConductBureauRuleTypePage(Integer pageIndex, Integer pageSize, Integer type,String key) {
         if(pageIndex < 1) {
             pageIndex = 1;
         }
         pageIndex = (pageIndex - 1) * pageSize;
-        return riskConductBureauRuleTypeMapper.riskConductBureauRuleTypePage(pageIndex, pageSize);
+        return riskConductBureauRuleTypeMapper.riskConductBureauRuleTypePage(pageIndex, pageSize,type,key);
     }
 
     @Override
-    public Integer getRiskConductBureauRuleTypePageCount() {
-        return riskConductBureauRuleTypeMapper.getRiskConductBureauRuleTypePageCount();
+    public Integer getRiskConductBureauRuleTypePageCount(Integer type,String key) {
+        return riskConductBureauRuleTypeMapper.getRiskConductBureauRuleTypePageCount(type,key);
     }
 
     @Override

@@ -107,15 +107,30 @@
   </update>
 
   <select id="riskConductBureauRuleTypePage" resultMap="BaseResultMap">
-    select t1.*, t2.`name` typeName from risk_conduct_bureau_rule_type t1,
-                                         risk_conduct_bureau_rule_type t2 where t1.parent_id = t2.id
+    select * from risk_conduct_bureau_rule_type 
+	
+	<where>
+		<if test="type!=null">
+			and parent_id =#{type}
+		</if>
+		<if test="key != null">
+			and name like CONCAT('%',#{key},'%')
+		</if>
+	</where>
     order by id desc
     limit #{pageIndex}, #{pageSize}
   </select>
 
   <select id="getRiskConductBureauRuleTypePageCount" resultType="Integer">
-    select count(1) from risk_conduct_bureau_rule_type t1,
-                                         risk_conduct_bureau_rule_type t2 where t1.parent_id = t2.id
+    select count(1) from risk_conduct_bureau_rule_type 
+    <where>
+		<if test="type!=null">
+			and parent_id =#{type}
+		</if>
+		<if test="key != null">
+			and name like CONCAT('%',#{key},'%')
+		</if>
+	</where>
   </select>
 
   <select id="getAllRiskConductBureauRuleType" resultMap="BaseResultMap">

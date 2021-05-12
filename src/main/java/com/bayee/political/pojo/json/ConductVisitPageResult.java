@@ -13,9 +13,14 @@ public class ConductVisitPageResult {
     private String policeName;
 
     /**
-     * 类型id
+     * 大类
      */
-    private String type;
+    private String bigType;
+
+    /**
+     * 小类
+     */
+    private String smallType;
 
     /**
      * 问题情况和来源
@@ -31,6 +36,22 @@ public class ConductVisitPageResult {
      * 时间
      */
     private String date;
+
+    public String getBigType() {
+        return bigType;
+    }
+
+    public void setBigType(String bigType) {
+        this.bigType = bigType;
+    }
+
+    public String getSmallType() {
+        return smallType;
+    }
+
+    public void setSmallType(String smallType) {
+        this.smallType = smallType;
+    }
 
     public Integer getId() {
         return id;
@@ -54,14 +75,6 @@ public class ConductVisitPageResult {
 
     public void setPoliceName(String policeName) {
         this.policeName = policeName;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getContent() {

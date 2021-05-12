@@ -58,7 +58,7 @@ public class CaseController {
                                              @RequestParam("type") String type, @RequestParam("typeFlag") Integer typeFlag,
                                              @RequestParam("key") String key) {
         List<String> columnList = new ArrayList<>();
-        if (type != null) {
+        if (type != null && !"".equals(type)) {
             columnList = Arrays.asList(type.split(","));
         }
         List<RiskCaseAbilityRecord> recordList = riskCaseAbilityRecordService.riskCaseAbilityRecordPage(pageIndex,

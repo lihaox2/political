@@ -147,8 +147,7 @@ public class ConductController {
     @GetMapping("/visit/page")
     public ResponseEntity<?> conductVisitPage(@RequestParam("pageIndex") Integer pageIndex,
                                               @RequestParam("pageSize") Integer pageSize,
-                                              @RequestParam("bitType") Integer bitType,
-                                              @RequestParam("smallType") Integer smallType,
+                                              @RequestParam("type") Integer type,
                                               @RequestParam("key") String key) {
         List<RiskConductVisitRecord> recordList = riskConductVisitRecordService.riskConductVisitRecordPage(pageIndex, pageSize);
 
@@ -162,7 +161,10 @@ public class ConductController {
             if (user != null) {
                 pageResult.setPoliceName(user.getName());
             }
-            pageResult.setType(e.getTypeName());
+            pageResult.setBigType(e.getBigTypeName());
+            pageResult.setSmallType(e.getSmallTypeName());
+//            pageResult.setType(e.getTypeName());
+
             pageResult.setContent(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
             pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd"));
@@ -176,17 +178,17 @@ public class ConductController {
 
     @PostMapping("/add/visit")
     public ResponseEntity<?> addConductVisit(@RequestBody ConductVisitSaveParam saveParam) {
-        RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(saveParam.getTypeId());
+//        RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductVisitRecord record = new RiskConductVisitRecord();
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
         record.setPoliceId(saveParam.getPoliceId());
         record.setType(saveParam.getTypeId());
         record.setInputTime(DateUtils.parseDate(saveParam.getDate() +" "+time, "yyyy-MM-dd HH:mm:ss"));
-        record.setContent(riskConductVisitType.getName());
+        record.setContent(saveParam.getDesc());
         record.setRemarks(saveParam.getRemarks());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() +" "+time, "yyyy-MM-dd HH:mm:ss"));
-        record.setDeductionScore(riskConductVisitType.getDeductScore());
+        record.setDeductionScore(saveParam.getDeductScore());
 
         riskConductVisitRecordService.insert(record);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -219,7 +221,8 @@ public class ConductController {
         if (user != null) {
             result.setPoliceName(user.getName());
         }
-        result.setType(record.getTypeName());
+        result.setBigType(record.getBigTypeName());
+        result.setSmallType(record.getSmallTypeName());
         result.setContent(record.getContent());
         result.setDeductScore(record.getDeductionScore());
         result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd"));

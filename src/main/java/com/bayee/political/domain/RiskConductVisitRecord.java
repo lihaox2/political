@@ -23,6 +23,26 @@ public class RiskConductVisitRecord {
     
     private String typeName;
 
+    private String bigTypeName;
+
+    private String smallTypeName;
+
+    public String getBigTypeName() {
+        return bigTypeName;
+    }
+
+    public void setBigTypeName(String bigTypeName) {
+        this.bigTypeName = bigTypeName;
+    }
+
+    public String getSmallTypeName() {
+        return smallTypeName;
+    }
+
+    public void setSmallTypeName(String smallTypeName) {
+        this.smallTypeName = smallTypeName;
+    }
+
     public Integer getId() {
         return id;
     }

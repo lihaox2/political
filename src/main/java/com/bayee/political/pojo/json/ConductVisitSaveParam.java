@@ -14,6 +14,16 @@ public class ConductVisitSaveParam {
     private Integer typeId;
 
     /**
+     * 扣除分数
+     */
+    private Double deductScore;
+
+    /**
+     * 问题情况与描述
+     */
+    private String desc;
+
+    /**
      * 时间
      */
     private String date;
@@ -22,6 +32,22 @@ public class ConductVisitSaveParam {
      * 备注
      */
     private String remarks;
+
+    public Double getDeductScore() {
+        return deductScore;
+    }
+
+    public void setDeductScore(Double deductScore) {
+        this.deductScore = deductScore;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
     public String getPoliceId() {
         return policeId;

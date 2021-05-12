@@ -11,9 +11,14 @@ public class ConductVisitDetailsResult {
     private String policeName;
 
     /**
-     * 类型id
+     * 大类名称
      */
-    private String type;
+    private String bigType;
+
+    /**
+     * 小类名称
+     */
+    private String smallType;
 
     /**
      * 问题情况和来源
@@ -51,12 +56,20 @@ public class ConductVisitDetailsResult {
         this.policeName = policeName;
     }
 
-    public String getType() {
-        return type;
+    public String getBigType() {
+        return bigType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setBigType(String bigType) {
+        this.bigType = bigType;
+    }
+
+    public String getSmallType() {
+        return smallType;
+    }
+
+    public void setSmallType(String smallType) {
+        this.smallType = smallType;
     }
 
     public String getContent() {

@@ -213,11 +213,11 @@
     left join user u1 on r1.police_id = u1.police_id
     where 1 = 1
     <if test="key != null">
-      and r1.police_id like content('%', #{key}, '%') or u1.name like content('%', #{key}, '%')
+      and r1.police_id like concat('%', #{key}, '%') or u1.name like concat('%', #{key}, '%')
     </if>
-    <if test="columnList != null">
-      <foreach collection="columnList" separator="," item="item">
-        and ${time} = #{typeFlag}
+    <if test="columnList != null and typeFlag != null">
+      <foreach collection="columnList" separator=" " item="item">
+        and ${item} = #{typeFlag}
       </foreach>
     </if>
     order by r1.id desc
@@ -229,11 +229,11 @@
     left join user u1 on r1.police_id = u1.police_id
     where 1 = 1
     <if test="key != null">
-      and r1.police_id like content('%', #{key}, '%') or u1.name like content('%', #{key}, '%')
+      and r1.police_id like concat('%', #{key}, '%') or u1.name like concat('%', #{key}, '%')
     </if>
-    <if test="columnList != null">
-      <foreach collection="columnList" separator="," item="item">
-        and ${time} = #{typeFlag}
+    <if test="columnList != null and typeFlag != null">
+      <foreach collection="columnList" separator=" " item="item">
+        and ${item} = #{typeFlag}
       </foreach>
     </if>
   </select>

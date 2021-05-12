@@ -209,13 +209,33 @@
   </select>
 
   <select id="riskCaseAbilityRecordPage" resultMap="BaseResultMap">
-    select * from risk_case_ability_record
-    order by id desc
+    select * from risk_case_ability_record r1
+    left join user u1 on r1.police_id = u1.police_id
+    where 1 = 1
+    <if test="key != null">
+      and r1.police_id like content('%', #{key}, '%') or u1.name like content('%', #{key}, '%')
+    </if>
+    <if test="columnList != null">
+      <foreach collection="columnList" separator="," item="item">
+        and ${time} = #{typeFlag}
+      </foreach>
+    </if>
+    order by r1.id desc
     limit #{pageIndex}, #{pageSize}
   </select>
 
   <select id="getRiskCaseAbilityRecordPageCount" resultType="Integer">
-    select count(1) from risk_case_ability_record
+    select count(1) from risk_case_ability_record r1
+    left join user u1 on r1.police_id = u1.police_id
+    where 1 = 1
+    <if test="key != null">
+      and r1.police_id like content('%', #{key}, '%') or u1.name like content('%', #{key}, '%')
+    </if>
+    <if test="columnList != null">
+      <foreach collection="columnList" separator="," item="item">
+        and ${time} = #{typeFlag}
+      </foreach>
+    </if>
   </select>
   
 </mapper>

@@ -47,18 +47,18 @@ public class RiskCaseLawEnforcementRecordServiceImpl implements RiskCaseLawEnfor
 	}
 
 	@Override
-	public List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize) {
+	public List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize, Integer type, String key) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
 
-		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPage(pageIndex, pageSize);
+		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPage(pageIndex, pageSize, type, key);
 	}
 
 	@Override
-	public Integer riskCaseLawEnforcementRecordPageCount() {
-		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPageCount();
+	public Integer riskCaseLawEnforcementRecordPageCount(Integer type, String key) {
+		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPageCount(type, key);
 	}
 
 }

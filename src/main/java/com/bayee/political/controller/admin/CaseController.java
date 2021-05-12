@@ -21,10 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -60,7 +57,12 @@ public class CaseController {
                                              @RequestParam("pageSize") Integer pageSize,
                                              @RequestParam("type") String type, @RequestParam("typeFlag") Integer typeFlag,
                                              @RequestParam("key") String key) {
-        List<RiskCaseAbilityRecord> recordList = riskCaseAbilityRecordService.riskCaseAbilityRecordPage(pageIndex, pageSize);
+        List<String> columnList = new ArrayList<>();
+        if (type != null) {
+            columnList = Arrays.asList(type.split(","));
+        }
+        List<RiskCaseAbilityRecord> recordList = riskCaseAbilityRecordService.riskCaseAbilityRecordPage(pageIndex,
+                pageSize, columnList, typeFlag, key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -105,7 +107,7 @@ public class CaseController {
             pageResult.setErrorCount(errorCount);
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskCaseAbilityRecordService.getRiskCaseAbilityRecordPageCount());
+        result.put("totalCount", riskCaseAbilityRecordService.getRiskCaseAbilityRecordPageCount(columnList, typeFlag, key));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
@@ -198,7 +200,7 @@ public class CaseController {
                                                     @RequestParam("type") Integer type,
                                                     @RequestParam("key") String key) {
         List<RiskCaseLawEnforcementRecord> recordList = riskCaseLawEnforcementRecordService.
-                riskCaseLawEnforcementRecordPage(pageIndex, pageSize);
+                riskCaseLawEnforcementRecordPage(pageIndex, pageSize, type, key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -216,7 +218,7 @@ public class CaseController {
             return pageResult;
         }).collect(Collectors.toList()));
 
-        result.put("totalCount", riskCaseLawEnforcementRecordService.riskCaseLawEnforcementRecordPageCount());
+        result.put("totalCount", riskCaseLawEnforcementRecordService.riskCaseLawEnforcementRecordPageCount(type, key));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);

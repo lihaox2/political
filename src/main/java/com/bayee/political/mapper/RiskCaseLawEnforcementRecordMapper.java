@@ -56,15 +56,21 @@ public interface RiskCaseLawEnforcementRecordMapper {
      * 分页查询执法管理数据
      * @param pageIndex
      * @param pageSize
+     * @param type
+     * @param key
      * @return
      */
     List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordPage(@Param("pageIndex") Integer pageIndex,
-                                                                        @Param("pageSize") Integer pageSize);
+                                                                        @Param("pageSize") Integer pageSize,
+                                                                        @Param("type") Integer type,
+                                                                        @Param("key") String key);
 
     /**
      * 统计分页数据条数
+     * @param type
+     * @param key
      * @return
      */
-    Integer riskCaseLawEnforcementRecordPageCount();
+    Integer riskCaseLawEnforcementRecordPageCount(@Param("type") Integer type, @Param("key") String key);
 
 }

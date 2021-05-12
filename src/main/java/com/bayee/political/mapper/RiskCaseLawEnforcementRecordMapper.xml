@@ -162,7 +162,15 @@
   <select id="riskCaseLawEnforcementRecordPage" resultMap="BaseResultMap">
     select a.*,b.name as typeName from risk_case_law_enforcement_record a
     left join risk_case_law_enforcement_type b on b.id = a.type
-    order by id desc
+    left join user u on u.police_id = a.police_id
+    where 1 = 1
+    <if test="key != null">
+        and a.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or a.content like concat('%', #{key}, '%')
+    </if>
+    <if test="type != null">
+        and a.type = #{type}
+    </if>
+    order by a.id desc
     limit #{pageIndex}, #{pageSize}
   </select>
 

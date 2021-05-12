@@ -118,22 +118,70 @@ public class SystemController {
 
     @GetMapping("/case/ability/type/list")
     public ResponseEntity<?> getCaseAbilityTypeList() {
-        List<Map<String, Object>> results = new ArrayList<>();
         Map<String, Object> data1 = new HashMap<>();
-        data1.put("id", "");
-        data1.put("name", "");
+        data1.put("key", "reconsideration_litigation_status");
+        data1.put("name", "复议诉讼撤变");
 
-        return new ResponseEntity<>(DataListReturn.ok(results), HttpStatus.OK);
+        Map<String, Object> data2 = new HashMap<>();
+        data2.put("key", "letter_visit_status");
+        data2.put("name", "有责涉案（警）投诉、信访");
+
+        Map<String, Object> data3 = new HashMap<>();
+        data3.put("key", "law_enforcement_fault_status");
+        data3.put("name", "重大执法过错");
+
+        Map<String, Object> data4 = new HashMap<>();
+        data4.put("key", "judicial_supervision_status");
+        data4.put("name", "司法监督（检察院纠违）");
+
+        Map<String, Object> data5 = new HashMap<>();
+        data5.put("key", "case_expert_status");
+        data5.put("name", "执法办案能手");
+
+        Map<String, Object> data6 = new HashMap<>();
+        data6.put("key", "excellent_legal_officer_status");
+        data6.put("name", "优秀法制员");
+
+        Map<String, Object> data7 = new HashMap<>();
+        data7.put("key", "basic_test_status");
+        data7.put("name", "基本级执法考试");
+
+        Map<String, Object> data8 = new HashMap<>();
+        data8.put("key", "high_test_status");
+        data8.put("name", "高级执法考试");
+
+        Map<String, Object> data9 = new HashMap<>();
+        data9.put("key", "judicial_test_status");
+        data9.put("name", "司法考试");
+
+        return new ResponseEntity<>(DataListReturn.ok(Arrays.asList(data1, data2, data3, data4, data5, data6, data7,
+                data8, data9)), HttpStatus.OK);
     }
 
     @GetMapping("/health/type/list")
     public ResponseEntity<?> getHealthTypeList() {
-        List<Map<String, Object>> results = new ArrayList<>();
         Map<String, Object> data1 = new HashMap<>();
-        data1.put("id", "");
-        data1.put("name", "");
+        data1.put("key", "is_overweight");
+        data1.put("name", "体重超标");
 
-        return new ResponseEntity<>(DataListReturn.ok(results), HttpStatus.OK);
+        Map<String, Object> data2 = new HashMap<>();
+        data2.put("key", "is_hyperlipidemia");
+        data2.put("name", "高血脂");
+
+        Map<String, Object> data3 = new HashMap<>();
+        data3.put("key", "is_hypertension");
+        data3.put("name", "高血压");
+
+        Map<String, Object> data4 = new HashMap<>();
+        data4.put("key", "is_hyperglycemia");
+        data4.put("name", "高血糖");
+
+        Map<String, Object> data5 = new HashMap<>();
+        data5.put("key", "is_hyperuricemia");
+        data5.put("name", "高血尿酸");
+
+
+        return new ResponseEntity<>(DataListReturn.ok(Arrays.asList(data1, data2, data3, data4, data5)), HttpStatus.OK);
     }
 
     /**

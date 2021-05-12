@@ -22,14 +22,18 @@ public interface RiskCaseLawEnforcementRecordService {
 	 * 分页查询执法管理数据
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param type
+	 * @param key
 	 * @return
 	 */
-	List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize);
+	List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize, Integer type, String key);
 
 	/**
 	 * 分页数据条数统计
+	 * @param type
+	 * @param key
 	 * @return
 	 */
-	Integer riskCaseLawEnforcementRecordPageCount();
+	Integer riskCaseLawEnforcementRecordPageCount(Integer type, String key);
 
 }

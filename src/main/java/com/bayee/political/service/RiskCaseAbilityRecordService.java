@@ -21,14 +21,21 @@ public interface RiskCaseAbilityRecordService {
 	 * 分页查询执法能力数据
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param columnList
+	 * @param typeFlag
+	 * @param key
 	 * @return
 	 */
-	List<RiskCaseAbilityRecord> riskCaseAbilityRecordPage(Integer pageIndex, Integer pageSize);
+	List<RiskCaseAbilityRecord> riskCaseAbilityRecordPage(Integer pageIndex, Integer pageSize,
+														  List<String> columnList, Integer typeFlag, String key);
 
 	/**
-	 * 统计数据条数
+	 * 统计分页数据条数
+	 * @param columnList
+	 * @param typeFlag
+	 * @param key
 	 * @return
 	 */
-	Integer getRiskCaseAbilityRecordPageCount();
+	Integer getRiskCaseAbilityRecordPageCount(List<String> columnList, Integer typeFlag, String key);
 
 }

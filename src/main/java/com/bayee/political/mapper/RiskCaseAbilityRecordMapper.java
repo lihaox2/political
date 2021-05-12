@@ -34,14 +34,24 @@ public interface RiskCaseAbilityRecordMapper {
      * 分页查询执法能力数据
      * @param pageIndex
      * @param pageSize
+     * @param columnList
+     * @param typeFlag
+     * @param key
      * @return
      */
-    List<RiskCaseAbilityRecord> riskCaseAbilityRecordPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize);
+    List<RiskCaseAbilityRecord> riskCaseAbilityRecordPage(@Param("pageIndex") Integer pageIndex,
+                                                          @Param("pageSize") Integer pageSize,
+                                                          @Param("columnList") List<String> columnList,
+                                                          @Param("typeFlag") Integer typeFlag, @Param("key") String key);
 
     /**
      * 统计数据条数
+     * @param columnList
+     * @param typeFlag
+     * @param key
      * @return
      */
-    Integer getRiskCaseAbilityRecordPageCount();
+    Integer getRiskCaseAbilityRecordPageCount(@Param("columnList") List<String> columnList,
+                                              @Param("typeFlag") Integer typeFlag, @Param("key") String key);
 
 }

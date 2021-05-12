@@ -89,7 +89,7 @@
       #{studyNum,jdbcType=DOUBLE},
       #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskReportRecord" >
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskReportRecord" useGeneratedKeys="true" keyProperty="id">
     insert into risk_report_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

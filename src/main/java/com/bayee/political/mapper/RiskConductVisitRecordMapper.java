@@ -41,14 +41,20 @@ public interface RiskConductVisitRecordMapper {
      * 分页查询
      * @param pageIndex
      * @param pageSize
+     * @param type
+     * @param key
      * @return
      */
-    List<RiskConductVisitRecord> riskConductVisitRecordPage(@Param("pageIndex") Integer pageIndex,@Param("pageSize") Integer pageSize);
+    List<RiskConductVisitRecord> riskConductVisitRecordPage(@Param("pageIndex") Integer pageIndex,
+                                                            @Param("pageSize") Integer pageSize,
+                                                            @Param("type") Integer type, @Param("key") String key);
 
     /**
      * 统计分页数据条数
+     * @param type
+     * @param key
      * @return
      */
-    Integer getRiskConductVisitRecordPageCount();
+    Integer getRiskConductVisitRecordPageCount(@Param("type") Integer type, @Param("key") String key);
 
 }

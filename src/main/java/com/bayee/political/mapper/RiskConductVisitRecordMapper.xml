@@ -19,7 +19,8 @@
     id, police_id, type, input_time, content, remarks,deduction_score, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select r.*,t.name as type_name, t.name as smallTypeName from risk_conduct_visit_record r
+    select r.*,t.name as type_name, t.name as smallTypeName, (select name from risk_conduct_visit_type where id in (
+      select parent_id from risk_conduct_visit_type where id = r.type)) as bigName from risk_conduct_visit_record r
     left join risk_conduct_visit_type t on r.type = t.id
     where r.id = #{id,jdbcType=INTEGER}
   </select>
@@ -160,14 +161,32 @@
   </select>
 
   <select id="riskConductVisitRecordPage" resultMap="BaseResultMap">
-    select r.*,t.name as type_name from risk_conduct_visit_record r
+    select r.*,t.name as type_name, t.name as smallTypeName, (select name from risk_conduct_visit_type where id in (
+      select parent_id from risk_conduct_visit_type where id = r.type)) as bigName from risk_conduct_visit_record r
     left join risk_conduct_visit_type t on r.type = t.id
+    left join user u on u.police_id = r.police_id
+    where 1 = 1
+    <if test="key != null">
+      and u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or r.content like concat('%', #{key}, '%')
+    </if>
+    <if test="type != null">
+      r.type = #{type}
+    </if>
     order by r.id desc
     limit #{pageIndex}, #{pageSize}
   </select>
 
   <select id="getRiskConductVisitRecordPageCount" resultType="Integer">
-    select count(1) from risk_conduct_visit_record
+    select count(1) from risk_conduct_visit_record r
+    left join risk_conduct_visit_type t on r.type = t.id
+    left join user u on u.police_id = r.police_id
+    where 1 = 1
+    <if test="key != null">
+      and u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or r.content like concat('%', #{key}, '%')
+    </if>
+    <if test="type != null">
+      r.type = #{type}
+    </if>
   </select>
 
 </mapper>

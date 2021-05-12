@@ -28,13 +28,13 @@ public interface RiskConductVisitRecordService {
      * @param pageSize
      * @return
      */
-    List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize);
+    List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize, Integer type, String key);
 
     /**
      * 统计分页数据条数
      * @return
      */
-    Integer getRiskConductVisitRecordPageCount();
+    Integer getRiskConductVisitRecordPageCount(Integer type, String key);
 
     /**
      * 根绝类型统计树蕨条数

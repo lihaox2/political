@@ -149,7 +149,7 @@ public class ConductController {
                                               @RequestParam("pageSize") Integer pageSize,
                                               @RequestParam("type") Integer type,
                                               @RequestParam("key") String key) {
-        List<RiskConductVisitRecord> recordList = riskConductVisitRecordService.riskConductVisitRecordPage(pageIndex, pageSize);
+        List<RiskConductVisitRecord> recordList = riskConductVisitRecordService.riskConductVisitRecordPage(pageIndex, pageSize, type, key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -170,7 +170,7 @@ public class ConductController {
             pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd"));
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskConductVisitRecordService.getRiskConductVisitRecordPageCount());
+        result.put("totalCount", riskConductVisitRecordService.getRiskConductVisitRecordPageCount(type, key));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);

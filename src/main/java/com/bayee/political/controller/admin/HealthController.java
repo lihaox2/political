@@ -51,7 +51,7 @@ public class HealthController {
     @GetMapping("/health/page")
     public ResponseEntity<?> healthPage(@RequestParam("pageIndex") Integer pageIndex,
                                         @RequestParam("pageSize") Integer pageSize,
-                                        @RequestParam("type") Integer type,@RequestParam("typeFlag") Integer typeFlag,
+                                        @RequestParam("type") String type, @RequestParam("typeFlag") Integer typeFlag,
                                         @RequestParam("key") String key) {
         List<RiskHealthRecord> recordList = riskHealthRecordService.riskRiskHealthRecordPage(pageIndex, pageSize);
 

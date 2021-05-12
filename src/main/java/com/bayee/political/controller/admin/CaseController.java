@@ -58,7 +58,7 @@ public class CaseController {
     @GetMapping("/ability/page")
     public ResponseEntity<?> caseAbilityPage(@RequestParam("pageIndex") Integer pageIndex,
                                              @RequestParam("pageSize") Integer pageSize,
-                                             @RequestParam("type") Integer type, @RequestParam("typeFlag") Integer typeFlag,
+                                             @RequestParam("type") String type, @RequestParam("typeFlag") Integer typeFlag,
                                              @RequestParam("key") String key) {
         List<RiskCaseAbilityRecord> recordList = riskCaseAbilityRecordService.riskCaseAbilityRecordPage(pageIndex, pageSize);
 

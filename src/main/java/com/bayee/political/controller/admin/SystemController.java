@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -110,12 +108,32 @@ public class SystemController {
         }).collect(Collectors.toList());
 
         for (ConductVisitTypeListResult typeListResult : typeListResultList) {
-            if (typeListResult.getLevel() == 2) {
+            if (typeListResult.getParentId() == 0) {
                 results.add(visitTypeChildDetails(typeListResult, typeListResultList));
             }
         }
 
-        return new ResponseEntity<>(DataListReturn.ok(Arrays.asList(results)), HttpStatus.OK);
+        return new ResponseEntity<>(DataListReturn.ok(results), HttpStatus.OK);
+    }
+
+    @GetMapping("/case/ability/type/list")
+    public ResponseEntity<?> getCaseAbilityTypeList() {
+        List<Map<String, Object>> results = new ArrayList<>();
+        Map<String, Object> data1 = new HashMap<>();
+        data1.put("id", "");
+        data1.put("name", "");
+
+        return new ResponseEntity<>(DataListReturn.ok(results), HttpStatus.OK);
+    }
+
+    @GetMapping("/health/type/list")
+    public ResponseEntity<?> getHealthTypeList() {
+        List<Map<String, Object>> results = new ArrayList<>();
+        Map<String, Object> data1 = new HashMap<>();
+        data1.put("id", "");
+        data1.put("name", "");
+
+        return new ResponseEntity<>(DataListReturn.ok(results), HttpStatus.OK);
     }
 
     /**

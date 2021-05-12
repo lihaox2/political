@@ -147,8 +147,9 @@ public class ConductController {
     @GetMapping("/visit/page")
     public ResponseEntity<?> conductVisitPage(@RequestParam("pageIndex") Integer pageIndex,
                                               @RequestParam("pageSize") Integer pageSize,
-                                              @RequestParam("rootType") Integer rootType,
-                                              @RequestParam("parentType") Integer parentType) {
+                                              @RequestParam("bitType") Integer bitType,
+                                              @RequestParam("smallType") Integer smallType,
+                                              @RequestParam("key") String key) {
         List<RiskConductVisitRecord> recordList = riskConductVisitRecordService.riskConductVisitRecordPage(pageIndex, pageSize);
 
         Map<String, Object> result = new HashMap<>();
@@ -243,7 +244,8 @@ public class ConductController {
     @GetMapping("/bureau/rule/type/page")
     public ResponseEntity<?> conductBureauRuleTypePage(@RequestParam("pageIndex") Integer pageIndex,
                                                        @RequestParam("pageSize") Integer pageSize,
-                                                       @RequestParam("type") Integer type, @RequestParam("key") String key) {
+                                                       @RequestParam("type") Integer type,
+                                                       @RequestParam("key") String key) {
         List<RiskConductBureauRuleType> ruleTypeList = riskConductBureauRuleTypeService.riskConductBureauRuleTypePage(pageIndex, pageSize);
 
         Map<String, Object> result = new HashMap<>();
@@ -321,8 +323,7 @@ public class ConductController {
      */
     @GetMapping("/visit/type/page")
     public ResponseEntity<?> conductVisitTypePage(@RequestParam("pageIndex") Integer pageIndex,
-                                                  @RequestParam("pageSize") Integer pageSize,
-                                                  @RequestParam("type") Integer type, @RequestParam("key") String key) {
+                                                  @RequestParam("pageSize") Integer pageSize) {
         List<RiskConductVisitType> visitTypes = riskConductVisitTypeService.riskConductVisitTypePage(pageIndex, pageSize);
 
         Map<String, Object> result = new HashMap<>();

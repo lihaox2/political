@@ -132,7 +132,7 @@
   </select>
 
   <select id="getAllRiskConductVisitType" resultMap="BaseResultMap">
-    select * from risk_conduct_visit_type where `level` != 1
+    select * from risk_conduct_visit_type
   </select>
 
   <select id="countByNameAndParentId" resultType="Integer">

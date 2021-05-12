@@ -15,17 +15,16 @@
     id, name, parent_id, deduct_score, level, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from risk_conduct_visit_type
-    where id = #{id,jdbcType=INTEGER}
+    select t1.*, t2.`name` typeName from risk_conduct_visit_type t1,
+                                         risk_conduct_visit_type t2 where t1.parent_id = t2.id and t2.`level` = 2
+    and t1.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from risk_conduct_visit_type
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductVisitType">
-    insert into risk_conduct_visit_type (id, name, parent_id, deduct_score
+    insert into risk_conduct_visit_type (id, name, parent_id, deduct_score,
       level, creation_date, update_date
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, #{deductScore},
@@ -128,7 +127,8 @@
   </select>
 
   <select id="getRiskConductVisitTypePageCount" resultType="Integer">
-    select count(1) from risk_conduct_visit_type
+    select count(1) from risk_conduct_visit_type t1,
+                                         risk_conduct_visit_type t2 where t1.parent_id = t2.id and t2.`level` = 2
   </select>
 
   <select id="getAllRiskConductVisitType" resultMap="BaseResultMap">
@@ -136,7 +136,7 @@
   </select>
 
   <select id="countByNameAndParentId" resultType="Integer">
-    select * from risk_conduct_visit_type where name = #{name} and parent_id = #{parentId}
+    select count(1) from risk_conduct_visit_type where name = #{name} and parent_id = #{parentId}
     <if test="id != null">
       and id != #{id}
     </if>

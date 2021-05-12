@@ -50,6 +50,10 @@ public class RiskConductBureauRuleTypeServiceImpl implements RiskConductBureauRu
 
     @Override
     public List<RiskConductBureauRuleType> riskConductBureauRuleTypePage(Integer pageIndex, Integer pageSize) {
+        if(pageIndex < 1) {
+            pageIndex = 1;
+        }
+        pageIndex = (pageIndex - 1) * pageSize;
         return riskConductBureauRuleTypeMapper.riskConductBureauRuleTypePage(pageIndex, pageSize);
     }
 

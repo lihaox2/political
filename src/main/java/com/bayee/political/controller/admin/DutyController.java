@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,7 +40,8 @@ public class DutyController {
      */
     @GetMapping("/duty/page")
     public ResponseEntity<?> dutyPage(@RequestParam("pageIndex") Integer pageIndex,
-                                        @RequestParam("pageSize") Integer pageSize) {
+                                      @RequestParam("pageSize") Integer pageSize,
+                                      @RequestParam("type") Integer type, @RequestParam("key") String key) {
         List<RiskDutyDealPoliceRecord> recordList = riskDutyDealPoliceRecordService.riskDutyDealPoliceRecordPage(pageIndex, pageSize);
 
         Map<String, Object> result = new HashMap<>();
@@ -53,7 +56,7 @@ public class DutyController {
             pageResult.setTypeName(e.getTypeName());
             pageResult.setDesc(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
-            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
+            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd"));
 
             return pageResult;
         }).collect(Collectors.toList()));
@@ -67,23 +70,29 @@ public class DutyController {
     @PostMapping("/add/duty")
     public ResponseEntity<?> addDuty(@RequestBody DutySaveParam saveParam) {
         RiskDutyDealPoliceRecord record = new RiskDutyDealPoliceRecord();
+        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
         record.setPoliceId(saveParam.getPoliceId());
         record.setType(saveParam.getTypeId());
         record.setContent(saveParam.getDesc());
         record.setDeductionScore(saveParam.getDeductScore());
-        record.setInputTime(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
-        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
+        record.setInputTime(DateUtils.parseDate(saveParam.getDate() +" "+ time, "yyyy-MM-dd HH:mm:ss"));
+        record.setCreationDate(DateUtils.parseDate(saveParam.getDate() +" "+ time, "yyyy-MM-dd HH:mm:ss"));
 
         riskDutyDealPoliceRecordService.insert(record);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
-    @PostMapping("/update/duty")
-    public ResponseEntity<?> updateDuty(@RequestParam("id") Integer id, @RequestBody DutySaveParam saveParam) {
+    @PostMapping("/update/duty/{id}")
+    public ResponseEntity<?> updateDuty(@PathVariable("id") Integer id,@RequestBody DutySaveParam saveParam) {
         RiskDutyDealPoliceRecord record = riskDutyDealPoliceRecordService.selectByPrimaryKey(id);
+        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
         record.setType(saveParam.getTypeId());
         record.setContent(saveParam.getDesc());
         record.setDeductionScore(saveParam.getDeductScore());
+        record.setInputTime(DateUtils.parseDate(saveParam.getDate() +" "+ time, "yyyy-MM-dd HH:mm:ss"));
+        record.setCreationDate(DateUtils.parseDate(saveParam.getDate() +" "+ time, "yyyy-MM-dd HH:mm:ss"));
         record.setUpdateDate(new Date());
 
         riskDutyDealPoliceRecordService.updateByPrimaryKeySelective(record);
@@ -102,12 +111,12 @@ public class DutyController {
         result.setTypeId(record.getType());
         result.setDesc(record.getContent());
         result.setDeductScore(record.getDeductionScore());
-        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
+        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd"));
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
 
-    @GetMapping("/delete/duty")
+    @DeleteMapping("/delete/duty")
     public ResponseEntity<?> deleteDuty(@RequestParam("id") Integer id) {
         riskDutyDealPoliceRecordService.deleteByPrimaryKey(id);
 

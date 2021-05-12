@@ -12,11 +12,6 @@ public class CaseTestSaveParam {
     private String policeId;
 
     /**
-     * 警员名称
-     */
-    private String policeName;
-
-    /**
      * 考试名称
      */
     private String testName;
@@ -29,7 +24,7 @@ public class CaseTestSaveParam {
     /**
      * 考试时间
      */
-    private String date;
+    private String year;
 
     /**
      * 期数
@@ -42,14 +37,6 @@ public class CaseTestSaveParam {
 
     public void setPoliceId(String policeId) {
         this.policeId = policeId;
-    }
-
-    public String getPoliceName() {
-        return policeName;
-    }
-
-    public void setPoliceName(String policeName) {
-        this.policeName = policeName;
     }
 
     public String getTestName() {
@@ -68,12 +55,12 @@ public class CaseTestSaveParam {
         this.score = score;
     }
 
-    public String getDate() {
-        return date;
+    public String getYear() {
+        return year;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public Integer getSemester() {

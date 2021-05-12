@@ -11,13 +11,12 @@
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, content, deduct_score, parent_id, creation_date, update_date
+    id, name, deduct_score, parent_id, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from risk_conduct_bureau_rule_type
-    where id = #{id,jdbcType=INTEGER}
+    select t1.*, t2.`name` typeName from risk_conduct_bureau_rule_type t1,
+                                         risk_conduct_bureau_rule_type t2 where t1.parent_id = t2.id
+    and t1.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from risk_conduct_bureau_rule_type
@@ -26,7 +25,7 @@
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductBureauRuleType">
     insert into risk_conduct_bureau_rule_type (id, name, deduct_score, parent_id, creation_date, update_date
       )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{deductScore}, #{parentId}
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{deductScore}, #{parentId},
             #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -115,8 +114,8 @@
   </select>
 
   <select id="getRiskConductBureauRuleTypePageCount" resultType="Integer">
-    select count(1)
-    from risk_conduct_bureau_rule_type
+    select count(1) from risk_conduct_bureau_rule_type t1,
+                                         risk_conduct_bureau_rule_type t2 where t1.parent_id = t2.id
   </select>
 
   <select id="getAllRiskConductBureauRuleType" resultMap="BaseResultMap">
@@ -124,7 +123,7 @@
   </select>
 
   <select id="countRuleTypeByNameAndRuleType" resultType="Integer">
-    select * from risk_conduct_bureau_rule_type where name = #{name} and parent_id = #{parentId}
+    select count(1) from risk_conduct_bureau_rule_type where name = #{name} and parent_id = #{parentId}
     <if test="id != null">
       and id != #{id}
     </if>

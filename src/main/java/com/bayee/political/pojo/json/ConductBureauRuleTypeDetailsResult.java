@@ -12,6 +12,11 @@ public class ConductBureauRuleTypeDetailsResult {
     private Integer parentId;
 
     /**
+     * 父级类型名称
+     */
+    private String typeName;
+
+    /**
      * 名称
      */
     private String name;
@@ -20,6 +25,14 @@ public class ConductBureauRuleTypeDetailsResult {
      * 扣除分数
      */
     private Double deductScore;
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 
     public Integer getParentId() {
         return parentId;

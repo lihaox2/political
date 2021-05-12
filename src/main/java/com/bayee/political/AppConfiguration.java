@@ -83,16 +83,11 @@ public class AppConfiguration {
 		return commonsMultipartResolver;
 	}
 
-	/*
-	 * @Bean public Resource getMybatisConfig() { return new
-	 * ClassPathResource("mybatis-config.xml"); }
-	 */
-
 	@Bean
 	public SqlSessionFactory sqlSessionFactory() throws Exception {
 		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
 		sqlSessionFactory.setDataSource(dataSource());
-		//sqlSessionFactory.setConfigLocation(getMybatisConfig());
+		sqlSessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
 		sqlSessionFactory.getObject().getConfiguration().addMapper(DepartmentMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(HomePageMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(LeaveProcessCodeMapper.class);

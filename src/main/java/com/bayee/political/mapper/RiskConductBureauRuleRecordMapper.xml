@@ -18,10 +18,9 @@
     update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from risk_conduct_bureau_rule_record
-    where id = #{id,jdbcType=INTEGER}
+    select r1.*, r2.name as type_name from risk_conduct_bureau_rule_record r1
+    left join risk_conduct_bureau_rule_type r2 on r1.type = r2.id
+    where r1.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from risk_conduct_bureau_rule_record

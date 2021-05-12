@@ -6,12 +6,13 @@
     <result column="police_id" property="policeId" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="deduction_score" property="deductionScore" jdbcType="DOUBLE" />
     <result column="input_time" property="inputTime" jdbcType="TIMESTAMP" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, police_id, type, content, input_time, creation_date, update_date
+    id, police_id, type, content, input_time, creation_date, update_date, deduction_score
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -26,10 +27,10 @@
   <insert id="insert" parameterType="com.bayee.political.domain.RiskDutyDealPoliceRecord" >
     insert into risk_duty_deal_police_record (id, police_id, type, 
       content, input_time, creation_date, 
-      update_date)
+      update_date, deduction_score)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{content,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP}, 
-      #{updateDate,jdbcType=TIMESTAMP})
+      #{updateDate,jdbcType=TIMESTAMP}, #{deductionScore})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskDutyDealPoliceRecord" >
     insert into risk_duty_deal_police_record
@@ -55,6 +56,9 @@
       <if test="updateDate != null" >
         update_date,
       </if>
+        <if test="deductionScore != null">
+          deduction_score,
+        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -78,6 +82,9 @@
       <if test="updateDate != null" >
         #{updateDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="deductionScore != null">
+        #{deductionScore},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskDutyDealPoliceRecord" >
@@ -91,6 +98,9 @@
       </if>
       <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="deductionScore != null" >
+        deduction_score = #{deductionScore},
       </if>
       <if test="inputTime != null" >
         input_time = #{inputTime,jdbcType=TIMESTAMP},
@@ -109,6 +119,7 @@
     set police_id = #{policeId,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
       content = #{content,jdbcType=VARCHAR},
+      deduction_score = #{deductionScore},
       input_time = #{inputTime,jdbcType=TIMESTAMP},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}

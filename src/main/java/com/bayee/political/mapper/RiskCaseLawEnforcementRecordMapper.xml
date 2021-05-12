@@ -17,10 +17,9 @@
     id, police_id, type, content, input_time, deduction_score, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from risk_case_law_enforcement_record
-    where id = #{id,jdbcType=INTEGER}
+    select a.*,b.name as typeName from risk_case_law_enforcement_record a
+    left join risk_case_law_enforcement_type b on b.id = a.type
+    where a.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from risk_case_law_enforcement_record

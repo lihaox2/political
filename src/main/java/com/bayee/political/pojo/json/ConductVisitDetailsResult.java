@@ -13,7 +13,7 @@ public class ConductVisitDetailsResult {
     /**
      * 类型id
      */
-    private Integer typeId;
+    private String type;
 
     /**
      * 问题情况和来源
@@ -51,12 +51,12 @@ public class ConductVisitDetailsResult {
         this.policeName = policeName;
     }
 
-    public Integer getTypeId() {
-        return typeId;
+    public String getType() {
+        return type;
     }
 
-    public void setTypeId(Integer typeId) {
-        this.typeId = typeId;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getContent() {

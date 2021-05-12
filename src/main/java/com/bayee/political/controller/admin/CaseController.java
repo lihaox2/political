@@ -17,6 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +57,9 @@ public class CaseController {
      */
     @GetMapping("/ability/page")
     public ResponseEntity<?> caseAbilityPage(@RequestParam("pageIndex") Integer pageIndex,
-                                             @RequestParam("pageSize") Integer pageSize) {
+                                             @RequestParam("pageSize") Integer pageSize,
+                                             @RequestParam("type") Integer type, @RequestParam("typeFlag") Integer typeFlag,
+                                             @RequestParam("key") String key) {
         List<RiskCaseAbilityRecord> recordList = riskCaseAbilityRecordService.riskCaseAbilityRecordPage(pageIndex, pageSize);
 
         Map<String, Object> result = new HashMap<>();
@@ -108,6 +114,8 @@ public class CaseController {
     @PostMapping("/add/ability")
     public ResponseEntity<?> addCaseAbility(@RequestBody CaseAbilitySaveParam caseAbilitySaveParam) {
         RiskCaseAbilityRecord record = new RiskCaseAbilityRecord();
+        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
         record.setPoliceId(caseAbilitySaveParam.getPoliceId());
         record.setReconsiderationLitigationStatus(caseAbilitySaveParam.getReconsiderationLitigationStatus());
         record.setLetterVisitStatus(caseAbilitySaveParam.getLetterVisitStatus());
@@ -118,17 +126,19 @@ public class CaseController {
         record.setBasicTestStatus(caseAbilitySaveParam.getBasicTestStatus());
         record.setHighTestStatus(caseAbilitySaveParam.getHighTestStatus());
         record.setJudicialTestStatus(caseAbilitySaveParam.getJudicialTestStatus());
-        record.setYear(DateUtils.formatDate(DateUtils.parseDate(caseAbilitySaveParam.getDate(), "yyyy-MM-dd HH:mm:ss"), "YYYY"));
-        record.setCreationDate(DateUtils.parseDate(caseAbilitySaveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
+        record.setYear(DateUtils.formatDate(DateUtils.parseDate(caseAbilitySaveParam.getDate(), "yyyy-MM-dd"), "yyyy"));
+        record.setCreationDate(DateUtils.parseDate(caseAbilitySaveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
 
         riskCaseAbilityRecordService.insertSelective(record);
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
-    @PostMapping("/update/ability")
-    public ResponseEntity<?> updateCaseAbility(@RequestParam("id") Integer id,
+    @PostMapping("/update/ability/{id}")
+    public ResponseEntity<?> updateCaseAbility(@PathVariable("id") Integer id,
                                                @RequestBody CaseAbilitySaveParam caseAbilitySaveParam) {
         RiskCaseAbilityRecord record = riskCaseAbilityRecordService.selectByPrimaryKey(id);
+        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
         record.setReconsiderationLitigationStatus(caseAbilitySaveParam.getReconsiderationLitigationStatus());
         record.setLetterVisitStatus(caseAbilitySaveParam.getLetterVisitStatus());
         record.setLawEnforcementFaultStatus(caseAbilitySaveParam.getLawEnforcementFaultStatus());
@@ -138,6 +148,8 @@ public class CaseController {
         record.setBasicTestStatus(caseAbilitySaveParam.getBasicTestStatus());
         record.setHighTestStatus(caseAbilitySaveParam.getHighTestStatus());
         record.setJudicialTestStatus(caseAbilitySaveParam.getJudicialTestStatus());
+        record.setYear(DateUtils.formatDate(DateUtils.parseDate(caseAbilitySaveParam.getDate(), "yyyy-MM-dd"), "yyyy"));
+        record.setCreationDate(DateUtils.parseDate(caseAbilitySaveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
         record.setUpdateDate(new Date());
 
         riskCaseAbilityRecordService.updateByPrimaryKeySelective(record);
@@ -162,7 +174,7 @@ public class CaseController {
         result.setBasicTestStatus(record.getBasicTestStatus());
         result.setHighTestStatus(record.getHighTestStatus());
         result.setJudicialTestStatus(record.getJudicialTestStatus());
-        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
+        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd"));
 
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
     }
@@ -182,7 +194,9 @@ public class CaseController {
      */
     @GetMapping("/law/enforcement/page")
     public ResponseEntity<?> caseLawEnforcementPage(@RequestParam("pageIndex") Integer pageIndex,
-                                                    @RequestParam("pageSize") Integer pageSize) {
+                                                    @RequestParam("pageSize") Integer pageSize,
+                                                    @RequestParam("type") Integer type,
+                                                    @RequestParam("key") String key) {
         List<RiskCaseLawEnforcementRecord> recordList = riskCaseLawEnforcementRecordService.
                 riskCaseLawEnforcementRecordPage(pageIndex, pageSize);
 
@@ -198,7 +212,7 @@ public class CaseController {
             pageResult.setTypeName(e.getTypeName());
             pageResult.setDesc(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
-            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
+            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd"));
             return pageResult;
         }).collect(Collectors.toList()));
 
@@ -211,25 +225,30 @@ public class CaseController {
     @PostMapping("/add/law/enforcement")
     public ResponseEntity<?> addCaseLawEnforcement(@RequestBody CaseLawEnforcementSaveParam saveParam) {
         RiskCaseLawEnforcementRecord record = new RiskCaseLawEnforcementRecord();
+        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
         record.setPoliceId(saveParam.getPoliceId());
         record.setType(saveParam.getTypeId());
         record.setContent(saveParam.getDesc());
-        record.setInputTime(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
+        record.setInputTime(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
         record.setDeductionScore(saveParam.getDeductScore());
-        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
+        record.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
 
         riskCaseLawEnforcementRecordService.insert(record);
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
-    @PostMapping("/update/law/enforcement")
-    public ResponseEntity<?> updateCaseLawEnforcement(@RequestParam("id") Integer id,
+    @PostMapping("/update/law/enforcement/{id}")
+    public ResponseEntity<?> updateCaseLawEnforcement(@PathVariable("id") Integer id,
                                                       @RequestBody CaseLawEnforcementSaveParam saveParam) {
         RiskCaseLawEnforcementRecord oldRecord = riskCaseLawEnforcementRecordService.selectByPrimaryKey(id);
+        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
         oldRecord.setPoliceId(saveParam.getPoliceId());
         oldRecord.setType(saveParam.getTypeId());
         oldRecord.setContent(saveParam.getDesc());
         oldRecord.setDeductionScore(saveParam.getDeductScore());
+        oldRecord.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
         oldRecord.setUpdateDate(new Date());
 
         riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(oldRecord);
@@ -245,10 +264,10 @@ public class CaseController {
         if (user != null) {
             result.setPoliceName(user.getName());
         }
-        result.setType(record.getType());
+        result.setType(record.getTypeName());
         result.setDesc(record.getContent());
         result.setDeductScore(record.getDeductionScore());
-        result.setDate(DateUtils.formatDate(record.getCreationDate(), "YYYY-MM-dd HH:mm:ss"));
+        result.setDate(DateUtils.formatDate(record.getCreationDate(), "YYYY-MM-dd"));
 
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
     }
@@ -268,7 +287,9 @@ public class CaseController {
      */
     @GetMapping("/test/page")
     public ResponseEntity<?> caseTestPage(@RequestParam("pageIndex") Integer pageIndex,
-                                          @RequestParam("pageSize") Integer pageSize) {
+                                          @RequestParam("pageSize") Integer pageSize,
+                                          @RequestParam("year") String year, @RequestParam("semester") Integer semester,
+                                          @RequestParam("passFlag") Integer passFlag, @RequestParam("key") String key) {
         List<RiskCaseTestRecord> recordList = riskCaseTestRecordService.riskCaseTestRecordPage(pageIndex, pageSize);
 
         Map<String, Object> result = new HashMap<>();
@@ -295,25 +316,42 @@ public class CaseController {
 
     @PostMapping("/add/test")
     public ResponseEntity<?> addCaseTest(@RequestBody CaseTestSaveParam saveParam) {
+        String dateLast = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).substring(7);
+        String month = "01";
+        if (saveParam.getSemester() == 1) {
+            month = "04";
+        }else {
+            month = "08";
+        }
+        String date = saveParam.getYear() + "-" + month + dateLast;
         RiskCaseTestRecord record = new RiskCaseTestRecord();
         record.setPoliceId(saveParam.getPoliceId());
-        record.setYear(DateUtils.formatDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"), "YYYY"));
         record.setSemester(saveParam.getSemester());
         record.setScore(saveParam.getScore());
-        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
+        record.setYear(saveParam.getYear());
+        record.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd HH:mm:ss"));
 
         riskCaseTestRecordService.insertTest(record);
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
-    @PostMapping("/update/test")
-    public ResponseEntity<?> updateCaseTest(@RequestParam("id") Integer id,
+    @PostMapping("/update/test/{id}")
+    public ResponseEntity<?> updateCaseTest(@PathVariable("id") Integer id,
                                             @RequestBody CaseTestSaveParam saveParam) {
+        String dateLast = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).substring(7);
+        String month = "01";
+        if (saveParam.getSemester() == 1) {
+            month = "04";
+        }else {
+            month = "08";
+        }
+        String date = saveParam.getYear() + "-" + month + dateLast;
         RiskCaseTestRecord oldRecord = riskCaseTestRecordService.selectByPrimaryKey(id);
-        oldRecord.setId(id);
         oldRecord.setPoliceId(saveParam.getPoliceId());
         oldRecord.setSemester(saveParam.getSemester());
         oldRecord.setScore(saveParam.getScore());
+        oldRecord.setYear(saveParam.getYear());
+        oldRecord.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd HH:mm:ss"));
         oldRecord.setUpdateDate(new Date());
 
         riskCaseTestRecordService.updateByPrimaryKey(oldRecord);

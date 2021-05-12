@@ -26,6 +26,7 @@ import com.bayee.political.domain.RiskDrinkRecord;
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
 import com.bayee.political.domain.RiskHealth;
 import com.bayee.political.domain.RiskHealthRecord;
+import com.bayee.political.domain.RiskHealthRecordInfo;
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.RiskStutyActivitiesPartyRecord;
 import com.bayee.political.domain.RiskStutyPalmSchoolRecord;
@@ -38,6 +39,7 @@ import com.bayee.political.service.RiskCaseTestRecordService;
 import com.bayee.political.service.RiskConductBureauRuleRecordService;
 import com.bayee.political.service.RiskConductVisitRecordService;
 import com.bayee.political.service.RiskDutyDealPoliceRecordService;
+import com.bayee.political.service.RiskHealthRecordInfoService;
 import com.bayee.political.service.RiskHealthRecordService;
 import com.bayee.political.service.RiskReportRecordService;
 import com.bayee.political.service.RiskService;
@@ -100,6 +102,8 @@ public class RiskExportExcelDataController {
 	@Autowired
 	RiskReportRecordService riskReportRecordService;
 	
+	@Autowired
+    RiskHealthRecordInfoService riskHealthRecordInfoService;
 
 	/**
 	 * 	导入Excel警员健康数据
@@ -131,18 +135,22 @@ public class RiskExportExcelDataController {
 				// 警员体检
 				RiskHealthRecord riskHealthRecord = new RiskHealthRecord();
 				
+				RiskHealthRecordInfo recordInfo = new RiskHealthRecordInfo();
 				
 				riskHealthRecord.setPoliceId(excel.get(5));
 				
+		        recordInfo.setPoliceId(excel.get(5));
 				
 				riskHealthRecord.setYear(yearStr);
-				
+
 				
 				if(excel.get(6).indexOf("\\")==-1) {
 					riskHealthRecord.setHeight(Double.valueOf(excel.get(6)));
+			        recordInfo.setHeight(Double.valueOf(excel.get(6)));
 				}
 				if(excel.get(7).indexOf("\\")==-1) {
 					riskHealthRecord.setWeight(Double.valueOf(excel.get(7)));
+			        recordInfo.setWeight(Double.valueOf(excel.get(7)));
 				}
 				
 				if(excel.get(6).indexOf("\\")==-1 &&  excel.get(7).indexOf("\\")==-1) {
@@ -162,75 +170,126 @@ public class RiskExportExcelDataController {
 				
 				riskHealthRecord.setBlood(excel.get(8));
 				
+				if(!excel.get(10).isEmpty()) {
+					recordInfo.setHighDensityLipoprotein(Double.valueOf(excel.get(10)));
+				}
+				
+				if(!excel.get(11).isEmpty()) {
+					recordInfo.setLowDensityLipoprotein(Double.valueOf(excel.get(11)));
+				}
+				
 				if(!excel.get(12).isEmpty()) {
+			        recordInfo.setTriglyceride(Double.valueOf(excel.get(12)));
 					if(Double.valueOf(excel.get(12))>1.7) {
 						riskHealthRecord.setIsHyperlipidemia(1);
 					}
 				}
 				
 				if(!excel.get(13).isEmpty()) {
+
+			        recordInfo.setCholesterol(Double.valueOf(excel.get(13)));
 					if(Double.valueOf(excel.get(13))>5.72) {
 						riskHealthRecord.setIsHyperlipidemia(1);
 					}
 				}
 				
 				if(!excel.get(14).isEmpty() &&  !excel.get(14).equals("弃检")) {
+					
+
+			        recordInfo.setReceiveCompression(Double.valueOf(excel.get(14)));
 					if(Double.valueOf(excel.get(14))>140) {
 						riskHealthRecord.setIsHypertension(1);
 					}
 				}
 				
 				if(!excel.get(15).isEmpty() &&  !excel.get(15).equals("弃检")) {
+
+			        recordInfo.setDiastolicPressure(Double.valueOf(excel.get(15)));
 					if(Double.valueOf(excel.get(15))>90) {
 						riskHealthRecord.setIsHypertension(1);
 					}
 				}
 				
 				if(!excel.get(16).isEmpty()) {
+
+			        recordInfo.setBloodSugar(Double.valueOf(excel.get(16)));
 					if(Double.valueOf(excel.get(16))>6.1) {
 						riskHealthRecord.setIsHyperglycemia(1);
 					}
 				}
 				
 				if(!excel.get(17).isEmpty()) {
+
+			        recordInfo.setSerumUricAcid(Double.valueOf(excel.get(17)));
 					if(Double.valueOf(excel.get(17))>420) {
 						riskHealthRecord.setIsHyperuricemia(1);
 					}
 				}
 				
 				if(!excel.get(18).isEmpty()) {
+
+			        recordInfo.setProstateDesc(excel.get(18));
 					if(excel.get(18).equals("异常")) {
 						riskHealthRecord.setIsProstate(1);
+
+				        recordInfo.setIsProstate(1);
 					}
 				}
 				
 				if(!excel.get(19).isEmpty()) {
 					riskHealthRecord.setIsMajorDiseases(1);
+
+			        recordInfo.setIsMajorDiseases(1);
 				}
 				riskHealthRecord.setMajorDiseasesDescribe(excel.get(19));
 				
+		        recordInfo.setMajorDiseasesDesc(excel.get(19));
+		        
+				
 				if(!excel.get(20).isEmpty()) {
 					riskHealthRecord.setIsHeart(1);
+
+			        recordInfo.setIsHeart(1);
 				}
+				
 				riskHealthRecord.setHeartDescribe(excel.get(20));
+
+		        recordInfo.setHeartDesc(excel.get(20));
 				
 				if(!excel.get(21).isEmpty()) {
 					riskHealthRecord.setIsTumorAntigen(1);
+			        recordInfo.setIsTumorAntigen(1);
 				}
 				riskHealthRecord.setTumorAntigenDescribe(excel.get(21));
+		        recordInfo.setTumorAntigenDesc(excel.get(21));
 				
 				if(!excel.get(22).isEmpty()) {
 					riskHealthRecord.setIsOrthopaedics(1);
+
+			        recordInfo.setIsOrthopaedics(1);
 				}
 				riskHealthRecord.setOrthopaedicsDescribe(excel.get(22));
+		        recordInfo.setOrthopaedicsDesc(excel.get(22));
 				
 				if(riskHealthRecordId!=null) {
 					riskHealthRecord.setId(riskHealthRecordId);
 					riskHealthRecord.setUpdateDate(new Date());
 					riskHealthRecordService.updateByPrimaryKeySelective(riskHealthRecord);
+					
+					riskHealthRecordInfoService.deleteByRecordId(riskHealthRecordId);
+					
+					recordInfo.setRecordId(riskHealthRecord.getId());
+			        recordInfo.setCreationDate(new Date());
+
+			        riskHealthRecordInfoService.insert(recordInfo);
 				}else {
 					riskHealthRecord.setCreationDate(new Date());
 					riskHealthRecordService.insertSelective(riskHealthRecord);
+					
+			        recordInfo.setRecordId(riskHealthRecord.getId());
+			        recordInfo.setCreationDate(new Date());
+
+			        riskHealthRecordInfoService.insert(recordInfo);
 				}
 				
 			}

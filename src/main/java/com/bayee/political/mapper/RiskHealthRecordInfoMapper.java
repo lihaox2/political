@@ -28,5 +28,7 @@ public interface RiskHealthRecordInfoMapper {
      * @param recordId
      */
     void deleteByRecordId(@Param("recordId") Integer recordId);
+    
+    int updateByRecordId(RiskHealthRecordInfo record);
 
 }

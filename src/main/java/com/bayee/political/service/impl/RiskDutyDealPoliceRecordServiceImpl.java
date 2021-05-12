@@ -1,5 +1,6 @@
 package com.bayee.political.service.impl;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,16 +43,16 @@ public class RiskDutyDealPoliceRecordServiceImpl implements RiskDutyDealPoliceRe
 	}
 
 	@Override
-	public List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordPage(Integer pageIndex, Integer pageSize) {
+	public List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordPage(Integer pageIndex, Integer pageSize,Integer type,String key) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
-		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPage(pageIndex, pageSize);
+		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPage(pageIndex, pageSize,type,key);
 	}
 
 	@Override
-	public Integer riskDutyDealPoliceRecordPageCount() {
-		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPageCount();
+	public Integer riskDutyDealPoliceRecordPageCount(Integer type,String key) {
+		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPageCount(type,key);
 	}
 }

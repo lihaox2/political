@@ -22,12 +22,12 @@ public interface RiskDutyDealPoliceRecordService {
 	 * @param pageSize
 	 * @return
 	 */
-	List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordPage(Integer pageIndex, Integer pageSize);
+	List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordPage(Integer pageIndex, Integer pageSize,Integer type,String key);
 
 	/**
 	 * 统计分页数据数据条数
 	 * @return
 	 */
-	Integer riskDutyDealPoliceRecordPageCount();
+	Integer riskDutyDealPoliceRecordPageCount(Integer type,String key);
 
 }

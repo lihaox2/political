@@ -56,12 +56,13 @@ public interface RiskDutyDealPoliceRecordMapper {
 	 * @param pageSize
 	 * @return
 	 */
-	List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize);
+	List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize
+			,@Param("type") Integer type,@Param("key") String key);
 
 	/**
 	 * 统计分页数据数据条数
 	 * @return
 	 */
-	Integer riskDutyDealPoliceRecordPageCount();
+	Integer riskDutyDealPoliceRecordPageCount(@Param("type") Integer type,@Param("key") String key);
 
 }

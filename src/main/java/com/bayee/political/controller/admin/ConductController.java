@@ -52,7 +52,7 @@ public class ConductController {
                                                    @RequestParam("pageSize") Integer pageSize,
                                                    @RequestParam("type") Integer type, @RequestParam("key") String key) {
         List<RiskConductBureauRuleRecord> recordList = riskConductBureauRuleRecordService.
-                riskConductBureauRuleRecordPage(pageIndex, pageSize);
+                riskConductBureauRuleRecordPage(pageIndex, pageSize,type,key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -70,7 +70,7 @@ public class ConductController {
 
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskConductBureauRuleRecordService.getRiskConductBureauRuleRecordPageCount());
+        result.put("totalCount", riskConductBureauRuleRecordService.getRiskConductBureauRuleRecordPageCount(type,key));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
 

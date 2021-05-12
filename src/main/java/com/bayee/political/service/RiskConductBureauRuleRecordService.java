@@ -24,13 +24,13 @@ public interface RiskConductBureauRuleRecordService {
      * @param pageSize
      * @return
      */
-    List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(Integer pageIndex, Integer pageSize);
+    List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(Integer pageIndex, Integer pageSize,Integer type, String key);
 
     /**
      * 统计分页数据条数
      * @return
      */
-    Integer getRiskConductBureauRuleRecordPageCount();
+    Integer getRiskConductBureauRuleRecordPageCount(Integer type, String key);
 
     /**
      * 根据局规类型统计数据数据条数

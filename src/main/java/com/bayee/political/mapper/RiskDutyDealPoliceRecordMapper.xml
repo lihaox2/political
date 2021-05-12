@@ -159,12 +159,34 @@
   <select id="riskDutyDealPoliceRecordPage" resultMap="BaseResultMap">
     select a.*,b.name as typeName from risk_duty_deal_police_record a
     left join risk_case_law_enforcement_type b on b.id=a.type
+		LEFT JOIN `user` u ON a.police_id=u.police_id
+		
+		<where>
+			<if test="key!=null and key!=''">
+				AND (u.name like CONCAT('%','#{key}','%') OR a.police_id like CONCAT('%','#{key}','%') OR a.content LIKE CONCAT('%','#{key}','%'))
+			</if>
+			<if test="type!=null">
+				AND a.type=#{type}
+			</if>
+		</where> 
     order by id desc
     limit #{pageIndex}, #{pageSize}
   </select>
 
   <select id="riskDutyDealPoliceRecordPageCount" resultType="Integer">
-    select count(1) from risk_duty_deal_police_record
+    select a.*,b.name as typeName from risk_duty_deal_police_record a
+    left join risk_case_law_enforcement_type b on b.id=a.type
+		LEFT JOIN `user` u ON a.police_id=u.police_id
+		
+		<where>
+			<if test="key!=null and key!=''">
+				AND (u.name like CONCAT('%','#{key}','%') OR a.police_id like CONCAT('%','#{key}','%') OR a.content LIKE CONCAT('%','#{key}','%'))
+			</if>
+			<if test="type!=null">
+				AND a.type=#{type}
+			</if>
+		</where>
+    order by id desc
   </select>
 
 </mapper>

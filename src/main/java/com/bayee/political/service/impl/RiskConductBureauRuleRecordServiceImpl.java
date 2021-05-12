@@ -1,5 +1,6 @@
 package com.bayee.political.service.impl;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,18 +53,18 @@ public class RiskConductBureauRuleRecordServiceImpl implements RiskConductBureau
 	}
 
 	@Override
-	public List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(Integer pageIndex, Integer pageSize) {
+	public List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(Integer pageIndex, Integer pageSize,Integer type, String key) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
 
-		return riskConductBureauRuleRecordMapper.riskConductBureauRuleRecordPage(pageIndex, pageSize);
+		return riskConductBureauRuleRecordMapper.riskConductBureauRuleRecordPage(pageIndex, pageSize,type,key);
 	}
 
 	@Override
-	public Integer getRiskConductBureauRuleRecordPageCount() {
-		return riskConductBureauRuleRecordMapper.getRiskConductBureauRuleRecordPageCount();
+	public Integer getRiskConductBureauRuleRecordPageCount(Integer type, String key) {
+		return riskConductBureauRuleRecordMapper.getRiskConductBureauRuleRecordPageCount(type,key);
 	}
 
 	@Override

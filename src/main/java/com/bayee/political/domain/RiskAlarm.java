@@ -1,6 +1,8 @@
 package com.bayee.political.domain;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class RiskAlarm {
     private Integer id;
@@ -28,6 +30,8 @@ public class RiskAlarm {
     private Date creationDate;
 
     private Date updateDate;
+    
+    private List<Map<String,Object>> typeList;
 
     public Integer getId() {
         return id;
@@ -174,5 +178,14 @@ public class RiskAlarm {
 	public void setIsTalk(Integer isTalk) {
 		this.isTalk = isTalk;
 	}
+
+	public List<Map<String, Object>> getTypeList() {
+		return typeList;
+	}
+
+	public void setTypeList(List<Map<String, Object>> typeList) {
+		this.typeList = typeList;
+	}
+	
     
 }

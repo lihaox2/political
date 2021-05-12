@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bayee.political.mapper.RiskTrendsMapper">
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskTrends">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="creation_date" jdbcType="DATE" property="creationDate" />
+    <result column="month" jdbcType="VARCHAR" property="month" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMapTwo" type="com.bayee.political.domain.RiskReportRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="year" property="year" jdbcType="VARCHAR" />
+    <result column="month" property="month" jdbcType="VARCHAR" />
+    <result column="total_num" property="totalNum" jdbcType="DOUBLE" />
+    <result column="conduct_num" property="conductNum" jdbcType="DOUBLE" />
+    <result column="handling_case_num" property="handlingCaseNum" jdbcType="DOUBLE" />
+    <result column="duty_num" property="dutyNum" jdbcType="DOUBLE" />
+    <result column="train_num" property="trainNum" jdbcType="DOUBLE" />
+    <result column="social_contact_num" property="socialContactNum" jdbcType="DOUBLE" />
+    <result column="amily_evaluation_num" property="amilyEvaluationNum" jdbcType="DOUBLE" />
+    <result column="health_num" property="healthNum" jdbcType="DOUBLE" />
+    <result column="drink_num" property="drinkNum" jdbcType="DOUBLE" />
+    <result column="study_num" property="studyNum" jdbcType="DOUBLE" />
+    <result column="work_num" property="workNum" jdbcType="DOUBLE" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="age" property="age"  />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, num, creation_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from risk_trends
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from risk_trends
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskTrends">
+    insert into risk_trends (id, num, creation_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, #{creationDate,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskTrends">
+    insert into risk_trends
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="num != null">
+        num,
+      </if>
+      <if test="creationDate != null">
+        creation_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null">
+        #{creationDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskTrends">
+    update risk_trends
+    <set>
+      <if test="num != null">
+        num = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null">
+        creation_date = #{creationDate,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskTrends">
+    update risk_trends
+    set num = #{num,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectRiskTotal" resultType="Integer">
+  	SELECT count(1) FROM (SELECT (case when sum(r.conduct_num) > 15 then 15 else sum(r.conduct_num) end+
+															case when sum(r.handling_case_num) &gt; 20 then 20 else sum(r.handling_case_num) end+
+															case when sum(r.duty_num) &gt; 25 then 25 else sum(r.duty_num) end+
+															case when sum(r.train_num) &gt; 10 then 10 else sum(r.train_num) end+
+															case when sum(r.drink_num) &gt; 15 then 15 else sum(r.drink_num) end+
+															case when sum(r.study_num) &gt; 5 then 5 else sum(r.study_num) end+
+															case when sum(r.amily_evaluation_num) &gt; 5 then 5 else sum(r.amily_evaluation_num) end+
+															case when sum(r.work_num) &gt; 5 then 5 else sum(r.work_num) end+r.health_num) AS total_num FROM `user` u LEFT JOIN risk_report_record r ON u.police_id=r.police_id 
+  	WHERE 
+	r.creation_date&gt;=#{startTime} AND
+ 	r.creation_date&lt;=#{endTime} GROUP BY r.police_id ORDER BY  total_num DESC) a WHERE a.total_num&gt;30
+  </select>
+  
+  <select id="selectRiskTrends" resultType="HashMap">
+  	SELECT * FROM (SELECT v.month,IFNULL(b.total,0) value FROM (
+		    SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `month`
+			) v LEFT JOIN
+			(SELECT DATE_FORMAT(a.creation_date,'%Y-%m') AS paTime,a.num AS total FROM risk_trends a GROUP BY patime) b
+			ON b.paTime=v.month) a  ORDER BY a.month ASC;
+  </select>
+  
+  
+  <select id="selectDeptTopFive" resultType="HashMap">
+  	  SELECT a.`name`,IFNULL(a.value,0) AS value,IFNULL(ROUND((value/(SELECT count(1) total FROM ( SELECT (case when sum(r.conduct_num) > 15 then 15 else sum(r.conduct_num) end+
+															case when sum(r.handling_case_num) > 20 then 20 else sum(r.handling_case_num) end+
+															case when sum(r.duty_num) > 25 then 25 else sum(r.duty_num) end+
+															case when sum(r.train_num) >10 then 10 else sum(r.train_num) end+
+															case when sum(r.drink_num) > 15 then 15 else sum(r.drink_num) end+
+															case when sum(r.study_num) > 5 then 5 else sum(r.study_num) end+
+															case when sum(r.amily_evaluation_num)> 5 then 5 else sum(r.amily_evaluation_num) end+
+															case when sum(r.work_num) >5 then 5 else sum(r.work_num) end+r.health_num) AS total FROM  risk_report_record r WHERE  r.creation_date&gt;=#{startTime}  AND r.creation_date&lt;=#{endTime} GROUP BY  
+		 police_id ORDER BY total DESC) a WHERE a.total>=30)*100),2),0) as ratio  FROM  (select * from	(SELECT count(1) value,a.name,a.department_id FROM 
+  	(SELECT * FROM 
+  	department d, 
+  	(SELECT a.department_id FROM 
+  	(SELECT (case when sum(r.conduct_num) > 15 then 15 else sum(r.conduct_num) end+
+															case when sum(r.handling_case_num) > 20 then 20 else sum(r.handling_case_num) end+
+															case when sum(r.duty_num) >25 then 25 else sum(r.duty_num) end+
+															case when sum(r.train_num) > 10 then 10 else sum(r.train_num) end+
+															case when sum(r.drink_num) > 15 then 15 else sum(r.drink_num) end+
+															case when sum(r.study_num) > 5 then 5 else sum(r.study_num) end+
+															case when sum(r.amily_evaluation_num) > 5 then 5 else sum(r.amily_evaluation_num) end+
+															case when sum(r.work_num) > 5 then 5 else sum(r.work_num) end+r.health_num) AS total_num,u.department_id  FROM 
+  	`user` u LEFT JOIN risk_report_record r ON u.police_id=r.police_id WHERE r.creation_date&gt;=#{startTime}  AND r.creation_date&lt;=#{endTime}  
+  	 GROUP BY r.police_id ORDER BY  total_num DESC) a WHERE a.total_num>=30) a WHERE d.id=a.department_id) a GROUP BY a.id ORDER BY value DESC limit 5) a order by a.value DESC) a 
+  </select>
+  
+  <!-- top10 -->
+  <select id="selectPoliceRiskTopTen" resultMap="BaseResultMapTwo">
+  	select a.*,b.name,b.head_image as headImage,TIMESTAMPDIFF(YEAR,b.birthday,CURDATE()) AS age,
+c.name as departmentName,d.position_name as positionName
+from (select police_id,
+sum(total_num) as total_num,
+sum(conduct_num) as conduct_num,
+round(sum(handling_case_num),2) as handling_case_num,
+ sum(duty_num) as duty_num,
+sum(train_num) as train_num,
+sum(social_contact_num) as social_contact_num,
+sum(amily_evaluation_num) as amily_evaluation_num,
+sum(drink_num) as drink_num,
+sum(study_num) as study_num,
+sum(health_num) as health_num,
+sum(work_num) as work_num
+from risk_report_record where DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime}
+and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+GROUP BY police_id order by ${orderName} desc limit 10) a
+left join user b on b.police_id=a.police_id
+left join department c on c.id=b.department_id
+left join police_position d on d.id=b.position_id WHERE b.`name` IS NOT NULL
+order by ${sortName} desc limit 10
+  </select>
+  
+  
+  <select id="selectPolice" resultType="HashMap">
+  		select u.police_id AS policeId, u.head_image AS headImage,
+  		u.`name`,d.`name` AS departmentName,p.position_name AS positionName,u.`name` AS value
+  		 from `user` u,department d,police_position p WHERE 
+  		 u.department_id=d.id AND u.position_id=p.id
+  		 <if test="content !=null  and 	content !=''">
+  		 	AND (u.police_id LIKE CONCAT('%',#{content},'%')	OR  u.`name` LIKE CONCAT('%',#{content},'%'));
+  		 </if>
+  </select>
+  
+  
+  
+  
+  <!-- 综合指数风险 -->
+<select id="comprehensiveIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultType="Integer">
+SELECT count(1) FROM (SELECT (case when sum(r.conduct_num) &gt; 15 then 15 else sum(r.conduct_num) end+
+															case when sum(r.handling_case_num) &gt; 20 then 20 else sum(r.handling_case_num) end+
+															case when sum(r.duty_num) &gt; 25 then 25 else sum(r.duty_num) end+
+															case when sum(r.train_num) &gt; 10 then 10 else sum(r.train_num) end+
+															case when sum(r.drink_num) &gt; 15 then 15 else sum(r.drink_num) end+
+															case when sum(r.study_num) &gt; 5 then 5 else sum(r.study_num) end+
+															case when sum(r.amily_evaluation_num) &gt; 5 then 5 else sum(r.amily_evaluation_num) end+
+															case when sum(r.work_num) &gt; 5 then 5 else sum(r.work_num) end+r.health_num) AS total_num FROM risk_report_record r
+															WHERE 
+	r.creation_date&gt;=#{lastMonthTime} AND
+ 	r.creation_date&lt;=#{dateTime} GROUP BY r.police_id ORDER BY  total_num DESC) a WHERE a.total_num&gt;30
+</select>
+<!-- 行为规范风险 -->
+<select id="drinkIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultType="Integer">
+SELECT count(1) FROM (SELECT * FROM risk_alarm r WHERE r.alarm_type=11002
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{dateTime}
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{lastMonthTime} GROUP BY r.police_id) a
+</select>
+<!-- 执法办案风险 -->
+<select id="conductIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultType="Integer">
+SELECT count(1) FROM (SELECT * FROM risk_alarm r WHERE r.alarm_type=11003
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{dateTime}
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{lastMonthTime} GROUP BY r.police_id) a
+</select>
+<!-- 接警执勤风险  -->
+<select id="caseIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultType="Integer">
+SELECT count(1) FROM (SELECT * FROM risk_alarm r WHERE r.alarm_type=11004
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{dateTime}
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{lastMonthTime} GROUP BY r.police_id) a
+</select>
+<!-- 警务技能风险 -->
+<select id="dutyIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultType="Integer">
+SELECT count(1) FROM (SELECT * FROM risk_alarm r WHERE r.alarm_type=11005
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{dateTime}
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{lastMonthTime} GROUP BY r.police_id) a
+</select>
+<!-- 社交风险-->
+<select id="trainIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultType="Integer">
+SELECT count(1) FROM (SELECT * FROM risk_alarm r WHERE r.alarm_type=11006
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{dateTime}
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{lastMonthTime} GROUP BY r.police_id) a
+</select>
+<!-- 家属评价风险 -->
+<select id="studyIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultType="Integer">
+SELECT count(1) FROM (SELECT * FROM risk_alarm r WHERE r.alarm_type=11007
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{dateTime}
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{lastMonthTime} GROUP BY r.police_id) a
+</select>
+<!-- 健康  -->
+<select id="healthIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultType="Integer">
+SELECT count(1) FROM (SELECT * FROM risk_alarm r WHERE r.alarm_type=11008
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{dateTime}
+ AND DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{lastMonthTime} GROUP BY r.police_id) a
+</select>
+
+<!-- 各项风险指标平均数 -->
+<select id="avgNum" resultType="HashMap">
+		SELECT v.month,IFNULL(b.value,0) value FROM (
+		    SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `month` 
+			) v LEFT JOIN
+(SELECT AVG(${sortName}) value,DATE_FORMAT(a.creation_date,'%Y-%m') paTime FROM (SELECT * FROM risk_report_record a WHERE ${sortName}!=0
+GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_date,'%Y-%m') DESC) a
+		GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY paTime DESC) b ON v.`month`=b.paTime ORDER BY v.month ASC
+</select>
+
+
+<select id="riskPersonnelTrend"  resultType="HashMap">
+	SELECT * FROM (SELECT v.month,IFNULL(b.total,0) value FROM (
+		    SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `month` 
+		    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `month` 
+			) v LEFT JOIN
+(SELECT count(1) total,a.paTime FROM (SELECT count(1),police_id,DATE_FORMAT(r.creation_date,'%Y-%m') paTime FROM risk_alarm r
+ WHERE r.alarm_type=#{alamType} GROUP BY police_id) a GROUP BY a.paTime) b ON b.paTime=v.month) a  ORDER BY a.month ASC
+</select>
+
+<!-- 本月新增预警人数 -->
+
+<select id="theMonthAlamTotal" resultType="HashMap">
+	SELECT *,(a.toMonth-b.upMonth)/b.upMonth AS tongbi
+ FROM (SELECT count(1) AS toMonth FROM (SELECT count(1) AS value,r.police_id FROM risk_alarm r WHERE DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT(CURDATE(), '%Y-%m')
+ GROUP BY r.police_id) a) a,
+ 
+ 
+(SELECT count(1) upMonth FROM (SELECT count(1) AS value,r.police_id FROM risk_alarm r WHERE
+ DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m')
+ GROUP BY r.police_id) a) b
+</select>
+
+
+
+</mapper>

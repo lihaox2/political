@@ -19,6 +19,7 @@
     <result column="work_num" property="workNum" jdbcType="DOUBLE" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="age" property="age" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="ScreenDoubeChartMap" type="com.bayee.political.domain.ScreenDoubeChart" >
     <id column="id" property="id" />
@@ -380,7 +381,7 @@ where 1=1
 </select>
 <!-- 警员风险详情查询 -->
 <select id="riskReportRecordItem" parameterType="com.bayee.political.domain.RiskReportRecord" resultMap="BaseResultMap">
-  select a.*,b.name,b.head_image as headImage,
+  select a.*,b.name,b.head_image as headImage,TIMESTAMPDIFF(YEAR,b.birthday,NOW()) as age,
   c.name as departmentName,d.position_name as positionName,
   g.total_num as currentTotalNum,
   round(ifnull((g.total_num-e.total_num)/e.total_num*100,0),2) as riskRate,

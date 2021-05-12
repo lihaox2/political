@@ -1,9 +1,11 @@
 package com.bayee.political.mapper;
 
-import com.bayee.political.domain.RiskAlarm;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import com.bayee.political.domain.RiskAlarm;
 
 public interface RiskAlarmMapper {
 	int deleteByPrimaryKey(Integer id);
@@ -45,5 +47,15 @@ public interface RiskAlarmMapper {
 
 	// 警员预警新增
 	int riskAlarmCreat(RiskAlarm item);
+	
+	List<RiskAlarm> theMonthAlarm();
+
+	String findAlarmType(Integer id);
+	
+	List<Map<String,Object>> findByPoliceIdRiskAlarm(String policeId);
+	
+	List<Map<String,Object>> continuityAlarm();
+	
+	List<Map<String,Object>> continuityAlarmDetails(String policeId);
 
 }

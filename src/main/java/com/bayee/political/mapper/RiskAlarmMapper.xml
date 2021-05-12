@@ -167,4 +167,53 @@ GROUP BY a.police_id) as t
       )
     </foreach >
   </insert>
+  
+  <select id="theMonthAlarm" resultMap="BaseResultMap">
+	 SELECT u.name,r.*,count(1) num ,sum(alarm_score) AS alarmScore
+FROM risk_alarm r,`user` u WHERE r.police_id=u.police_id AND DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT(CURDATE(), '%Y-%m')
+ GROUP BY r.police_id ORDER BY alarmScore DESC 
+</select>
+
+<select id="findAlarmType" resultType="String">
+	SELECT r.alarm_name FROM risk_alarm_type r WHERE r.id=#{id}
+</select>
+
+<select id="findByPoliceIdRiskAlarm" resultType="HashMap">
+	 SELECT r.police_id as policeId,r.alarm_type as alarmType,r.alarm_score as alarmScore
+	FROM risk_alarm r,`user` u WHERE r.police_id=u.police_id AND DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT(CURDATE(), '%Y-%m')
+	AND r.police_id=#{policeId}
+</select>
+
+
+<select id="continuityAlarm" resultType="HashMap">
+	SELECT u.`name`,a.* FROM (SELECT a.police_id AS policeId,a.consequtive+1 AS value FROM (select base.police_id, count(subq.creation_date) consequtive 
+from (select distinct police_id from risk_alarm) base
+left join 
+
+(
+    select a.* 
+    from (select police_id, 
+     cast(concat(left(creation_date,7), '-01') as date) as creation_date 
+    from risk_alarm) a 
+    join (select police_id, date_sub(cast(concat(left(creation_date,7), '-01') as date), interval 1 month) as creation_date from risk_alarm) b 
+    on a.police_id = b.police_id and a.creation_date = b.creation_date 
+) subq 
+on subq.police_id = base.police_id 
+group by base.police_id
+ORDER BY consequtive) a WHERE a.consequtive>0) a ,`user` u WHERE a.policeId=u.police_id ORDER BY a.value desc
+</select>
+
+<select id="continuityAlarmDetails" resultType="HashMap">
+	SELECT u.`name`,t.alarm_name AS alarmName,a.creation_date AS alarmTime FROM (select distinct r1.*
+    from
+      (select * from risk_alarm where police_id = #{policeId} order by creation_date) r1,
+      (select * from risk_alarm where police_id = #{policeId} order by creation_date) r2
+   where (
+   (DATE_FORMAT(DATE_SUB(r1.creation_date,interval 1 month), '%Y-%m') = DATE_FORMAT(r2.creation_date, '%Y-%m'))
+   or 
+   (DATE_FORMAT(DATE_SUB(r2.creation_date,interval 1 month), '%Y-%m') = DATE_FORMAT(r1.creation_date, '%Y-%m'))
+   )
+   group by DATE_FORMAT(r1.creation_date, '%Y-%m')
+    order by DATE_FORMAT(r1.creation_date, '%Y-%m')) a,risk_alarm_type t,`user` u WHERE a.police_id=u.police_id AND a.alarm_type=t.id ;
+</select>
 </mapper>

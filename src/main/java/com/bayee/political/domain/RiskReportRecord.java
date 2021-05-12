@@ -53,6 +53,8 @@ public class RiskReportRecord {
     private Date creationDate;
 
     private Date updateDate;
+    
+    private Integer age;
 
     public RiskReportRecord() {
 
@@ -357,5 +359,12 @@ public class RiskReportRecord {
 	public void setCurrentTotalNum(double currentTotalNum) {
 		this.currentTotalNum = currentTotalNum;
 	}
-	
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
 }

@@ -324,8 +324,19 @@
   </select>
 
   <select id="riskRiskHealthRecordPage" resultMap="BaseResultMap">
-    select * from risk_health_record
-    order by id desc
+    select * from risk_health_record r left join user u on u.police_id=r.police_id
+    
+    <where>
+    	<if test="key !=null">
+    		AND (u.`name` like CONCAT('%',#{key},'%') or r.police_id like CONCAT('%',#{key},'%'))
+    	</if>
+    	<if test="columnList !=null and typeFlag!=null">
+    		<foreach collection="columnList" separator=" " item="item">
+    			AND ${item}=#{typeFlag}
+    		</foreach>
+    	</if>
+    </where>
+    order by r.id desc
     limit #{pageIndex}, #{pageSize}
   </select>
 

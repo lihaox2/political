@@ -3,6 +3,7 @@ package com.bayee.political.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+
 import com.bayee.political.domain.RiskCaseTestRecord;
 import com.bayee.political.domain.ScreenDoubeChart;
 
@@ -50,12 +51,15 @@ public interface RiskCaseTestRecordMapper {
 	 * @param pageSize
 	 * @return
 	 */
-	List<RiskCaseTestRecord> riskCaseTestRecordPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize);
+	List<RiskCaseTestRecord> riskCaseTestRecordPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize,
+			@Param("year") String year, @Param("semester") Integer semester,
+            @Param("passFlag") Integer passFlag, @Param("key") String key);
 
 	/**
 	 * 统计数据条数
 	 * @return
 	 */
-	Integer riskCaseTestRecordPageCount();
+	Integer riskCaseTestRecordPageCount(@Param("year") String year, @Param("semester") Integer semester,
+            @Param("passFlag") Integer passFlag, @Param("key") String key);
 
 }

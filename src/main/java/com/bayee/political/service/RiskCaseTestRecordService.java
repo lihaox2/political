@@ -33,12 +33,12 @@ public interface RiskCaseTestRecordService {
      * @param pageSize
      * @return
      */
-	List<RiskCaseTestRecord> riskCaseTestRecordPage(Integer pageIndex, Integer pageSize);
+	List<RiskCaseTestRecord> riskCaseTestRecordPage(Integer pageIndex, Integer pageSize,String year,Integer semester,Integer passFlag,String key);
 
     /**
      * 统计数据条数
      * @return
      */
-	Integer riskCaseTestRecordPageCount();
+	Integer riskCaseTestRecordPageCount(String year,Integer semester,Integer passFlag,String key);
 
 }

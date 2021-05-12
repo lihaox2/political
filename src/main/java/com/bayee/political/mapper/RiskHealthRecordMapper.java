@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bayee.political.domain.RiskReportRecord;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bayee.political.domain.RiskHealthRecord;
 
@@ -30,12 +31,16 @@ public interface RiskHealthRecordMapper {
      * @param pageSize
      * @return
      */
-    List<RiskHealthRecord> riskRiskHealthRecordPage(@Param("pageIndex") Integer pageIndex,@Param("pageSize") Integer pageSize);
+    List<RiskHealthRecord> riskRiskHealthRecordPage(@Param("pageIndex") Integer pageIndex,@Param("pageSize") Integer pageSize,
+    		@Param("columnList") List<String> columnList, @Param("typeFlag") Integer typeFlag,
+            @Param("key") String key);
 
     /**
      * 统计分页数据条数
      * @return
      */
-    Integer getRiskReportRecordPageCount();
+    Integer getRiskReportRecordPageCount(
+            @Param("columnList") List<String> columnList, @Param("typeFlag") Integer typeFlag,
+            @Param("key") String key);
 
 }

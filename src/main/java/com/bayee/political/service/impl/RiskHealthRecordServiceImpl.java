@@ -1,7 +1,9 @@
 package com.bayee.political.service.impl;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bayee.political.domain.RiskHealthRecord;
 import com.bayee.political.domain.RiskReportRecord;
@@ -69,17 +71,20 @@ public class RiskHealthRecordServiceImpl implements RiskHealthRecordService{
 	}
 
 	@Override
-	public List<RiskHealthRecord> riskRiskHealthRecordPage(Integer pageIndex, Integer pageSize) {
+	public List<RiskHealthRecord> riskRiskHealthRecordPage(Integer pageIndex, Integer pageSize,
+			List<String> columnList,Integer typeFlag,
+            String key) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
-		return riskHealthRecordMapper.riskRiskHealthRecordPage(pageIndex, pageSize);
+		return riskHealthRecordMapper.riskRiskHealthRecordPage(pageIndex, pageSize,columnList,typeFlag,key);
 	}
 
 	@Override
-	public Integer getRiskReportRecordPageCount() {
-		return riskHealthRecordMapper.getRiskReportRecordPageCount();
+	public Integer getRiskReportRecordPageCount(List<String> columnList,Integer typeFlag,
+            String key) {
+		return riskHealthRecordMapper.getRiskReportRecordPageCount(columnList,typeFlag,key);
 	}
 
 }

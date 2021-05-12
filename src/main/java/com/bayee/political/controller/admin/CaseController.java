@@ -292,7 +292,7 @@ public class CaseController {
                                           @RequestParam("pageSize") Integer pageSize,
                                           @RequestParam("year") String year, @RequestParam("semester") Integer semester,
                                           @RequestParam("passFlag") Integer passFlag, @RequestParam("key") String key) {
-        List<RiskCaseTestRecord> recordList = riskCaseTestRecordService.riskCaseTestRecordPage(pageIndex, pageSize);
+        List<RiskCaseTestRecord> recordList = riskCaseTestRecordService.riskCaseTestRecordPage(pageIndex, pageSize,year,semester,passFlag,key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -310,7 +310,7 @@ public class CaseController {
             return pageResult;
         }).collect(Collectors.toList()));
 
-        result.put("totalCount", riskCaseTestRecordService.riskCaseTestRecordPageCount());
+        result.put("totalCount", riskCaseTestRecordService.riskCaseTestRecordPageCount(year,semester,passFlag,key));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);

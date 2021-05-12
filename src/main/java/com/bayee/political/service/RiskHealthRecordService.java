@@ -29,12 +29,15 @@ public interface RiskHealthRecordService {
      * @param pageSize
      * @return
      */
-    List<RiskHealthRecord> riskRiskHealthRecordPage(Integer pageIndex, Integer pageSize);
+    List<RiskHealthRecord> riskRiskHealthRecordPage(Integer pageIndex, Integer pageSize,
+    		List<String> columnList,Integer typeFlag,
+            String key);
 
     /**
      * 统计分页数据条数
      * @return
      */
-    Integer getRiskReportRecordPageCount();
+    Integer getRiskReportRecordPageCount(List<String> columnList,Integer typeFlag,
+            String key);
 
 }

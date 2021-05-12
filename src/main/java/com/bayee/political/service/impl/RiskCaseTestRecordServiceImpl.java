@@ -2,6 +2,7 @@ package com.bayee.political.service.impl;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,17 +72,18 @@ public class RiskCaseTestRecordServiceImpl implements RiskCaseTestRecordService{
 	}
 
 	@Override
-	public List<RiskCaseTestRecord> riskCaseTestRecordPage(Integer pageIndex, Integer pageSize) {
+	public List<RiskCaseTestRecord> riskCaseTestRecordPage(Integer pageIndex, Integer pageSize,
+			String year,Integer semester,Integer passFlag,String key) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
-		return riskCaseTestRecordMapper.riskCaseTestRecordPage(pageIndex, pageSize);
+		return riskCaseTestRecordMapper.riskCaseTestRecordPage(pageIndex, pageSize,year,semester,passFlag,key);
 	}
 
 	@Override
-	public Integer riskCaseTestRecordPageCount() {
-		return riskCaseTestRecordMapper.riskCaseTestRecordPageCount();
+	public Integer riskCaseTestRecordPageCount(String year,Integer semester,Integer passFlag,String key) {
+		return riskCaseTestRecordMapper.riskCaseTestRecordPageCount(year,semester,passFlag,key);
 	}
 
 

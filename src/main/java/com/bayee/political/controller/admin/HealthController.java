@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +55,15 @@ public class HealthController {
                                         @RequestParam("pageSize") Integer pageSize,
                                         @RequestParam("type") String type, @RequestParam("typeFlag") Integer typeFlag,
                                         @RequestParam("key") String key) {
-        List<RiskHealthRecord> recordList = riskHealthRecordService.riskRiskHealthRecordPage(pageIndex, pageSize);
+    	
+    	List<String> columnList=new ArrayList<String>();
+    	
+    	if(type!=null && !"".equals(type)) {
+    		columnList=Arrays.asList(type.split(","));
+    	}
+    	
+    	
+        List<RiskHealthRecord> recordList = riskHealthRecordService.riskRiskHealthRecordPage(pageIndex, pageSize,columnList,typeFlag,key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -71,7 +81,7 @@ public class HealthController {
             pageResult.setIsHyperuricemia(e.getIsHyperuricemia() == null ? "否" : e.getIsHyperuricemia() == 1 ? "是" : "否");
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskHealthRecordService.getRiskReportRecordPageCount());
+        result.put("totalCount", riskHealthRecordService.getRiskReportRecordPageCount(columnList,typeFlag,key));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);

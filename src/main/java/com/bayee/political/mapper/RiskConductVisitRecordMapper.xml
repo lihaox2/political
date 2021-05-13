@@ -166,11 +166,11 @@
     left join risk_conduct_visit_type t on r.type = t.id
     left join user u on u.police_id = r.police_id
     where 1 = 1
-    <if test="key != null">
+    <if test="key != null and  key !='' ">
       and u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or r.content like concat('%', #{key}, '%')
     </if>
     <if test="type != null">
-      r.type = #{type}
+      AND r.type = #{type}
     </if>
     order by r.id desc
     limit #{pageIndex}, #{pageSize}
@@ -181,11 +181,11 @@
     left join risk_conduct_visit_type t on r.type = t.id
     left join user u on u.police_id = r.police_id
     where 1 = 1
-    <if test="key != null">
+    <if test="key != null and  key !='' ">
       and u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or r.content like concat('%', #{key}, '%')
     </if>
     <if test="type != null">
-      r.type = #{type}
+      AND r.type = #{type}
     </if>
   </select>
 

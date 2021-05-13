@@ -203,7 +203,7 @@
   <select id="riskCaseTestRecordPage" resultMap="BaseResultMap">
     select * from risk_case_test_record r LEFT JOIN `user` u  ON r.police_id=u.police_id
 	<where>
-		<if test="year!=null">
+		<if test="year!=null and year!=''">
 			r.`year`=#{year}
 		</if>
 		<if test="semester!=null">
@@ -226,7 +226,7 @@
   <select id="riskCaseTestRecordPageCount" resultType="Integer">
     select count(1) from risk_case_test_record r LEFT JOIN `user` u  ON r.police_id=u.police_id
 	<where>
-		<if test="year!=null">
+		<if test="year!=null and year!=''">
 			r.`year`=#{year}
 		</if>
 		<if test="semester!=null">

@@ -14,6 +14,11 @@ public class ConductVisitTypeListResult {
     private Integer id;
 
     /**
+     * 级联处理
+     */
+    private Integer value;
+
+    /**
      * 父级id
      */
     private Integer parentId;
@@ -37,6 +42,14 @@ public class ConductVisitTypeListResult {
      * 子类型
      */
     private List<ConductVisitTypeListResult> childType;
+
+    public Integer getValue() {
+        return value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
+    }
 
     public Integer getParentId() {
         return parentId;

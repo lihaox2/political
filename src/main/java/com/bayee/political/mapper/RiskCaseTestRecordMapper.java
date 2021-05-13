@@ -49,6 +49,10 @@ public interface RiskCaseTestRecordMapper {
 	 * 分页查询执法考试数据
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param year
+	 * @param semester
+	 * @param passFlag
+	 * @param key
 	 * @return
 	 */
 	List<RiskCaseTestRecord> riskCaseTestRecordPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize,

@@ -101,6 +101,7 @@ public class SystemController {
             ConductVisitTypeListResult result = new ConductVisitTypeListResult();
             result.setParentId(e.getParentId());
             result.setId(e.getId());
+            result.setValue(e.getId());
             result.setName(e.getName());
             result.setDeductScore(e.getDeductScore());
             result.setLevel(e.getLevel());

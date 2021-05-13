@@ -212,7 +212,7 @@
     select * from risk_case_ability_record r1
     left join user u1 on r1.police_id = u1.police_id
     where 1 = 1
-    <if test="key != null">
+    <if test="key != null and key != ''">
       and r1.police_id like concat('%', #{key}, '%') or u1.name like concat('%', #{key}, '%')
     </if>
     <if test="columnList != null and typeFlag != null">
@@ -228,7 +228,7 @@
     select count(1) from risk_case_ability_record r1
     left join user u1 on r1.police_id = u1.police_id
     where 1 = 1
-    <if test="key != null">
+    <if test="key != null and key != ''">
       and r1.police_id like concat('%', #{key}, '%') or u1.name like concat('%', #{key}, '%')
     </if>
     <if test="columnList != null and typeFlag != null">

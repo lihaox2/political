@@ -17,9 +17,14 @@ public class ConductBureauRuleDetailsResult {
     private String policeName;
 
     /**
-     * 类型id
+     * 类型名称
      */
     private String type;
+
+    /**
+     * 类型id
+     */
+    private Integer typeId;
 
     /**
      * 问题情况和来源
@@ -40,6 +45,14 @@ public class ConductBureauRuleDetailsResult {
      * 备注
      */
     private String remarks;
+
+    public Integer getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
+    }
 
     public String getType() {
         return type;

@@ -169,8 +169,11 @@
     <if test="key != null and  key !='' ">
       and u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or r.content like concat('%', #{key}, '%')
     </if>
-    <if test="type != null">
-      AND r.type = #{type}
+    <if test="smallType != null">
+      AND r.type = #{smallType}
+    </if>
+    <if test="bigType != null">
+      and t.parent_id = #{bigType}
     </if>
     order by r.id desc
     limit #{pageIndex}, #{pageSize}
@@ -184,8 +187,11 @@
     <if test="key != null and  key !='' ">
       and u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or r.content like concat('%', #{key}, '%')
     </if>
-    <if test="type != null">
-      AND r.type = #{type}
+    <if test="smallType != null">
+      AND r.type = #{smallType}
+    </if>
+    <if test="bigType != null">
+      and t.parent_id = #{bigType}
     </if>
   </select>
 

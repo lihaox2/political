@@ -122,6 +122,7 @@ public class ConductController {
         if (user != null) {
             result.setPoliceName(user.getName());
         }
+        result.setTypeId(record.getType());
         result.setType(record.getTypeName());
         result.setContent(record.getContent());
         result.setDeductScore(record.getDeductionScore());
@@ -147,9 +148,10 @@ public class ConductController {
     @GetMapping("/visit/page")
     public ResponseEntity<?> conductVisitPage(@RequestParam("pageIndex") Integer pageIndex,
                                               @RequestParam("pageSize") Integer pageSize,
-                                              @RequestParam("type") Integer type,
+                                              @RequestParam("bigType") Integer bigType,
+                                              @RequestParam("smallType") Integer smallType,
                                               @RequestParam("key") String key) {
-        List<RiskConductVisitRecord> recordList = riskConductVisitRecordService.riskConductVisitRecordPage(pageIndex, pageSize, type, key);
+        List<RiskConductVisitRecord> recordList = riskConductVisitRecordService.riskConductVisitRecordPage(pageIndex, pageSize, bigType, smallType, key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -170,7 +172,7 @@ public class ConductController {
             pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd"));
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskConductVisitRecordService.getRiskConductVisitRecordPageCount(type, key));
+        result.put("totalCount", riskConductVisitRecordService.getRiskConductVisitRecordPageCount(bigType, smallType, key));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);

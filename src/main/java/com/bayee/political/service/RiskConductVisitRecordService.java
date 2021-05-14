@@ -26,15 +26,22 @@ public interface RiskConductVisitRecordService {
      * 分页查询
      * @param pageIndex
      * @param pageSize
+     * @param bigType
+     * @param smallType
+     * @param key
      * @return
      */
-    List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize, Integer type, String key);
+    List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize, Integer bigType,
+                                                            Integer smallType, String key);
 
     /**
      * 统计分页数据条数
+     * @param bigType
+     * @param smallType
+     * @param key
      * @return
      */
-    Integer getRiskConductVisitRecordPageCount(Integer type, String key);
+    Integer getRiskConductVisitRecordPageCount(Integer bigType, Integer smallType, String key);
 
     /**
      * 根绝类型统计树蕨条数

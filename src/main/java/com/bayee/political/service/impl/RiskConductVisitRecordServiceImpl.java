@@ -68,17 +68,18 @@ public class RiskConductVisitRecordServiceImpl implements RiskConductVisitRecord
 	}
 
 	@Override
-	public List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize, Integer type, String key) {
+	public List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize, Integer bigType,
+																   Integer smallType, String key) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
-		return riskConductVisitRecordMapper.riskConductVisitRecordPage(pageIndex, pageSize, type, key);
+		return riskConductVisitRecordMapper.riskConductVisitRecordPage(pageIndex, pageSize, bigType, smallType, key);
 	}
 
 	@Override
-	public Integer getRiskConductVisitRecordPageCount(Integer type, String key) {
-		return riskConductVisitRecordMapper.getRiskConductVisitRecordPageCount(type, key);
+	public Integer getRiskConductVisitRecordPageCount(Integer bigType, Integer smallType, String key) {
+		return riskConductVisitRecordMapper.getRiskConductVisitRecordPageCount(bigType, smallType, key);
 	}
 
 	@Override

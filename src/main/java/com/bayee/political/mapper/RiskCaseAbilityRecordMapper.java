@@ -37,21 +37,25 @@ public interface RiskCaseAbilityRecordMapper {
      * @param columnList
      * @param typeFlag
      * @param key
+     * @param date
      * @return
      */
     List<RiskCaseAbilityRecord> riskCaseAbilityRecordPage(@Param("pageIndex") Integer pageIndex,
                                                           @Param("pageSize") Integer pageSize,
                                                           @Param("columnList") List<String> columnList,
-                                                          @Param("typeFlag") Integer typeFlag, @Param("key") String key);
+                                                          @Param("typeFlag") Integer typeFlag, @Param("key") String key,
+                                                          @Param("date") String date);
 
     /**
      * 统计数据条数
      * @param columnList
      * @param typeFlag
      * @param key
+     * @param date
      * @return
      */
     Integer getRiskCaseAbilityRecordPageCount(@Param("columnList") List<String> columnList,
-                                              @Param("typeFlag") Integer typeFlag, @Param("key") String key);
+                                              @Param("typeFlag") Integer typeFlag, @Param("key") String key,
+                                              @Param("date") String date);
 
 }

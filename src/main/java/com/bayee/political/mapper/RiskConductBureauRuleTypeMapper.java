@@ -1,9 +1,12 @@
 package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskConductBureauRuleType;
+import com.bayee.political.domain.RiskConductVisitType;
+import com.bayee.political.pojo.dto.ConductBureauRuleTypeDetailsDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xxl
@@ -29,7 +32,9 @@ public interface RiskConductBureauRuleTypeMapper {
      * @param pageSize
      * @return
      */
-    List<RiskConductBureauRuleType> riskConductBureauRuleTypePage(@Param("pageIndex") Integer pageIndex,@Param("pageSize") Integer pageSize,@Param("type") Integer type,@Param("key") String key);
+    List<RiskConductBureauRuleType> riskConductBureauRuleTypePage(@Param("pageIndex") Integer pageIndex,
+                                                                  @Param("pageSize") Integer pageSize,
+                                                                  @Param("type") Integer type, @Param("key") String key);
 
     /**
      * 统计数据条数
@@ -51,5 +56,25 @@ public interface RiskConductBureauRuleTypeMapper {
      * @return
      */
     Integer countRuleTypeByNameAndRuleType(@Param("name") String name,@Param("parentId") Integer parentId, @Param("id") Integer id);
+
+    /**
+     * 查询一级分类
+     * @return
+     */
+    List<RiskConductBureauRuleType> getMeasuresType();
+
+    /**
+     * 通过id查询详情
+     * @param id
+     * @return
+     */
+    ConductBureauRuleTypeDetailsDO findById(@Param("id") Integer id);
+
+    /**
+     * 通过计分项向上查询所有类型
+     * @param name
+     * @return
+     */
+    List<Map<String, Object>> getTotalTypeByScoringOptionName(@Param("name") String name);
 
 }

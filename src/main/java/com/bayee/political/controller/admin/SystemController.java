@@ -1,15 +1,10 @@
 package com.bayee.political.controller.admin;
 
+import com.bayee.political.domain.Department;
 import com.bayee.political.domain.RiskConductBureauRuleType;
 import com.bayee.political.mapper.RiskCaseLawEnforcementTypeMapper;
-import com.bayee.political.pojo.json.CaseTypeListResult;
-import com.bayee.political.pojo.json.ConductBureauRuleTypeListResult;
-import com.bayee.political.pojo.json.ConductVisitTypeListResult;
-import com.bayee.political.pojo.json.PoliceListResult;
-import com.bayee.political.service.RiskCaseLawEnforcementTypeService;
-import com.bayee.political.service.RiskConductBureauRuleTypeService;
-import com.bayee.political.service.RiskConductVisitTypeService;
-import com.bayee.political.service.UserService;
+import com.bayee.political.pojo.json.*;
+import com.bayee.political.service.*;
 import com.bayee.political.utils.DataListReturn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +28,9 @@ public class SystemController {
     UserService userService;
 
     @Autowired
+    DepartmentService departmentService;
+
+    @Autowired
     RiskCaseLawEnforcementTypeService riskCaseLawEnforcementTypeService;
 
     @Autowired
@@ -40,6 +38,9 @@ public class SystemController {
 
     @Autowired
     RiskConductVisitTypeService riskConductVisitTypeService;
+
+    @Autowired
+    MeasuresService measuresService;
 
     @GetMapping("/police/list")
     public ResponseEntity<?> policeList() {
@@ -183,6 +184,43 @@ public class SystemController {
 
 
         return new ResponseEntity<>(DataListReturn.ok(Arrays.asList(data1, data2, data3, data4, data5)), HttpStatus.OK);
+    }
+
+    @GetMapping("/conduct/measures/type/list")
+    public ResponseEntity<?> getMeasuresTypeList() {
+        List<MeasuresTypeListResult> resultList = measuresService.findAllMeasures().stream().map(e -> {
+            MeasuresTypeListResult result = new MeasuresTypeListResult();
+            result.setId(e.getId());
+            result.setName(e.getName());
+            return result;
+        }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(DataListReturn.ok(resultList), HttpStatus.OK);
+    }
+
+    @GetMapping("/dept/list")
+    public ResponseEntity<?> getDeptList() {
+        // 机关单位
+        List<Department> unit = departmentService.getDepartmentByType(2);
+        // 派出所
+        List<Department> policeStation = departmentService.getDepartmentByType(3);
+
+        List<DeptListResult> resultList = new ArrayList<>();
+        resultList.addAll(unit.stream().map(e -> {
+            DeptListResult result = new DeptListResult();
+            result.setId(e.getId());
+            result.setDeptName(e.getName());
+            return result;
+        }).collect(Collectors.toList()));
+
+        resultList.addAll(policeStation.stream().map(e -> {
+            DeptListResult result = new DeptListResult();
+            result.setId(e.getId());
+            result.setDeptName(e.getName());
+            return result;
+        }).collect(Collectors.toList()));
+
+        return new ResponseEntity<>(DataListReturn.ok(resultList), HttpStatus.OK);
     }
 
     /**

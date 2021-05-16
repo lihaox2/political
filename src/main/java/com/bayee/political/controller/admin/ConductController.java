@@ -1,6 +1,8 @@
 package com.bayee.political.controller.admin;
 
 import com.bayee.political.domain.*;
+import com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO;
+import com.bayee.political.pojo.dto.ConductBureauRuleTypeDetailsDO;
 import com.bayee.political.pojo.json.*;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DataListReturn;
@@ -81,12 +83,14 @@ public class ConductController {
     public ResponseEntity<?> addConductBureauRule(@RequestBody ConductBureauRuleSaveParam saveParam) {
         RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(saveParam.getTypeId());
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-
         RiskConductBureauRuleRecord record = new RiskConductBureauRuleRecord();
-        record.setPoliceId(saveParam.getPoliceId());
-        record.setType(saveParam.getTypeId());
-        record.setInputTime(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
+        record.setScoringLevel(saveParam.getScoringLevel());
+        record.setScoringDept(saveParam.getScoringDept());
+        record.setMeasures(saveParam.getMeasures());
+        record.setType(ruleType.getId());
         record.setContent(ruleType.getName());
+        record.setPoliceId(saveParam.getPoliceId());
+        record.setInputTime(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
         record.setDeductionScore(ruleType.getDeductScore());
         record.setRemarks(saveParam.getRemarks());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
@@ -101,9 +105,13 @@ public class ConductController {
         RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductBureauRuleRecord record = riskConductBureauRuleRecordService.selectByPrimaryKey(id);
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-
-        record.setType(saveParam.getTypeId());
+        record.setScoringLevel(saveParam.getScoringLevel());
+        record.setScoringDept(saveParam.getScoringDept());
+        record.setMeasures(saveParam.getMeasures());
+        record.setType(ruleType.getId());
         record.setContent(ruleType.getName());
+        record.setPoliceId(saveParam.getPoliceId());
+        record.setInputTime(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
         record.setDeductionScore(ruleType.getDeductScore());
         record.setRemarks(saveParam.getRemarks());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
@@ -115,19 +123,25 @@ public class ConductController {
 
     @GetMapping("/bureau/rule/details")
     public ResponseEntity<?> conductBureauRuleDetails(@RequestParam("id") Integer id) {
-        RiskConductBureauRuleRecord record = riskConductBureauRuleRecordService.selectByPrimaryKey(id);
+        ConductBureauRuleDetailsDO detailsDTO = riskConductBureauRuleRecordService.findById(id);
         ConductBureauRuleDetailsResult result = new ConductBureauRuleDetailsResult();
-        User user = userService.findByPoliceId(record.getPoliceId());
-        result.setPoliceId(record.getPoliceId());
-        if (user != null) {
-            result.setPoliceName(user.getName());
-        }
-        result.setTypeId(record.getType());
-        result.setType(record.getTypeName());
-        result.setContent(record.getContent());
-        result.setDeductScore(record.getDeductionScore());
-        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd"));
-        result.setRemarks(record.getRemarks());
+        result.setScoringRootType(detailsDTO.getScoringRootType());
+        result.setScoringRootTypeName(detailsDTO.getScoringRootTypeName());
+        result.setScoringLevel(detailsDTO.getScoringLevel());
+        result.setScoringLevelName(detailsDTO.getScoringLevelName());
+        result.setScoringDept(detailsDTO.getScoringDept());
+        result.setScoringDeptName(detailsDTO.getScoringDeptName());
+        result.setScoringType(detailsDTO.getScoringType());
+        result.setScoringTypeName(detailsDTO.getScoringTypeName());
+        result.setScoringOption(detailsDTO.getScoringOption());
+        result.setScoringOptionName(detailsDTO.getScoringOptionName());
+        result.setMeasures(detailsDTO.getMeasures());
+        result.setMeasuresName(detailsDTO.getMeasuresName());
+        result.setPoliceId(detailsDTO.getPoliceId());
+        result.setPoliceName(detailsDTO.getPoliceName());
+        result.setDeductScore(detailsDTO.getDeductScore());
+        result.setDate(detailsDTO.getDate());
+        result.setRemarks(detailsDTO.getRemarks());
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
@@ -203,6 +217,8 @@ public class ConductController {
         RiskConductVisitRecord record = riskConductVisitRecordService.selectByPrimaryKey(id);
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
+        record.setInputTime(DateUtils.parseDate(saveParam.getDate() +" "+time, "yyyy-MM-dd HH:mm:ss"));
+        record.setDeductionScore(saveParam.getDeductScore());
         record.setType(saveParam.getTypeId());
         record.setContent(riskConductVisitType.getName());
         record.setRemarks(saveParam.getRemarks());
@@ -223,6 +239,8 @@ public class ConductController {
         if (user != null) {
             result.setPoliceName(user.getName());
         }
+        result.setBigTypeId(record.getBigType());
+        result.setSmallTypeId(record.getSmallType());
         result.setBigType(record.getBigTypeName());
         result.setSmallType(record.getSmallTypeName());
         result.setContent(record.getContent());
@@ -251,7 +269,7 @@ public class ConductController {
                                                        @RequestParam("pageSize") Integer pageSize,
                                                        @RequestParam("type") Integer type,
                                                        @RequestParam("key") String key) {
-        List<RiskConductBureauRuleType> ruleTypeList = riskConductBureauRuleTypeService.riskConductBureauRuleTypePage(pageIndex, pageSize,type,key);
+        List<RiskConductBureauRuleType> ruleTypeList = riskConductBureauRuleTypeService.riskConductBureauRuleTypePage(pageIndex, pageSize, type, key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", ruleTypeList.stream().map(e -> {
@@ -274,6 +292,7 @@ public class ConductController {
             return new ResponseEntity<>(DataListReturn.error("该类型已存在！"), HttpStatus.OK);
         }
         RiskConductBureauRuleType ruleType = new RiskConductBureauRuleType();
+        ruleType.setLevel(3);
         ruleType.setParentId(saveParam.getParentId());
         ruleType.setName(saveParam.getName());
         ruleType.setDeductScore(saveParam.getDeductScore());
@@ -301,12 +320,14 @@ public class ConductController {
 
     @GetMapping("/bureau/rule/type/details")
     public ResponseEntity<?> conductBureauRuleTypeDetails(@RequestParam("id") Integer id) {
-        RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(id);
+        ConductBureauRuleTypeDetailsDO detailsDO = riskConductBureauRuleTypeService.findById(id);
         ConductBureauRuleTypeDetailsResult result = new ConductBureauRuleTypeDetailsResult();
-        result.setParentId(ruleType.getParentId());
-        result.setTypeName(ruleType.getTypeName());
-        result.setName(ruleType.getName());
-        result.setDeductScore(ruleType.getDeductScore());
+        result.setRootTypeId(detailsDO.getRootTypeId());
+        result.setRootTypeName(detailsDO.getRootTypeName());
+        result.setParentId(detailsDO.getParentId());
+        result.setParentTypeName(detailsDO.getParentTypeName());
+        result.setName(detailsDO.getName());
+        result.setDeductScore(detailsDO.getDeductScore());
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
@@ -318,6 +339,12 @@ public class ConductController {
         }
         riskConductBureauRuleTypeService.deleteByPrimaryKey(id);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get/type/by/scoringOption")
+    public ResponseEntity<?> getScoringOptionType(@RequestParam("scoringOption") String scoringOption) {
+        return new ResponseEntity<>(DataListReturn.ok(riskConductBureauRuleTypeService.
+                getTotalTypeByScoringOptionName(scoringOption)), HttpStatus.OK);
     }
 
     /**

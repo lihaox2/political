@@ -1,6 +1,6 @@
 package com.bayee.political.service.impl;
 
-import org.apache.ibatis.annotations.Param;
+import com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +70,11 @@ public class RiskConductBureauRuleRecordServiceImpl implements RiskConductBureau
 	@Override
 	public Integer countByBureauRuleType(Integer typeId) {
 		return riskConductBureauRuleRecordMapper.countByBureauRuleType(typeId);
+	}
+
+	@Override
+	public ConductBureauRuleDetailsDO findById(Integer id) {
+		return riskConductBureauRuleRecordMapper.findById(id);
 	}
 
 }

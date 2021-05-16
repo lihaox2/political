@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.bayee.political.domain.*;
 import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
-import com.bayee.political.pojo.dto.RiskConductResultDTO;
 import org.springframework.stereotype.Service;
 
 /**

@@ -9,9 +9,24 @@ public class ConductBureauRuleSaveParam {
     private String policeId;
 
     /**
-     * 类型id
+     * 计分项
      */
     private Integer typeId;
+
+    /**
+     * 计分等级
+     */
+    private Integer scoringLevel;
+
+    /**
+     * 计分单位
+     */
+    private Integer scoringDept;
+
+    /**
+     * 采取措施
+     */
+    private Integer measures;
 
     /**
      * 时间
@@ -22,6 +37,30 @@ public class ConductBureauRuleSaveParam {
      * 备注
      */
     private String remarks;
+
+    public Integer getScoringLevel() {
+        return scoringLevel;
+    }
+
+    public void setScoringLevel(Integer scoringLevel) {
+        this.scoringLevel = scoringLevel;
+    }
+
+    public Integer getScoringDept() {
+        return scoringDept;
+    }
+
+    public void setScoringDept(Integer scoringDept) {
+        this.scoringDept = scoringDept;
+    }
+
+    public Integer getMeasures() {
+        return measures;
+    }
+
+    public void setMeasures(Integer measures) {
+        this.measures = measures;
+    }
 
     public String getPoliceId() {
         return policeId;

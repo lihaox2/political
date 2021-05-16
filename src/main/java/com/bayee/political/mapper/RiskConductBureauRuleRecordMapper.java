@@ -1,6 +1,7 @@
 package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskConductBureauRuleRecord;
+import com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -42,7 +43,9 @@ public interface RiskConductBureauRuleRecordMapper {
      * @return
      */
     List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(@Param("pageIndex") Integer pageIndex,
-                                                                      @Param("pageSize") Integer pageSize,@Param("type") Integer type,@Param("key") String key);
+                                                                      @Param("pageSize") Integer pageSize,
+                                                                      @Param("type") Integer type,
+                                                                      @Param("key") String key);
 
     /**
      * 统计分页数据条数
@@ -56,4 +59,12 @@ public interface RiskConductBureauRuleRecordMapper {
      * @return
      */
     Integer countByBureauRuleType(@Param("typeId") Integer typeId);
+
+    /**
+     * 通过id查询
+     * @param id
+     * @return
+     */
+    ConductBureauRuleDetailsDO findById(@Param("id") Integer id);
+
 }

@@ -2,14 +2,11 @@ package com.bayee.political.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import com.bayee.political.domain.*;
 import com.bayee.political.mapper.*;
 import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
-import com.bayee.political.pojo.dto.RiskConductResultDTO;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

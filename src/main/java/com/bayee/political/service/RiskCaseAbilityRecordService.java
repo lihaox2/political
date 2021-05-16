@@ -24,18 +24,21 @@ public interface RiskCaseAbilityRecordService {
 	 * @param columnList
 	 * @param typeFlag
 	 * @param key
+	 * @param date
 	 * @return
 	 */
 	List<RiskCaseAbilityRecord> riskCaseAbilityRecordPage(Integer pageIndex, Integer pageSize,
-														  List<String> columnList, Integer typeFlag, String key);
+														  List<String> columnList, Integer typeFlag,
+														  String key, String date);
 
 	/**
 	 * 统计分页数据条数
 	 * @param columnList
 	 * @param typeFlag
 	 * @param key
+	 * @param date
 	 * @return
 	 */
-	Integer getRiskCaseAbilityRecordPageCount(List<String> columnList, Integer typeFlag, String key);
+	Integer getRiskCaseAbilityRecordPageCount(List<String> columnList, Integer typeFlag, String key, String date);
 
 }

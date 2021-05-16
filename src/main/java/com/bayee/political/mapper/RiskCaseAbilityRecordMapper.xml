@@ -215,6 +215,9 @@
     <if test="key != null and key != ''">
       and r1.police_id like concat('%', #{key}, '%') or u1.name like concat('%', #{key}, '%')
     </if>
+    <if test="date != null and date != ''">
+      and DATE_FORMAT(r1.creation_date, '%Y-%m') = #{date}
+    </if>
     <if test="columnList != null and typeFlag != null">
       <foreach collection="columnList" separator=" " item="item">
         and ${item} = #{typeFlag}

@@ -1,10 +1,10 @@
-package com.bayee.political.pojo.json;
+package com.bayee.political.pojo.dto;
 
 /**
  * @author xxl
  * @date 2021/5/7
  */
-public class ConductBureauRuleDetailsResult {
+public class ConductBureauRuleDetailsDO {
 
     /**
      * 警员编号
@@ -27,16 +27,6 @@ public class ConductBureauRuleDetailsResult {
     private String scoringLevelName;
 
     /**
-     * 计分单位id
-     */
-    private Integer scoringDept;
-
-    /**
-     * 计分单位名称
-     */
-    private String scoringDeptName;
-
-    /**
      *
      */
     private Integer scoringRootType;
@@ -45,6 +35,16 @@ public class ConductBureauRuleDetailsResult {
      * 记分类型大类名称
      */
     private String scoringRootTypeName;
+
+    /**
+     * 计分单位id
+     */
+    private Integer scoringDept;
+
+    /**
+     * 计分单位名称
+     */
+    private String scoringDeptName;
 
     /**
      * 计分类型id

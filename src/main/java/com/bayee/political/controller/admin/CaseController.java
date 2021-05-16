@@ -55,45 +55,71 @@ public class CaseController {
     @GetMapping("/ability/page")
     public ResponseEntity<?> caseAbilityPage(@RequestParam("pageIndex") Integer pageIndex,
                                              @RequestParam("pageSize") Integer pageSize,
-                                             @RequestParam("type") String type, @RequestParam("typeFlag") Integer typeFlag,
-                                             @RequestParam("key") String key) {
+                                             @RequestParam("type") String type,
+                                             @RequestParam("typeFlag") Integer typeFlag,
+                                             @RequestParam("key") String key,
+                                             @RequestParam("date") String date) {
         List<String> columnList = new ArrayList<>();
         if (type != null && !"".equals(type)) {
             columnList = Arrays.asList(type.split(","));
         }
         List<RiskCaseAbilityRecord> recordList = riskCaseAbilityRecordService.riskCaseAbilityRecordPage(pageIndex,
-                pageSize, columnList, typeFlag, key);
+                pageSize, columnList, typeFlag, key, date);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
             Integer passCount = 0;
             Integer errorCount = 0;
-            if (e.getReconsiderationLitigationStatus() != null && e.getReconsiderationLitigationStatus().equals(1)) {
-                passCount++;
-            }
             if (e.getLetterVisitStatus() != null && e.getLetterVisitStatus().equals(1)) {
                 errorCount++;
+            }else{
+                passCount++;
             }
             if (e.getLawEnforcementFaultStatus() != null && e.getLawEnforcementFaultStatus().equals(1)) {
                 errorCount++;
+            }else{
+                passCount++;
             }
             if (e.getJudicialSupervisionStatus() != null && e.getJudicialSupervisionStatus().equals(1)) {
                 errorCount++;
+            }else{
+                passCount++;
             }
+
+            if (e.getReconsiderationLitigationStatus() != null && e.getReconsiderationLitigationStatus().equals(1)) {
+                passCount++;
+            }else{
+                errorCount++;
+            }
+
             if (e.getCaseExpertStatus() != null && e.getCaseExpertStatus().equals(1)) {
                 passCount++;
+            }else{
+                errorCount++;
             }
+
             if (e.getExcellentLegalOfficerStatus() != null && e.getExcellentLegalOfficerStatus().equals(1)) {
                 passCount++;
+            }else{
+                errorCount++;
             }
+
             if (e.getBasicTestStatus() != null && e.getBasicTestStatus().equals(1)) {
                 passCount++;
+            }else{
+                errorCount++;
             }
+
             if (e.getHighTestStatus() != null && e.getHighTestStatus().equals(1)) {
                 passCount++;
+            }else{
+                errorCount++;
             }
+
             if (e.getJudicialTestStatus() != null && e.getJudicialTestStatus().equals(1)) {
                 passCount++;
+            }else{
+                errorCount++;
             }
 
             User user = userService.findByPoliceId(e.getPoliceId());
@@ -103,11 +129,12 @@ public class CaseController {
             if (user != null) {
                 pageResult.setPoliceName(user.getName());
             }
+            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM"));
             pageResult.setPassCount(passCount);
             pageResult.setErrorCount(errorCount);
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskCaseAbilityRecordService.getRiskCaseAbilityRecordPageCount(columnList, typeFlag, key));
+        result.put("totalCount", riskCaseAbilityRecordService.getRiskCaseAbilityRecordPageCount(columnList, typeFlag, key, date));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
@@ -266,6 +293,7 @@ public class CaseController {
         if (user != null) {
             result.setPoliceName(user.getName());
         }
+        result.setTypeId(record.getType());
         result.setType(record.getTypeName());
         result.setDesc(record.getContent());
         result.setDeductScore(record.getDeductionScore());
@@ -330,6 +358,7 @@ public class CaseController {
         record.setPoliceId(saveParam.getPoliceId());
         record.setSemester(saveParam.getSemester());
         record.setScore(saveParam.getScore());
+        record.setName(saveParam.getTestName());
         record.setYear(saveParam.getYear());
         record.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd HH:mm:ss"));
 
@@ -353,6 +382,7 @@ public class CaseController {
         oldRecord.setSemester(saveParam.getSemester());
         oldRecord.setScore(saveParam.getScore());
         oldRecord.setYear(saveParam.getYear());
+        oldRecord.setName(saveParam.getTestName());
         oldRecord.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd HH:mm:ss"));
         oldRecord.setUpdateDate(new Date());
 

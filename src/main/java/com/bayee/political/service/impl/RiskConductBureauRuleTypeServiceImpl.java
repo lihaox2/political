@@ -1,7 +1,9 @@
 package com.bayee.political.service.impl;
 
 import com.bayee.political.domain.RiskConductBureauRuleType;
+import com.bayee.political.domain.RiskConductVisitType;
 import com.bayee.political.mapper.RiskConductBureauRuleTypeMapper;
+import com.bayee.political.pojo.dto.ConductBureauRuleTypeDetailsDO;
 import com.bayee.political.service.RiskConductBureauRuleTypeService;
 
 import org.apache.ibatis.annotations.Param;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xxl
@@ -72,5 +75,20 @@ public class RiskConductBureauRuleTypeServiceImpl implements RiskConductBureauRu
     @Override
     public Integer countRuleTypeByNameAndRuleType(String name, Integer parentId, Integer id) {
         return riskConductBureauRuleTypeMapper.countRuleTypeByNameAndRuleType(name, parentId, id);
+    }
+
+    @Override
+    public List<RiskConductBureauRuleType> getMeasuresType() {
+        return riskConductBureauRuleTypeMapper.getMeasuresType();
+    }
+
+    @Override
+    public ConductBureauRuleTypeDetailsDO findById(Integer id) {
+        return riskConductBureauRuleTypeMapper.findById(id);
+    }
+
+    @Override
+    public List<Map<String, Object>> getTotalTypeByScoringOptionName(String name) {
+        return riskConductBureauRuleTypeMapper.getTotalTypeByScoringOptionName(name);
     }
 }

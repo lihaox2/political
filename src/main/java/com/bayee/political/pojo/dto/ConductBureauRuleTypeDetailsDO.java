@@ -1,10 +1,10 @@
-package com.bayee.political.pojo.json;
+package com.bayee.political.pojo.dto;
 
 /**
  * @author xxl
  * @date 2021/5/8
  */
-public class ConductBureauRuleTypeDetailsResult {
+public class ConductBureauRuleTypeDetailsDO {
 
     /**
      * 类型id
@@ -52,20 +52,20 @@ public class ConductBureauRuleTypeDetailsResult {
         this.rootTypeName = rootTypeName;
     }
 
-    public Integer getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
-    }
-
     public String getParentTypeName() {
         return parentTypeName;
     }
 
     public void setParentTypeName(String parentTypeName) {
         this.parentTypeName = parentTypeName;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 
     public String getName() {

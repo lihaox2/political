@@ -11,6 +11,21 @@ public class RiskConductBureauRuleRecord {
 
     private Date inputTime;
 
+    /**
+     * 计分层级
+     */
+    private Integer scoringLevel;
+
+    /**
+     * 计分单位
+     */
+    private Integer scoringDept;
+
+    /**
+     * 采取措施
+     */
+    private Integer measures;
+
     private String content;
 
     private Double deductionScore;
@@ -22,6 +37,40 @@ public class RiskConductBureauRuleRecord {
     private Date updateDate;
 
     private String typeName;
+
+    private Integer parentTypeId;
+
+    public Integer getScoringLevel() {
+        return scoringLevel;
+    }
+
+    public void setScoringLevel(Integer scoringLevel) {
+        this.scoringLevel = scoringLevel;
+    }
+
+    public Integer getScoringDept() {
+        return scoringDept;
+    }
+
+    public void setScoringDept(Integer scoringDept) {
+        this.scoringDept = scoringDept;
+    }
+
+    public Integer getMeasures() {
+        return measures;
+    }
+
+    public void setMeasures(Integer measures) {
+        this.measures = measures;
+    }
+
+    public Integer getParentTypeId() {
+        return parentTypeId;
+    }
+
+    public void setParentTypeId(Integer parentTypeId) {
+        this.parentTypeId = parentTypeId;
+    }
 
     public String getTypeName() {
         return typeName;

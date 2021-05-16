@@ -14,13 +14,17 @@
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="bigTypeName" jdbcType="VARCHAR" property="bigTypeName" />
     <result column="smallTypeName" jdbcType="VARCHAR" property="smallTypeName" />
+    <result column="bigType" jdbcType="INTEGER" property="bigType" />
+    <result column="smallType" jdbcType="INTEGER" property="smallType" />
   </resultMap>
   <sql id="Base_Column_List">
     id, police_id, type, input_time, content, remarks,deduction_score, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select r.*,t.name as type_name, t.name as smallTypeName, (select name from risk_conduct_visit_type where id in (
-      select parent_id from risk_conduct_visit_type where id = r.type)) as bigName from risk_conduct_visit_record r
+    select r.*,t.name as type_name, t.id as smallType, t.name as smallTypeName, (
+      select parent_id from risk_conduct_visit_type where id = r.type) as bigType
+         , (select name from risk_conduct_visit_type where id in (
+      select parent_id from risk_conduct_visit_type where id = r.type)) as bigTypeName from risk_conduct_visit_record r
     left join risk_conduct_visit_type t on r.type = t.id
     where r.id = #{id,jdbcType=INTEGER}
   </select>

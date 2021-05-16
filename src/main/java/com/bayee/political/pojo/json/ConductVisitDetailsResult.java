@@ -10,10 +10,14 @@ public class ConductVisitDetailsResult {
 
     private String policeName;
 
+    private Integer bigTypeId;
+
     /**
      * 大类名称
      */
     private String bigType;
+
+    private Integer smallTypeId;
 
     /**
      * 小类名称
@@ -39,6 +43,22 @@ public class ConductVisitDetailsResult {
      * 备注
      */
     private String remarks;
+
+    public Integer getBigTypeId() {
+        return bigTypeId;
+    }
+
+    public void setBigTypeId(Integer bigTypeId) {
+        this.bigTypeId = bigTypeId;
+    }
+
+    public Integer getSmallTypeId() {
+        return smallTypeId;
+    }
+
+    public void setSmallTypeId(Integer smallTypeId) {
+        this.smallTypeId = smallTypeId;
+    }
 
     public String getPoliceId() {
         return policeId;

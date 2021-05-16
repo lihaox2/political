@@ -26,6 +26,11 @@ public class RiskConductBureauRuleType {
     private Integer parentId;
 
     /**
+     * 级别
+     */
+    private Integer level;
+
+    /**
      * 创建时间
      */
     private Date creationDate;
@@ -36,6 +41,14 @@ public class RiskConductBureauRuleType {
     private Date updateDate;
 
     private String typeName;
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
 
     public String getTypeName() {
         return typeName;

@@ -23,10 +23,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductBureauRuleType">
-    insert into risk_conduct_bureau_rule_type (id, name, deduct_score, parent_id, creation_date, update_date
+    insert into risk_conduct_bureau_rule_type (id, name, deduct_score, parent_id, creation_date, update_date,level
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{deductScore}, #{parentId},
-            #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+            #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{level}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductBureauRuleType">
@@ -107,32 +107,33 @@
   </update>
 
   <select id="riskConductBureauRuleTypePage" resultMap="BaseResultMap">
-     select r.id,r.`name` typeName,r.deduct_score,r.creation_date,r.update_date,r2.`name` from risk_conduct_bureau_rule_type r,risk_conduct_bureau_rule_type r2
+     select r2.id,r.`name` typeName,r2.deduct_score,r2.creation_date,r2.update_date,r2.`name`
+    from risk_conduct_bureau_rule_type r,risk_conduct_bureau_rule_type r2
 
 	<where>
-	 r.id=r2.parent_id
+	 r.id=r2.parent_id and r.level = 2
 		<if test="type!=null">
 			and r2.parent_id =#{type}
 		</if>
-		<if test="key != null">
+		<if test="key != null and key != ''">
 			and r2.name like CONCAT('%',#{key},'%')
 		</if>
 	</where>
-    order by r.id desc
+    order by r2.id desc
     limit #{pageIndex}, #{pageSize}
   </select>
 
   <select id="getRiskConductBureauRuleTypePageCount" resultType="Integer">
     select count(1) from risk_conduct_bureau_rule_type r,risk_conduct_bureau_rule_type r2
     <where>
-    r.id=r2.parent_id
-		<if test="type!=null">
-			and r2.parent_id =#{type}
-		</if>
-		<if test="key != null">
-			and r2.name like CONCAT('%',#{key},'%')
-		</if>
-	</where>
+      r.id=r2.parent_id and r.level = 2
+      <if test="type!=null">
+        and r2.parent_id =#{type}
+      </if>
+      <if test="key != null and key != ''">
+        and r2.name like CONCAT('%',#{key},'%')
+      </if>
+    </where>
   </select>
 
   <select id="getAllRiskConductBureauRuleType" resultMap="BaseResultMap">
@@ -144,6 +145,26 @@
     <if test="id != null">
       and id != #{id}
     </if>
+  </select>
+
+  <select id="getMeasuresType" resultMap="BaseResultMap">
+    select * from risk_conduct_bureau_rule_type where level = 1
+  </select>
+
+  <select id="findById" resultType="com.bayee.political.pojo.dto.ConductBureauRuleTypeDetailsDO">
+    select
+      t3.id as rootTypeId, t3.name as rootTypeName,t2.id as parentId, t2.name as parentTypeName,
+      t.name as name, t.deduct_score as deductScore
+    from risk_conduct_bureau_rule_type t,risk_conduct_bureau_rule_type t2, risk_conduct_bureau_rule_type t3
+    where t.parent_id = t2.id and t2.parent_id = t3.id and t.id = #{id}
+  </select>
+
+  <select id="getTotalTypeByScoringOptionName" resultType="HashMap">
+    select
+      r1.id, r1.deduct_score, r1.name, r2.id as parentId, r2.parent_id as rootId
+    from risk_conduct_bureau_rule_type r1, risk_conduct_bureau_rule_type r2
+    where r1.parent_id = r2.id and
+      r1.level = 3 and r1.name like concat('%', #{name},'%')
   </select>
 
 </mapper>

@@ -9,16 +9,24 @@
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="deduction_score" property="deductionScore" jdbcType="DOUBLE" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+
+    <result column="scoring_level" property="scoringLevel" jdbcType="INTEGER" />
+    <result column="scoring_dept" property="scoringDept" jdbcType="INTEGER" />
+    <result column="measures" property="measures" jdbcType="INTEGER" />
+
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="parentTypeId" property="parentTypeId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, police_id, type, input_time, content, deduction_score, remarks, creation_date, 
-    update_date
+    id, police_id, type, input_time, content, deduction_score, remarks, creation_date, update_date,
+    scoring_level, scoring_dept, measures
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select r1.*, r2.name as type_name from risk_conduct_bureau_rule_record r1
+    select r1.*, (select name from risk_conduct_bureau_rule_type t where t.id = r2.parent_id) as type_name,
+           r2.parent_id as parentTypeId
+    from risk_conduct_bureau_rule_record r1
     left join risk_conduct_bureau_rule_type r2 on r1.type = r2.id
     where r1.id = #{id,jdbcType=INTEGER}
   </select>
@@ -29,11 +37,12 @@
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
     insert into risk_conduct_bureau_rule_record (id, police_id, type, 
       input_time, content, deduction_score, 
-      remarks, creation_date, update_date
+      remarks, creation_date, update_date, scoring_level, scoring_dept, measures
       )
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{deductionScore,jdbcType=DOUBLE}, 
-      #{remarks,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      #{remarks,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},
+            #{scoringLevel}, #{scoringDept}, #{measures}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
@@ -66,6 +75,15 @@
       <if test="updateDate != null" >
         update_date,
       </if>
+        <if test="scoringLevel != null">
+          scoring_level,
+        </if>
+      <if test="scoringDept != null">
+        scoring_dept,
+      </if>
+      <if test="measures != null">
+        measures,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -94,6 +112,15 @@
       </if>
       <if test="updateDate != null" >
         #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="scoringLevel != null">
+        #{scoringLevel},
+      </if>
+      <if test="scoringDept != null">
+        #{scoringDept},
+      </if>
+      <if test="measures != null">
+        #{measures},
       </if>
     </trim>
   </insert>
@@ -124,6 +151,15 @@
       <if test="updateDate != null" >
         update_date = #{updateDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="scoringLevel != null">
+        scoring_level = #{scoringLevel},
+      </if>
+      <if test="scoringDept != null">
+        scoring_dept = #{scoringDept},
+      </if>
+      <if test="measures != null">
+        measures = #{measures},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -136,7 +172,10 @@
       deduction_score = #{deductionScore,jdbcType=DOUBLE},
       remarks = #{remarks,jdbcType=VARCHAR},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
-      update_date = #{updateDate,jdbcType=TIMESTAMP}
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+        scoring_level = #{scoringLevel},
+        scoring_dept = #{scoringDept},
+        measures = #{measures}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
@@ -158,7 +197,8 @@
   </select>
 
   <select id="riskConductBureauRuleRecordPage" resultMap="BaseResultMap">
-    select r1.*, r2.name as type_name from risk_conduct_bureau_rule_record r1
+    select r1.*, (select name from risk_conduct_bureau_rule_type t where t.id = r2.parent_id) as type_name
+    from risk_conduct_bureau_rule_record r1
         left join risk_conduct_bureau_rule_type r2 on r1.type = r2.id
 				LEFT JOIN `user` u ON r1.police_id=u.police_id
 		<where>
@@ -166,10 +206,10 @@
 				AND (u.name like CONCAT('%',#{key},'%') OR r1.police_id like CONCAT('%',#{key},'%') OR r1.content LIKE CONCAT('%',#{key},'%'))
 			</if>
 			<if test="type!=null">
-				AND r2.id=#{type}
+				AND r2.parent_id = #{type}
 			</if>
 		</where> 
-		order by r1.id
+		order by r1.id desc
       limit #{pageIndex}, #{pageSize}
   </select>
 
@@ -183,13 +223,31 @@
 			AND (u.name like CONCAT('%',#{key},'%') OR r1.police_id like CONCAT('%',#{key},'%') OR r1.content LIKE CONCAT('%',#{key},'%'))
 		</if>
 		<if test="type!=null">
-			AND r2.id=#{type}
+			AND r2.parent_id = #{type}
 		</if>
 	</where> 
   </select>
 
   <select id="countByBureauRuleType" resultType="Integer">
     select count(1) from risk_conduct_bureau_rule_record where type = #{typeId}
+  </select>
+
+  <select id="findById" resultType="com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO">
+    select
+      u.police_id as policeId, u.name as policeName,
+      rb.scoring_level as scoringLevel,
+      rb.scoring_dept as scoringDept, (select name from department d where d.id = rb.scoring_dept) as scoringDeptName,
+      rt2.parent_id as scoringRootType, (select name from risk_conduct_bureau_rule_type where id = rt2.parent_id) as scoringRootTypeName,
+      rt.parent_id as scoringType, (select name from risk_conduct_bureau_rule_type where id = rt.parent_id) as scoringTypeName,
+      rb.type as scoringOption, rb.content as scoringOptionName,
+      rb.measures as measures, m.name as measuresName,
+      rb.deduction_score as deductScore, DATE_FORMAT(rb.creation_date,'%Y-%m-%d %H:%i:%s') as date, rb.remarks as remarks
+    from risk_conduct_bureau_rule_record rb
+      left join user u on rb.police_id = u.police_id
+      left join measures m on rb.measures = m.id
+      left join risk_conduct_bureau_rule_type rt on rt.id = rb.type
+      left join risk_conduct_bureau_rule_type rt2 on rt2.id = rt.parent_id
+    where rb.id = #{id}
   </select>
 
 </mapper>

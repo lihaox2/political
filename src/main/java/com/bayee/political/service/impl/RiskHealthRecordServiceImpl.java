@@ -72,7 +72,7 @@ public class RiskHealthRecordServiceImpl implements RiskHealthRecordService{
 
 	@Override
 	public List<RiskHealthRecord> riskRiskHealthRecordPage(Integer pageIndex, Integer pageSize,
-			List<String> columnList,Integer typeFlag,
+														   List<String> columnList,Integer typeFlag,
             String key) {
 		if (pageIndex < 1) {
 			pageIndex = 1;

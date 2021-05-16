@@ -17,6 +17,11 @@ public class CaseLawEnforcementDetailsResult {
     private String policeName;
 
     /**
+     * 类型id
+     */
+    private Integer typeId;
+
+    /**
      * 问题分类
      */
     private String type;
@@ -35,6 +40,14 @@ public class CaseLawEnforcementDetailsResult {
      * 时间
      */
     private String date;
+
+    public Integer getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
+    }
 
     public String getPoliceId() {
         return policeId;

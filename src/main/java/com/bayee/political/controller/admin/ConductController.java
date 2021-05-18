@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -43,6 +44,9 @@ public class ConductController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    TotalRiskDetailsService totalRiskDetailsService;
+
     /**
      * 局规计分
      * @param pageIndex
@@ -52,7 +56,7 @@ public class ConductController {
     @GetMapping("/bureau/rule/page")
     public ResponseEntity<?> conductBureauRulePage(@RequestParam("pageIndex") Integer pageIndex,
                                                    @RequestParam("pageSize") Integer pageSize,
-                                                   @RequestParam("type") Integer type, @RequestParam("key") String key) {
+                                                   @RequestParam("type") String type, @RequestParam("key") String key) {
         List<RiskConductBureauRuleRecord> recordList = riskConductBureauRuleRecordService.
                 riskConductBureauRuleRecordPage(pageIndex, pageSize,type,key);
 
@@ -64,6 +68,7 @@ public class ConductController {
             if (user != null) {
                 pageResult.setPoliceName(user.getName());
             }
+            pageResult.setRootName(e.getRootName());
             pageResult.setId(e.getId());
             pageResult.setType(e.getTypeName());
             pageResult.setContent(e.getContent());
@@ -96,6 +101,7 @@ public class ConductController {
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
 
         riskConductBureauRuleRecordService.insert(record);
+        totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -118,6 +124,7 @@ public class ConductController {
         record.setUpdateDate(new Date());
 
         riskConductBureauRuleRecordService.updateByPrimaryKey(record);
+        totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -148,8 +155,10 @@ public class ConductController {
 
     @DeleteMapping("/delete/bureau/rule")
     public ResponseEntity<?> deleteConductBureauRule(@RequestParam("id") Integer id) {
-        riskConductBureauRuleRecordService.deleteByPrimaryKey(id);
+        ConductBureauRuleDetailsDO detailsDTO = riskConductBureauRuleRecordService.findById(id);
 
+        riskConductBureauRuleRecordService.deleteByPrimaryKey(id);
+        totalRiskDetailsService.conductRiskDetails(detailsDTO.getPoliceId(), LocalDate.parse(detailsDTO.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -162,10 +171,9 @@ public class ConductController {
     @GetMapping("/visit/page")
     public ResponseEntity<?> conductVisitPage(@RequestParam("pageIndex") Integer pageIndex,
                                               @RequestParam("pageSize") Integer pageSize,
-                                              @RequestParam("bigType") Integer bigType,
-                                              @RequestParam("smallType") Integer smallType,
+                                              @RequestParam("type") String type,
                                               @RequestParam("key") String key) {
-        List<RiskConductVisitRecord> recordList = riskConductVisitRecordService.riskConductVisitRecordPage(pageIndex, pageSize, bigType, smallType, key);
+        List<RiskConductVisitRecord> recordList = riskConductVisitRecordService.riskConductVisitRecordPage(pageIndex, pageSize, type, key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -179,14 +187,12 @@ public class ConductController {
             }
             pageResult.setBigType(e.getBigTypeName());
             pageResult.setSmallType(e.getSmallTypeName());
-//            pageResult.setType(e.getTypeName());
-
             pageResult.setContent(e.getContent());
             pageResult.setDeductScore(e.getDeductionScore());
             pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd"));
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskConductVisitRecordService.getRiskConductVisitRecordPageCount(bigType, smallType, key));
+        result.put("totalCount", riskConductVisitRecordService.getRiskConductVisitRecordPageCount(type, key));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
@@ -207,26 +213,28 @@ public class ConductController {
         record.setDeductionScore(saveParam.getDeductScore());
 
         riskConductVisitRecordService.insert(record);
+        totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/visit/{id}")
     public ResponseEntity<?> updateConductVisit(@PathVariable("id") Integer id,
                                                 @RequestBody ConductVisitSaveParam saveParam) {
-        RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(saveParam.getTypeId());
+//        RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductVisitRecord record = riskConductVisitRecordService.selectByPrimaryKey(id);
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-        record.setInputTime(DateUtils.parseDate(saveParam.getDate() +" "+time, "yyyy-MM-dd HH:mm:ss"));
+        record.setPoliceId(saveParam.getPoliceId());
+        record.setContent(saveParam.getDesc());
         record.setDeductionScore(saveParam.getDeductScore());
+        record.setInputTime(DateUtils.parseDate(saveParam.getDate() +" "+time, "yyyy-MM-dd HH:mm:ss"));
         record.setType(saveParam.getTypeId());
-        record.setContent(riskConductVisitType.getName());
         record.setRemarks(saveParam.getRemarks());
-        record.setDeductionScore(riskConductVisitType.getDeductScore());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() +" "+ time, "yyyy-MM-dd HH:mm:ss"));
         record.setUpdateDate(new Date());
 
         riskConductVisitRecordService.updateByPrimaryKey(record);
+        totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -253,8 +261,10 @@ public class ConductController {
 
     @DeleteMapping("/delete/visit")
     public ResponseEntity<?> deleteConductVisit(@RequestParam("id") Integer id) {
-        riskConductVisitRecordService.deleteByPrimaryKey(id);
+        RiskConductVisitRecord record = riskConductVisitRecordService.selectByPrimaryKey(id);
 
+        riskConductVisitRecordService.deleteByPrimaryKey(id);
+        totalRiskDetailsService.conductRiskDetails(record.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -267,7 +277,7 @@ public class ConductController {
     @GetMapping("/bureau/rule/type/page")
     public ResponseEntity<?> conductBureauRuleTypePage(@RequestParam("pageIndex") Integer pageIndex,
                                                        @RequestParam("pageSize") Integer pageSize,
-                                                       @RequestParam("type") Integer type,
+                                                       @RequestParam("type") String type,
                                                        @RequestParam("key") String key) {
         List<RiskConductBureauRuleType> ruleTypeList = riskConductBureauRuleTypeService.riskConductBureauRuleTypePage(pageIndex, pageSize, type, key);
 
@@ -275,6 +285,7 @@ public class ConductController {
         result.put("data", ruleTypeList.stream().map(e -> {
             ConductBureauRuleTypePageResult pageResult = new ConductBureauRuleTypePageResult();
             pageResult.setId(e.getId());
+            pageResult.setRootName(e.getRootName());
             pageResult.setTypeName(e.getTypeName());
             pageResult.setName(e.getName());
             pageResult.setDeductScore(e.getDeductScore());

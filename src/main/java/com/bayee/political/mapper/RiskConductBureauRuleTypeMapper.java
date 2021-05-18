@@ -30,17 +30,19 @@ public interface RiskConductBureauRuleTypeMapper {
      * 分页查询局规计分类型
      * @param pageIndex
      * @param pageSize
+     * @param type
+     * @param key
      * @return
      */
     List<RiskConductBureauRuleType> riskConductBureauRuleTypePage(@Param("pageIndex") Integer pageIndex,
                                                                   @Param("pageSize") Integer pageSize,
-                                                                  @Param("type") Integer type, @Param("key") String key);
+                                                                  @Param("list") List<Integer> type, @Param("key") String key);
 
     /**
      * 统计数据条数
      * @return
      */
-    Integer getRiskConductBureauRuleTypePageCount(@Param("type") Integer type,@Param("key") String key);
+    Integer getRiskConductBureauRuleTypePageCount(@Param("list") List<Integer> type,@Param("key") String key);
 
     /**
      * 查询所有大于1级的类型

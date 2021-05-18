@@ -32,6 +32,19 @@ public class ConductBureauRulePageResult {
      */
     private String date;
 
+    /**
+     * 大类名称
+     */
+    private String rootName;
+
+    public String getRootName() {
+        return rootName;
+    }
+
+    public void setRootName(String rootName) {
+        this.rootName = rootName;
+    }
+
     public Integer getId() {
         return id;
     }

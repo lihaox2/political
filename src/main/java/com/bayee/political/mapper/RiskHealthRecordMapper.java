@@ -21,7 +21,7 @@ public interface RiskHealthRecordMapper {
 
     int updateByPrimaryKey(RiskHealthRecord record);
 
-    Integer getByIdAndYear(@Param("policeId") String policeId,@Param("year")String year);
+    Integer getByIdAndYear(@Param("policeId") String policeId,@Param("year")String year,@Param("id") Integer id);
     
     List<RiskHealthRecord> selectYearAll(@Param("year")String year);
 

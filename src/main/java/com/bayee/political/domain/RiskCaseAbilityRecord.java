@@ -9,22 +9,49 @@ public class RiskCaseAbilityRecord {
     
     private String year;
 
+    /**
+     * 复议诉讼撤变
+     */
     private Integer reconsiderationLitigationStatus;
 
+    /**
+     * 有责涉案（警）投诉、信访
+     */
     private Integer letterVisitStatus;
 
+    /**
+     * 重大执法过错
+     */
     private Integer lawEnforcementFaultStatus;
 
+    /**
+     * 司法监督（检察院纠违）
+     */
     private Integer judicialSupervisionStatus;
 
+    /**
+     * 执法办案能手
+     */
     private Integer caseExpertStatus;
 
+    /**
+     * 优秀法制员
+     */
     private Integer excellentLegalOfficerStatus;
 
+    /**
+     * 基本级执法考试
+     */
     private Integer basicTestStatus;
 
+    /**
+     * 高级执法考试
+     */
     private Integer highTestStatus;
 
+    /**
+     * 司法考试
+     */
     private Integer judicialTestStatus;
 
     private Date creationDate;

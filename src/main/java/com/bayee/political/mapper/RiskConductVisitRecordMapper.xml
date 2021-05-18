@@ -138,7 +138,8 @@
       input_time = #{inputTime,jdbcType=TIMESTAMP},
       content = #{content,jdbcType=VARCHAR},
       remarks = #{remarks,jdbcType=VARCHAR},
-      creation_date = #{creationDate,jdbcType=TIMESTAMP},deduction_score = #{deductionScore},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      deduction_score = #{deductionScore},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -166,18 +167,23 @@
 
   <select id="riskConductVisitRecordPage" resultMap="BaseResultMap">
     select r.*,t.name as type_name, t.name as smallTypeName, (select name from risk_conduct_visit_type where id in (
-      select parent_id from risk_conduct_visit_type where id = r.type)) as bigName from risk_conduct_visit_record r
+      select parent_id from risk_conduct_visit_type where id = r.type)) as bigTypeName from risk_conduct_visit_record r
     left join risk_conduct_visit_type t on r.type = t.id
     left join user u on u.police_id = r.police_id
     where 1 = 1
     <if test="key != null and  key !='' ">
-      and u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or r.content like concat('%', #{key}, '%')
+      and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or r.content like concat('%', #{key}, '%'))
     </if>
-    <if test="smallType != null">
-      AND r.type = #{smallType}
-    </if>
-    <if test="bigType != null">
-      and t.parent_id = #{bigType}
+    <if test="list != null and list.size > 0">
+      AND (t.id in (
+      <foreach collection="list" item="item" separator=",">
+        #{item}
+      </foreach>
+      ) or t.parent_id in (
+      <foreach collection="list" item="item" separator=",">
+        #{item}
+      </foreach>
+      ))
     </if>
     order by r.id desc
     limit #{pageIndex}, #{pageSize}
@@ -189,13 +195,18 @@
     left join user u on u.police_id = r.police_id
     where 1 = 1
     <if test="key != null and  key !='' ">
-      and u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or r.content like concat('%', #{key}, '%')
+      and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or r.content like concat('%', #{key}, '%'))
     </if>
-    <if test="smallType != null">
-      AND r.type = #{smallType}
-    </if>
-    <if test="bigType != null">
-      and t.parent_id = #{bigType}
+    <if test="list != null and list.size > 0">
+      AND (t.id in (
+        <foreach collection="list" item="item" separator=",">
+          #{item}
+        </foreach>
+      ) or t.parent_id in (
+        <foreach collection="list" item="item" separator=",">
+          #{item}
+        </foreach>
+      ))
     </if>
   </select>
 

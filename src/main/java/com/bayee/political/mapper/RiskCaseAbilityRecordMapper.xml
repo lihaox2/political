@@ -213,10 +213,10 @@
     left join user u1 on r1.police_id = u1.police_id
     where 1 = 1
     <if test="key != null and key != ''">
-      and r1.police_id like concat('%', #{key}, '%') or u1.name like concat('%', #{key}, '%')
+      and (r1.police_id like concat('%', #{key}, '%') or u1.name like concat('%', #{key}, '%'))
     </if>
     <if test="date != null and date != ''">
-      and DATE_FORMAT(r1.creation_date, '%Y-%m') = #{date}
+      and DATE_FORMAT(r1.creation_date, '%Y-%m-%d') = #{date}
     </if>
     <if test="columnList != null and typeFlag != null">
       <foreach collection="columnList" separator=" " item="item">
@@ -232,12 +232,23 @@
     left join user u1 on r1.police_id = u1.police_id
     where 1 = 1
     <if test="key != null and key != ''">
-      and r1.police_id like concat('%', #{key}, '%') or u1.name like concat('%', #{key}, '%')
+      and (r1.police_id like concat('%', #{key}, '%') or u1.name like concat('%', #{key}, '%'))
+    </if>
+    <if test="date != null and date != ''">
+      and DATE_FORMAT(r1.creation_date, '%Y-%m-%d') = #{date}
     </if>
     <if test="columnList != null and typeFlag != null">
       <foreach collection="columnList" separator=" " item="item">
         and ${item} = #{typeFlag}
       </foreach>
+    </if>
+  </select>
+
+  <select id="getIdByDateAndPoliceId" resultType="Integer">
+    select id from risk_case_ability_record
+    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m-%d') = #{date}
+    <if test="id != null">
+      and id != #{id}
     </if>
   </select>
   

@@ -9,6 +9,7 @@
     <result column="parent_id" jdbcType="INTEGER" property="parentId" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="rootName" jdbcType="VARCHAR" property="rootName" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, deduct_score, parent_id, creation_date, update_date
@@ -107,33 +108,47 @@
   </update>
 
   <select id="riskConductBureauRuleTypePage" resultMap="BaseResultMap">
-     select r2.id,r.`name` typeName,r2.deduct_score,r2.creation_date,r2.update_date,r2.`name`
-    from risk_conduct_bureau_rule_type r,risk_conduct_bureau_rule_type r2
-
-	<where>
-	 r.id=r2.parent_id and r.level = 2
-		<if test="type!=null">
-			and r2.parent_id =#{type}
-		</if>
-		<if test="key != null and key != ''">
-			and r2.name like CONCAT('%',#{key},'%')
-		</if>
-	</where>
-    order by r2.id desc
+    select
+    r1.*, r2.`name` as typeName, r3.`name` as rootName
+    from risk_conduct_bureau_rule_type r1, risk_conduct_bureau_rule_type r2, risk_conduct_bureau_rule_type r3
+    where r1.parent_id = r2.id and r2.parent_id = r3.id
+    <if test="list != null and list.size > 0">
+      and (r2.id in (
+        <foreach collection="list" item="item" separator=",">
+          #{item}
+        </foreach>
+      ) or r3.id in (
+        <foreach collection="list" item="item" separator=",">
+          #{item}
+        </foreach>
+      ))
+    </if>
+    <if test="key != null and key != ''">
+      and r1.name like CONCAT('%',#{key},'%')
+    </if>
+    order by r3.name, r2.`name`
     limit #{pageIndex}, #{pageSize}
   </select>
 
   <select id="getRiskConductBureauRuleTypePageCount" resultType="Integer">
-    select count(1) from risk_conduct_bureau_rule_type r,risk_conduct_bureau_rule_type r2
-    <where>
-      r.id=r2.parent_id and r.level = 2
-      <if test="type!=null">
-        and r2.parent_id =#{type}
-      </if>
-      <if test="key != null and key != ''">
-        and r2.name like CONCAT('%',#{key},'%')
-      </if>
-    </where>
+    select
+    count(1)
+    from risk_conduct_bureau_rule_type r1, risk_conduct_bureau_rule_type r2, risk_conduct_bureau_rule_type r3
+    where r1.parent_id = r2.id and r2.parent_id = r3.id
+    <if test="list != null and list.size > 0">
+      and (r2.id in (
+          <foreach collection="list" item="item" separator=",">
+            #{item}
+          </foreach>
+      ) or r3.id in (
+        <foreach collection="list" item="item" separator=",">
+          #{item}
+        </foreach>
+      ))
+    </if>
+    <if test="key != null and key != ''">
+      and r1.name like CONCAT('%',#{key},'%')
+    </if>
   </select>
 
   <select id="getAllRiskConductBureauRuleType" resultMap="BaseResultMap">
@@ -161,7 +176,7 @@
 
   <select id="getTotalTypeByScoringOptionName" resultType="HashMap">
     select
-      r1.id, r1.deduct_score, r1.name, r2.id as parentId, r2.parent_id as rootId
+      r1.id, r1.deduct_score as deductScore, r1.name, r2.id as parentId, r2.parent_id as rootId
     from risk_conduct_bureau_rule_type r1, risk_conduct_bureau_rule_type r2
     where r1.parent_id = r2.id and
       r1.level = 3 and r1.name like concat('%', #{name},'%')

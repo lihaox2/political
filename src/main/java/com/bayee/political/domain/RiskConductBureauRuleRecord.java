@@ -40,6 +40,16 @@ public class RiskConductBureauRuleRecord {
 
     private Integer parentTypeId;
 
+    private String rootName;
+
+    public String getRootName() {
+        return rootName;
+    }
+
+    public void setRootName(String rootName) {
+        this.rootName = rootName;
+    }
+
     public Integer getScoringLevel() {
         return scoringLevel;
     }

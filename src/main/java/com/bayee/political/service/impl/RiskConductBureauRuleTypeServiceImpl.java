@@ -10,8 +10,11 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author xxl
@@ -54,17 +57,27 @@ public class RiskConductBureauRuleTypeServiceImpl implements RiskConductBureauRu
     }
 
     @Override
-    public List<RiskConductBureauRuleType> riskConductBureauRuleTypePage(Integer pageIndex, Integer pageSize, Integer type,String key) {
+    public List<RiskConductBureauRuleType> riskConductBureauRuleTypePage(Integer pageIndex, Integer pageSize, String type,String key) {
         if(pageIndex < 1) {
             pageIndex = 1;
         }
         pageIndex = (pageIndex - 1) * pageSize;
-        return riskConductBureauRuleTypeMapper.riskConductBureauRuleTypePage(pageIndex, pageSize,type,key);
+        List<Integer> typeList = new ArrayList<>();
+        if (type != null && !"".equals(type)) {
+            typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
+        }
+
+        return riskConductBureauRuleTypeMapper.riskConductBureauRuleTypePage(pageIndex, pageSize, typeList, key);
     }
 
     @Override
-    public Integer getRiskConductBureauRuleTypePageCount(Integer type,String key) {
-        return riskConductBureauRuleTypeMapper.getRiskConductBureauRuleTypePageCount(type,key);
+    public Integer getRiskConductBureauRuleTypePageCount(String type,String key) {
+        List<Integer> typeList = new ArrayList<>();
+        if (type != null && !"".equals(type)) {
+            typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
+        }
+
+        return riskConductBureauRuleTypeMapper.getRiskConductBureauRuleTypePageCount(typeList, key);
     }
 
     @Override

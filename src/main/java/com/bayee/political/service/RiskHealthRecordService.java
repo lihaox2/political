@@ -19,7 +19,7 @@ public interface RiskHealthRecordService {
 
     int updateByPrimaryKey(RiskHealthRecord record);
     
-    Integer getByIdAndYear(String policeId,String year);
+    Integer getByIdAndYear(String policeId, String year, Integer id);
     
     RiskReportRecord getByPoliceIdMonth(String year,String month,String policeId);
 

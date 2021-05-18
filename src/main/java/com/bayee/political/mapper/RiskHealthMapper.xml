@@ -320,7 +320,7 @@ risk_health WHERE id=#{id}
 
   <!-- 警员最新一条健康风险指数查询 -->
   <select id="riskHealthIndexNewestItem" parameterType="com.bayee.political.domain.RiskHealth" resultMap="BaseResultMap">
-    select * from risk_health where police_id=#{policeId,jdbcType=VARCHAR}
+    select * from risk_health where police_id=#{policeId,jdbcType=VARCHAR} and index_num is not null
     order by creation_date desc limit 1
   </select>
 <!--  <select id="getByIdAndYear" resultType="Integer">-->

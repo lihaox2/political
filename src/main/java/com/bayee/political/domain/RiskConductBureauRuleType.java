@@ -42,6 +42,16 @@ public class RiskConductBureauRuleType {
 
     private String typeName;
 
+    private String rootName;
+
+    public String getRootName() {
+        return rootName;
+    }
+
+    public void setRootName(String rootName) {
+        this.rootName = rootName;
+    }
+
     public Integer getLevel() {
         return level;
     }

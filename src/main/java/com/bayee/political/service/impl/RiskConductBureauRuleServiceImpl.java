@@ -198,49 +198,49 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
                     deductionScore += 1;
                 } else if (VisitRecordType.INQUIRY.getTypeId().equals(record.getType())) {
                     //函询
-                    deductionCount += 1;
+                    deductionScore += 1;
                 } else if (VisitRecordType.PERSUADE_AND_ADMONISH.getTypeId().equals(record.getType())) {
                     //诫勉
-                    deductionCount += 2;
+                    deductionScore += 2;
                 } else if (VisitRecordType.PARTY_WARNING.getTypeId().equals(record.getType())) {
                     //党纪处分-警告
-                    deductionCount += 3;
+                    deductionScore += 3;
                 } else if (VisitRecordType.PARTY_SERIOUS_WARNING.getTypeId().equals(record.getType())) {
                     //党纪处分-严重警告
-                    deductionCount += 4;
+                    deductionScore += 4;
                 } else if (VisitRecordType.PARTY_REMOVAL_OF_PARTY_POSTS.getTypeId().equals(record.getType())) {
                     //党纪处分-撤销党内职务
-                    deductionCount += 10;
+                    deductionScore += 10;
                 } else if (VisitRecordType.PARTY_STAY_IN_THE_PARTY_FOR_INSPECTION.getTypeId().equals(record.getType())) {
                     //党纪处分-留党查看
-                    deductionCount += 5;
+                    deductionScore += 5;
                 } else if (VisitRecordType.PARTY_EXPULSION_FORM_THE_PARTY.getTypeId().equals(record.getType())) {
                     //党纪处分-开除党籍
-                    deductionCount += 10;
+                    deductionScore += 10;
                 } else if (VisitRecordType.GOVERNMENT_WARNING.getTypeId().equals(record.getType())) {
                     //政纪处分-警告
-                    deductionCount += 1;
+                    deductionScore += 1;
                 } else if (VisitRecordType.GOVERNMENT_RECORD_A_DEMERIT.getTypeId().equals(record.getType())) {
                     //政纪处分-记过
-                    deductionCount += 2;
+                    deductionScore += 2;
                 } else if (VisitRecordType.GOVERNMENT_RECORD_A_BIG_DEMERIT.getTypeId().equals(record.getType())) {
                     //政纪处分-记大过
-                    deductionCount += 3;
+                    deductionScore += 3;
                 } else if (VisitRecordType.GOVERNMENT_DEMOTION_LEVEL.getTypeId().equals(record.getType())) {
                     //政纪处分-降级
-                    deductionCount += 4;
+                    deductionScore += 4;
                 } else if (VisitRecordType.GOVERNMENT_DEMOTION_POSITION.getTypeId().equals(record.getType())) {
                     //政纪处分-撤职
-                    deductionCount += 7;
+                    deductionScore += 7;
                 } else if (VisitRecordType.GOVERNMENT_EXPEL.getTypeId().equals(record.getType())) {
                     //政纪处分-开除
-                    deductionCount += 10;
+                    deductionScore += 10;
                 } else if (VisitRecordType.GIVE_CRIMINAL_SANCTIONS.getTypeId().equals(record.getType())) {
                     //追究刑事责任
-                    deductionCount += 10;
+                    deductionScore += 10;
                 } else if (VisitRecordType.INVESTIGATION_OF_CIVIL_LIABILITY.getTypeId().equals(record.getType())) {
                     //追究民事责任
-                    deductionCount += 9;
+                    deductionScore += 9;
                 }
             }
             riskConductVisit.setIndexNum(deductionScore);
@@ -259,6 +259,8 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
             oldRiskConductVisit.setDeductionScoreCount(riskConductVisit.getDeductionScoreCount());
             oldRiskConductVisit.setTotalDeductionScore(riskConductVisit.getTotalDeductionScore());
             oldRiskConductVisit.setUpdateDate(new Date());
+
+            riskConductVisitMapper.updateByPrimaryKey(oldRiskConductVisit);
         }
 
         return riskConductVisit;

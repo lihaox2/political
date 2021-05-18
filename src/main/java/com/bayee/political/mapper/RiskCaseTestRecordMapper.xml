@@ -178,6 +178,9 @@
 	
 	<select id="isExistence" resultType="Integer">
 	select id from risk_case_test_record where year=#{year} and semester=#{semester} and police_id = #{policeId}
+    <if test="id != null">
+        and id != #{id}
+    </if>
 	</select>
 
   <!-- 警员执法考试数据列表查询 -->
@@ -196,7 +199,6 @@
   <select id="findPoliceCaseData" resultMap="BaseResultMap">
     select * from risk_case_test_record
     where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
-      and semester = #{semester}
     order by id desc limit 1
   </select>
 

@@ -59,9 +59,9 @@ public class RiskHealthRecordServiceImpl implements RiskHealthRecordService{
 	}
 
 	@Override
-	public Integer getByIdAndYear(String policeId, String year) {
+	public Integer getByIdAndYear(String policeId, String year, Integer id) {
 		// TODO Auto-generated method stub
-		return riskHealthRecordMapper.getByIdAndYear(policeId, year);
+		return riskHealthRecordMapper.getByIdAndYear(policeId, year, id);
 	}
 
 	@Override

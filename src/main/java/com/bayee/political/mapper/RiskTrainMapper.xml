@@ -15,6 +15,8 @@
     <result column="firearm_standard_status" property="firearmStandardStatus" jdbcType="INTEGER" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="physical_score" property="physicalScore" jdbcType="DOUBLE" />
+    <result column="firearm_score" property="firearmScore" jdbcType="DOUBLE" />
   </resultMap>
   <resultMap id="ScreenChartMap" type="com.bayee.political.domain.ScreenChart" >
     <id column="id" property="id" />
@@ -23,7 +25,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, police_id, index_num, physical_num, physical_pass_num, physical_fail_num, physical_standard_status, 
-    firearm_num, firearm_pass_num, firearm_fail_num, firearm_standard_status, creation_date, 
+    firearm_num, firearm_pass_num, firearm_fail_num, firearm_standard_status, physical_score, firearm_score, creation_date,
     update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -38,27 +40,27 @@
   </delete>
    <!-- 警员警务技能新增 -->
   <insert id="riskTrainCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.RiskTrain" useGeneratedKeys="true">
-    insert into risk_train (police_id, index_num, 
-      physical_num, physical_pass_num, physical_fail_num, 
-      physical_standard_status, firearm_num, firearm_pass_num, 
-      firearm_fail_num, firearm_standard_status, 
+    insert into risk_train (police_id, index_num,
+      physical_num, physical_pass_num, physical_fail_num,
+      physical_standard_status, firearm_num, firearm_pass_num,
+      firearm_fail_num, firearm_standard_status, physical_score, firearm_score,
       creation_date, update_date)
     values (#{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
       #{physicalNum,jdbcType=INTEGER}, #{physicalPassNum,jdbcType=INTEGER}, #{physicalFailNum,jdbcType=INTEGER}, 
       #{physicalStandardStatus,jdbcType=INTEGER}, #{firearmNum,jdbcType=INTEGER}, #{firearmPassNum,jdbcType=INTEGER}, 
-      #{firearmFailNum,jdbcType=INTEGER}, #{firearmStandardStatus,jdbcType=INTEGER}, 
+      #{firearmFailNum,jdbcType=INTEGER}, #{firearmStandardStatus,jdbcType=INTEGER}, #{physicalScore}, #{firearmScore},
       #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskTrain" >
     insert into risk_train (id, police_id, index_num, 
       physical_num, physical_pass_num, physical_fail_num, 
       physical_standard_status, firearm_num, firearm_pass_num, 
-      firearm_fail_num, firearm_standard_status, 
+      firearm_fail_num, firearm_standard_status, physical_score, firearm_score,
       creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
       #{physicalNum,jdbcType=INTEGER}, #{physicalPassNum,jdbcType=INTEGER}, #{physicalFailNum,jdbcType=INTEGER}, 
       #{physicalStandardStatus,jdbcType=INTEGER}, #{firearmNum,jdbcType=INTEGER}, #{firearmPassNum,jdbcType=INTEGER}, 
-      #{firearmFailNum,jdbcType=INTEGER}, #{firearmStandardStatus,jdbcType=INTEGER}, 
+      #{firearmFailNum,jdbcType=INTEGER}, #{firearmStandardStatus,jdbcType=INTEGER}, #{physicalScore}, #{firearmScore},
       #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskTrain" >
@@ -96,6 +98,12 @@
       </if>
       <if test="firearmStandardStatus != null" >
         firearm_standard_status,
+      </if>
+      <if test="physicalScore != null" >
+        physical_score,
+      </if>
+      <if test="firearmScore != null" >
+        firearm_score,
       </if>
       <if test="creationDate != null" >
         creation_date,
@@ -138,6 +146,12 @@
       <if test="firearmStandardStatus != null" >
         #{firearmStandardStatus,jdbcType=INTEGER},
       </if>
+      <if test="physicalScore != null" >
+        #{physicalScore},
+      </if>
+      <if test="firearmScore != null" >
+        #{firearmScore},
+      </if>
       <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -178,6 +192,12 @@
       </if>
       <if test="firearmStandardStatus != null" >
         firearm_standard_status = #{firearmStandardStatus,jdbcType=INTEGER},
+      </if>
+      <if test="physicalScore != null" >
+        physical_score = #{physicalScore},
+      </if>
+      <if test="firearmScore != null" >
+        firearm_score = #{firearmScore},
       </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -222,6 +242,12 @@
       <if test="firearmStandardStatus != null" >
         firearm_standard_status = #{firearmStandardStatus,jdbcType=INTEGER},
       </if>
+      <if test="physicalScore != null" >
+        physical_score = #{physicalScore},
+      </if>
+      <if test="firearmScore != null" >
+        firearm_score = #{firearmScore},
+      </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -243,13 +269,15 @@
       firearm_pass_num = #{firearmPassNum,jdbcType=INTEGER},
       firearm_fail_num = #{firearmFailNum,jdbcType=INTEGER},
       firearm_standard_status = #{firearmStandardStatus,jdbcType=INTEGER},
+      physical_score = #{physicalScore},
+      firearm_score = #{firearmScore},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
     <!-- 警员警务技能指数查询 -->
 <select id="riskTrainIndexItem" parameterType="com.bayee.political.domain.RiskTrain" resultMap="BaseResultMap">
-select id, police_id, sum(index_num) as index_num, sum(physical_num) as physical_num,
+select id, police_id, sum(index_num) as index_num, sum(physical_score) as physical_score, sum(firearm_score) as firearm_score, sum(physical_num) as physical_num,
 sum(physical_pass_num) as physical_pass_num, sum(physical_fail_num) as physical_fail_num, 
 physical_standard_status, sum(firearm_num) as firearm_num, sum(firearm_pass_num) as firearm_pass_num, 
 sum(firearm_fail_num) as firearm_fail_num, firearm_standard_status from risk_train 
@@ -306,14 +334,14 @@ and achievement_grade >1 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) d
     insert into  risk_train (id, police_id, index_num,
          physical_num, physical_pass_num, physical_fail_num,
          physical_standard_status, firearm_num, firearm_pass_num,
-         firearm_fail_num, firearm_standard_status,
+         firearm_fail_num, firearm_standard_status, physical_score, firearm_score,
          creation_date, update_date)
     values
     <foreach collection="list" separator="," item="t">
       (null, #{t.policeId,jdbcType=VARCHAR}, #{t.indexNum,jdbcType=DOUBLE},
       #{t.physicalNum,jdbcType=INTEGER}, #{t.physicalPassNum,jdbcType=INTEGER}, #{t.physicalFailNum,jdbcType=INTEGER},
       #{t.physicalStandardStatus,jdbcType=INTEGER}, #{t.firearmNum,jdbcType=INTEGER}, #{t.firearmPassNum,jdbcType=INTEGER},
-      #{t.firearmFailNum,jdbcType=INTEGER}, #{t.firearmStandardStatus,jdbcType=INTEGER},
+      #{t.firearmFailNum,jdbcType=INTEGER}, #{t.firearmStandardStatus,jdbcType=INTEGER},#{t.physicalScore}, #{t.firearmScore}
       #{t.creationDate,jdbcType=TIMESTAMP}, #{t.updateDate,jdbcType=TIMESTAMP})
     </foreach>
   </insert>

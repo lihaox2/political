@@ -58,4 +58,12 @@ public interface RiskCaseAbilityRecordMapper {
                                               @Param("typeFlag") Integer typeFlag, @Param("key") String key,
                                               @Param("date") String date);
 
+    /**
+     * 根据时间和警号查询id
+     * @param date
+     * @param policeId
+     * @return
+     */
+    Integer getIdByDateAndPoliceId(@Param("date") String date,@Param("policeId") String policeId, @Param("id") Integer id);
+
 }

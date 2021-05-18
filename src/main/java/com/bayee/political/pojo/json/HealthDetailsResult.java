@@ -116,6 +116,16 @@ public class HealthDetailsResult {
      */
     private String orthopaedicsDesc;
 
+    private String year;
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
     public String getMajorDiseasesDesc() {
         return majorDiseasesDesc;
     }

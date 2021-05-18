@@ -60,6 +60,8 @@ public class RiskSkillServiceImpl implements RiskSkillService {
 //            if (riskTrain.getFirearmFailNum() != null && riskTrain.getFirearmFailNum() > 0) {
 //                totalScore += (riskTrain.getFirearmFailNum() * shootingScore);
 //            }
+            riskTrain.setFirearmScore(firearmScore);
+            riskTrain.setPhysicalScore(physicalScore);
             riskTrain.setIndexNum(Math.min(totalScore, maxScore));
 
             // 产生预警数据
@@ -77,6 +79,16 @@ public class RiskSkillServiceImpl implements RiskSkillService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Double getPolicePhysicalDeductionScore(String policeId, String date) {
+        return trainPhysicalAchievementDetailsMapper.getPolicePhysicalDeductionScore(policeId, date);
+    }
+
+    @Override
+    public Double getPoliceFirearmDeductionScore(String policeId, String date) {
+        return trainFirearmAchievementMapper.getPoliceFirearmDeductionScore(policeId, date);
     }
 
 }

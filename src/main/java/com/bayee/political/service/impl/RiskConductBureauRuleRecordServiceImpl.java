@@ -8,7 +8,10 @@ import com.bayee.political.domain.RiskConductBureauRuleRecord;
 import com.bayee.political.mapper.RiskConductBureauRuleRecordMapper;
 import com.bayee.political.service.RiskConductBureauRuleRecordService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RiskConductBureauRuleRecordServiceImpl implements RiskConductBureauRuleRecordService{
@@ -53,18 +56,27 @@ public class RiskConductBureauRuleRecordServiceImpl implements RiskConductBureau
 	}
 
 	@Override
-	public List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(Integer pageIndex, Integer pageSize,Integer type, String key) {
+	public List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(Integer pageIndex, Integer pageSize,String type, String key) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
+		List<Integer> typeList = new ArrayList<>();
+		if (type != null && !"".equals(type)) {
+			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
+		}
 
-		return riskConductBureauRuleRecordMapper.riskConductBureauRuleRecordPage(pageIndex, pageSize,type,key);
+		return riskConductBureauRuleRecordMapper.riskConductBureauRuleRecordPage(pageIndex, pageSize, typeList,key);
 	}
 
 	@Override
-	public Integer getRiskConductBureauRuleRecordPageCount(Integer type, String key) {
-		return riskConductBureauRuleRecordMapper.getRiskConductBureauRuleRecordPageCount(type,key);
+	public Integer getRiskConductBureauRuleRecordPageCount(String type, String key) {
+		List<Integer> typeList = new ArrayList<>();
+		if (type != null && !"".equals(type)) {
+			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
+		}
+
+		return riskConductBureauRuleRecordMapper.getRiskConductBureauRuleRecordPageCount(typeList,key);
 	}
 
 	@Override

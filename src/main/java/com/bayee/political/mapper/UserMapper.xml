@@ -621,7 +621,12 @@ where 1=1 and department_id!=47
   </select>
 
     <select id="findByPoliceId" resultMap="userResult">
-        select * from user where police_id = #{policeId} limit 1
+        select
+               a.*,b.name as department_name,c.position_name
+        from user a
+          left join department b on b.id=a.department_id
+          left join police_position c on c.id=a.position_id
+        where a.police_id = #{policeId} limit 1
     </select>
 
 </mapper>

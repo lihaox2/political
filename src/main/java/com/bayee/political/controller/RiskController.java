@@ -159,11 +159,24 @@ public class RiskController extends BaseController {
 			dlr.setMessage("success");
 			if(sortType == null || sortType == 11001) {
 				dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getTotalNum).reversed()).collect(Collectors.toList()));
+			} else if (sortType == 11002) {
+				dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getConductNum).reversed()).collect(Collectors.toList()));
+			} else if (sortType == 11003) {
+				dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getHandlingCaseNum).reversed()).collect(Collectors.toList()));
+			} else if (sortType == 11004) {
+				dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getDutyNum).reversed()).collect(Collectors.toList()));
+			} else if (sortType == 11005) {
+				dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getTrainNum).reversed()).collect(Collectors.toList()));
+			} else if (sortType == 11006) {
+				dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getSocialContactNum).reversed()).collect(Collectors.toList()));
+			} else if (sortType == 11007) {
+				dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getAmilyEvaluationNum).reversed()).collect(Collectors.toList()));
+			}else if (sortType == 11008) {
+				dlr.setResult(list.stream().sorted(Comparator.comparing(RiskReportRecord::getHealthNum).reversed()).collect(Collectors.toList()));
 			}else {
 				dlr.setResult(list);
 			}
-			
-			
+
 			dlr.setCode(StatusCode.getSuccesscode());
 			dlr.setTotal(total);
 			dlr.setPageNum(pageNums);

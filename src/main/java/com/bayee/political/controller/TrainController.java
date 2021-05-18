@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bayee.political.enums.TrainProjectType;
+import com.bayee.political.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +76,6 @@ import com.bayee.political.domain.TrainSignIn;
 import com.bayee.political.domain.TrainStatisticsAnalysis;
 import com.bayee.political.domain.TrainUnit;
 import com.bayee.political.domain.User;
-import com.bayee.political.service.DepartmentService;
-import com.bayee.political.service.TrainMatchService;
-import com.bayee.political.service.TrainService;
-import com.bayee.political.service.UserService;
 import com.bayee.political.utils.DataListPage;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
@@ -109,6 +108,9 @@ public class TrainController extends BaseController {
 
 	@Autowired
 	private DepartmentService departmentService;
+
+	@Autowired
+	TotalRiskDetailsService totalRiskDetailsService;
 
 	@Value("${train_images}")
 	private String imageDirectory; // = "uploads";
@@ -6932,6 +6934,7 @@ public class TrainController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		totalRiskDetailsService.skillRiskDetails(LocalDate.parse(registrationStartDate.substring(0, 10)));
 		System.out.println("结束: " + DateUtils.formatDate(new Date(), "HH:mm:ss"));
 //		System.out.println("第" + index + "行报错");
 		DataListReturn dataListReturn = new DataListReturn();
@@ -7158,6 +7161,8 @@ public class TrainController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		totalRiskDetailsService.skillRiskDetails(LocalDate.parse(registrationStartDate.substring(0, 10)));
 		System.out.println("结束: " + DateUtils.formatDate(new Date(), "HH:mm:ss"));
 //			System.out.println("第" + index + "行报错");
 		DataListReturn dataListReturn = new DataListReturn();
@@ -7493,6 +7498,7 @@ public class TrainController extends BaseController {
 			if (insertList.size() > 0) {
 				trainService.trainPhysicalAchievementDetailsCreatBatch(insertList);
 			}
+			totalRiskDetailsService.skillRiskDetails(LocalDate.parse(DateUtils.formatDate(physical.getCreationDate(), "yyyy-MM-dd")));
 			// 根据训练id查询报名人员list
 			List<TrainPhysicalAchievement> updateGradeList = trainService.updateGradeList(physical.getId());
 			if (updateGradeList.size() > 0) {
@@ -7643,6 +7649,7 @@ public class TrainController extends BaseController {
 			if (insertList.size() > 0) {
 				trainService.trainFirearmAchievementCreatBatch(insertList);
 			}
+			totalRiskDetailsService.skillRiskDetails(LocalDate.parse(DateUtils.formatDate(trainFirearm.getCreationDate(), "yyyy-MM-dd")));
 			trainService.trainFirearmUpdate(trainFirearm);
 		} catch (Exception e) {
 			e.printStackTrace();

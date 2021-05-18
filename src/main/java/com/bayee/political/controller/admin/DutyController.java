@@ -6,6 +6,7 @@ import com.bayee.political.pojo.json.DutyDetailsResult;
 import com.bayee.political.pojo.json.DutyPageResult;
 import com.bayee.political.pojo.json.DutySaveParam;
 import com.bayee.political.service.RiskDutyDealPoliceRecordService;
+import com.bayee.political.service.TotalRiskDetailsService;
 import com.bayee.political.service.UserService;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -31,6 +33,9 @@ public class DutyController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    TotalRiskDetailsService totalRiskDetailsService;
 
     /**
      * 接警执勤
@@ -80,6 +85,7 @@ public class DutyController {
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() +" "+ time, "yyyy-MM-dd HH:mm:ss"));
 
         riskDutyDealPoliceRecordService.insert(record);
+        totalRiskDetailsService.dutyRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -88,6 +94,7 @@ public class DutyController {
         RiskDutyDealPoliceRecord record = riskDutyDealPoliceRecordService.selectByPrimaryKey(id);
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
+        record.setPoliceId(saveParam.getPoliceId());
         record.setType(saveParam.getTypeId());
         record.setContent(saveParam.getDesc());
         record.setDeductionScore(saveParam.getDeductScore());
@@ -96,6 +103,7 @@ public class DutyController {
         record.setUpdateDate(new Date());
 
         riskDutyDealPoliceRecordService.updateByPrimaryKeySelective(record);
+        totalRiskDetailsService.dutyRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -118,8 +126,10 @@ public class DutyController {
 
     @DeleteMapping("/delete/duty")
     public ResponseEntity<?> deleteDuty(@RequestParam("id") Integer id) {
-        riskDutyDealPoliceRecordService.deleteByPrimaryKey(id);
+        RiskDutyDealPoliceRecord record = riskDutyDealPoliceRecordService.selectByPrimaryKey(id);
 
+        riskDutyDealPoliceRecordService.deleteByPrimaryKey(id);
+        totalRiskDetailsService.dutyRiskDetails(record.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 

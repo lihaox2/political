@@ -430,7 +430,13 @@
 		  <artifactId>javase</artifactId>
 		  <version>3.2.1</version>
 	  </dependency>
-	
+
+	  <dependency>
+		  <groupId>com.itextpdf</groupId>
+		  <artifactId>itextpdf</artifactId>
+		  <version>5.4.3</version>
+	  </dependency>
+
   </dependencies>
   <build>
     <finalName>dataumb</finalName>

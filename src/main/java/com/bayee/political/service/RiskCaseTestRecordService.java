@@ -25,7 +25,7 @@ public interface RiskCaseTestRecordService {
  	
  	int insertTest(RiskCaseTestRecord record);
 	
-	Integer isExistence( String policeId,String year, Integer semester);
+	Integer isExistence( String policeId,String year, Integer semester, Integer id);
 
     /**
      * 分页查询执法考试数据

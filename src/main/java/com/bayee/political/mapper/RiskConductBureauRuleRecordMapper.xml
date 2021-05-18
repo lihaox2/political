@@ -18,6 +18,7 @@
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="type_name" property="typeName" jdbcType="VARCHAR" />
     <result column="parentTypeId" property="parentTypeId" jdbcType="INTEGER" />
+    <result column="rootName" property="rootName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, police_id, type, input_time, content, deduction_score, remarks, creation_date, update_date,
@@ -197,35 +198,54 @@
   </select>
 
   <select id="riskConductBureauRuleRecordPage" resultMap="BaseResultMap">
-    select r1.*, (select name from risk_conduct_bureau_rule_type t where t.id = r2.parent_id) as type_name
+    select
+        r1.*, r3.name as type_name, r4.name as rootName
     from risk_conduct_bureau_rule_record r1
         left join risk_conduct_bureau_rule_type r2 on r1.type = r2.id
-				LEFT JOIN `user` u ON r1.police_id=u.police_id
-		<where>
-			<if test="key!=null and key!=''">
-				AND (u.name like CONCAT('%',#{key},'%') OR r1.police_id like CONCAT('%',#{key},'%') OR r1.content LIKE CONCAT('%',#{key},'%'))
-			</if>
-			<if test="type!=null">
-				AND r2.parent_id = #{type}
-			</if>
-		</where> 
-		order by r1.id desc
-      limit #{pageIndex}, #{pageSize}
+        left join risk_conduct_bureau_rule_type r3 on r2.parent_id = r3.id
+        left join risk_conduct_bureau_rule_type r4 on r3.parent_id = r4.id
+        LEFT JOIN `user` u ON r1.police_id=u.police_id
+     where 1 = 1
+    <if test="key!=null and key!=''">
+      AND (u.name like CONCAT('%',#{key},'%') OR r1.police_id like CONCAT('%',#{key},'%') OR r1.content LIKE CONCAT('%',#{key},'%'))
+    </if>
+    <if test="list != null and list.size > 0">
+      AND (r3.id in (
+      <foreach collection="list" item="item" separator=",">
+        #{item}
+      </foreach>
+      ) or r3.parent_id in (
+      <foreach collection="list" item="item" separator=",">
+        #{item}
+      </foreach>
+      ))
+    </if>
+    order by r1.id desc
+    limit #{pageIndex}, #{pageSize}
   </select>
 
   <select id="getRiskConductBureauRuleRecordPageCount" resultType="Integer">
-    select count(1) from risk_conduct_bureau_rule_record r1
+    select
+      count(1)
+    from risk_conduct_bureau_rule_record r1
         left join risk_conduct_bureau_rule_type r2 on r1.type = r2.id
-				LEFT JOIN `user` u ON r1.police_id=u.police_id
-    
-    <where>
-		<if test="key!=null and key!=''">
-			AND (u.name like CONCAT('%',#{key},'%') OR r1.police_id like CONCAT('%',#{key},'%') OR r1.content LIKE CONCAT('%',#{key},'%'))
-		</if>
-		<if test="type!=null">
-			AND r2.parent_id = #{type}
-		</if>
-	</where> 
+        left join risk_conduct_bureau_rule_type r3 on r2.parent_id = r3.id
+        LEFT JOIN `user` u ON r1.police_id=u.police_id
+    where 1 = 1
+    <if test="key!=null and key!=''">
+      AND (u.name like CONCAT('%',#{key},'%') OR r1.police_id like CONCAT('%',#{key},'%') OR r1.content LIKE CONCAT('%',#{key},'%'))
+    </if>
+    <if test="list != null and list.size > 0">
+      AND (r3.id in (
+        <foreach collection="list" item="item" separator=",">
+          #{item}
+        </foreach>
+      ) or r3.parent_id in (
+        <foreach collection="list" item="item" separator=",">
+          #{item}
+        </foreach>
+      ))
+    </if>
   </select>
 
   <select id="countByBureauRuleType" resultType="Integer">
@@ -241,7 +261,7 @@
       rt.parent_id as scoringType, (select name from risk_conduct_bureau_rule_type where id = rt.parent_id) as scoringTypeName,
       rb.type as scoringOption, rb.content as scoringOptionName,
       rb.measures as measures, m.name as measuresName,
-      rb.deduction_score as deductScore, DATE_FORMAT(rb.creation_date,'%Y-%m-%d %H:%i:%s') as date, rb.remarks as remarks
+      rb.deduction_score as deductScore, DATE_FORMAT(rb.creation_date,'%Y-%m-%d') as date, rb.remarks as remarks
     from risk_conduct_bureau_rule_record rb
       left join user u on rb.police_id = u.police_id
       left join measures m on rb.measures = m.id

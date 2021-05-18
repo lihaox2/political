@@ -9,14 +9,17 @@ import com.bayee.political.pojo.json.HealthPageResult;
 import com.bayee.political.pojo.json.HealthSaveParam;
 import com.bayee.political.service.RiskHealthRecordInfoService;
 import com.bayee.political.service.RiskHealthRecordService;
+import com.bayee.political.service.TotalRiskDetailsService;
 import com.bayee.political.service.UserService;
 import com.bayee.political.utils.DataListReturn;
+import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +46,9 @@ public class HealthController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    TotalRiskDetailsService totalRiskDetailsService;
 
     /**
      * 健康管理
@@ -79,6 +85,7 @@ public class HealthController {
             pageResult.setIsHypertension(e.getIsHypertension() == null ? "否" : e.getIsHypertension() == 1 ? "是" : "否");
             pageResult.setIsHyperglycemia(e.getIsHyperglycemia() == null ? "否" : e.getIsHyperglycemia() == 1 ? "是" : "否");
             pageResult.setIsHyperuricemia(e.getIsHyperuricemia() == null ? "否" : e.getIsHyperuricemia() == 1 ? "是" : "否");
+            pageResult.setYear(DateUtils.formatDate(e.getCreationDate(), "yyyy"));
             return pageResult;
         }).collect(Collectors.toList()));
         result.put("totalCount", riskHealthRecordService.getRiskReportRecordPageCount(columnList,typeFlag,key));
@@ -89,23 +96,34 @@ public class HealthController {
 
     @PostMapping("/add/health")
     public ResponseEntity<?> addHealth(@RequestBody HealthSaveParam saveParam) {
-        String year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
+        String monthDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd HH:mm:ss"));
+
+        Integer id = riskHealthRecordService.getByIdAndYear(saveParam.getPoliceId(), saveParam.getYear(), null);
+        if (id != null) {
+            return new ResponseEntity(DataListReturn.error("本警员在该年度内已存在！"), HttpStatus.OK);
+        }
 
         Double bmi = saveParam.getWeight()/Math.pow(saveParam.getHeight()/100,2);
         Integer bmiId = 0;
+        Integer isOverweight = 0;
         if(bmi<=18.40) {
             bmiId = 1;
         }else if(bmi>=18.41 && bmi<=23.99) {
             bmiId = 2;
         }else if(bmi>=24 && bmi<=27.99) {
             bmiId = 3;
+            isOverweight = 1;
         }else if(bmi>=28 && bmi<=100.00) {
             bmiId = 4;
+            isOverweight = 1;
+        }else if (bmi > 100.00) {
+            bmiId = 4;
+            isOverweight = 1;
         }
 
         RiskHealthRecord record = new RiskHealthRecord();
         record.setPoliceId(saveParam.getPoliceId());
-        record.setYear(year);
+        record.setYear(saveParam.getYear());
         record.setHeight(saveParam.getHeight());
         record.setWeight(saveParam.getWeight());
         record.setBmi(bmi);
@@ -137,9 +155,9 @@ public class HealthController {
         record.setOrthopaedicsDescribe(saveParam.getOrthopaedicsDesc());
         record.setTumorAntigenDescribe(saveParam.getTumorAntigenDesc());
         record.setHeartDescribe(saveParam.getHeartDesc());
-        record.setIsOverweight(0);
+        record.setIsOverweight(isOverweight);
         record.setMajorDiseasesDescribe(saveParam.getMajorDiseasesDesc());
-        record.setCreationDate(new Date());
+        record.setCreationDate(DateUtils.parseDate(saveParam.getYear()+monthDate, "yyyy-MM-dd HH:mm:ss"));
         /*record.setUpdateDate();
         record.setBlood();*/
 
@@ -168,31 +186,44 @@ public class HealthController {
         recordInfo.setIsHeart(saveParam.getIsHeart());
         recordInfo.setIsTumorAntigen(saveParam.getIsTumorAntigen());
         recordInfo.setIsOrthopaedics(saveParam.getIsOrthopaedics());
-        recordInfo.setCreationDate(new Date());
+        recordInfo.setCreationDate(DateUtils.parseDate(saveParam.getYear()+monthDate, "yyyy-MM-dd HH:mm:ss"));
 
         riskHealthRecordInfoService.insert(recordInfo);
+        totalRiskDetailsService.healthRiskDetails(LocalDate.parse(saveParam.getYear()+LocalDate.now().format(DateTimeFormatter.ofPattern("-MM-dd"))));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/health/{id}")
     public ResponseEntity<?> updateHealth(@PathVariable("id") Integer id, @RequestBody HealthSaveParam saveParam) {
-        String year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
+//        String year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
+        String monthDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd HH:mm:ss"));
+
+        Integer recordId = riskHealthRecordService.getByIdAndYear(saveParam.getPoliceId(), saveParam.getYear(), id);
+        if (recordId != null) {
+            return new ResponseEntity(DataListReturn.error("本警员在该年度内已存在！"), HttpStatus.OK);
+        }
 
         Double bmi = saveParam.getWeight()/Math.pow(saveParam.getHeight()/100,2);
         Integer bmiId = 0;
+        Integer isOverweight = 0;
         if(bmi<=18.40) {
             bmiId = 1;
         }else if(bmi>=18.41 && bmi<=23.99) {
             bmiId = 2;
         }else if(bmi>=24 && bmi<=27.99) {
             bmiId = 3;
+            isOverweight = 1;
         }else if(bmi>=28 && bmi<=100.00) {
             bmiId = 4;
+            isOverweight = 1;
+        }else if (bmi > 100.00) {
+            bmiId = 4;
+            isOverweight = 1;
         }
 
         RiskHealthRecord record = riskHealthRecordService.selectByPrimaryKey(id);
         record.setPoliceId(saveParam.getPoliceId());
-        record.setYear(year);
+        record.setYear(saveParam.getYear());
         record.setHeight(saveParam.getHeight());
         record.setWeight(saveParam.getWeight());
         record.setBmi(bmi);
@@ -216,6 +247,7 @@ public class HealthController {
         if (saveParam.getSerumUricAcid() > 420) {
             record.setIsHyperuricemia(1);
         }
+        record.setIsOverweight(isOverweight);
         record.setIsProstate(saveParam.getIsProstate() == null ? 0 : saveParam.getIsProstate());
         record.setIsMajorDiseases(saveParam.getIsMajorDiseases() == null ? 0 : saveParam.getIsMajorDiseases());
         record.setIsHeart(saveParam.getIsHeart() == null ? 0 : saveParam.getIsHeart());
@@ -224,9 +256,9 @@ public class HealthController {
         record.setOrthopaedicsDescribe(saveParam.getOrthopaedicsDesc());
         record.setTumorAntigenDescribe(saveParam.getTumorAntigenDesc());
         record.setHeartDescribe(saveParam.getHeartDesc());
-        record.setIsOverweight(0);
         record.setMajorDiseasesDescribe(saveParam.getMajorDiseasesDesc());
         record.setUpdateDate(new Date());
+        record.setCreationDate(DateUtils.parseDate(saveParam.getYear()+monthDate, "yyyy-MM-dd HH:mm:ss"));
         /*record.setUpdateDate();
         record.setBlood();*/
 
@@ -256,10 +288,11 @@ public class HealthController {
             recordInfo.setIsHeart(saveParam.getIsHeart());
             recordInfo.setIsTumorAntigen(saveParam.getIsTumorAntigen());
             recordInfo.setIsOrthopaedics(saveParam.getIsOrthopaedics());
-            recordInfo.setCreationDate(new Date());
+            recordInfo.setCreationDate(DateUtils.parseDate(saveParam.getYear()+monthDate, "yyyy-MM-dd HH:mm:ss"));
 
             riskHealthRecordInfoService.updateByPrimaryKey(recordInfo);
         }
+        totalRiskDetailsService.healthRiskDetails(LocalDate.parse(saveParam.getYear()+LocalDate.now().format(DateTimeFormatter.ofPattern("-MM-dd"))));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -296,15 +329,18 @@ public class HealthController {
         result.setTumorAntigenDesc(recordInfo.getTumorAntigenDesc());
         result.setIsOrthopaedics(recordInfo.getIsOrthopaedics());
         result.setOrthopaedicsDesc(recordInfo.getOrthopaedicsDesc());
+        result.setYear(DateUtils.formatDate(record.getCreationDate(), "yyyy"));
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/health")
     public ResponseEntity<?> deleteHealth(@RequestParam("id") Integer id) {
+        RiskHealthRecord record = riskHealthRecordService.selectByPrimaryKey(id);
+
         riskHealthRecordService.deleteByPrimaryKey(id);
         riskHealthRecordInfoService.deleteByRecordId(id);
-
+        totalRiskDetailsService.healthRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 

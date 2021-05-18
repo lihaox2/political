@@ -392,7 +392,7 @@ where 1=1
   ifnull(sum(amily_evaluation_num), 0) as amily_evaluation_num,
     sum(drink_num) as drink_num,
     sum(study_num) as study_num,
-    sum(work_num) as work_num
+    sum(work_num) as work_num,creation_date
   from risk_report_record where 1=1 and police_id = #{policeId}
   <if test="timeType == 1">
     and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}

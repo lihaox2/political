@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +25,7 @@ import java.util.List;
  */
 @Component
 @EnableScheduling
+@RestController
 public class SkillRiskTask {
 
     @Autowired
@@ -35,6 +38,7 @@ public class SkillRiskTask {
     RiskSkillService riskSkillService;
 
     @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
+//    @RequestMapping("/skill/task")
     public void skillRiskTaskDetails() {
         LocalDate localDate = LocalDate.now();
         List<User> userList = userService.userAllList();

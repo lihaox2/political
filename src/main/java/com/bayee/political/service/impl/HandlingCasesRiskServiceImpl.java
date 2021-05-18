@@ -299,7 +299,7 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 	private RiskCaseTest handlingCasesExamRiskDetails(User user, String date) {
 		String year = date.substring(0, 4);
 		String month = date.substring(5, 7);
-		int semester = Integer.valueOf(month) >= 1 && Integer.valueOf(month) <= 6 ? 1 : 2;
+//		int semester = Integer.valueOf(month) >= 1 && Integer.valueOf(month) <= 6 ? 1 : 2;
 		// 校验规则
 		double passScore = 60d;
 		// 扣分规则
@@ -309,11 +309,11 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 		riskCaseTest.setPoliceId(user.getPoliceId());
 		riskCaseTest.setIndexNum(0d);
 		riskCaseTest.setYear(year);
-		riskCaseTest.setSemester(semester);
+		riskCaseTest.setSemester(Integer.valueOf(month));
 		riskCaseTest.setDeductionScore(0d);
 		riskCaseTest.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 
-		RiskCaseTestRecord record = riskCaseTestRecordMapper.findPoliceCaseData(user.getPoliceId(), date, semester);
+		RiskCaseTestRecord record = riskCaseTestRecordMapper.findPoliceCaseData(user.getPoliceId(), date);
 		if(record != null && record.getId() != null) {
 			if (record.getScore() < passScore) {
 				riskCaseTest.setIndexNum(score);

@@ -27,7 +27,7 @@ public interface RiskCaseTestRecordMapper {
  	List<ScreenDoubeChart> riskCaseTestChart(@Param("policeId") String policeId);
  	
  	Integer isExistence(@Param("policeId") String policeId, @Param("year") String year,
-			@Param("semester") Integer semester);
+			@Param("semester") Integer semester,@Param("id") Integer id);
  	
  	/**
 	 * 查询警员执法数据
@@ -37,8 +37,7 @@ public interface RiskCaseTestRecordMapper {
 	 * @param semester 学期
 	 * @return
 	 */
-	RiskCaseTestRecord findPoliceCaseData(@Param("policeId") String policeId, @Param("date") String date,
-												@Param("semester") Integer semester);
+	RiskCaseTestRecord findPoliceCaseData(@Param("policeId") String policeId, @Param("date") String date);
 
 	// 警员执法考试数据列表查询
 	List<RiskCaseTestRecord> riskCaseTestRecordList(@Param("policeId") String policeId,

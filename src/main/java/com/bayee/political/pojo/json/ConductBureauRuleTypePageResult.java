@@ -9,6 +9,11 @@ public class ConductBureauRuleTypePageResult {
     private Integer id;
 
     /**
+     * 大类名称
+     */
+    private String rootName;
+
+    /**
      * 所属类型
      */
     private String typeName;
@@ -22,6 +27,14 @@ public class ConductBureauRuleTypePageResult {
      * 扣除分数
      */
     private Double deductScore;
+
+    public String getRootName() {
+        return rootName;
+    }
+
+    public void setRootName(String rootName) {
+        this.rootName = rootName;
+    }
 
     public Integer getId() {
         return id;

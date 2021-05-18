@@ -1,6 +1,9 @@
 package com.bayee.political.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,18 +71,27 @@ public class RiskConductVisitRecordServiceImpl implements RiskConductVisitRecord
 	}
 
 	@Override
-	public List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize, Integer bigType,
-																   Integer smallType, String key) {
+	public List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize, String type, String key) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
-		return riskConductVisitRecordMapper.riskConductVisitRecordPage(pageIndex, pageSize, bigType, smallType, key);
+		List<Integer> typeList = new ArrayList<>();
+		if (type != null && !"".equals(type)) {
+			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
+		}
+
+		return riskConductVisitRecordMapper.riskConductVisitRecordPage(pageIndex, pageSize, typeList, key);
 	}
 
 	@Override
-	public Integer getRiskConductVisitRecordPageCount(Integer bigType, Integer smallType, String key) {
-		return riskConductVisitRecordMapper.getRiskConductVisitRecordPageCount(bigType, smallType, key);
+	public Integer getRiskConductVisitRecordPageCount(String type, String key) {
+		List<Integer> typeList = new ArrayList<>();
+		if (type != null && !"".equals(type)) {
+			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
+		}
+
+		return riskConductVisitRecordMapper.getRiskConductVisitRecordPageCount(typeList, key);
 	}
 
 	@Override

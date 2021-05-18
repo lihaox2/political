@@ -165,7 +165,7 @@
     left join user u on u.police_id = a.police_id
     where 1 = 1
     <if test="key != null and key != ''">
-        and a.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or a.content like concat('%', #{key}, '%')
+        and (a.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or a.content like concat('%', #{key}, '%'))
     </if>
     <if test="type != null">
         and a.type = #{type}
@@ -180,7 +180,7 @@
     left join user u on u.police_id = a.police_id
     where 1 = 1
     <if test="key != null and key != ''">
-      and a.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or a.content like concat('%', #{key}, '%')
+      and (a.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or a.content like concat('%', #{key}, '%'))
     </if>
     <if test="type != null">
       and a.type = #{type}

@@ -1,11 +1,14 @@
 package com.bayee.political.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.bayee.political.domain.*;
+import com.bayee.political.service.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,36 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bayee.political.domain.RiskCaseAbilityRecord;
-import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
-import com.bayee.political.domain.RiskCaseTestRecord;
-import com.bayee.political.domain.RiskConductBureauRuleRecord;
-import com.bayee.political.domain.RiskConductVisitRecord;
-import com.bayee.political.domain.RiskDrinkRecord;
-import com.bayee.political.domain.RiskDutyDealPoliceRecord;
-import com.bayee.political.domain.RiskHealth;
-import com.bayee.political.domain.RiskHealthRecord;
-import com.bayee.political.domain.RiskHealthRecordInfo;
-import com.bayee.political.domain.RiskReportRecord;
-import com.bayee.political.domain.RiskStutyActivitiesPartyRecord;
-import com.bayee.political.domain.RiskStutyPalmSchoolRecord;
-import com.bayee.political.domain.RiskStutyUnitTrainRecord;
 import com.bayee.political.mapper.RiskDrinkRecordMapper;
-import com.bayee.political.service.RiskAlarmService;
-import com.bayee.political.service.RiskCaseAbilityRecordService;
-import com.bayee.political.service.RiskCaseLawEnforcementRecordService;
-import com.bayee.political.service.RiskCaseTestRecordService;
-import com.bayee.political.service.RiskConductBureauRuleRecordService;
-import com.bayee.political.service.RiskConductVisitRecordService;
-import com.bayee.political.service.RiskDutyDealPoliceRecordService;
-import com.bayee.political.service.RiskHealthRecordInfoService;
-import com.bayee.political.service.RiskHealthRecordService;
-import com.bayee.political.service.RiskReportRecordService;
-import com.bayee.political.service.RiskService;
-import com.bayee.political.service.RiskStutyActivitiesPartyRecordService;
-import com.bayee.political.service.RiskStutyPalmSchoolRecordService;
-import com.bayee.political.service.RiskStutyUnitTrainRecordService;
-import com.bayee.political.service.UserService;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
 import com.bayee.political.utils.GetExcel;
@@ -105,6 +79,9 @@ public class RiskExportExcelDataController {
 	@Autowired
     RiskHealthRecordInfoService riskHealthRecordInfoService;
 
+	@Autowired
+	TotalRiskDetailsService totalRiskDetailsService;
+
 	/**
 	 * 	导入Excel警员健康数据
 	 * 
@@ -125,11 +102,22 @@ public class RiskExportExcelDataController {
 		}
 		
 		// 记录错误行
-		int index = 0;
+		int index = 1;
 		try {
 			for (List<String> excel : readExcel) {
+				String policeId = excel.get(5);
+				if (policeId != null && !"".equals(policeId)) {
+					User user = userService.findByPoliceId(policeId);
+
+					if (user == null || user.getName() == null) {
+						throw new RuntimeException();
+					}
+				}else {
+					throw new RuntimeException();
+				}
+
 				System.out.println(excel);
-				Integer riskHealthRecordId=riskHealthRecordService.getByIdAndYear(excel.get(5), yearStr);
+				Integer riskHealthRecordId=riskHealthRecordService.getByIdAndYear(excel.get(5), yearStr, null);
 				// 累计错误行
 				index++;
 				// 警员体检
@@ -157,14 +145,17 @@ public class RiskExportExcelDataController {
 
 					Double bmi=Double.valueOf(excel.get(7))/Math.pow(Double.valueOf(excel.get(6))/100,2);
 					riskHealthRecord.setBmi(bmi);
+					riskHealthRecord.setIsOverweight(0);
 					if(bmi<=18.40) {
 						riskHealthRecord.setBmiId(1);
 					}else if(bmi>=18.41 && bmi<=23.99) {
 						riskHealthRecord.setBmiId(2);
 					}else if(bmi>=24 && bmi<=27.99) {
 						riskHealthRecord.setBmiId(3);
+						riskHealthRecord.setIsOverweight(1);
 					}else if(bmi>=28 && bmi<=100.00) {
 						riskHealthRecord.setBmiId(4);
+						riskHealthRecord.setIsOverweight(1);
 					}
 				}
 				
@@ -225,48 +216,55 @@ public class RiskExportExcelDataController {
 						riskHealthRecord.setIsHyperuricemia(1);
 					}
 				}
-				
-				if(!excel.get(18).isEmpty()) {
 
+				riskHealthRecord.setIsProstate(0);
+				recordInfo.setIsProstate(0);
+				if(!excel.get(18).isEmpty()) {
 			        recordInfo.setProstateDesc(excel.get(18));
 					if(excel.get(18).equals("异常")) {
 						riskHealthRecord.setIsProstate(1);
-
 				        recordInfo.setIsProstate(1);
 					}
 				}
 				
 				if(!excel.get(19).isEmpty()) {
 					riskHealthRecord.setIsMajorDiseases(1);
-
 			        recordInfo.setIsMajorDiseases(1);
+				}else {
+					riskHealthRecord.setIsMajorDiseases(0);
+					recordInfo.setIsMajorDiseases(0);
 				}
 				riskHealthRecord.setMajorDiseasesDescribe(excel.get(19));
-				
 		        recordInfo.setMajorDiseasesDesc(excel.get(19));
-		        
-				
+
+
 				if(!excel.get(20).isEmpty()) {
 					riskHealthRecord.setIsHeart(1);
-
 			        recordInfo.setIsHeart(1);
+				}else {
+					riskHealthRecord.setIsHeart(0);
+					recordInfo.setIsHeart(0);
 				}
-				
 				riskHealthRecord.setHeartDescribe(excel.get(20));
+				recordInfo.setHeartDesc(excel.get(20));
 
-		        recordInfo.setHeartDesc(excel.get(20));
 				
 				if(!excel.get(21).isEmpty()) {
 					riskHealthRecord.setIsTumorAntigen(1);
 			        recordInfo.setIsTumorAntigen(1);
+				}else {
+					riskHealthRecord.setIsTumorAntigen(0);
+					recordInfo.setIsTumorAntigen(0);
 				}
 				riskHealthRecord.setTumorAntigenDescribe(excel.get(21));
 		        recordInfo.setTumorAntigenDesc(excel.get(21));
 				
 				if(!excel.get(22).isEmpty()) {
 					riskHealthRecord.setIsOrthopaedics(1);
-
 			        recordInfo.setIsOrthopaedics(1);
+				}else {
+					riskHealthRecord.setIsOrthopaedics(0);
+					recordInfo.setIsOrthopaedics(0);
 				}
 				riskHealthRecord.setOrthopaedicsDescribe(excel.get(22));
 		        recordInfo.setOrthopaedicsDesc(excel.get(22));
@@ -284,7 +282,7 @@ public class RiskExportExcelDataController {
 			        riskHealthRecordInfoService.insert(recordInfo);
 				}else {
 					riskHealthRecord.setCreationDate(new Date());
-					riskHealthRecordService.insertSelective(riskHealthRecord);
+					riskHealthRecordService.insert(riskHealthRecord);
 					
 			        recordInfo.setRecordId(riskHealthRecord.getId());
 			        recordInfo.setCreationDate(new Date());
@@ -332,13 +330,22 @@ public class RiskExportExcelDataController {
 		readExcel.remove(0);
 		String yearMonth=DateUtils.formatDate(new Date(),"yyyy-MM");
 		// 记录错误行
-		int index = 0;
+		int index = 1;
 
 		try {
 
 			for (List<String> excel : readExcel) {
-				
 				index++;
+				String policeId = excel.get(3);
+				if (policeId != null && !"".equals(policeId)) {
+					User user = userService.findByPoliceId(policeId);
+
+					if (user == null || user.getName() == null) {
+						throw new RuntimeException();
+					}
+				}else {
+					throw new RuntimeException();
+				}
 				
 				Integer id=riskStutyPalmSchoolRecordService.getByIdAndYearMonth(yearMonth, excel.get(3));
 
@@ -405,13 +412,22 @@ public class RiskExportExcelDataController {
 		readExcel.remove(0);
 		String yearMonth=DateUtils.formatDate(new Date(),"yyyy-MM");
 		// 记录错误行
-		int index = 0;
+		int index = 1;
 
 		try {
 
 			for (List<String> excel : readExcel) {
-				
 				index++;
+				String policeId = excel.get(2);
+				if (policeId != null && !"".equals(policeId)) {
+					User user = userService.findByPoliceId(policeId);
+
+					if (user == null || user.getName() == null) {
+						throw new RuntimeException();
+					}
+				}else {
+					throw new RuntimeException();
+				}
 				
 				Integer id=riskStutyUnitTrainRecordService.getByIdAndYearMonth(yearMonth, excel.get(2));
 				
@@ -484,13 +500,22 @@ public class RiskExportExcelDataController {
 		readExcel.remove(0);
 		String yearMonth=DateUtils.formatDate(new Date(),"yyyy-MM");
 		// 记录错误行
-		int index = 0;
+		int index = 1;
 
 		try {
 
 			for (List<String> excel : readExcel) {
-				
 				index++;
+				String policeId = excel.get(2);
+				if (policeId != null && !"".equals(policeId)) {
+					User user = userService.findByPoliceId(policeId);
+
+					if (user == null || user.getName() == null) {
+						throw new RuntimeException();
+					}
+				}else {
+					throw new RuntimeException();
+				}
 				
 				Integer id=riskStutyActivitiesPartyRecordService.getByIdAndYearMonth(yearMonth, excel.get(2));
 				
@@ -554,12 +579,22 @@ public class RiskExportExcelDataController {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
 		//readExcel.remove(0);
 		// 记录错误行
-		int index = 0;
+		int index = 1;
 
 		try {
 
 			for (List<String> excel : readExcel) {
-				
+				String policeId = excel.get(0);
+				if (policeId != null && !"".equals(policeId)) {
+					User user = userService.findByPoliceId(policeId);
+
+					if (user == null || user.getName() == null) {
+						throw new RuntimeException();
+					}
+				}else {
+					throw new RuntimeException();
+				}
+
 				if(excel.get(2).equals("jcj")) {
 					RiskDutyDealPoliceRecord riskDutyDealPoliceRecord=new RiskDutyDealPoliceRecord();
 					
@@ -595,8 +630,8 @@ public class RiskExportExcelDataController {
 					
 					riskCaseLawEnforcementRecordService.insertSelective(riskCaseLawEnforcementRecord);
 				}
-				
-				
+
+				totalRiskDetailsService.dutyRiskDetails(policeId, LocalDate.parse(excel.get(4).substring(0, 10)));
 			}
 
 		} catch (Exception e) {
@@ -633,12 +668,22 @@ public class RiskExportExcelDataController {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
 		//readExcel.remove(0);
 		// 记录错误行
-		int index = 0;
+		int index = 1;
 
 		try {
 
 			for (List<String> excel : readExcel) {
-				
+				String policeId = excel.get(0);
+				if (policeId != null && !"".equals(policeId)) {
+					User user = userService.findByPoliceId(policeId);
+
+					if (user == null || user.getName() == null) {
+						throw new RuntimeException();
+					}
+				}else {
+					throw new RuntimeException();
+				}
+
 				RiskDrinkRecord riskDrinkRecord = new RiskDrinkRecord();
 				riskDrinkRecord.setPoliceId(excel.get(0));
 				riskDrinkRecord.setDrinkDate(DateUtils.toDate2(excel.get(2)));
@@ -696,15 +741,25 @@ public class RiskExportExcelDataController {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
 		//readExcel.remove(0);
 		// 记录错误行
-		int index = 0;
+		int index = 1;
 
 		try {
 
 			for (List<String> excel : readExcel) {
 				index++;
+				String policeId = excel.get(4);
+				if (policeId != null && !"".equals(policeId)) {
+					User user = userService.findByPoliceId(policeId);
+
+					if (user == null || user.getName() == null) {
+						throw new RuntimeException();
+					}
+				}else {
+					throw new RuntimeException();
+				}
+
 				RiskCaseTestRecord riskCaseTestRecord = new RiskCaseTestRecord();
-				
-				
+
 				riskCaseTestRecord.setYear(excel.get(0));
 				//riskCaseTestRecord.setType(excel.get(1));
 				riskCaseTestRecord.setSemester(Double.valueOf(excel.get(1)).intValue());
@@ -718,16 +773,22 @@ public class RiskExportExcelDataController {
 				}else {
 					riskCaseTestRecord.setDeductionScore(0.0);
 				}
-				Integer id=riskCaseTestRecordService.isExistence(excel.get(4), excel.get(0), Double.valueOf(excel.get(1)).intValue());
-				
+				Integer id=riskCaseTestRecordService.isExistence(excel.get(4), excel.get(0), Double.valueOf(excel.get(1)).intValue(), null);
+
+				String lastTime = DateUtils.formatDate(new Date(), "-MM-dd HH:mm:ss");
+				String lastDate = DateUtils.formatDate(new Date(), "-MM-dd");
+				riskCaseTestRecord.setCreationDate(DateUtils.parseDate(excel.get(0)+lastTime, "yyyy-MM-dd"));
 				if(id!=null) {
 					riskCaseTestRecord.setId(id);
 					riskCaseTestRecord.setUpdateDate(new Date());
+					riskCaseTestRecord.setCreationDate(DateUtils.parseDate(excel.get(0)+lastTime, "yyyy-MM-dd"));
 					riskCaseTestRecordService.updateByPrimaryKeySelective(riskCaseTestRecord);
 				}else {
-					riskCaseTestRecord.setCreationDate(new Date());
+					riskCaseTestRecord.setCreationDate(DateUtils.parseDate(excel.get(0)+lastTime, "yyyy-MM-dd"));
 					riskCaseTestRecordService.insertTest(riskCaseTestRecord);
 				}
+
+				totalRiskDetailsService.caseRiskDetails(policeId, LocalDate.parse(excel.get(0) + lastDate));
 			}
 
 		} catch (Exception e) {
@@ -763,15 +824,25 @@ public class RiskExportExcelDataController {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
 		//readExcel.remove(0);
 		// 记录错误行
-		int index = 0;
+		int index = 1;
 
 		try {
 
 			for (List<String> excel : readExcel) {
 				index++;
 				RiskCaseAbilityRecord riskCaseAbilityRecord = new RiskCaseAbilityRecord();
-				riskCaseAbilityRecord.setYear(excel.get(0));
-				riskCaseAbilityRecord.setPoliceId(excel.get(2));
+				String policeId = excel.get(2);
+				if (policeId != null && !"".equals(policeId)) {
+					User user = userService.findByPoliceId(policeId);
+
+					if (user == null || user.getName() == null) {
+						throw new RuntimeException();
+					}
+				}else {
+					throw new RuntimeException();
+				}
+
+				riskCaseAbilityRecord.setPoliceId(policeId);
 				riskCaseAbilityRecord.setReconsiderationLitigationStatus(Double.valueOf(excel.get(3)).intValue());
 				riskCaseAbilityRecord.setLetterVisitStatus(Double.valueOf(excel.get(4)).intValue());
 				riskCaseAbilityRecord.setLawEnforcementFaultStatus(Double.valueOf(excel.get(5)).intValue());
@@ -781,16 +852,27 @@ public class RiskExportExcelDataController {
 				riskCaseAbilityRecord.setBasicTestStatus(Double.valueOf(excel.get(9)).intValue());
 				riskCaseAbilityRecord.setHighTestStatus(Double.valueOf(excel.get(10)).intValue());
 				riskCaseAbilityRecord.setJudicialTestStatus(Double.valueOf(excel.get(11)).intValue());
-				Integer id=riskCaseAbilityRecordService.getByYearAndPoliceId(excel.get(0),excel.get(2));
-				
+
+				String columnDate = excel.get(0);
+				Integer id = null;
+				if (columnDate != null && !"".equals(columnDate)) {
+					riskCaseAbilityRecord.setYear(columnDate.substring(0, 4));
+					id = riskCaseAbilityRecordService.getByYearAndPoliceId(columnDate, policeId);
+				}else {
+					throw new RuntimeException();
+				}
+
 				if(id!=null) {
 					riskCaseAbilityRecord.setId(id);
 					riskCaseAbilityRecord.setUpdateDate(new Date());
+					riskCaseAbilityRecord.setCreationDate(DateUtils.parseDate(columnDate, "yyyy-MM-dd"));
 					riskCaseAbilityRecordService.updateByPrimaryKeySelective(riskCaseAbilityRecord);
 				}else {
-					riskCaseAbilityRecord.setCreationDate(DateUtils.toDate2(excel.get(0)));
+					riskCaseAbilityRecord.setCreationDate(DateUtils.parseDate(columnDate, "yyyy-MM-dd"));
 					riskCaseAbilityRecordService.insertSelective(riskCaseAbilityRecord);
 				}
+
+				totalRiskDetailsService.caseRiskDetails(policeId, LocalDate.parse(columnDate));
 			}
 
 		} catch (Exception e) {
@@ -826,13 +908,23 @@ public class RiskExportExcelDataController {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
 		//readExcel.remove(0);
 		// 记录错误行
-		int index = 0;
+		int index = 1;
 
 		try {
 
 			for (List<String> excel : readExcel) {
 				index++;
-				
+				String policeId = excel.get(0);
+				if (policeId != null && !"".equals(policeId)) {
+					User user = userService.findByPoliceId(policeId);
+
+					if (user == null || user.getName() == null) {
+						throw new RuntimeException();
+					}
+				}else {
+					throw new RuntimeException();
+				}
+
 				RiskConductBureauRuleRecord riskConductBureauRuleRecord = new RiskConductBureauRuleRecord();
 				if(excel.get(0).equals("辅警")  ||  excel.get(0).equals("文员")) {
 					continue;
@@ -862,6 +954,8 @@ public class RiskExportExcelDataController {
 				
 				riskConductBureauRuleRecord.setCreationDate(DateUtils.toDate2(excel.get(5)));
 				riskConductBureauRuleRecordService.insertSelective(riskConductBureauRuleRecord);
+
+//				totalRiskDetailsService.conductRiskDetails(policeId, LocalDate.parse(columnDate));
 			}
 
 		} catch (Exception e) {
@@ -898,12 +992,23 @@ public class RiskExportExcelDataController {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
 		//readExcel.remove(0);
 		// 记录错误行
-		int index = 0;
+		int index = 1;
 
 		try {
 
 			for (List<String> excel : readExcel) {
 				index++;
+				String policeId = excel.get(0);
+				if (policeId != null && !"".equals(policeId)) {
+					User user = userService.findByPoliceId(policeId);
+
+					if (user == null || user.getName() == null) {
+						throw new RuntimeException();
+					}
+				}else {
+					throw new RuntimeException();
+				}
+
 				//
 				RiskConductVisitRecord riskConductVisitRecord=new RiskConductVisitRecord();
 				
@@ -954,6 +1059,8 @@ public class RiskExportExcelDataController {
 				riskConductVisitRecord.setRemarks(excel.get(7));
 				riskConductVisitRecord.setCreationDate(DateUtils.toDate2(excel.get(6)));
 				riskConductVisitRecordService.insertSelective(riskConductVisitRecord);
+
+				totalRiskDetailsService.conductRiskDetails(policeId, LocalDate.parse(excel.get(6)));
 			}
 
 		} catch (Exception e) {

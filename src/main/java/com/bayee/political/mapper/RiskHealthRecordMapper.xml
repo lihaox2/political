@@ -316,7 +316,12 @@
   </update>
   
    <select id="getByIdAndYear" resultType="Integer">
-	select id from risk_health_record r where r.year=#{year} AND r.police_id=#{policeId}
+	select id from risk_health_record r
+	where r.year=#{year} AND r.police_id=#{policeId}
+	<if test="id != null">
+      and r.id != #{id}
+    </if>
+	limit 1
   </select>
   
   <select id="selectYearAll" resultMap="BaseResultMap">
@@ -328,7 +333,7 @@
         left join user u on u.police_id=r.police_id
     
     <where>
-    	<if test="key !=null">
+    	<if test="key != null and key != ''">
     		AND (u.`name` like CONCAT('%',#{key},'%') or r.police_id like CONCAT('%',#{key},'%'))
     	</if>
     	<if test="columnList !=null and typeFlag!=null">
@@ -346,7 +351,7 @@
     left join user u on u.police_id=r.police_id
 
     <where>
-      <if test="key !=null">
+      <if test="key !=null and key != ''">
         AND (u.`name` like CONCAT('%',#{key},'%') or r.police_id like CONCAT('%',#{key},'%'))
       </if>
       <if test="columnList !=null and typeFlag!=null">

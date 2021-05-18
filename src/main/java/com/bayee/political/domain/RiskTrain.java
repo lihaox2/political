@@ -29,6 +29,32 @@ public class RiskTrain {
 
     private Date updateDate;
 
+    /**
+     * 综合训练分数
+     */
+    private Double physicalScore;
+
+    /**
+     * 射击训练分数
+     */
+    private Double firearmScore;
+
+    public Double getPhysicalScore() {
+        return physicalScore;
+    }
+
+    public void setPhysicalScore(Double physicalScore) {
+        this.physicalScore = physicalScore;
+    }
+
+    public Double getFirearmScore() {
+        return firearmScore;
+    }
+
+    public void setFirearmScore(Double firearmScore) {
+        this.firearmScore = firearmScore;
+    }
+
     public Integer getId() {
         return id;
     }

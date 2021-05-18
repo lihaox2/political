@@ -20,4 +20,20 @@ public interface RiskSkillService {
      */
     RiskTrain riskSkillDetails(User user, String date);
 
+    /**
+     *
+     * @param policeId
+     * @param date
+     * @return
+     */
+    Double getPolicePhysicalDeductionScore(String policeId, String date);
+
+    /**
+     *
+     * @param policeId
+     * @param date
+     * @return
+     */
+    Double getPoliceFirearmDeductionScore(String policeId, String date);
+
 }

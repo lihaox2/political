@@ -44,14 +44,14 @@ public interface RiskConductBureauRuleRecordMapper {
      */
     List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(@Param("pageIndex") Integer pageIndex,
                                                                       @Param("pageSize") Integer pageSize,
-                                                                      @Param("type") Integer type,
+                                                                      @Param("list") List<Integer> type,
                                                                       @Param("key") String key);
 
     /**
      * 统计分页数据条数
      * @return
      */
-    Integer getRiskConductBureauRuleRecordPageCount(@Param("type") Integer type,@Param("key") String key);
+    Integer getRiskConductBureauRuleRecordPageCount(@Param("list") List<Integer> type,@Param("key") String key);
 
     /**
      * 根据局规类型统计数据数据条数

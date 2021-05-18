@@ -63,4 +63,9 @@ public class RiskCaseAbilityRecordServiceImpl implements RiskCaseAbilityRecordSe
 		return riskCaseAbilityRecordMapper.getRiskCaseAbilityRecordPageCount(columnList, typeFlag, key, date);
 	}
 
+	@Override
+	public Integer getIdByDateAndPoliceId(String date, String policeId, Integer id) {
+		return riskCaseAbilityRecordMapper.getIdByDateAndPoliceId(date, policeId, id);
+	}
+
 }

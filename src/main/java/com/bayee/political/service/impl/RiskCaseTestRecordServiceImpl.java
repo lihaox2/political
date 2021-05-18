@@ -66,9 +66,9 @@ public class RiskCaseTestRecordServiceImpl implements RiskCaseTestRecordService{
 	}
 
 	@Override
-	public Integer isExistence(String policeId, String year, Integer semester) {
+	public Integer isExistence(String policeId, String year, Integer semester, Integer id) {
 		// TODO Auto-generated method stub
-		return riskCaseTestRecordMapper.isExistence(policeId, year, semester);
+		return riskCaseTestRecordMapper.isExistence(policeId, year, semester,id);
 	}
 
 	@Override

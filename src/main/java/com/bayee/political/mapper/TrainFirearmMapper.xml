@@ -62,7 +62,8 @@
     delete from train_firearm
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="trainFirearmAdd" parameterType="com.bayee.political.domain.TrainFirearm" >
+  <insert id="trainFirearmAdd" parameterType="com.bayee.political.domain.TrainFirearm" useGeneratedKeys="true"
+          keyProperty="id">
     insert into train_firearm (type,department_id, name, place, 
       registration_start_date, registration_end_date, 
       train_start_date, train_end_date, train_firearm_type, is_all, 

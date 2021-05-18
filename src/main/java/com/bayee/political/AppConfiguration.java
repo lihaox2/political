@@ -87,7 +87,7 @@ public class AppConfiguration {
 	public SqlSessionFactory sqlSessionFactory() throws Exception {
 		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
 		sqlSessionFactory.setDataSource(dataSource());
-		//sqlSessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
+		sqlSessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
 		sqlSessionFactory.getObject().getConfiguration().addMapper(DepartmentMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(HomePageMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(LeaveProcessCodeMapper.class);
@@ -216,6 +216,7 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductBureauRuleTypeMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskHealthRecordInfoMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskTrendsMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(MeasuresMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -244,6 +245,12 @@ public class AppConfiguration {
 				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		velocityEngine.setVelocityPropertiesMap(velocityPropertiesMap);
 		return velocityEngine.createVelocityEngine();
+	}
+
+	@Bean
+	public MeasuresMapper measuresMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(MeasuresMapper.class);
 	}
 
 	@Bean

@@ -2,6 +2,7 @@ package com.bayee.political.service;
 
 
 import com.bayee.political.domain.RiskCaseAbilityRecord;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -40,5 +41,13 @@ public interface RiskCaseAbilityRecordService {
 	 * @return
 	 */
 	Integer getRiskCaseAbilityRecordPageCount(List<String> columnList, Integer typeFlag, String key, String date);
+
+	/**
+	 * 根据时间和警号查询id
+	 * @param date
+	 * @param policeId
+	 * @return
+	 */
+	Integer getIdByDateAndPoliceId(String date, String policeId, Integer id);
 
 }

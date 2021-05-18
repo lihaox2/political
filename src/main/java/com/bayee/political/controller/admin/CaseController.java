@@ -5,10 +5,7 @@ import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
 import com.bayee.political.domain.RiskCaseTestRecord;
 import com.bayee.political.domain.User;
 import com.bayee.political.pojo.json.*;
-import com.bayee.political.service.RiskCaseAbilityRecordService;
-import com.bayee.political.service.RiskCaseLawEnforcementRecordService;
-import com.bayee.political.service.RiskCaseTestRecordService;
-import com.bayee.political.service.UserService;
+import com.bayee.political.service.*;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
 import org.apache.ibatis.annotations.Delete;
@@ -45,6 +42,9 @@ public class CaseController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    TotalRiskDetailsService totalRiskDetailsService;
 
     /**
      * 执法能力
@@ -129,7 +129,7 @@ public class CaseController {
             if (user != null) {
                 pageResult.setPoliceName(user.getName());
             }
-            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM"));
+            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd"));
             pageResult.setPassCount(passCount);
             pageResult.setErrorCount(errorCount);
             return pageResult;
@@ -158,7 +158,12 @@ public class CaseController {
         record.setYear(DateUtils.formatDate(DateUtils.parseDate(caseAbilitySaveParam.getDate(), "yyyy-MM-dd"), "yyyy"));
         record.setCreationDate(DateUtils.parseDate(caseAbilitySaveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
 
+        Integer id = riskCaseAbilityRecordService.getIdByDateAndPoliceId(caseAbilitySaveParam.getDate(), record.getPoliceId(), null);
+        if (id != null) {
+            return new ResponseEntity(DataListReturn.error("本警员在该日期内已存在！"), HttpStatus.OK);
+        }
         riskCaseAbilityRecordService.insertSelective(record);
+        totalRiskDetailsService.caseRiskDetails(caseAbilitySaveParam.getPoliceId(), LocalDate.parse(caseAbilitySaveParam.getDate()));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -168,6 +173,7 @@ public class CaseController {
         RiskCaseAbilityRecord record = riskCaseAbilityRecordService.selectByPrimaryKey(id);
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
+        record.setPoliceId(caseAbilitySaveParam.getPoliceId());
         record.setReconsiderationLitigationStatus(caseAbilitySaveParam.getReconsiderationLitigationStatus());
         record.setLetterVisitStatus(caseAbilitySaveParam.getLetterVisitStatus());
         record.setLawEnforcementFaultStatus(caseAbilitySaveParam.getLawEnforcementFaultStatus());
@@ -181,7 +187,12 @@ public class CaseController {
         record.setCreationDate(DateUtils.parseDate(caseAbilitySaveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
         record.setUpdateDate(new Date());
 
+        Integer recordId = riskCaseAbilityRecordService.getIdByDateAndPoliceId(caseAbilitySaveParam.getDate(), record.getPoliceId(), id);
+        if (recordId != null) {
+            return new ResponseEntity(DataListReturn.error("本警员在该日期内已存在！"), HttpStatus.OK);
+        }
         riskCaseAbilityRecordService.updateByPrimaryKeySelective(record);
+        totalRiskDetailsService.caseRiskDetails(caseAbilitySaveParam.getPoliceId(), LocalDate.parse(caseAbilitySaveParam.getDate()));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -210,8 +221,10 @@ public class CaseController {
 
     @DeleteMapping("/delete/ability")
     public ResponseEntity<?> deleteCaseAbility(@RequestParam("id") Integer id) {
-        riskCaseAbilityRecordService.deleteByPrimaryKey(id);
+        RiskCaseAbilityRecord record = riskCaseAbilityRecordService.selectByPrimaryKey(id);
 
+        riskCaseAbilityRecordService.deleteByPrimaryKey(id);
+        totalRiskDetailsService.caseRiskDetails(record.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -264,6 +277,7 @@ public class CaseController {
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
 
         riskCaseLawEnforcementRecordService.insert(record);
+        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -281,6 +295,7 @@ public class CaseController {
         oldRecord.setUpdateDate(new Date());
 
         riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(oldRecord);
+        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -304,8 +319,10 @@ public class CaseController {
 
     @DeleteMapping("/delete/law/enforcement")
     public ResponseEntity<?> deleteCaseLawEnforcement(@RequestParam("id") Integer id) {
-        riskCaseLawEnforcementRecordService.deleteByPrimaryKey(id);
+        RiskCaseLawEnforcementRecord record = riskCaseLawEnforcementRecordService.selectByPrimaryKey(id);
 
+        riskCaseLawEnforcementRecordService.deleteByPrimaryKey(id);
+        totalRiskDetailsService.caseRiskDetails(record.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -346,15 +363,16 @@ public class CaseController {
 
     @PostMapping("/add/test")
     public ResponseEntity<?> addCaseTest(@RequestBody CaseTestSaveParam saveParam) {
-        String dateLast = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).substring(7);
+        String dateLast = LocalDateTime.now().format(DateTimeFormatter.ofPattern("-dd HH:mm:ss"));
         String month = "01";
-        if (saveParam.getSemester() == 1) {
-            month = "04";
+        if (saveParam.getSemester() < 10) {
+            month = "0"+saveParam.getSemester();
         }else {
-            month = "08";
+            month = saveParam.getSemester()+"";
         }
         String date = saveParam.getYear() + "-" + month + dateLast;
         RiskCaseTestRecord record = new RiskCaseTestRecord();
+        record.setDeductionScore(saveParam.getScore() >= 60 ? 0d : 2d);
         record.setPoliceId(saveParam.getPoliceId());
         record.setSemester(saveParam.getSemester());
         record.setScore(saveParam.getScore());
@@ -362,22 +380,28 @@ public class CaseController {
         record.setYear(saveParam.getYear());
         record.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd HH:mm:ss"));
 
+        Integer id = riskCaseTestRecordService.isExistence(saveParam.getPoliceId(), saveParam.getYear(), saveParam.getSemester(), null);
+        if (id != null) {
+            return new ResponseEntity(DataListReturn.error("本警员在该年度同一期内已存在！"), HttpStatus.OK);
+        }
         riskCaseTestRecordService.insertTest(record);
+        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/test/{id}")
     public ResponseEntity<?> updateCaseTest(@PathVariable("id") Integer id,
                                             @RequestBody CaseTestSaveParam saveParam) {
-        String dateLast = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).substring(7);
+        String dateLast = LocalDateTime.now().format(DateTimeFormatter.ofPattern("-dd HH:mm:ss"));
         String month = "01";
-        if (saveParam.getSemester() == 1) {
-            month = "04";
+        if (saveParam.getSemester() < 10) {
+            month = "0"+saveParam.getSemester();
         }else {
-            month = "08";
+            month = saveParam.getSemester()+"";
         }
         String date = saveParam.getYear() + "-" + month + dateLast;
         RiskCaseTestRecord oldRecord = riskCaseTestRecordService.selectByPrimaryKey(id);
+        oldRecord.setDeductionScore(saveParam.getScore() >= 60 ? 0d : 2d);
         oldRecord.setPoliceId(saveParam.getPoliceId());
         oldRecord.setSemester(saveParam.getSemester());
         oldRecord.setScore(saveParam.getScore());
@@ -386,7 +410,12 @@ public class CaseController {
         oldRecord.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd HH:mm:ss"));
         oldRecord.setUpdateDate(new Date());
 
+        Integer recordId = riskCaseTestRecordService.isExistence(saveParam.getPoliceId(), saveParam.getYear(), saveParam.getSemester(), id);
+        if (recordId != null) {
+            return new ResponseEntity(DataListReturn.error("本警员在该年度同一期内已存在！"), HttpStatus.OK);
+        }
         riskCaseTestRecordService.updateByPrimaryKey(oldRecord);
+        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(DateUtils.formatDate(oldRecord.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -409,8 +438,10 @@ public class CaseController {
 
     @DeleteMapping("/delete/test")
     public ResponseEntity<?> deleteCaseTest(@RequestParam("id") Integer id) {
-        riskCaseTestRecordService.deleteByPrimaryKey(id);
+        RiskCaseTestRecord record = riskCaseTestRecordService.selectByPrimaryKey(id);
 
+        riskCaseTestRecordService.deleteByPrimaryKey(id);
+        totalRiskDetailsService.caseRiskDetails(record.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 

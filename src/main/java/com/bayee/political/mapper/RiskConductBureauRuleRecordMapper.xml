@@ -270,4 +270,19 @@
     where rb.id = #{id}
   </select>
 
+  <select id="countAll" resultType="Integer">
+    select count(1) from risk_conduct_bureau_rule_record
+  </select>
+
+  <select id="getConductBureauChart" resultType="com.bayee.political.domain.ScreenChart">
+    select a.id as id, a.name, b.count as value from risk_conduct_bureau_rule_type a
+      left join (
+      select ptype.parent_id as id, count(1) as count from risk_conduct_bureau_rule_record record
+      left join risk_conduct_bureau_rule_type type on record.type = type.id
+      left join risk_conduct_bureau_rule_type ptype on type.parent_id = ptype.id
+      group by ptype.parent_id) b on a.id = b.id
+    where a.parent_id = 0
+    order by a.id
+  </select>
+
 </mapper>

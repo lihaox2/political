@@ -353,4 +353,8 @@ where a.id = #{id}
 select * from train_firearm where train_firearm_type = (select project_id from train_project_rule where id = #{projectRuleId})
 </select>
 
+  <select id="countAll" resultType="Integer">
+    select count(1) from train_firearm
+  </select>
+
 </mapper>

@@ -332,4 +332,11 @@ public interface TrainPhysicalMapper {
 
 	// 训练成绩合格率前5名
 	List<TrainRank> screenTrainNewestRankList();
+
+	/**
+	 * 统计所有综合训练数据
+	 * @return
+	 */
+	Integer countAll();
+
 }

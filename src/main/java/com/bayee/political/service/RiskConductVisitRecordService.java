@@ -39,10 +39,16 @@ public interface RiskConductVisitRecordService {
     Integer getRiskConductVisitRecordPageCount(String type, String key);
 
     /**
-     * 根绝类型统计树蕨条数
+     * 根绝类型统计数据条数
      * @param typeId
      * @return
      */
     Integer countByTypeId(Integer typeId);
+
+    /**
+     * 统计所有信访投诉数据
+     * @return
+     */
+    Integer countAll();
 
 }

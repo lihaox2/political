@@ -1,6 +1,7 @@
 package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskConductBureauRuleRecord;
+import com.bayee.political.domain.ScreenChart;
 import com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO;
 import org.apache.ibatis.annotations.Param;
 
@@ -66,5 +67,17 @@ public interface RiskConductBureauRuleRecordMapper {
      * @return
      */
     ConductBureauRuleDetailsDO findById(@Param("id") Integer id);
+
+    /**
+     * 统计所有局规记分数据
+     * @return
+     */
+    Integer countAll();
+
+    /**
+     * 首页图表查询
+     * @return
+     */
+    List<ScreenChart> getConductBureauChart();
 
 }

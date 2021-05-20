@@ -58,4 +58,10 @@ public interface RiskConductVisitRecordMapper {
      */
     Integer getRiskConductVisitRecordPageCount(@Param("list") List<Integer> type, @Param("key") String key);
 
+    /**
+     * 统计所有信访投诉数据
+     * @return
+     */
+    Integer countAll();
+
 }

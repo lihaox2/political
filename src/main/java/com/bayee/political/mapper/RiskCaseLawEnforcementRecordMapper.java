@@ -82,4 +82,10 @@ public interface RiskCaseLawEnforcementRecordMapper {
      */
     CaseLawEnforcementDetailsDO findDetailsDOById(@Param("id") Integer id);
 
+    /**
+     * 统计所有执法管理数据
+     * @return
+     */
+    Integer countAll();
+
 }

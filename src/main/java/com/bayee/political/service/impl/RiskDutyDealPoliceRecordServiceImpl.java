@@ -63,4 +63,9 @@ public class RiskDutyDealPoliceRecordServiceImpl implements RiskDutyDealPoliceRe
 	public DutyDetailsDO findById(Integer id) {
 		return riskDutyDealPoliceRecordMapper.findById(id);
 	}
+
+	@Override
+	public Integer countAll() {
+		return riskDutyDealPoliceRecordMapper.countAll();
+	}
 }

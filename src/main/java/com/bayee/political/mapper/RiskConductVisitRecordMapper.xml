@@ -210,4 +210,8 @@
     </if>
   </select>
 
+  <select id="countAll" resultType="Integer">
+    select count(1) from risk_conduct_visit_record
+  </select>
+
 </mapper>

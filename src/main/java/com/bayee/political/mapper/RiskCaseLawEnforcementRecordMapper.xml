@@ -246,4 +246,8 @@
     where record.id = #{id}
   </select>
 
+  <select id="countAll" resultType="Integer">
+    select count(1) from risk_case_law_enforcement_record
+  </select>
+
 </mapper>

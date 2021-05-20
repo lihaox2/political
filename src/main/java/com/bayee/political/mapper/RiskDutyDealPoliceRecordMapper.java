@@ -84,4 +84,10 @@ public interface RiskDutyDealPoliceRecordMapper {
 	 */
 	DutyDetailsDO findById(@Param("id") Integer id);
 
+	/**
+	 * 统计所有数据条数
+	 * @return
+	 */
+	Integer countAll();
+
 }

@@ -45,4 +45,10 @@ public interface RiskCaseLawEnforcementRecordService {
 	 */
 	CaseLawEnforcementDetailsDO findById(Integer id);
 
+	/**
+	 * 统计所有执法管理数据
+	 * @return
+	 */
+	Integer countAll();
+
 }

@@ -1,6 +1,7 @@
 package com.bayee.political.service;
 
 import com.bayee.political.domain.RiskConductBureauRuleRecord;
+import com.bayee.political.domain.ScreenChart;
 import com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO;
 
 import java.util.List;
@@ -46,5 +47,17 @@ public interface RiskConductBureauRuleRecordService {
      * @return
      */
     ConductBureauRuleDetailsDO findById(Integer id);
+
+    /**
+     * 统计所有局规记分数据
+     * @return
+     */
+    Integer countAll();
+
+    /**
+     * 首页图表查询
+     * @return
+     */
+    List<ScreenChart> getConductBureauChart();
 
 }

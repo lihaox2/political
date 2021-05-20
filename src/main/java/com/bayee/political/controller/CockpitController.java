@@ -23,16 +23,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bayee.political.domain.RiskAlarm;
 import com.bayee.political.domain.RiskHealth;
-import com.bayee.political.domain.RiskIndexMonitorChild;
 import com.bayee.political.domain.RiskReportRecord;
-import com.bayee.political.json.RiskProportionResult;
-import com.bayee.political.json.RiskTrendResult;
+import com.bayee.political.pojo.json.RiskProportionResult;
+import com.bayee.political.pojo.json.RiskTrendResult;
 import com.bayee.political.service.RiskService;
 import com.bayee.political.service.RiskTrendsService;
 import com.bayee.political.service.UserService;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
-import com.bayee.political.utils.StatusCode;
 import com.taobao.api.ApiException;
 
 @Controller
@@ -411,7 +409,7 @@ public class CockpitController {
 					Map<String,Object> typeMap=new HashMap<String, Object>();
 					typeMap.put("typeName", typeName);
 					typeMap.put("alarmScore", m.get("alarmScore"));
-					if(r.getTypeList()==null) { 
+					if(r.getTypeList()==null) {
 						r.setTypeList(new ArrayList<Map<String,Object>>());
 					}
 					r.getTypeList().add(typeMap);

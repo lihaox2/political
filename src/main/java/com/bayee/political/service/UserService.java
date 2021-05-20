@@ -204,4 +204,10 @@ public interface UserService {
 	 */
 	User findByPoliceId(String policeId);
 
+	/**
+	 * 统计所有警员
+	 * @return
+	 */
+	Integer countAllPolice();
+
 }

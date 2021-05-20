@@ -1964,4 +1964,9 @@ left join user c on c.police_id=a.police_id
 left join department d on d.id=c.department_id
 order by ifnull(b.bnum/a.anum,0) desc limit 5
 </select>
+
+	<select id="countAll" resultType="Integer">
+		select count(1) from train_physical
+	</select>
+
 </mapper>

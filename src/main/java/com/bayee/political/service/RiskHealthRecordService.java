@@ -39,4 +39,10 @@ public interface RiskHealthRecordService {
     Integer getRiskReportRecordPageCount(List<String> columnList,Integer typeFlag,
             String key);
 
+    /**
+     * 统计所有数据条数
+     * @return
+     */
+    Integer countAll();
+
 }

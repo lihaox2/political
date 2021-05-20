@@ -1,4 +1,4 @@
-package com.bayee.political.json;
+package com.bayee.political.pojo.json;
 
 public class RiskProportionResult {
 	

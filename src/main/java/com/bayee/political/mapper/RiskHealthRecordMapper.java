@@ -43,4 +43,10 @@ public interface RiskHealthRecordMapper {
             @Param("columnList") List<String> columnList, @Param("typeFlag") Integer typeFlag,
             @Param("key") String key);
 
+    /**
+     * 统计所有数据条数
+     * @return
+     */
+    Integer countAll();
+
 }

@@ -116,4 +116,10 @@ public interface TrainFirearmMapper {
 	 */
 	List<TrainFirearm> getTrainFirearmByProjectRuleId(@Param("projectRuleId") Integer projectRuleId);
 
+	/**
+	 * 统计所有枪械训练数据
+	 * @return
+	 */
+	Integer countAll();
+
 }

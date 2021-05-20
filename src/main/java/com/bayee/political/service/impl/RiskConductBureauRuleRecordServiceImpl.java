@@ -1,5 +1,6 @@
 package com.bayee.political.service.impl;
 
+import com.bayee.political.domain.ScreenChart;
 import com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,6 +88,16 @@ public class RiskConductBureauRuleRecordServiceImpl implements RiskConductBureau
 	@Override
 	public ConductBureauRuleDetailsDO findById(Integer id) {
 		return riskConductBureauRuleRecordMapper.findById(id);
+	}
+
+	@Override
+	public Integer countAll() {
+		return riskConductBureauRuleRecordMapper.countAll();
+	}
+
+	@Override
+	public List<ScreenChart> getConductBureauChart() {
+		return riskConductBureauRuleRecordMapper.getConductBureauChart();
 	}
 
 }

@@ -87,4 +87,9 @@ public class RiskHealthRecordServiceImpl implements RiskHealthRecordService{
 		return riskHealthRecordMapper.getRiskReportRecordPageCount(columnList,typeFlag,key);
 	}
 
+	@Override
+	public Integer countAll() {
+		return riskHealthRecordMapper.countAll();
+	}
+
 }

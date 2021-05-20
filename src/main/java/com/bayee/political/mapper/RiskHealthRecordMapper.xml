@@ -362,4 +362,8 @@
     </where>
   </select>
 
+  <select id="countAll" resultType="Integer">
+    select count(1) from risk_health_record
+  </select>
+
 </mapper>

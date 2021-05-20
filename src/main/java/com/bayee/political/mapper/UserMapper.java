@@ -212,4 +212,10 @@ public interface UserMapper {
 	// 查询全部警员详细信息数据
 	List<User> userInfoAllList();
 
+	/**
+	 * 统计所有警员
+	 * @return
+	 */
+	Integer countAllPolice();
+
 }

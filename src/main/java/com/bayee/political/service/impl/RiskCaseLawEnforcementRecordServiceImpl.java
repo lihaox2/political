@@ -80,4 +80,9 @@ public class RiskCaseLawEnforcementRecordServiceImpl implements RiskCaseLawEnfor
 		return riskCaseLawEnforcementRecordMapper.findDetailsDOById(id);
 	}
 
+	@Override
+	public Integer countAll() {
+		return riskCaseLawEnforcementRecordMapper.countAll();
+	}
+
 }

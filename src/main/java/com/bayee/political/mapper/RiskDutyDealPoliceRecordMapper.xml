@@ -281,4 +281,8 @@
     where record.id = #{id}
   </select>
 
+  <select id="countAll" resultType="Integer">
+    select count(1) from risk_duty_deal_police_record
+  </select>
+
 </mapper>

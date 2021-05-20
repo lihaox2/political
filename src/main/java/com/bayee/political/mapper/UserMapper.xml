@@ -63,11 +63,11 @@
 	</select>
 
 	<select id="findAll" resultMap="userResult">
-		select * from user
+		select * from user where police_id not in (000001)
 	</select>
 
 	<select id="countTotal" resultType="int">
-		select count(*) from user
+		select count(*) from user where police_id not in (000001)
 	</select>
 
 	<select id="findUserByName" resultMap="userResult">
@@ -627,6 +627,10 @@ where 1=1 and department_id!=47
           left join department b on b.id=a.department_id
           left join police_position c on c.id=a.position_id
         where a.police_id = #{policeId} limit 1
+    </select>
+
+    <select id="countAllPolice" resultType="Integer">
+        select count(1) from user where police_id not in (000001)
     </select>
 
 </mapper>

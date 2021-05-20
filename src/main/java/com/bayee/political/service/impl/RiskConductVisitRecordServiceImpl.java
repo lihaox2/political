@@ -99,4 +99,9 @@ public class RiskConductVisitRecordServiceImpl implements RiskConductVisitRecord
 		return riskConductVisitRecordMapper.countByTypeId(typeId);
 	}
 
+	@Override
+	public Integer countAll() {
+		return riskConductVisitRecordMapper.countAll();
+	}
+
 }

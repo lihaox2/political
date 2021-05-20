@@ -126,16 +126,16 @@
               (SELECT * FROM
               department d,
               (SELECT a.department_id FROM
-              (SELECT (case when sum(r.conduct_num) > 15 then 15 else sum(r.conduct_num) end+
-              case when sum(r.handling_case_num) > 20 then 20 else sum(r.handling_case_num) end+
-              case when sum(r.duty_num) >25 then 25 else sum(r.duty_num) end+
-              case when sum(r.train_num) > 10 then 10 else sum(r.train_num) end+
-              case when sum(r.drink_num) > 15 then 15 else sum(r.drink_num) end+
-              case when sum(r.study_num) > 5 then 5 else sum(r.study_num) end+
-              case when sum(r.amily_evaluation_num) > 5 then 5 else sum(r.amily_evaluation_num) end+
-              case when sum(r.work_num) > 5 then 5 else sum(r.work_num) end+r.health_num) AS total_num,u.department_id  FROM
-              `user` u LEFT JOIN risk_report_record r ON u.police_id=r.police_id WHERE r.creation_date &gt;= #{startTime}  AND r.creation_date &lt;= #{endTime}
-              GROUP BY r.police_id ORDER BY  total_num DESC) a WHERE a.total_num>=30) a WHERE d.id=a.department_id) a GROUP BY a.id ORDER BY value DESC limit 5) a order by a.value DESC) a ) result
+	              (SELECT (case when sum(r.conduct_num) > 15 then 15 else sum(r.conduct_num) end+
+	              case when sum(r.handling_case_num) > 20 then 20 else sum(r.handling_case_num) end+
+	              case when sum(r.duty_num) >25 then 25 else sum(r.duty_num) end+
+	              case when sum(r.train_num) > 10 then 10 else sum(r.train_num) end+
+	              case when sum(r.drink_num) > 15 then 15 else sum(r.drink_num) end+
+	              case when sum(r.study_num) > 5 then 5 else sum(r.study_num) end+
+	              case when sum(r.amily_evaluation_num) > 5 then 5 else sum(r.amily_evaluation_num) end+
+	              case when sum(r.work_num) > 5 then 5 else sum(r.work_num) end+r.health_num) AS total_num,u.department_id  FROM
+	              `user` u LEFT JOIN risk_report_record r ON u.police_id=r.police_id WHERE r.creation_date &gt;= #{startTime}  AND r.creation_date &lt;= #{endTime}
+	              GROUP BY r.police_id ORDER BY  total_num DESC) a WHERE a.total_num>=30) a WHERE d.id=a.department_id) a GROUP BY a.id ORDER BY value DESC limit 5) a order by a.value DESC) a ) result
           left join (select department_id, count(police_id) count from user group by department_id) dept on result.department_id = dept.department_id
       order by ratio desc
 </select>
@@ -288,4 +288,159 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
         order by rat.id
     </select>
 
+	<select id="selectIndexRiskTotal" resultType="Integer">
+			SELECT count(1) FROM ( SELECT * FROM risk_alarm a GROUP BY a.police_id) a
+	</select>
+	
+	<select id="selectTheMonthRiskTotal" resultType="Integer">
+			SELECT count(1) FROM ( SELECT * FROM risk_alarm a where	DATE_FORMAT(a.creation_date, '%Y-%m')=#{month} GROUP BY a.police_id) a
+	</select>
+	
+	<select id="caseLawTrends" resultType="HashMap">
+		SELECT * FROM (
+			SELECT v.click_date AS name,IFNULL(b.total,0) value FROM (
+			SELECT curdate() as click_date
+    union all
+    SELECT date_sub(curdate(), interval 1 day) as click_date
+    union all
+    SELECT date_sub(curdate(), interval 2 day) as click_date
+    union all
+    SELECT date_sub(curdate(), interval 3 day) as click_date
+    union all
+    SELECT date_sub(curdate(), interval 4 day) as click_date
+    union all
+    SELECT date_sub(curdate(), interval 5 day) as click_date
+    union all
+    SELECT date_sub(curdate(), interval 6 day) as click_date) v
+		 LEFT JOIN (SELECT DATE_FORMAT(a.creation_date,'%Y-%m-%d') AS paTime,count(1) AS total FROM risk_case_law_enforcement_record a GROUP BY paTime) b
+		 ON b.paTime=v.click_date) a ORDER BY a.name ASC
+	</select>
+	
+	<select id="caseLawPepolNum" resultType="Integer">
+		SELECT count(1) FROM (SELECT count(1) FROM risk_case_law_enforcement_record r GROUP BY r.police_id) a;
+	</select>
+	
+	
+	<select id="caseLawThisMonthNum" resultType="Integer">
+		SELECT count(1) FROM risk_case_law_enforcement_record r WHERE DATE_FORMAT(CURDATE(), '%Y-%m')=DATE_FORMAT(r.creation_date, '%Y-%m')
+	</select>
+	
+	<select id="caseLawRepeatNum"  resultType="Integer">
+		SELECT count(1) FROM (SELECT count(1) total,r.police_id,r.type FROM risk_case_law_enforcement_record r GROUP BY r.police_id,r.type) a WHERE a.total>1
+	</select>
+	
+	
+	
+	
+	<select id="dutyDealTrends" resultType="HashMap">
+		SELECT * FROM (
+			SELECT v.click_date AS name,IFNULL(b.total,0) value FROM (
+			SELECT curdate() as click_date
+    union all
+    SELECT date_sub(curdate(), interval 1 day) as click_date
+    union all
+    SELECT date_sub(curdate(), interval 2 day) as click_date
+    union all
+    SELECT date_sub(curdate(), interval 3 day) as click_date
+    union all
+    SELECT date_sub(curdate(), interval 4 day) as click_date
+    union all
+    SELECT date_sub(curdate(), interval 5 day) as click_date
+    union all
+    SELECT date_sub(curdate(), interval 6 day) as click_date) v
+		 LEFT JOIN (SELECT DATE_FORMAT(a.creation_date,'%Y-%m-%d') AS paTime,count(1) AS total FROM risk_duty_deal_police_record a GROUP BY paTime) b
+		 ON b.paTime=v.click_date) a ORDER BY a.name ASC
+	</select>
+	
+	<select id="dutyDealPepolNum" resultType="Integer">
+		SELECT count(1) FROM (SELECT count(1) FROM risk_duty_deal_police_record r GROUP BY r.police_id) a;
+	</select>
+	
+	
+	<select id="dutyDealThisMonthNum" resultType="Integer">
+		SELECT count(1) FROM risk_duty_deal_police_record r WHERE DATE_FORMAT(CURDATE(), '%Y-%m')=DATE_FORMAT(r.creation_date, '%Y-%m')
+	</select>
+	
+	<select id="dutyDealRepeatNum"  resultType="Integer">
+		SELECT count(1) FROM (SELECT count(1) total,r.police_id,r.type FROM risk_duty_deal_police_record r GROUP BY r.police_id,r.type) a WHERE a.total>1
+	</select>
+	
+	<select id="ishealth" resultType="HashMap">
+			SELECT * FROM (SELECT count(1) AS noOverweight FROM risk_health_record r WHERE r.is_overweight!=1) a,
+		 (SELECT count(1) AS noHyperlipidemia FROM risk_health_record r WHERE r.is_hyperlipidemia!=1) b,
+		 (SELECT count(1) AS noHypertension FROM risk_health_record r WHERE r.is_hypertension!=1) c,
+		 (SELECT count(1) AS noHyperglycemia FROM risk_health_record r WHERE r.is_hyperglycemia!=1) d,
+		 (SELECT count(1) AS noHyperuricemia FROM risk_health_record r WHERE r.is_hyperuricemia!=1) e,
+		 (SELECT count(1) AS noProstate FROM risk_health_record r WHERE r.is_prostate!=1) f,
+		 (SELECT count(1) AS noMajorDiseases FROM risk_health_record r WHERE r.is_major_diseases!=1) g,
+		 (SELECT count(1) AS onHeart FROM risk_health_record r WHERE r.is_heart!=1) h,
+		 (SELECT count(1) AS onTumorAntigen FROM risk_health_record r WHERE r.is_tumor_antigen!=1) i,
+		 (SELECT count(1) AS onOrthopaedics FROM risk_health_record r WHERE r.is_orthopaedics!=1) j;
+	</select>
+	
+	<select id="nohealth" resultType="HashMap">
+		SELECT * FROM (SELECT count(1) AS isOverweight FROM risk_health_record r WHERE r.is_overweight=1) a,
+		 (SELECT count(1) AS isHyperlipidemia FROM risk_health_record r WHERE r.is_hyperlipidemia=1) b,
+		 (SELECT count(1) AS isHypertension FROM risk_health_record r WHERE r.is_hypertension=1) c,
+		 (SELECT count(1) AS isHyperglycemia FROM risk_health_record r WHERE r.is_hyperglycemia=1) d,
+		 (SELECT count(1) AS isHyperuricemia FROM risk_health_record r WHERE r.is_hyperuricemia=1) e,
+		 (SELECT count(1) AS isProstate FROM risk_health_record r WHERE r.is_prostate!=1) f,
+		 (SELECT count(1) AS isMajorDiseases FROM risk_health_record r WHERE r.is_major_diseases=1) g,
+		 (SELECT count(1) AS isHeart FROM risk_health_record r WHERE r.is_heart=1) h,
+		 (SELECT count(1) AS isTumorAntigen FROM risk_health_record r WHERE r.is_tumor_antigen=1) i,
+		 (SELECT count(1) AS isOrthopaedics FROM risk_health_record r WHERE r.is_orthopaedics=1) j;
+	</select>
+	
+	<select id="inspectNum" resultType="Integer">
+		SELECT count(1) FROM (SELECT r.`year` FROM risk_health_record r ORDER BY r.creation_date LIMIT 1) a ,risk_health_record r WHERE a.`year`=r.`year`
+	</select>
+	
+	<select id="healthNum" resultType="Integer">
+		SELECT count(1) FROM (SELECT r.`year` FROM risk_health_record r ORDER BY r.creation_date LIMIT 1) a ,risk_health_record r WHERE a.`year`=r.`year`
+		 AND r.bmi!=2 AND r.is_overweight!=1 AND r.is_hyperlipidemia!=1 AND r.is_hypertension!=1 AND r.is_hyperglycemia!=1 AND r.is_hyperuricemia!=1 AND r.is_prostate!=1
+		 AND r.is_major_diseases!=1 AND r.is_heart!=1 AND r.is_tumor_antigen!=1 AND r.is_orthopaedics!=1
+	</select>
+	
+	<select id="healthRiskNum" resultType="Integer">
+		SELECT count(1) FROM (SELECT r.`year` FROM risk_health r ORDER BY r.creation_date LIMIT 1) a ,risk_health r WHERE a.`year`=r.`year` AND r.index_num>=3;
+	</select>
+	
+	<!-- 总合格数 -->
+	<select id="qualifiedNum" resultType="Integer">
+		SELECT a.count+b.count FROM (select count(distinct(a.police_id)) as count from train_firearm_achievement a ,train_firearm t
+		where a.train_firearm_id =t.id
+		and a.is_sign = 2 
+		and a.achievement_grade = 2) a,(select count(distinct(police_id)) as count from train_physical_achievement a,train_physical t 
+		where a.train_physical_id = t.id
+		and a.is_sign = 2 
+		and a.achievement_grade = 2) b;
+	</select>
+	
+	<!-- 合格率 -->
+	<select id="qualifiedRate" resultType="Double">
+		SELECT ROUND((SELECT a.count+b.count FROM (select count(distinct(a.police_id)) as count from train_firearm_achievement a ,train_firearm t
+where a.train_firearm_id =t.id
+and a.is_sign = 2 
+and a.achievement_grade = 2) a,(select count(distinct(police_id)) as count from train_physical_achievement a,train_physical t 
+where a.train_physical_id = t.id
+and a.is_sign = 2 
+and a.achievement_grade = 2) b)/(SELECT (SELECT a.count*(select count(*) from user where department_id!=47) FROM (SELECT count(1) count FROM train_firearm) a)+
+
+(SELECT a.count*(select count(*) from user where department_id!=47) FROM (SELECT count(1) count FROM train_physical) a))*100,2)
+	</select>
+	
+	
+	<!-- 柱状图 -->
+	<select id="qualifiedRateEcharts" resultType="HashMap">
+		SELECT count(1)/((SELECT count(1) FROM train_physical t ORDER BY t.creation_date DESC limit 5)*(select count(*) from user where department_id!=47)) AS rate,a.`name` FROM (SELECT * FROM train_physical t ORDER BY t.creation_date DESC limit 5) a,train_physical_achievement t WHERE a.id=t.train_physical_id
+		and t.is_sign = 2 
+		and t.achievement_grade = 2 GROUP BY a.id
+		
+		UNION ALL
+		
+		
+		SELECT count(1)/((SELECT count(1) FROM train_firearm t ORDER BY t.creation_date DESC limit 5)*(select count(*) from user where department_id!=47)) AS rate,a.`name` FROM (SELECT * FROM train_physical t ORDER BY t.creation_date DESC limit 5) a,train_firearm_achievement t WHERE a.id=t.train_firearm_id
+		and t.is_sign = 2 
+		and t.achievement_grade = 2 GROUP BY a.id;
+	</select>
 </mapper>

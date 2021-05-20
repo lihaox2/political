@@ -200,4 +200,112 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 		return riskAlarmMapper.theMonthAlarmByAlarmType(alarmType);
 	}
 
+	@Override
+	public Integer selectIndexRiskTotal() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.selectIndexRiskTotal();
+	}
+
+	@Override
+	public Integer selectTheMonthRiskTotal(String month) {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.selectTheMonthRiskTotal(month);
+	}
+
+	@Override
+	public List<Map<String, Object>> caseLawTrends() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.caseLawTrends();
+	}
+
+	@Override
+	public Integer caseLawPepolNum() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.caseLawPepolNum();
+	}
+
+	@Override
+	public Integer caseLawThisMonthNum() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.caseLawThisMonthNum();
+	}
+
+	@Override
+	public Integer caseLawRepeatNum() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.caseLawRepeatNum();
+	}
+
+	@Override
+	public List<Map<String, Object>> dutyDealTrends() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.dutyDealTrends();
+	}
+
+	@Override
+	public Integer dutyDealPepolNum() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.dutyDealPepolNum();
+	}
+
+	@Override
+	public Integer dutyDealThisMonthNum() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.dutyDealThisMonthNum();
+	}
+
+	@Override
+	public Integer dutyDealRepeatNum() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.dutyDealRepeatNum();
+	}
+
+	@Override
+	public Map<String, Object> ishealth() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.ishealth();
+	}
+
+	@Override
+	public Map<String, Object> nohealth() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.nohealth();
+	}
+
+	@Override
+	public Integer inspectNums() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.inspectNum();
+	}
+
+	@Override
+	public Integer healthNum() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.healthNum();
+	}
+
+	@Override
+	public Integer healthRiskNum() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.healthRiskNum();
+	}
+
+	@Override
+	public Integer qualifiedNum() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.qualifiedNum();
+	}
+
+	@Override
+	public Double qualifiedRate() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.qualifiedRate();
+	}
+
+	@Override
+	public List<Map<String, Object>> qualifiedRateEcharts() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.qualifiedRateEcharts();
+	}
+
 }

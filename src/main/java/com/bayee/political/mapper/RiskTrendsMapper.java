@@ -74,5 +74,41 @@ public interface RiskTrendsMapper {
 	 * @return
 	 */
 	List<RiskAlarmTypeDO> getRiskAlarmType();
+	
+	Integer selectIndexRiskTotal();
+	
+	Integer selectTheMonthRiskTotal(@Param("month")String month);
+	
+	List<Map<String,Object>> caseLawTrends();
+	
+	Integer caseLawPepolNum();
+	
+	Integer caseLawThisMonthNum();
+	
+	Integer caseLawRepeatNum();
+	
+	List<Map<String,Object>> dutyDealTrends();
+	
+	Integer dutyDealPepolNum();
+	
+	Integer dutyDealThisMonthNum();
+	
+	Integer dutyDealRepeatNum();
+	
+	Map<String,Object> ishealth();
+	
+	Map<String,Object> nohealth();
+	
+	Integer inspectNum();
+	
+	Integer healthNum();
+	
+	Integer healthRiskNum();
+	
+	Integer qualifiedNum();
+	
+	Double qualifiedRate();
+	
+	List<Map<String,Object>> qualifiedRateEcharts();
 
 }

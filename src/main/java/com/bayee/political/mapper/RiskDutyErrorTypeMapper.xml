@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bayee.political.mapper.RiskDutyErrorTypeMapper">
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskDutyErrorType">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, creation_date
+  </sql>
+
+  <select id="getAll" resultMap="BaseResultMap">
+    select * from risk_duty_error_type
+  </select>
+
+  <select id="findIdByName" resultType="Integer">
+    select id from risk_duty_error_type where name = #{name}
+  </select>
+
+</mapper>

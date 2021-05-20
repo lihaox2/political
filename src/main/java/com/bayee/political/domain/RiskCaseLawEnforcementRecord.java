@@ -15,11 +15,37 @@ public class RiskCaseLawEnforcementRecord {
 
     private Double deductionScore;
 
+    /**
+     * 责任单位
+     */
+    private String deptName;
+
+    /**
+     * 案件编号
+     */
+    private String caseCode;
+
     private Date creationDate;
 
     private Date updateDate;
     
     private String typeName;
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public String getCaseCode() {
+        return caseCode;
+    }
+
+    public void setCaseCode(String caseCode) {
+        this.caseCode = caseCode;
+    }
 
     public Integer getId() {
         return id;

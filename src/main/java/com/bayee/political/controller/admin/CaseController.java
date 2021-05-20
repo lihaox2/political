@@ -4,6 +4,8 @@ import com.bayee.political.domain.RiskCaseAbilityRecord;
 import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
 import com.bayee.political.domain.RiskCaseTestRecord;
 import com.bayee.political.domain.User;
+import com.bayee.political.pojo.dto.CaseLawEnforcementDetailsDO;
+import com.bayee.political.pojo.dto.CaseLawEnforcementPageDO;
 import com.bayee.political.pojo.json.*;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DataListReturn;
@@ -237,27 +239,27 @@ public class CaseController {
     @GetMapping("/law/enforcement/page")
     public ResponseEntity<?> caseLawEnforcementPage(@RequestParam("pageIndex") Integer pageIndex,
                                                     @RequestParam("pageSize") Integer pageSize,
-                                                    @RequestParam("type") Integer type,
+                                                    @RequestParam("type") String type,
                                                     @RequestParam("key") String key) {
-        List<RiskCaseLawEnforcementRecord> recordList = riskCaseLawEnforcementRecordService.
+        List<CaseLawEnforcementPageDO> recordList = riskCaseLawEnforcementRecordService.
                 riskCaseLawEnforcementRecordPage(pageIndex, pageSize, type, key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
             CaseLawEnforcementPageResult pageResult = new CaseLawEnforcementPageResult();
-            User user = userService.findByPoliceId(e.getPoliceId());
+            pageResult.setContent(e.getContent());
+            pageResult.setDesc(e.getDesc());
             pageResult.setId(e.getId());
             pageResult.setPoliceId(e.getPoliceId());
-            if (user != null) {
-                pageResult.setPoliceName(user.getName());
-            }
+            pageResult.setPoliceName(e.getPoliceName());
+            pageResult.setDeptName(e.getDeptName());
+            pageResult.setCaseCode(e.getCaseCode());
             pageResult.setTypeName(e.getTypeName());
-            pageResult.setDesc(e.getContent());
-            pageResult.setDeductScore(e.getDeductionScore());
-            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd"));
+            pageResult.setDeductScore(e.getDeductScore());
+            pageResult.setDate(e.getDate());
+
             return pageResult;
         }).collect(Collectors.toList()));
-
         result.put("totalCount", riskCaseLawEnforcementRecordService.riskCaseLawEnforcementRecordPageCount(type, key));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
@@ -267,52 +269,55 @@ public class CaseController {
     @PostMapping("/add/law/enforcement")
     public ResponseEntity<?> addCaseLawEnforcement(@RequestBody CaseLawEnforcementSaveParam saveParam) {
         RiskCaseLawEnforcementRecord record = new RiskCaseLawEnforcementRecord();
-        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
+        record.setDeptName(saveParam.getDeptName());
+        record.setCaseCode(saveParam.getCaseCode());
         record.setPoliceId(saveParam.getPoliceId());
         record.setType(saveParam.getTypeId());
         record.setContent(saveParam.getDesc());
-        record.setInputTime(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
+        record.setInputTime(new Date());
         record.setDeductionScore(saveParam.getDeductScore());
-        record.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
+        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
 
         riskCaseLawEnforcementRecordService.insert(record);
-        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
+        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/law/enforcement/{id}")
     public ResponseEntity<?> updateCaseLawEnforcement(@PathVariable("id") Integer id,
                                                       @RequestBody CaseLawEnforcementSaveParam saveParam) {
-        RiskCaseLawEnforcementRecord oldRecord = riskCaseLawEnforcementRecordService.selectByPrimaryKey(id);
-        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        RiskCaseLawEnforcementRecord record = riskCaseLawEnforcementRecordService.selectByPrimaryKey(id);
 
-        oldRecord.setPoliceId(saveParam.getPoliceId());
-        oldRecord.setType(saveParam.getTypeId());
-        oldRecord.setContent(saveParam.getDesc());
-        oldRecord.setDeductionScore(saveParam.getDeductScore());
-        oldRecord.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
-        oldRecord.setUpdateDate(new Date());
+        record.setDeptName(saveParam.getDeptName());
+        record.setCaseCode(saveParam.getCaseCode());
+        record.setPoliceId(saveParam.getPoliceId());
+        record.setType(saveParam.getTypeId());
+        record.setContent(saveParam.getDesc());
+        record.setDeductionScore(saveParam.getDeductScore());
+        record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
+        record.setUpdateDate(new Date());
 
-        riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(oldRecord);
-        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
+        riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(record);
+        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @GetMapping("/law/enforcement/details")
     public ResponseEntity<?> caseLawEnforcementDetails(@RequestParam("id") Integer id) {
-        RiskCaseLawEnforcementRecord record = riskCaseLawEnforcementRecordService.selectByPrimaryKey(id);
+        CaseLawEnforcementDetailsDO detailsDO = riskCaseLawEnforcementRecordService.findById(id);
         CaseLawEnforcementDetailsResult result = new CaseLawEnforcementDetailsResult();
-        User user = userService.findByPoliceId(record.getPoliceId());
-        result.setPoliceId(record.getPoliceId());
-        if (user != null) {
-            result.setPoliceName(user.getName());
-        }
-        result.setTypeId(record.getType());
-        result.setType(record.getTypeName());
-        result.setDesc(record.getContent());
-        result.setDeductScore(record.getDeductionScore());
-        result.setDate(DateUtils.formatDate(record.getCreationDate(), "YYYY-MM-dd"));
+        result.setDeptName(detailsDO.getDeptName());
+        result.setCaseCode(detailsDO.getCaseCode());
+        result.setParentId(detailsDO.getParentId());
+        result.setParentName(detailsDO.getParentName());
+        result.setTypeName(detailsDO.getTypeName());
+        result.setTypeId(detailsDO.getTypeId());
+        result.setPoliceId(detailsDO.getPoliceId());
+        result.setPoliceName(detailsDO.getPoliceName());
+        result.setDesc(detailsDO.getDesc());
+        result.setDeductScore(detailsDO.getDeductScore());
+        result.setDate(detailsDO.getDate());
 
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
     }
@@ -335,9 +340,9 @@ public class CaseController {
     @GetMapping("/test/page")
     public ResponseEntity<?> caseTestPage(@RequestParam("pageIndex") Integer pageIndex,
                                           @RequestParam("pageSize") Integer pageSize,
-                                          @RequestParam("year") String year, @RequestParam("semester") Integer semester,
-                                          @RequestParam("passFlag") Integer passFlag, @RequestParam("key") String key) {
-        List<RiskCaseTestRecord> recordList = riskCaseTestRecordService.riskCaseTestRecordPage(pageIndex, pageSize,year,semester,passFlag,key);
+                                          @RequestParam("date") String date, @RequestParam("passFlag") Integer passFlag,
+                                          @RequestParam("key") String key) {
+        List<RiskCaseTestRecord> recordList = riskCaseTestRecordService.riskCaseTestRecordPage(pageIndex, pageSize, date,passFlag,key);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -350,12 +355,11 @@ public class CaseController {
             pageResult.setPoliceId(e.getPoliceId());
             pageResult.setTestName(e.getName());
             pageResult.setScore(e.getScore());
-            pageResult.setYear(e.getYear());
-            pageResult.setSemester(e.getSemester());
+            pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd"));
             return pageResult;
         }).collect(Collectors.toList()));
 
-        result.put("totalCount", riskCaseTestRecordService.riskCaseTestRecordPageCount(year,semester,passFlag,key));
+        result.put("totalCount", riskCaseTestRecordService.riskCaseTestRecordPageCount(date,passFlag,key));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
@@ -363,27 +367,21 @@ public class CaseController {
 
     @PostMapping("/add/test")
     public ResponseEntity<?> addCaseTest(@RequestBody CaseTestSaveParam saveParam) {
-        String dateLast = LocalDateTime.now().format(DateTimeFormatter.ofPattern("-dd HH:mm:ss"));
-        String month = "01";
-        if (saveParam.getSemester() < 10) {
-            month = "0"+saveParam.getSemester();
-        }else {
-            month = saveParam.getSemester()+"";
-        }
-        String date = saveParam.getYear() + "-" + month + dateLast;
+        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
         RiskCaseTestRecord record = new RiskCaseTestRecord();
         record.setDeductionScore(saveParam.getScore() >= 60 ? 0d : 2d);
         record.setPoliceId(saveParam.getPoliceId());
-        record.setSemester(saveParam.getSemester());
+        record.setSemester(Integer.valueOf(saveParam.getDate().substring(5, 7)));
         record.setScore(saveParam.getScore());
         record.setName(saveParam.getTestName());
-        record.setYear(saveParam.getYear());
-        record.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd HH:mm:ss"));
+        record.setYear(saveParam.getDate().substring(0, 4));
+        record.setCreationDate(DateUtils.parseDate(saveParam.getDate()+" "+currentTime, "yyyy-MM-dd HH:mm:ss"));
 
-        Integer id = riskCaseTestRecordService.isExistence(saveParam.getPoliceId(), saveParam.getYear(), saveParam.getSemester(), null);
-        if (id != null) {
-            return new ResponseEntity(DataListReturn.error("本警员在该年度同一期内已存在！"), HttpStatus.OK);
-        }
+//        Integer id = riskCaseTestRecordService.isExistence(saveParam.getPoliceId(), saveParam.getYear(), saveParam.getSemester(), null);
+//        if (id != null) {
+//            return new ResponseEntity(DataListReturn.error("本警员在该年度同一期内已存在！"), HttpStatus.OK);
+//        }
         riskCaseTestRecordService.insertTest(record);
         totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
@@ -392,28 +390,21 @@ public class CaseController {
     @PostMapping("/update/test/{id}")
     public ResponseEntity<?> updateCaseTest(@PathVariable("id") Integer id,
                                             @RequestBody CaseTestSaveParam saveParam) {
-        String dateLast = LocalDateTime.now().format(DateTimeFormatter.ofPattern("-dd HH:mm:ss"));
-        String month = "01";
-        if (saveParam.getSemester() < 10) {
-            month = "0"+saveParam.getSemester();
-        }else {
-            month = saveParam.getSemester()+"";
-        }
-        String date = saveParam.getYear() + "-" + month + dateLast;
+        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         RiskCaseTestRecord oldRecord = riskCaseTestRecordService.selectByPrimaryKey(id);
         oldRecord.setDeductionScore(saveParam.getScore() >= 60 ? 0d : 2d);
         oldRecord.setPoliceId(saveParam.getPoliceId());
-        oldRecord.setSemester(saveParam.getSemester());
+        oldRecord.setSemester(Integer.valueOf(saveParam.getDate().substring(5, 7)));
         oldRecord.setScore(saveParam.getScore());
-        oldRecord.setYear(saveParam.getYear());
+        oldRecord.setYear(saveParam.getDate().substring(0, 4));
         oldRecord.setName(saveParam.getTestName());
-        oldRecord.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd HH:mm:ss"));
+        oldRecord.setCreationDate(DateUtils.parseDate(saveParam.getDate()+" "+currentTime, "yyyy-MM-dd HH:mm:ss"));
         oldRecord.setUpdateDate(new Date());
 
-        Integer recordId = riskCaseTestRecordService.isExistence(saveParam.getPoliceId(), saveParam.getYear(), saveParam.getSemester(), id);
+        /*Integer recordId = riskCaseTestRecordService.isExistence(saveParam.getPoliceId(), saveParam.getYear(), saveParam.getSemester(), id);
         if (recordId != null) {
             return new ResponseEntity(DataListReturn.error("本警员在该年度同一期内已存在！"), HttpStatus.OK);
-        }
+        }*/
         riskCaseTestRecordService.updateByPrimaryKey(oldRecord);
         totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(DateUtils.formatDate(oldRecord.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
@@ -430,8 +421,7 @@ public class CaseController {
         }
         result.setTestName(record.getName());
         result.setScore(record.getScore());
-        result.setYear(record.getYear());
-        result.setSemester(record.getSemester());
+        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
 
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
     }

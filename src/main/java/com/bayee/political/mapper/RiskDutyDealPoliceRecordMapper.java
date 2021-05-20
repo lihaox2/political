@@ -2,6 +2,8 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.pojo.dto.DutyDetailsDO;
+import com.bayee.political.pojo.dto.DutyPageDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
@@ -54,15 +56,32 @@ public interface RiskDutyDealPoliceRecordMapper {
 	 * 分页查询接警执勤信息
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param informationId
+	 * @param errorId
+	 * @param key
 	 * @return
 	 */
-	List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize
-			,@Param("type") Integer type,@Param("key") String key);
+	List<DutyPageDO> riskDutyDealPoliceRecordPage(@Param("pageIndex") Integer pageIndex,
+												  @Param("pageSize") Integer pageSize,
+												  @Param("informationId") Integer informationId,
+												  @Param("errorId") Integer errorId,
+												  @Param("key") String key);
 
 	/**
 	 * 统计分页数据数据条数
+	 * @param informationId
+	 * @param errorId
+	 * @param key
 	 * @return
 	 */
-	Integer riskDutyDealPoliceRecordPageCount(@Param("type") Integer type,@Param("key") String key);
+	Integer riskDutyDealPoliceRecordPageCount(@Param("informationId") Integer informationId,
+											  @Param("errorId") Integer errorId, @Param("key") String key);
+
+	/**
+	 * 通过id查询接警执勤详情
+	 * @param id
+	 * @return
+	 */
+	DutyDetailsDO findById(@Param("id") Integer id);
 
 }

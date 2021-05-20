@@ -17,14 +17,34 @@ public class CaseLawEnforcementDetailsResult {
     private String policeName;
 
     /**
-     * 类型id
+     * 责任单位
+     */
+    private String deptName;
+
+    /**
+     * 案件编号
+     */
+    private String caseCode;
+
+    /**
+     * 问题分类id
+     */
+    private Integer parentId;
+
+    /**
+     * 问题分类名称
+     */
+    private String parentName;
+
+    /**
+     * 扣分标准id
      */
     private Integer typeId;
 
     /**
-     * 问题分类
+     * 扣分标准
      */
-    private String type;
+    private String typeName;
 
     /**
      * 问题描述
@@ -40,6 +60,46 @@ public class CaseLawEnforcementDetailsResult {
      * 时间
      */
     private String date;
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public String getCaseCode() {
+        return caseCode;
+    }
+
+    public void setCaseCode(String caseCode) {
+        this.caseCode = caseCode;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 
     public Integer getTypeId() {
         return typeId;
@@ -63,14 +123,6 @@ public class CaseLawEnforcementDetailsResult {
 
     public void setPoliceName(String policeName) {
         this.policeName = policeName;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getDesc() {

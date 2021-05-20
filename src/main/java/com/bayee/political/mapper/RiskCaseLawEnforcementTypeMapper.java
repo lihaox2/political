@@ -1,6 +1,7 @@
 package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskCaseLawEnforcementType;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,5 +29,13 @@ public interface RiskCaseLawEnforcementTypeMapper {
      * @return
      */
     List<RiskCaseLawEnforcementType> getDutyType();
+
+    /**
+     * 通过类型名称查询id
+     * @param name
+     * @param parentId
+     * @return
+     */
+    Integer findByNameAndParentId(@Param("name") String name,@Param("parentId") Integer parentId);
 
 }

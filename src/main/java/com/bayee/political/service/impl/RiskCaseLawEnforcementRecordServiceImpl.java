@@ -1,7 +1,12 @@
 package com.bayee.political.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.bayee.political.pojo.dto.CaseLawEnforcementDetailsDO;
+import com.bayee.political.pojo.dto.CaseLawEnforcementPageDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,18 +52,32 @@ public class RiskCaseLawEnforcementRecordServiceImpl implements RiskCaseLawEnfor
 	}
 
 	@Override
-	public List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize, Integer type, String key) {
+	public List<CaseLawEnforcementPageDO> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize, String type, String key) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
+		List<Integer> typeList = new ArrayList<>();
+		if (type != null && !"".equals(type)) {
+			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
+		}
 
-		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPage(pageIndex, pageSize, type, key);
+		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPage(pageIndex, pageSize, typeList, key);
 	}
 
 	@Override
-	public Integer riskCaseLawEnforcementRecordPageCount(Integer type, String key) {
-		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPageCount(type, key);
+	public Integer riskCaseLawEnforcementRecordPageCount(String type, String key) {
+		List<Integer> typeList = new ArrayList<>();
+		if (type != null && !"".equals(type)) {
+			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
+		}
+
+		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPageCount(typeList, key);
+	}
+
+	@Override
+	public CaseLawEnforcementDetailsDO findById(Integer id) {
+		return riskCaseLawEnforcementRecordMapper.findDetailsDOById(id);
 	}
 
 }

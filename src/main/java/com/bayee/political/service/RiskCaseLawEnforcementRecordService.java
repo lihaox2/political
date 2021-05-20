@@ -3,6 +3,8 @@ package com.bayee.political.service;
 import java.util.List;
 
 import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
+import com.bayee.political.pojo.dto.CaseLawEnforcementDetailsDO;
+import com.bayee.political.pojo.dto.CaseLawEnforcementPageDO;
 
 public interface RiskCaseLawEnforcementRecordService {
 
@@ -26,7 +28,7 @@ public interface RiskCaseLawEnforcementRecordService {
 	 * @param key
 	 * @return
 	 */
-	List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize, Integer type, String key);
+	List<CaseLawEnforcementPageDO> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize, String type, String key);
 
 	/**
 	 * 分页数据条数统计
@@ -34,6 +36,13 @@ public interface RiskCaseLawEnforcementRecordService {
 	 * @param key
 	 * @return
 	 */
-	Integer riskCaseLawEnforcementRecordPageCount(Integer type, String key);
+	Integer riskCaseLawEnforcementRecordPageCount(String type, String key);
+
+	/**
+	 * 通过id查询执法管理数据
+	 * @param id
+	 * @return
+	 */
+	CaseLawEnforcementDetailsDO findById(Integer id);
 
 }

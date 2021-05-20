@@ -3,6 +3,7 @@ package com.bayee.political.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.bayee.political.pojo.dto.RiskAlarmTypeDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -182,6 +183,21 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 	public List<Map<String, Object>> continuityAlarmDetails(String policeId) {
 		// TODO Auto-generated method stub
 		return riskAlarmMapper.continuityAlarmDetails(policeId);
+	}
+
+	@Override
+	public Integer countRiskAlarmByPolice() {
+		return riskAlarmMapper.countRiskAlarmByPolice();
+	}
+
+	@Override
+	public List<RiskAlarmTypeDO> getRiskAlarmType() {
+		return riskTrendsMapper.getRiskAlarmType();
+	}
+
+	@Override
+	public List<RiskAlarm> theMonthAlarm(Integer alarmType) {
+		return riskAlarmMapper.theMonthAlarmByAlarmType(alarmType);
 	}
 
 }

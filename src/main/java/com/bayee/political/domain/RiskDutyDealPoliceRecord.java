@@ -8,8 +8,36 @@ public class RiskDutyDealPoliceRecord {
     private String policeId;
 
     private Integer type;
-    
-    private String typeName;
+
+    /**
+     * 警情类别
+     */
+    private Integer informationId;
+
+    /**
+     * 错误类别
+     */
+    private Integer errorId;
+
+    /**
+     * 警单号
+     */
+    private String policeListCode;
+
+    /**
+     * 辖区
+     */
+    private String jurisdiction;
+
+    /**
+     * 警单详情
+     */
+    private String policeListInfo;
+
+    /**
+     * 是否核实（1 已核实，0 未核实）
+     */
+    private Integer isVerified;
 
     private String content;
 
@@ -20,6 +48,56 @@ public class RiskDutyDealPoliceRecord {
     private Date creationDate;
 
     private Date updateDate;
+
+    private String typeName;
+
+    public Integer getInformationId() {
+        return informationId;
+    }
+
+    public void setInformationId(Integer informationId) {
+        this.informationId = informationId;
+    }
+
+    public Integer getErrorId() {
+        return errorId;
+    }
+
+    public void setErrorId(Integer errorId) {
+        this.errorId = errorId;
+    }
+
+    public String getPoliceListCode() {
+        return policeListCode;
+    }
+
+    public void setPoliceListCode(String policeListCode) {
+        this.policeListCode = policeListCode;
+    }
+
+    public String getJurisdiction() {
+        return jurisdiction;
+    }
+
+    public void setJurisdiction(String jurisdiction) {
+        this.jurisdiction = jurisdiction;
+    }
+
+    public String getPoliceListInfo() {
+        return policeListInfo;
+    }
+
+    public void setPoliceListInfo(String policeListInfo) {
+        this.policeListInfo = policeListInfo;
+    }
+
+    public Integer getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(Integer isVerified) {
+        this.isVerified = isVerified;
+    }
 
     public Integer getId() {
         return id;

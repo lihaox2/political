@@ -27,4 +27,10 @@ public class RiskCaseLawEnforcementTypeServiceImpl implements RiskCaseLawEnforce
     public List<RiskCaseLawEnforcementType> getDutyType() {
         return riskCaseLawEnforcementTypeMapper.getDutyType();
     }
+
+    @Override
+    public Integer findByNameAndParentId(String name, Integer parentId) {
+        return riskCaseLawEnforcementTypeMapper.findByNameAndParentId(name, parentId);
+    }
+
 }

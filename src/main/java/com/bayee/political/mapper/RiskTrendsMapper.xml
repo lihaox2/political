@@ -121,29 +121,24 @@
   
   
   <select id="selectDeptTopFive" resultType="HashMap">
-  	  SELECT a.`name`,IFNULL(a.value,0) AS value,IFNULL(ROUND((value/(SELECT count(1) total FROM ( SELECT (case when sum(r.conduct_num) > 15 then 15 else sum(r.conduct_num) end+
-															case when sum(r.handling_case_num) > 20 then 20 else sum(r.handling_case_num) end+
-															case when sum(r.duty_num) > 25 then 25 else sum(r.duty_num) end+
-															case when sum(r.train_num) >10 then 10 else sum(r.train_num) end+
-															case when sum(r.drink_num) > 15 then 15 else sum(r.drink_num) end+
-															case when sum(r.study_num) > 5 then 5 else sum(r.study_num) end+
-															case when sum(r.amily_evaluation_num)> 5 then 5 else sum(r.amily_evaluation_num) end+
-															case when sum(r.work_num) >5 then 5 else sum(r.work_num) end+r.health_num) AS total FROM  risk_report_record r WHERE  r.creation_date&gt;=#{startTime}  AND r.creation_date&lt;=#{endTime} GROUP BY  
-		 police_id ORDER BY total DESC) a WHERE a.total>=30)*100),2),0) as ratio  FROM  (select * from	(SELECT count(1) value,a.name,a.department_id FROM 
-  	(SELECT * FROM 
-  	department d, 
-  	(SELECT a.department_id FROM 
-  	(SELECT (case when sum(r.conduct_num) > 15 then 15 else sum(r.conduct_num) end+
-															case when sum(r.handling_case_num) > 20 then 20 else sum(r.handling_case_num) end+
-															case when sum(r.duty_num) >25 then 25 else sum(r.duty_num) end+
-															case when sum(r.train_num) > 10 then 10 else sum(r.train_num) end+
-															case when sum(r.drink_num) > 15 then 15 else sum(r.drink_num) end+
-															case when sum(r.study_num) > 5 then 5 else sum(r.study_num) end+
-															case when sum(r.amily_evaluation_num) > 5 then 5 else sum(r.amily_evaluation_num) end+
-															case when sum(r.work_num) > 5 then 5 else sum(r.work_num) end+r.health_num) AS total_num,u.department_id  FROM 
-  	`user` u LEFT JOIN risk_report_record r ON u.police_id=r.police_id WHERE r.creation_date&gt;=#{startTime}  AND r.creation_date&lt;=#{endTime}  
-  	 GROUP BY r.police_id ORDER BY  total_num DESC) a WHERE a.total_num>=30) a WHERE d.id=a.department_id) a GROUP BY a.id ORDER BY value DESC limit 5) a order by a.value DESC) a 
-  </select>
+      select result.name, result.department_id, result.value, round((result.`value` / dept.count) * 100, 2) as ratio from (
+          SELECT a.`name`, a.department_id,IFNULL(a.value,0) AS value FROM (select * from	(SELECT count(1) value,a.name,a.department_id FROM
+              (SELECT * FROM
+              department d,
+              (SELECT a.department_id FROM
+              (SELECT (case when sum(r.conduct_num) > 15 then 15 else sum(r.conduct_num) end+
+              case when sum(r.handling_case_num) > 20 then 20 else sum(r.handling_case_num) end+
+              case when sum(r.duty_num) >25 then 25 else sum(r.duty_num) end+
+              case when sum(r.train_num) > 10 then 10 else sum(r.train_num) end+
+              case when sum(r.drink_num) > 15 then 15 else sum(r.drink_num) end+
+              case when sum(r.study_num) > 5 then 5 else sum(r.study_num) end+
+              case when sum(r.amily_evaluation_num) > 5 then 5 else sum(r.amily_evaluation_num) end+
+              case when sum(r.work_num) > 5 then 5 else sum(r.work_num) end+r.health_num) AS total_num,u.department_id  FROM
+              `user` u LEFT JOIN risk_report_record r ON u.police_id=r.police_id WHERE r.creation_date &gt;= #{startTime}  AND r.creation_date &lt;= #{endTime}
+              GROUP BY r.police_id ORDER BY  total_num DESC) a WHERE a.total_num>=30) a WHERE d.id=a.department_id) a GROUP BY a.id ORDER BY value DESC limit 5) a order by a.value DESC) a ) result
+          left join (select department_id, count(police_id) count from user group by department_id) dept on result.department_id = dept.department_id
+      order by ratio desc
+</select>
   
   <!-- top10 -->
   <select id="selectPoliceRiskTopTen" resultMap="BaseResultMapTwo">
@@ -283,6 +278,14 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
  GROUP BY r.police_id) a) b
 </select>
 
-
+    <select id="getRiskAlarmType" resultType="com.bayee.political.pojo.dto.RiskAlarmTypeDO">
+        select
+            rat.id as typeId, rat.alarm_name as typeName, ifnull(ra.count, 0) as typeCount
+        from risk_alarm_type rat
+                 left join (select count(police_id) as count, alarm_type from risk_alarm r
+                            where DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT(CURDATE(), '%Y-%m') group by alarm_type) ra
+                           on ra.alarm_type = rat.id
+        order by rat.id
+    </select>
 
 </mapper>

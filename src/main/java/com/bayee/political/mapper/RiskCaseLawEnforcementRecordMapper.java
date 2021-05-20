@@ -2,6 +2,8 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.pojo.dto.CaseLawEnforcementDetailsDO;
+import com.bayee.political.pojo.dto.CaseLawEnforcementPageDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
@@ -60,10 +62,10 @@ public interface RiskCaseLawEnforcementRecordMapper {
      * @param key
      * @return
      */
-    List<RiskCaseLawEnforcementRecord> riskCaseLawEnforcementRecordPage(@Param("pageIndex") Integer pageIndex,
-                                                                        @Param("pageSize") Integer pageSize,
-                                                                        @Param("type") Integer type,
-                                                                        @Param("key") String key);
+    List<CaseLawEnforcementPageDO> riskCaseLawEnforcementRecordPage(@Param("pageIndex") Integer pageIndex,
+                                                                    @Param("pageSize") Integer pageSize,
+                                                                    @Param("list") List<Integer> type,
+                                                                    @Param("key") String key);
 
     /**
      * 统计分页数据条数
@@ -71,6 +73,13 @@ public interface RiskCaseLawEnforcementRecordMapper {
      * @param key
      * @return
      */
-    Integer riskCaseLawEnforcementRecordPageCount(@Param("type") Integer type, @Param("key") String key);
+    Integer riskCaseLawEnforcementRecordPageCount(@Param("list") List<Integer> type, @Param("key") String key);
+
+    /**
+     * 通过id查询执法管理数据
+     * @param id
+     * @return
+     */
+    CaseLawEnforcementDetailsDO findDetailsDOById(@Param("id") Integer id);
 
 }

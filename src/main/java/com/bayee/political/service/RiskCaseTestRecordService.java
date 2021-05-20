@@ -31,14 +31,20 @@ public interface RiskCaseTestRecordService {
      * 分页查询执法考试数据
      * @param pageIndex
      * @param pageSize
+     * @param date
+     * @param passFlag
+     * @param key
      * @return
      */
-	List<RiskCaseTestRecord> riskCaseTestRecordPage(Integer pageIndex, Integer pageSize,String year,Integer semester,Integer passFlag,String key);
+	List<RiskCaseTestRecord> riskCaseTestRecordPage(Integer pageIndex, Integer pageSize,String date,Integer passFlag,String key);
 
     /**
      * 统计数据条数
+     * @param date
+     * @param passFlag
+     * @param key
      * @return
      */
-	Integer riskCaseTestRecordPageCount(String year,Integer semester,Integer passFlag,String key);
+	Integer riskCaseTestRecordPageCount(String date,Integer passFlag,String key);
 
 }

@@ -1,5 +1,7 @@
 package com.bayee.political.service.impl;
 
+import com.bayee.political.pojo.dto.DutyDetailsDO;
+import com.bayee.political.pojo.dto.DutyPageDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,16 +45,22 @@ public class RiskDutyDealPoliceRecordServiceImpl implements RiskDutyDealPoliceRe
 	}
 
 	@Override
-	public List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordPage(Integer pageIndex, Integer pageSize,Integer type,String key) {
+	public List<DutyPageDO> riskDutyDealPoliceRecordPage(Integer pageIndex, Integer pageSize,
+														 Integer informationId, Integer errorId, String key) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
-		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPage(pageIndex, pageSize,type,key);
+		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPage(pageIndex, pageSize, informationId, errorId, key);
 	}
 
 	@Override
-	public Integer riskDutyDealPoliceRecordPageCount(Integer type,String key) {
-		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPageCount(type,key);
+	public Integer riskDutyDealPoliceRecordPageCount(Integer informationId, Integer errorId, String key) {
+		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPageCount(informationId, errorId, key);
+	}
+
+	@Override
+	public DutyDetailsDO findById(Integer id) {
+		return riskDutyDealPoliceRecordMapper.findById(id);
 	}
 }

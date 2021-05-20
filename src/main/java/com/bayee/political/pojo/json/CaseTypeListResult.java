@@ -1,5 +1,7 @@
 package com.bayee.political.pojo.json;
 
+import java.util.List;
+
 /**
  * @author xxl
  * @date 2021/5/7
@@ -15,6 +17,32 @@ public class CaseTypeListResult {
      * 类型描述
      */
     private String name;
+
+    /**
+     * 上级id
+     */
+    private Integer parentId;
+
+    /**
+     *
+     */
+    private List<CaseTypeListResult> childType;
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    public List<CaseTypeListResult> getChildType() {
+        return childType;
+    }
+
+    public void setChildType(List<CaseTypeListResult> childType) {
+        this.childType = childType;
+    }
 
     public Integer getId() {
         return id;

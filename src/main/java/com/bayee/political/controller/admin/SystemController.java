@@ -61,6 +61,12 @@ public class SystemController {
     @Autowired
     RiskConductVisitService riskConductVisitService;
 
+    @Autowired
+    RiskDutyErrorTypeService riskDutyErrorTypeService;
+
+    @Autowired
+    RiskDutyInformationTypeService riskDutyInformationTypeService;
+
     @GetMapping("/police/list")
     public ResponseEntity<?> policeList() {
         return new ResponseEntity<>(DataListReturn.ok(userService.findAll().stream().map(e -> {
@@ -73,12 +79,22 @@ public class SystemController {
 
     @GetMapping("/law/enforcement/type")
     public ResponseEntity<?> getCaseLawEnforcementTypeList() {
-        return new ResponseEntity<>(DataListReturn.ok(riskCaseLawEnforcementTypeService.getLawEnforcementType().stream().map(e -> {
+        List<CaseTypeListResult> resultList = new ArrayList<>();
+        List<CaseTypeListResult> queryResult = riskCaseLawEnforcementTypeService.getLawEnforcementType().stream().map(e -> {
             CaseTypeListResult result = new CaseTypeListResult();
             result.setId(e.getId());
             result.setName(e.getName());
+            result.setParentId(e.getParentId());
             return result;
-        }).collect(Collectors.toList())), HttpStatus.OK);
+        }).collect(Collectors.toList());
+
+        for (CaseTypeListResult result : queryResult) {
+            if (result.getParentId() == 0) {
+                resultList.add(caseTypeListResultChildTypeDetails(queryResult, result));
+            }
+        }
+
+        return new ResponseEntity<>(DataListReturn.ok(resultList), HttpStatus.OK);
     }
 
     @GetMapping("/duty/type")
@@ -240,6 +256,48 @@ public class SystemController {
         }).collect(Collectors.toList()));
 
         return new ResponseEntity<>(DataListReturn.ok(resultList), HttpStatus.OK);
+    }
+
+    @GetMapping("/duty/information/type/list")
+    public ResponseEntity<?> getDutyInformationType() {
+        List<DutyInformationTypeListResult> resultList = riskDutyInformationTypeService.getAll().stream().map(e -> {
+            DutyInformationTypeListResult result = new DutyInformationTypeListResult();
+            result.setId(e.getId());
+            result.setName(e.getName());
+            return result;
+        }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(DataListReturn.ok(resultList), HttpStatus.OK);
+    }
+
+    @GetMapping("/duty/error/type/list")
+    public ResponseEntity<?> getDutyErrorType() {
+        List<DutyErrorTypeListResult> resultList = riskDutyErrorTypeService.getAll().stream().map(e -> {
+            DutyErrorTypeListResult result = new DutyErrorTypeListResult();
+            result.setId(e.getId());
+            result.setName(e.getName());
+            return result;
+        }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(DataListReturn.ok(resultList), HttpStatus.OK);
+    }
+
+    /**
+     * 执法管理类型处理
+     * @param list
+     * @param result
+     * @return
+     */
+    private CaseTypeListResult caseTypeListResultChildTypeDetails(List<CaseTypeListResult> list, CaseTypeListResult result) {
+        for (CaseTypeListResult data : list) {
+            if (data.getParentId().equals(result.getId())) {
+                if (result.getChildType() == null) {
+                    result.setChildType(new ArrayList<>());
+                }
+                result.getChildType().add(caseTypeListResultChildTypeDetails(list, data));
+            }
+        }
+        return result;
     }
 
     /**

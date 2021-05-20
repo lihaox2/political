@@ -22,4 +22,12 @@ public interface RiskCaseLawEnforcementTypeService {
      */
     List<RiskCaseLawEnforcementType> getDutyType();
 
+    /**
+     * 通过类型名称查询id
+     * @param name
+     * @param parentId
+     * @return
+     */
+    Integer findByNameAndParentId(String name, Integer parentId);
+
 }

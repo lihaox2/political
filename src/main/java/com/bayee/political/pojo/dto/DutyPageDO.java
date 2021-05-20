@@ -1,10 +1,10 @@
-package com.bayee.political.pojo.json;
+package com.bayee.political.pojo.dto;
 
 /**
  * @author xxl
- * @date 2021/5/7
+ * @date 2021/5/19
  */
-public class DutyPageResult {
+public class DutyPageDO {
 
     private Integer id;
 

@@ -1,15 +1,20 @@
-package com.bayee.political.pojo.json;
+package com.bayee.political.pojo.dto;
 
 /**
  * @author xxl
- * @date 2021/5/7
+ * @date 2021/5/19
  */
-public class CaseLawEnforcementSaveParam {
+public class CaseLawEnforcementDetailsDO {
 
     /**
-     * 警员id
+     * 警员编号
      */
     private String policeId;
+
+    /**
+     * 警员名称
+     */
+    private String policeName;
 
     /**
      * 责任单位
@@ -22,9 +27,24 @@ public class CaseLawEnforcementSaveParam {
     private String caseCode;
 
     /**
-     * 问题类型id
+     * 问题分类id
+     */
+    private Integer parentId;
+
+    /**
+     * 问题分类名称
+     */
+    private String parentName;
+
+    /**
+     * 扣分标准id
      */
     private Integer typeId;
+
+    /**
+     * 扣分标准
+     */
+    private String typeName;
 
     /**
      * 问题描述
@@ -40,6 +60,22 @@ public class CaseLawEnforcementSaveParam {
      * 时间
      */
     private String date;
+
+    public String getPoliceId() {
+        return policeId;
+    }
+
+    public void setPoliceId(String policeId) {
+        this.policeId = policeId;
+    }
+
+    public String getPoliceName() {
+        return policeName;
+    }
+
+    public void setPoliceName(String policeName) {
+        this.policeName = policeName;
+    }
 
     public String getDeptName() {
         return deptName;
@@ -57,12 +93,20 @@ public class CaseLawEnforcementSaveParam {
         this.caseCode = caseCode;
     }
 
-    public String getPoliceId() {
-        return policeId;
+    public Integer getParentId() {
+        return parentId;
     }
 
-    public void setPoliceId(String policeId) {
-        this.policeId = policeId;
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
     }
 
     public Integer getTypeId() {
@@ -71,6 +115,14 @@ public class CaseLawEnforcementSaveParam {
 
     public void setTypeId(Integer typeId) {
         this.typeId = typeId;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public String getDesc() {

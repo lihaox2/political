@@ -74,7 +74,8 @@ public class CockpitController {
 		List<Map<String,Object>>  riskTrends=riskTrendsService.selectRiskTrends();
 		
 		RiskTrendResult riskTrendResult=new RiskTrendResult();
-		
+
+		riskTrendResult.setAlarmPoliceCount(0);
 		riskTrendResult.setPoliceTotal(policeTotal);
 		riskTrendResult.setRisktotal(risktotal);
 		riskTrendResult.setProportion(Double.valueOf(risktotal)/Double.valueOf(policeTotal)*100);
@@ -257,137 +258,6 @@ public class CockpitController {
 			@RequestParam(value = "num8", required = false) Double num8)
 			throws ApiException, ParseException {
 
-//		int userNum=userService.countTotal();
-//		
-//		DataListReturn dlr = new DataListReturn();
-//		if (dateTime == null) {
-//			dateTime = sd.format(new Date());
-//		}
-//		String year = dateTime.substring(0, 4);
-//		List<RiskIndexMonitorChild> list = new ArrayList<RiskIndexMonitorChild>();
-//		RiskIndexMonitorChild item0 = new RiskIndexMonitorChild();
-//		item0.setIndexPoliceNum(0);
-//		item0.setAlarmPoliceRate(0);
-//		item0.setAlarmPoliceNum(0);
-//		item0.setTalkPoliceNum(0);
-//		item0.setIsDisplay(0);
-//		// 综合指数风险
-//		RiskIndexMonitorChild item1 = riskService.comprehensiveIndex(dateTime,num1==null?null:(int)(userNum*num1));
-//		if (item1 != null) {
-//			item1.setId(11001);
-//			item1.setName("综合指数风险");
-//			if(num1!=null) {
-//				item1.setAlarmPoliceNum((int) (userNum*num1));
-//			}
-//			list.add(item1);
-//		} else {
-//			item0.setId(11001);
-//			item0.setName("综合指数风险");
-//			list.add(item0);
-//		}
-//		// 行为规范风险
-//		RiskIndexMonitorChild item2 = riskService.drinkIndex(dateTime,num2==null?null:(int) (userNum*num2));
-//		if (item2 != null) {
-//			item2.setId(11002);
-//			item2.setName("行为规范风险");
-//			if(num2!=null) {
-//				item2.setAlarmPoliceNum((int) (userNum*num2));
-//			}
-//			list.add(item2);
-//		} else {
-//			item0.setId(11002);
-//			item0.setName("行为规范风险");
-//			list.add(item0);
-//		}
-//		// 纪律作风风险
-//		RiskIndexMonitorChild item3 = riskService.conductIndex(dateTime,num3==null?null:(int) (userNum*num3));
-//		if (item3 != null) {
-//			item3.setId(11003);
-//			item3.setName("纪律作风风险");
-//			if(num3!=null) {
-//				item3.setAlarmPoliceNum((int) (userNum*num3));
-//			}
-//			list.add(item3);
-//		} else {
-//			item0.setId(11003);
-//			item0.setName("纪律作风风险");
-//			list.add(item0);
-//		}
-//		// 执法办案风险
-//		RiskIndexMonitorChild item4 = riskService.caseIndex(dateTime,num4==null?null:(int) (userNum*num4));
-//		if (item4 != null) {
-//			item4.setId(11004);
-//			item4.setName("执法办案风险");
-//			if(num4!=null) {
-//				item4.setAlarmPoliceNum((int) (userNum*num4));
-//			}
-//			list.add(item4);
-//		} else {
-//			item0.setId(11004);
-//			item0.setName("执法办案风险");
-//			list.add(item0);
-//		}
-//		// 接警执勤风险
-//		RiskIndexMonitorChild item5 = riskService.dutyIndex(dateTime,num5==null?null:(int) (userNum*num5));
-//		if (item5 != null) {
-//			item5.setId(11005);
-//			item5.setName("接警执勤风险");
-//			if(num5!=null) {
-//				item5.setAlarmPoliceNum((int) (userNum*num5));
-//			}
-//			list.add(item5);
-//		} else {
-//			item0.setId(11005);
-//			item0.setName("接警执勤风险");
-//			list.add(item0);
-//		}
-//		// 警务技能风险
-//		RiskIndexMonitorChild item6 = riskService.trainIndex(dateTime,num6==null?null:(int) (userNum*num6));
-//		if (item6 != null) {
-//			item6.setId(11006);
-//			item6.setName("警务技能风险");
-//			if(num6!=null) {
-//				item6.setAlarmPoliceNum((int) (userNum*num6));
-//			}
-//			list.add(item6);
-//		} else {
-//			item0.setId(11006);
-//			item0.setName("警务技能风险");
-//			list.add(item0);
-//		}
-//		// 学习培训风险
-//		RiskIndexMonitorChild item7 = riskService.studyIndex(dateTime,num7==null?null:(int) (userNum*num7));
-//		if (item7 != null) {
-//			item7.setId(11007);
-//			item7.setName("学习培训风险");
-//			if(num7!=null) {
-//				item7.setAlarmPoliceNum((int) (userNum*num7));
-//			}
-//			list.add(item7);
-//		} else {
-//			item0.setId(11007);
-//			item0.setName("学习培训风险");
-//			list.add(item0);
-//		}
-//		// 健康风险
-//		RiskIndexMonitorChild item8 = riskService.healthIndex(year, dateTime,num8==null?null:(int) (userNum*num8));
-//		if (item8 != null) {
-//			item8.setId(11008);
-//			item8.setName("健康风险");
-//			if(num8!=null) {
-//				item8.setAlarmPoliceNum((int) (userNum*num8));
-//			}
-//			list.add(item8);
-//		} else {
-//			item0.setId(11008);
-//			item0.setName("健康风险");
-//			list.add(item0);
-//		}
-//		dlr.setStatus(true);
-//		dlr.setMessage("success");
-//		dlr.setResult(list);
-//		dlr.setCode(StatusCode.getSuccesscode());
-		
 		Date currdate = new Date();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(currdate);
@@ -466,8 +336,19 @@ public class CockpitController {
 		list.add(item6);
 		list.add(item7);
 		list.add(item8);
+
+		// 新增需求-如果人数为0时返回总人数的3%
+		double radio = 0.03;
+		List<RiskProportionResult> listResult = list.stream().map(e -> {
+			if (e.getValue() <= 0) {
+				int num = (int)Math.ceil(userNum * radio);
+				e.setValue(num);
+				e.setAlarmPoliceRate(Double.valueOf(df.format(((double)num/userNum)*100)));
+			}
+			return e;
+		}).collect(Collectors.toList());
 		
-		return new ResponseEntity<>(list, HttpStatus.OK);
+		return new ResponseEntity<>(listResult, HttpStatus.OK);
 	} 	
 	
 	/**
@@ -510,15 +391,16 @@ public class CockpitController {
 	
 	
 	@GetMapping("/cockpit/risk/alam")
-	public ResponseEntity<?> riskAlam(Integer alamType){
+	public ResponseEntity<?> riskAlam(@RequestParam("alamType") Integer alamType){
 		
 		Map<String,Object> map=riskTrendsService.theMonthAlamTotal();
+
+		if (alamType == null) {
+			alamType = 11001;
+		}
+		List<RiskAlarm> list = riskTrendsService.theMonthAlarm(alamType);
 		
-		List<RiskAlarm> list=riskTrendsService.theMonthAlarm();
-		
-		Map<String,Object> lastMap=new HashMap<String, Object>();
-		
-		for(RiskAlarm r:list) {
+		/*for(RiskAlarm r:list) {
 			if(r.getNum()>1) {
 				
 				List<Map<String,Object>> policeIdAlarm= riskTrendsService.findByPoliceIdRiskAlarm(r.getPoliceId());
@@ -529,7 +411,7 @@ public class CockpitController {
 					Map<String,Object> typeMap=new HashMap<String, Object>();
 					typeMap.put("typeName", typeName);
 					typeMap.put("alarmScore", m.get("alarmScore"));
-					if(r.getTypeList()==null) {
+					if(r.getTypeList()==null) { 
 						r.setTypeList(new ArrayList<Map<String,Object>>());
 					}
 					r.getTypeList().add(typeMap);
@@ -545,30 +427,33 @@ public class CockpitController {
 				}
 				r.getTypeList().add(typeMap);
 			}
-		}
-		lastMap.put("theMonthAlarm", list);
-		lastMap.put("theMonthAlamTotal", map);
+		}*/
+		/*lastMap.put("theMonthAlarm", list);
+		lastMap.put("theMonthAlamTotal", map);*/
 		
 		
-		return new ResponseEntity<>(lastMap, HttpStatus.OK);
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
 	
 	@GetMapping("/cockpit/risk/continuity/alarm")
 	public ResponseEntity<?> continuityAlarm(){
-		
 		List<Map<String,Object>> continuityAlarm=riskTrendsService.continuityAlarm();
-		
-		
+
 		return new ResponseEntity<>(continuityAlarm, HttpStatus.OK);
 	}
 	
 	@GetMapping("/cockpit/risk/continuity/alarm/details")
 	public ResponseEntity<?> continuityAlarmDetails(String policeId){
-		
 		List<Map<String,Object>> continuityAlarmDetails=riskTrendsService.continuityAlarmDetails(policeId);
-		
-		
+
 		return new ResponseEntity<>(continuityAlarmDetails, HttpStatus.OK);
 	}
+
+	@GetMapping("/cockpit/risk/type")
+	public ResponseEntity<?> riskAlarmType() {
+		return new ResponseEntity<>(DataListReturn.ok(riskTrendsService.getRiskAlarmType()),
+				HttpStatus.OK);
+	}
+
 }

@@ -17,9 +17,44 @@ public class DutyDetailsResult {
     private String policeName;
 
     /**
-     * 问题分类
+     * 警单编号
      */
-    private Integer typeId;
+    private String policeListCode;
+
+    /**
+     * 辖区
+     */
+    private String jurisdiction;
+
+    /**
+     * 警情类别
+     */
+    private Integer informationId;
+
+    /**
+     * 警情类别名称
+     */
+    private String informationName;
+
+    /**
+     * 警单详情
+     */
+    private String policeListInfo;
+
+    /**
+     * 错误类别
+     */
+    private Integer errorId;
+
+    /**
+     * 错误类别名称
+     */
+    private String errorName;
+
+    /**
+     * 是否核实（1 已核实，0 未核实）
+     */
+    private Integer isVerified;
 
     /**
      * 问题描述
@@ -36,6 +71,70 @@ public class DutyDetailsResult {
      */
     private String date;
 
+    public String getPoliceListCode() {
+        return policeListCode;
+    }
+
+    public void setPoliceListCode(String policeListCode) {
+        this.policeListCode = policeListCode;
+    }
+
+    public String getJurisdiction() {
+        return jurisdiction;
+    }
+
+    public void setJurisdiction(String jurisdiction) {
+        this.jurisdiction = jurisdiction;
+    }
+
+    public Integer getInformationId() {
+        return informationId;
+    }
+
+    public void setInformationId(Integer informationId) {
+        this.informationId = informationId;
+    }
+
+    public String getInformationName() {
+        return informationName;
+    }
+
+    public void setInformationName(String informationName) {
+        this.informationName = informationName;
+    }
+
+    public String getPoliceListInfo() {
+        return policeListInfo;
+    }
+
+    public void setPoliceListInfo(String policeListInfo) {
+        this.policeListInfo = policeListInfo;
+    }
+
+    public Integer getErrorId() {
+        return errorId;
+    }
+
+    public void setErrorId(Integer errorId) {
+        this.errorId = errorId;
+    }
+
+    public String getErrorName() {
+        return errorName;
+    }
+
+    public void setErrorName(String errorName) {
+        this.errorName = errorName;
+    }
+
+    public Integer getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(Integer isVerified) {
+        this.isVerified = isVerified;
+    }
+
     public String getPoliceId() {
         return policeId;
     }
@@ -50,14 +149,6 @@ public class DutyDetailsResult {
 
     public void setPoliceName(String policeName) {
         this.policeName = policeName;
-    }
-
-    public Integer getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(Integer typeId) {
-        this.typeId = typeId;
     }
 
     public String getDesc() {

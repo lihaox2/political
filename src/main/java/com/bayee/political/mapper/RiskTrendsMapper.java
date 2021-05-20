@@ -3,6 +3,7 @@ package com.bayee.political.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.bayee.political.pojo.dto.RiskAlarmTypeDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskReportRecord;
@@ -67,4 +68,11 @@ public interface RiskTrendsMapper {
  	List<Map<String,Object>> riskPersonnelTrend(@Param(value="alamType")Integer alamType);
  	
  	Map<String,Object> theMonthAlamTotal();
+
+	/**
+	 * 获取预警类型
+	 * @return
+	 */
+	List<RiskAlarmTypeDO> getRiskAlarmType();
+
 }

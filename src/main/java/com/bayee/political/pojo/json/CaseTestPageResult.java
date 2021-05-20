@@ -31,12 +31,7 @@ public class CaseTestPageResult {
     /**
      * 考试年份
      */
-    private String year;
-
-    /**
-     * 期数
-     */
-    private Integer semester;
+    private String date;
 
     public Integer getId() {
         return id;
@@ -78,19 +73,11 @@ public class CaseTestPageResult {
         this.score = score;
     }
 
-    public String getYear() {
-        return year;
+    public String getDate() {
+        return date;
     }
 
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public Integer getSemester() {
-        return semester;
-    }
-
-    public void setSemester(Integer semester) {
-        this.semester = semester;
+    public void setDate(String date) {
+        this.date = date;
     }
 }

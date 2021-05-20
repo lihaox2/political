@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
     <result column="deduction_score" property="deductionScore" jdbcType="DOUBLE" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
@@ -105,11 +106,18 @@
   </update>
 
   <select id="getLawEnforcementType" resultMap="BaseResultMap">
-    select * from risk_case_law_enforcement_type where code not in('jcj')
+    select * from risk_case_law_enforcement_type
   </select>
 
   <select id="getDutyType" resultMap="BaseResultMap">
     select * from risk_case_law_enforcement_type where code in('jcj')
+  </select>
+
+  <select id="findByNameAndParentId" resultType="Integer">
+    select id from risk_case_law_enforcement_type where name = #{name}
+    <if test="parentId != null">
+      and parent_id = #{parentId}
+    </if>
   </select>
 
 </mapper>

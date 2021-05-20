@@ -6693,6 +6693,7 @@ public class TrainController extends BaseController {
 		TrainPhysical physical = new TrainPhysical();
 		physical.setName(name);
 		physical.setPlace("分局");
+		physical.setDepartmentId(1);
 		physical.setRegistrationStartDate(DateUtil.parseDateTime(registrationStartDate +":00"));
 		physical.setRegistrationEndDate(DateUtil.parseDateTime(registrationStartDate +":00"));
 		physical.setTrainStartDate(DateUtil.parseDateTime(registrationStartDate +":00"));
@@ -7053,6 +7054,7 @@ public class TrainController extends BaseController {
 		TrainFirearm trainFirearm = new TrainFirearm();
 		trainFirearm.setType(type);
 		trainFirearm.setName(name);
+		trainFirearm.setDepartmentId(1);
 		trainFirearm.setPlace("分局");
 		trainFirearm.setRegistrationStartDate(DateUtil.parseDateTime(registrationStartDate +":00"));
 		trainFirearm.setRegistrationEndDate(DateUtil.parseDateTime(registrationStartDate +":00"));

@@ -216,4 +216,23 @@ ORDER BY consequtive) a WHERE a.consequtive>0) a ,`user` u WHERE a.policeId=u.po
    group by DATE_FORMAT(r1.creation_date, '%Y-%m')
     order by DATE_FORMAT(r1.creation_date, '%Y-%m')) a,risk_alarm_type t,`user` u WHERE a.police_id=u.police_id AND a.alarm_type=t.id ;
 </select>
+
+  <select id="countRiskAlarmByPolice" resultType="Integer">
+    select
+        count(1)
+    from (select
+            police_id
+        from risk_alarm
+        where creation_date BETWEEN DATE_SUB(CURDATE(),INTERVAL 12 MONTH) and CURDATE() group by police_id) a
+  </select>
+
+  <select id="theMonthAlarmByAlarmType" resultMap="BaseResultMap">
+    SELECT
+      u.name,r.*,sum(alarm_score) AS alarmScore
+    FROM risk_alarm r,`user` u
+    WHERE r.police_id=u.police_id AND DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT(CURDATE(), '%Y-%m')
+      and r.alarm_type = #{alarmType}
+    GROUP BY u.police_id, r.alarm_type ORDER BY alarmScore DESC
+  </select>
+
 </mapper>

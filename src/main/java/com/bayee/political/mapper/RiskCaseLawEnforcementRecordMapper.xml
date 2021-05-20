@@ -7,14 +7,15 @@
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="input_time" jdbcType="TIMESTAMP" property="inputTime" />
+    <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+    <result column="case_code" jdbcType="VARCHAR" property="caseCode" />
     <result column="deduction_score" jdbcType="DOUBLE" property="deductionScore" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
-    
     <result column="name" jdbcType="VARCHAR" property="typeName" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, police_id, type, content, input_time, deduction_score, creation_date, update_date
+    id, police_id, type, content, input_time, deduction_score, dept_name, case_code, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select a.*,b.name as typeName from risk_case_law_enforcement_record a
@@ -27,10 +28,11 @@
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord">
     insert into risk_case_law_enforcement_record (id, police_id, type, 
-      content, input_time, deduction_score, 
+      content, input_time, deduction_score, dept_name, case_code,
       creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
-      #{content,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, #{deductionScore,jdbcType=DOUBLE}, 
+      #{content,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, #{deductionScore,jdbcType=DOUBLE},
+      #{deptName}, #{caseCode},
       #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord">
@@ -54,6 +56,12 @@
       <if test="deductionScore != null">
         deduction_score,
       </if>
+        <if test="deptName != null">
+          dept_name,
+        </if>
+        <if test="caseCode != null">
+          case_code,
+        </if>
       <if test="creationDate != null">
         creation_date,
       </if>
@@ -79,6 +87,12 @@
       </if>
       <if test="deductionScore != null">
         #{deductionScore,jdbcType=DOUBLE},
+      </if>
+      <if test="deptName != null">
+        #{deptName},
+      </if>
+      <if test="caseCode != null">
+        #{caseCode},
       </if>
       <if test="creationDate != null">
         #{creationDate,jdbcType=TIMESTAMP},
@@ -106,6 +120,12 @@
       <if test="deductionScore != null">
         deduction_score = #{deductionScore,jdbcType=DOUBLE},
       </if>
+      <if test="deptName != null">
+        dept_name = #{deptName},
+      </if>
+      <if test="caseCode != null">
+        case_code = #{caseCode},
+      </if>
       <if test="creationDate != null">
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -122,6 +142,8 @@
       content = #{content,jdbcType=VARCHAR},
       input_time = #{inputTime,jdbcType=TIMESTAMP},
       deduction_score = #{deductionScore,jdbcType=DOUBLE},
+        dept_name = #{deptName},
+        case_code = #{caseCode},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
@@ -159,32 +181,69 @@
     where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
   </select>
 
-  <select id="riskCaseLawEnforcementRecordPage" resultMap="BaseResultMap">
-    select a.*,b.name as typeName from risk_case_law_enforcement_record a
-    left join risk_case_law_enforcement_type b on b.id = a.type
-    left join user u on u.police_id = a.police_id
+  <select id="riskCaseLawEnforcementRecordPage" resultType="com.bayee.political.pojo.dto.CaseLawEnforcementPageDO">
+    select
+        record.id as id, record.police_id as policeId, u.name as policeName, record.dept_name as deptName,
+        record.case_code as caseCode, parend_type.name as typeName, type.name as content, record.content as `desc`,
+        record.deduction_score as deductScore, DATE_FORMAT(record.creation_date, '%Y-%m-%d %H:%i:%s') as date
+    from risk_case_law_enforcement_record record
+    left join user u on record.police_id = u.police_id
+    left join risk_case_law_enforcement_type type on type.id = record.type
+    left join risk_case_law_enforcement_type parend_type on type.parent_id = parend_type.id
     where 1 = 1
     <if test="key != null and key != ''">
-        and (a.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or a.content like concat('%', #{key}, '%'))
+        and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or record.content like concat('%', #{key}, '%'))
     </if>
-    <if test="type != null">
-        and a.type = #{type}
+    <if test="list != null and list.size > 0">
+        and (type.id in (
+        <foreach collection="list" item="value" separator=",">
+          #{value }
+        </foreach>
+      ) or parend_type.id in (
+      <foreach collection="list" item="value" separator=",">
+        #{value }
+      </foreach>
+      ))
     </if>
-    order by a.id desc
+    order by record.id desc
     limit #{pageIndex}, #{pageSize}
   </select>
 
   <select id="riskCaseLawEnforcementRecordPageCount" resultType="Integer">
-    select count(1) from risk_case_law_enforcement_record a
-    left join risk_case_law_enforcement_type b on b.id = a.type
-    left join user u on u.police_id = a.police_id
+    select
+        count(1)
+    from risk_case_law_enforcement_record record
+    left join user u on record.police_id = u.police_id
+    left join risk_case_law_enforcement_type type on type.id = record.type
+    left join risk_case_law_enforcement_type parend_type on type.parent_id = parend_type.id
     where 1 = 1
     <if test="key != null and key != ''">
-      and (a.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or a.content like concat('%', #{key}, '%'))
+      and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or record.content like concat('%', #{key}, '%'))
     </if>
-    <if test="type != null">
-      and a.type = #{type}
+    <if test="list != null and list.size > 0">
+      and (type.id in (
+      <foreach collection="list" item="value" separator=",">
+        #{value }
+      </foreach>
+      ) or parend_type.id in (
+      <foreach collection="list" item="value" separator=",">
+        #{value }
+      </foreach>
+      ))
     </if>
+  </select>
+
+  <select id="findDetailsDOById" resultType="com.bayee.political.pojo.dto.CaseLawEnforcementDetailsDO">
+    select
+        record.police_id as policeId, u.name as policeName, record.dept_name as deptName, record.case_code as caseCode,
+        parend_type.id as parentId, parend_type.name as parentName, type.id as typeId, type.name as typeName,
+        record.content, record.deduction_score as deductScore,
+        DATE_FORMAT(record.creation_date, '%Y-%m-%d %H:%i:%s') as date
+    from risk_case_law_enforcement_record record
+      left join user u on record.police_id = u.police_id
+      left join risk_case_law_enforcement_type type on type.id = record.type
+      left join risk_case_law_enforcement_type parend_type on type.parent_id = parend_type.id
+    where record.id = #{id}
   </select>
 
 </mapper>

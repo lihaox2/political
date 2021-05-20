@@ -58,4 +58,17 @@ public interface RiskAlarmMapper {
 	
 	List<Map<String,Object>> continuityAlarmDetails(String policeId);
 
+	/**
+	 * 查询近12个月的风险人数总和，按警号去重
+	 * @return
+	 */
+	Integer countRiskAlarmByPolice();
+
+	/**
+	 * 根据风险类型查询 该类型下的所有人
+	 * @param alarmType
+	 * @return
+	 */
+	List<RiskAlarm> theMonthAlarmByAlarmType(@Param("alarmType") Integer alarmType);
+
 }

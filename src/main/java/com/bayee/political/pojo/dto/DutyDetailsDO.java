@@ -1,15 +1,20 @@
-package com.bayee.political.pojo.json;
+package com.bayee.political.pojo.dto;
 
 /**
  * @author xxl
  * @date 2021/5/7
  */
-public class DutySaveParam {
+public class DutyDetailsDO {
 
     /**
-     * 警员id
+     * 警员编号
      */
     private String policeId;
+
+    /**
+     * 警员名称
+     */
+    private String policeName;
 
     /**
      * 警单编号
@@ -27,6 +32,11 @@ public class DutySaveParam {
     private Integer informationId;
 
     /**
+     * 警情类别名称
+     */
+    private String informationName;
+
+    /**
      * 警单详情
      */
     private String policeListInfo;
@@ -35,6 +45,11 @@ public class DutySaveParam {
      * 错误类别
      */
     private Integer errorId;
+
+    /**
+     * 错误类别名称
+     */
+    private String errorName;
 
     /**
      * 是否核实（1 已核实，0 未核实）
@@ -80,6 +95,14 @@ public class DutySaveParam {
         this.informationId = informationId;
     }
 
+    public String getInformationName() {
+        return informationName;
+    }
+
+    public void setInformationName(String informationName) {
+        this.informationName = informationName;
+    }
+
     public String getPoliceListInfo() {
         return policeListInfo;
     }
@@ -96,6 +119,14 @@ public class DutySaveParam {
         this.errorId = errorId;
     }
 
+    public String getErrorName() {
+        return errorName;
+    }
+
+    public void setErrorName(String errorName) {
+        this.errorName = errorName;
+    }
+
     public Integer getIsVerified() {
         return isVerified;
     }
@@ -110,6 +141,14 @@ public class DutySaveParam {
 
     public void setPoliceId(String policeId) {
         this.policeId = policeId;
+    }
+
+    public String getPoliceName() {
+        return policeName;
+    }
+
+    public void setPoliceName(String policeName) {
+        this.policeName = policeName;
     }
 
     public String getDesc() {

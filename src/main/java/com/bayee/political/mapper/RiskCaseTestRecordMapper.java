@@ -48,21 +48,23 @@ public interface RiskCaseTestRecordMapper {
 	 * 分页查询执法考试数据
 	 * @param pageIndex
 	 * @param pageSize
-	 * @param year
-	 * @param semester
+	 * @param date
 	 * @param passFlag
 	 * @param key
 	 * @return
 	 */
-	List<RiskCaseTestRecord> riskCaseTestRecordPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize,
-			@Param("year") String year, @Param("semester") Integer semester,
-            @Param("passFlag") Integer passFlag, @Param("key") String key);
+	List<RiskCaseTestRecord> riskCaseTestRecordPage(@Param("pageIndex") Integer pageIndex,
+													@Param("pageSize") Integer pageSize, @Param("date") String date,
+													@Param("passFlag") Integer passFlag, @Param("key") String key);
 
 	/**
 	 * 统计数据条数
+	 * @param date
+	 * @param passFlag
+	 * @param key
 	 * @return
 	 */
-	Integer riskCaseTestRecordPageCount(@Param("year") String year, @Param("semester") Integer semester,
-            @Param("passFlag") Integer passFlag, @Param("key") String key);
+	Integer riskCaseTestRecordPageCount(@Param("date") String date, @Param("passFlag") Integer passFlag,
+										@Param("key") String key);
 
 }

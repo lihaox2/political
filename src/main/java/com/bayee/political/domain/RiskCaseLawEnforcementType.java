@@ -9,11 +9,21 @@ public class RiskCaseLawEnforcementType {
 
     private String code;
 
+    private Integer parentId;
+
     private Double deductionScore;
 
     private Date creationDate;
 
     private Date updateDate;
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
 
     public Integer getId() {
         return id;

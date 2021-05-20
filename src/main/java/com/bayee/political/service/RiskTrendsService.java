@@ -6,6 +6,8 @@ import java.util.Map;
 import com.bayee.political.domain.RiskAlarm;
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.RiskTrends;
+import com.bayee.political.pojo.dto.RiskAlarmTypeDO;
+import org.apache.ibatis.annotations.Param;
 
 public interface RiskTrendsService {
 
@@ -73,4 +75,24 @@ public interface RiskTrendsService {
   	List<Map<String,Object>> continuityAlarm();
   	
   	List<Map<String,Object>> continuityAlarmDetails(String policeId);
+
+	/**
+	 * 查询近12个月的风险人数总和，按警号去重
+	 * @return
+	 */
+	Integer countRiskAlarmByPolice();
+
+	/**
+	 * 获取预警类型
+	 * @return
+	 */
+	List<RiskAlarmTypeDO> getRiskAlarmType();
+
+	/**
+	 * 根据风险类型查询 该类型下的所有人
+	 * @param alarmType
+	 * @return
+	 */
+	List<RiskAlarm> theMonthAlarm(@Param("alarmType") Integer alarmType);
+
 }

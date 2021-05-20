@@ -153,6 +153,7 @@ public class ReportController {
             map.put("totalScore", totalNum.toString());
             map.put("upperMonthScore", reportRecord.getLastTotalNum()+"");
             map.put("thisMonthScore", reportRecord.getCurrentTotalNum()+"");
+
             map.put("conductScore", conduct.getIndexNum() == null ? "0" : conduct.getIndexNum().toString());
             map.put("caseScore", riskCase.getIndexNum() == null ? "0" : riskCase.getIndexNum().toString());
             map.put("dutyScore", duty.getIndexNum() == null ? "0" : duty.getIndexNum().toString());
@@ -160,6 +161,7 @@ public class ReportController {
             map.put("socialContactScore", socialContact.getIndexNum() == null ? "0" : socialContact.getIndexNum().toString());
             map.put("familyAssessScore", familyEvaluation.getIndexNum() == null ? "0" : familyEvaluation.getIndexNum().toString());
             map.put("healthScore", health.getIndexNum() == null ? "0" : health.getIndexNum().toString());
+
             map.put("inputDate", DateUtils.formatDate(reportRecord.getCreationDate(), "yyyy年MM月"));
             map.put("reportCreateDate", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日")));
             map.put("bureauRuleScore",  conduct.getBureauRuleScore() == null ? "0" : conduct.getBureauRuleScore().toString());
@@ -200,14 +202,14 @@ public class ReportController {
 
     private String createPoliceRiskReportDetails(Map<String, Object> o, String fileName) {
         // 模板路径
-        String templatePath = "/mnt/qiantang/police_risk_template_V1.pdf";
-//        String templatePath = "C:\\Users\\颜世旺\\Desktop\\police_risk_template_V1.pdf";
+//        String templatePath = "/mnt/qiantang/police_risk_template_V1.pdf";
+        String templatePath = "C:\\Users\\颜世旺\\Desktop\\police_risk_template_V1.pdf";
         // 生成的新文件路径
-        String newPDFPath = "/mnt/qiantang/policeRiskReport/"+fileName+".pdf";
-//        String newPDFPath = "C:\\Users\\颜世旺\\Desktop\\"+fileName+".pdf";
+//        String newPDFPath = "/mnt/qiantang/policeRiskReport/"+fileName+".pdf";
+        String newPDFPath = "C:\\Users\\颜世旺\\Desktop\\"+fileName+".pdf";
 
-//        String fontStylePath = "C:\\Windows\\Fonts\\simfang.ttf";
-        String fontStylePath = "/usr/share/font/simfang.ttf";
+        String fontStylePath = "C:\\Windows\\Fonts\\simfang.ttf";
+//        String fontStylePath = "/usr/share/font/simfang.ttf";
 
         String returnPath = "http://8.136.146.186:8099/static/policeRiskReport/"+fileName+".pdf";
 //        String returnPath = newPDFPath;
@@ -218,7 +220,10 @@ public class ReportController {
         PdfStamper stamper;
         try {
             BaseFont bf = BaseFont.createFont(fontStylePath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            Font FontChinese = new Font(bf, 5, Font.NORMAL);
+            /*Font fontChinese = new Font(bf, 5, Font.NORMAL);
+            Font font = new Font(bf, 32);
+            font.setColor(BaseColor.RED);*/
+
             // 输出流
             out = new FileOutputStream(newPDFPath);
 
@@ -232,8 +237,7 @@ public class ReportController {
             form.addSubstitutionFont(bf);
             for(String key : datemap.keySet()){
                 String value = datemap.get(key);
-                form.setField(key,value);
-
+                form.setField(key, value);
             }
             //图片类的内容处理
             Map<String,String> imgmap = (Map<String,String>)o.get("imgmap");
@@ -258,7 +262,6 @@ public class ReportController {
             stamper.setFormFlattening(true);
             stamper.close();
             Document doc = new Document();
-            Font font = new Font(bf, 32);
             PdfCopy copy = new PdfCopy(doc, out);
             doc.open();
             PdfImportedPage importPage = copy.getImportedPage(new PdfReader(bos.toByteArray()), 1);

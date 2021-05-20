@@ -13,6 +13,19 @@ public class RiskTrendResult {
 	
 	private List<Map<String,Object>>  riskTrends;
 
+	/**
+	 * 年度总预警人数
+	 */
+	private Integer alarmPoliceCount;
+
+	public Integer getAlarmPoliceCount() {
+		return alarmPoliceCount;
+	}
+
+	public void setAlarmPoliceCount(Integer alarmPoliceCount) {
+		this.alarmPoliceCount = alarmPoliceCount;
+	}
+
 	public Integer getPoliceTotal() {
 		return policeTotal;
 	}

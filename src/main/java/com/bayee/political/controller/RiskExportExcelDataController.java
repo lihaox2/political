@@ -82,6 +82,15 @@ public class RiskExportExcelDataController {
 	@Autowired
 	TotalRiskDetailsService totalRiskDetailsService;
 
+	@Autowired
+	RiskCaseLawEnforcementTypeService riskCaseLawEnforcementTypeService;
+
+	@Autowired
+	RiskDutyInformationTypeService riskDutyInformationTypeService;
+
+	@Autowired
+	RiskDutyErrorTypeService riskDutyErrorTypeService;
+
 	/**
 	 * 	导入Excel警员健康数据
 	 * 
@@ -102,7 +111,7 @@ public class RiskExportExcelDataController {
 		}
 		
 		// 记录错误行
-		int index = 1;
+		int index = 0;
 		try {
 			for (List<String> excel : readExcel) {
 				String policeId = excel.get(5);
@@ -330,7 +339,7 @@ public class RiskExportExcelDataController {
 		readExcel.remove(0);
 		String yearMonth=DateUtils.formatDate(new Date(),"yyyy-MM");
 		// 记录错误行
-		int index = 1;
+		int index = 0;
 
 		try {
 
@@ -412,7 +421,7 @@ public class RiskExportExcelDataController {
 		readExcel.remove(0);
 		String yearMonth=DateUtils.formatDate(new Date(),"yyyy-MM");
 		// 记录错误行
-		int index = 1;
+		int index = 0;
 
 		try {
 
@@ -500,7 +509,7 @@ public class RiskExportExcelDataController {
 		readExcel.remove(0);
 		String yearMonth=DateUtils.formatDate(new Date(),"yyyy-MM");
 		// 记录错误行
-		int index = 1;
+		int index = 0;
 
 		try {
 
@@ -577,13 +586,81 @@ public class RiskExportExcelDataController {
 	@RequestMapping(value = "/risk/dutyCase/import/excel/data", method = RequestMethod.POST)
 	public ResponseEntity<?> importDutyCaseExcel(@Param("file") MultipartFile file) throws Exception {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
-		//readExcel.remove(0);
 		// 记录错误行
-		int index = 1;
+		int index = 0;
 
 		try {
 
 			for (List<String> excel : readExcel) {
+				String policeId = excel.get(2);
+				if (policeId != null && !"".equals(policeId)) {
+					User user = userService.findByPoliceId(policeId);
+
+					if (user == null || user.getName() == null) {
+						throw new RuntimeException();
+					}
+				}else {
+					throw new RuntimeException();
+				}
+
+				Integer informationId = riskDutyInformationTypeService.findIdByName(excel.get(6));
+				Integer errorId = riskDutyErrorTypeService.findIdByName(excel.get(8));
+				if (informationId == null || errorId == null) {
+					throw new RuntimeException();
+				}
+
+				RiskDutyDealPoliceRecord policeRecord = new RiskDutyDealPoliceRecord();
+				policeRecord.setInformationId(informationId);
+				policeRecord.setErrorId(errorId);
+				policeRecord.setPoliceListCode(excel.get(4));
+				policeRecord.setJurisdiction(excel.get(5));
+				policeRecord.setPoliceListInfo(excel.get(7));
+				policeRecord.setIsVerified("已核实".equals(excel.get(10)) ? 1 : 0);
+				policeRecord.setPoliceId(policeId);
+				policeRecord.setContent(excel.get(9));
+				policeRecord.setInputTime(new Date());
+				policeRecord.setCreationDate(DateUtils.parseDate(excel.get(3), "yyyy-MM-dd HH:mm:ss"));
+				policeRecord.setDeductionScore(Double.valueOf(excel.get(11)));
+
+				riskDutyDealPoliceRecordService.insert(policeRecord);
+				totalRiskDetailsService.dutyRiskDetails(policeId, LocalDate.parse(excel.get(3).substring(0, 10)));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			DataListReturn dataListReturn = new DataListReturn();
+			dataListReturn.setCode(StatusCode.getFailcode());
+			dataListReturn.setMessage("faile");
+			dataListReturn.setResult("第" + index + "条数据错误,导入失败!");
+			dataListReturn.setStatus(true);
+			return new ResponseEntity<DataListReturn>(dataListReturn, HttpStatus.OK);
+		}
+
+		// 添加到数据库
+		DataListReturn dataListReturn = new DataListReturn();
+		dataListReturn.setCode(StatusCode.getSuccesscode());
+		dataListReturn.setMessage("message");
+		dataListReturn.setResult(readExcel.get(0).get(0).toString() + "-" + readExcel.get(0).get(1).toString());
+		dataListReturn.setStatus(true);
+		return new ResponseEntity<DataListReturn>(dataListReturn, HttpStatus.OK);
+	}
+
+	/**
+	 * 导入执法管理数据
+	 * @param file
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/risk/caseLaw/import/excel/data", method = RequestMethod.POST)
+	public ResponseEntity<?> importCaseLawExcel(@Param("file") MultipartFile file) throws Exception {
+		List<List<String>> readExcel = GetExcel.ReadExcel(file);
+		// 记录错误行
+		int index = 0;
+		try {
+
+			for (List<String> excel : readExcel) {
+				index++;
 				String policeId = excel.get(0);
 				if (policeId != null && !"".equals(policeId)) {
 					User user = userService.findByPoliceId(policeId);
@@ -595,63 +672,45 @@ public class RiskExportExcelDataController {
 					throw new RuntimeException();
 				}
 
-				if(excel.get(2).equals("jcj")) {
-					RiskDutyDealPoliceRecord riskDutyDealPoliceRecord=new RiskDutyDealPoliceRecord();
-					
-					riskDutyDealPoliceRecord.setPoliceId(excel.get(0));
-					riskDutyDealPoliceRecord.setType(12001);
-					riskDutyDealPoliceRecord.setContent(excel.get(3));
-					
-					riskDutyDealPoliceRecord.setInputTime(DateUtils.toDate2(excel.get(4)));
-					riskDutyDealPoliceRecord.setDeductionScore(Double.valueOf(excel.get(5)));
-					riskDutyDealPoliceRecord.setCreationDate(DateUtils.toDate2(excel.get(4)));
-					
-					riskDutyDealPoliceRecordService.insertSelective(riskDutyDealPoliceRecord);
-					
-				}else {
-					RiskCaseLawEnforcementRecord riskCaseLawEnforcementRecord=new RiskCaseLawEnforcementRecord();
-					
-					riskCaseLawEnforcementRecord.setPoliceId(excel.get(0));
-					riskCaseLawEnforcementRecord.setContent(excel.get(3));
-					
-					riskCaseLawEnforcementRecord.setInputTime(DateUtils.toDate2(excel.get(4)));
-					riskCaseLawEnforcementRecord.setDeductionScore(Double.valueOf(excel.get(5)));
-					riskCaseLawEnforcementRecord.setCreationDate(DateUtils.toDate2(excel.get(4)));
-					
-					if(excel.get(2).equals("xtsy")) {
-						riskCaseLawEnforcementRecord.setType(12002);
-					}else if(excel.get(2).equals("sawp")) {
-						riskCaseLawEnforcementRecord.setType(12003);
-					}else if(excel.get(2).equals("baq")) {
-						riskCaseLawEnforcementRecord.setType(12004);
-					}else if(excel.get(2).equals("wsba")) {
-						riskCaseLawEnforcementRecord.setType(12005);
-					}
-					
-					riskCaseLawEnforcementRecordService.insertSelective(riskCaseLawEnforcementRecord);
+				Integer typeId = null;
+				Integer parentId = null;
+				parentId = riskCaseLawEnforcementTypeService.findByNameAndParentId(excel.get(4), null);
+				if (parentId == null) {
+					throw new RuntimeException();
+				}
+				typeId = riskCaseLawEnforcementTypeService.findByNameAndParentId(excel.get(4), parentId);
+				if (typeId == null) {
+					throw new RuntimeException();
 				}
 
-				totalRiskDetailsService.dutyRiskDetails(policeId, LocalDate.parse(excel.get(4).substring(0, 10)));
+				RiskCaseLawEnforcementRecord record = new RiskCaseLawEnforcementRecord();
+				record.setDeptName(excel.get(2));
+				record.setCaseCode(excel.get(3));
+				record.setPoliceId(policeId);
+				record.setType(typeId);
+				record.setContent(excel.get(6));
+				record.setInputTime(new Date());
+				record.setDeductionScore(Double.valueOf(excel.get(8)));
+				record.setCreationDate(DateUtils.parseDate(excel.get(7), "yyyy-MM-dd HH:mm:ss"));
+
+				riskCaseLawEnforcementRecordService.insert(record);
+				totalRiskDetailsService.caseRiskDetails(policeId, LocalDate.parse(excel.get(7).substring(0, 10)));
 			}
 
 		} catch (Exception e) {
-
 			e.printStackTrace();
-
 			DataListReturn dataListReturn = new DataListReturn();
 			dataListReturn.setCode(StatusCode.getFailcode());
 			dataListReturn.setMessage("faile");
 			dataListReturn.setResult("第" + index + "条数据错误,导入失败!");
 			dataListReturn.setStatus(true);
 			return new ResponseEntity<DataListReturn>(dataListReturn, HttpStatus.OK);
-
 		}
 
 		// 添加到数据库
 		DataListReturn dataListReturn = new DataListReturn();
 		dataListReturn.setCode(StatusCode.getSuccesscode());
 		dataListReturn.setMessage("message");
-		dataListReturn.setResult(readExcel.get(0).get(0).toString() + "-" + readExcel.get(0).get(1).toString());
 		dataListReturn.setStatus(true);
 		return new ResponseEntity<DataListReturn>(dataListReturn, HttpStatus.OK);
 	}
@@ -668,11 +727,12 @@ public class RiskExportExcelDataController {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
 		//readExcel.remove(0);
 		// 记录错误行
-		int index = 1;
+		int index = 0;
 
 		try {
 
 			for (List<String> excel : readExcel) {
+				index++;
 				String policeId = excel.get(0);
 				if (policeId != null && !"".equals(policeId)) {
 					User user = userService.findByPoliceId(policeId);
@@ -741,7 +801,7 @@ public class RiskExportExcelDataController {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
 		//readExcel.remove(0);
 		// 记录错误行
-		int index = 1;
+		int index = 0;
 
 		try {
 
@@ -824,7 +884,7 @@ public class RiskExportExcelDataController {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
 		//readExcel.remove(0);
 		// 记录错误行
-		int index = 1;
+		int index = 0;
 
 		try {
 
@@ -908,7 +968,7 @@ public class RiskExportExcelDataController {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
 		//readExcel.remove(0);
 		// 记录错误行
-		int index = 1;
+		int index = 0;
 
 		try {
 
@@ -992,7 +1052,7 @@ public class RiskExportExcelDataController {
 		List<List<String>> readExcel = GetExcel.ReadExcel(file);
 		//readExcel.remove(0);
 		// 记录错误行
-		int index = 1;
+		int index = 0;
 
 		try {
 

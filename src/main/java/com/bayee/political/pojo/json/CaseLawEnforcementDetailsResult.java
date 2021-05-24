@@ -61,6 +61,19 @@ public class CaseLawEnforcementDetailsResult {
      */
     private String date;
 
+    /**
+     * 同样错误次数
+     */
+    private Integer replaceErrorCount;
+
+    public Integer getReplaceErrorCount() {
+        return replaceErrorCount;
+    }
+
+    public void setReplaceErrorCount(Integer replaceErrorCount) {
+        this.replaceErrorCount = replaceErrorCount;
+    }
+
     public String getDeptName() {
         return deptName;
     }

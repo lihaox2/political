@@ -68,4 +68,9 @@ public class RiskDutyDealPoliceRecordServiceImpl implements RiskDutyDealPoliceRe
 	public Integer countAll() {
 		return riskDutyDealPoliceRecordMapper.countAll();
 	}
+
+	@Override
+	public Integer getReplaceErrorCount(String policeId, Integer type) {
+		return riskDutyDealPoliceRecordMapper.getReplaceErrorCount(policeId, type);
+	}
 }

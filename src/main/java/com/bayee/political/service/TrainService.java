@@ -1228,6 +1228,14 @@ public interface TrainService {
 	Integer firearmQualifiedNum(@Param("trainFirearmId") Integer trainFirearmId);
 
 	/**
+	 * 枪械不合格人数
+	 *
+	 * @param trainFirearmId 枪械训练id
+	 * @return
+	 */
+	Integer firearmUnQualifiedNum(@Param("trainFirearmId") Integer trainFirearmId);
+
+	/**
 	 * 枪械U型靶良好人数
 	 * 
 	 * @param trainFirearmId 枪械训练id
@@ -1695,5 +1703,13 @@ public interface TrainService {
 	 * @param trainPhysicalAchievement
 	 */
 	void addTrainPhysicalAchievement(TrainPhysicalAchievement trainPhysicalAchievement);
+
+	/**
+	 *
+	 * @param startNum
+	 * @param endNum
+	 * @return
+	 */
+	Integer getNotEligibleCount(Integer physicalId, Integer startNum, Integer endNum);
 
 }

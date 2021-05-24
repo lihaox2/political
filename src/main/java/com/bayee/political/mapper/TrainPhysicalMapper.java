@@ -339,4 +339,27 @@ public interface TrainPhysicalMapper {
 	 */
 	Integer countAll();
 
+	/**
+	 * 分页查询综合训练
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param date
+	 * @param trainName
+	 * @param position
+	 * @return
+	 */
+	List<TrainPhysical> findTrainPhysicalPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize,
+											  @Param("date") String date, @Param("trainName") String trainName,
+											  @Param("position") Integer position);
+
+	/**
+	 * 统计分页数据条数
+	 * @param date
+	 * @param trainName
+	 * @param position
+	 * @return
+	 */
+	Integer countTrainPhysicalPage(@Param("date") String date, @Param("trainName") String trainName,
+								   @Param("position") Integer position);
+
 }

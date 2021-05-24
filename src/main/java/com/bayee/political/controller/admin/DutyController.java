@@ -131,6 +131,7 @@ public class DutyController {
         result.setDesc(detailsDO.getDesc());
         result.setDeductScore(detailsDO.getDeductScore());
         result.setDate(detailsDO.getDate());
+        result.setReplaceErrorCount(riskDutyDealPoliceRecordService.getReplaceErrorCount(detailsDO.getPoliceId(), detailsDO.getErrorId()));
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }

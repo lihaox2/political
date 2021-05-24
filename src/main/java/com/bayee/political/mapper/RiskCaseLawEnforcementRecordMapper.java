@@ -88,4 +88,12 @@ public interface RiskCaseLawEnforcementRecordMapper {
      */
     Integer countAll();
 
+    /**
+     * 查询警员重复执法管理数
+     * @param policeId
+     * @param type
+     * @return
+     */
+    Integer getPoliceReplaceErrorCount(@Param("policeId") String policeId, @Param("type") Integer type);
+
 }

@@ -381,6 +381,14 @@ and is_sign = 2
 and achievement_grade = 2
 </select>
 
+    <!-- 枪械合格人数 -->
+    <select id="firearmUnQualifiedNum" resultType="java.lang.Integer">
+        select count(distinct(police_id)) as count from train_firearm_achievement
+        where train_firearm_id = #{trainFirearmId}
+          and is_sign = 2
+          and achievement_grade = 1
+    </select>
+
 <!-- 枪械U型靶良好人数 -->
 <select id="firearmUFineNum" resultType="java.lang.Integer">
 select count(distinct(police_id)) as count from train_firearm_achievement 
@@ -503,4 +511,43 @@ order by a.creation_date desc
         where achievement_grade = 1 and achievement > 0 and police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m')) as b_count) firearm_train
 
     </select>
+
+    <select id="findTrainFirearmAchievementPage" resultMap="BaseResultMap">
+        select
+            u.name as police_name,  d.name as department_name, fa.*
+        from train_firearm_achievement fa
+             left join user u on fa.police_id = u.police_id
+             left join department d on d.id = u.department_id
+        where train_firearm_id = #{firearmId}
+        <if test="key != null and key != ''">
+            and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%'))
+        </if>
+        <if test="searchFlag != null and searchFlag == 1">
+            and fa.achievement_grade = 2
+        </if>
+        <if test="searchFlag != null and searchFlag == 2">
+            and fa.achievement_grade = 1
+        </if>
+        order by fa.id desc
+        limit #{pageIndex}, #{pageSize}
+    </select>
+
+    <select id="countTrainFirearmAchievementPage" resultType="Integer">
+        select
+            count(1)
+        from train_firearm_achievement fa
+        left join user u on fa.police_id = u.police_id
+        left join department d on d.id = u.department_id
+        where train_firearm_id = #{firearmId}
+        <if test="key != null and key != ''">
+            and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%'))
+        </if>
+        <if test="searchFlag != null and searchFlag == 1">
+            and fa.achievement_grade = 2
+        </if>
+        <if test="searchFlag != null and searchFlag == 2">
+            and fa.achievement_grade = 1
+        </if>
+    </select>
+
 </mapper>

@@ -52,4 +52,12 @@ public interface RiskDutyDealPoliceRecordService {
 	 */
 	Integer countAll();
 
+	/**
+	 * 获取重复次数
+	 * @param policeId
+	 * @param type
+	 * @return
+	 */
+	Integer getReplaceErrorCount(String policeId, Integer type);
+
 }

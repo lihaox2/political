@@ -5,6 +5,7 @@ import java.util.List;
 import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
 import com.bayee.political.pojo.dto.CaseLawEnforcementDetailsDO;
 import com.bayee.political.pojo.dto.CaseLawEnforcementPageDO;
+import org.apache.ibatis.annotations.Param;
 
 public interface RiskCaseLawEnforcementRecordService {
 
@@ -50,5 +51,13 @@ public interface RiskCaseLawEnforcementRecordService {
 	 * @return
 	 */
 	Integer countAll();
+
+	/**
+	 * 查询警员重复执法管理数
+	 * @param policeId
+	 * @param type
+	 * @return
+	 */
+	Integer getPoliceReplaceErrorCount(String policeId, Integer type);
 
 }

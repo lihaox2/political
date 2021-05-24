@@ -106,6 +106,14 @@ public interface TrainFirearmAchievementMapper {
 	Integer firearmQualifiedNum(@Param("trainFirearmId") Integer trainFirearmId);
 
 	/**
+	 * 枪械合格人数
+	 *
+	 * @param trainFirearmId 枪械训练id
+	 * @return
+	 */
+	Integer firearmUnQualifiedNum(@Param("trainFirearmId") Integer trainFirearmId);
+
+	/**
 	 * 枪械U型靶良好人数
 	 * 
 	 * @param trainFirearmId 枪械训练id
@@ -155,5 +163,32 @@ public interface TrainFirearmAchievementMapper {
 	 * @return
 	 */
 	Double getPoliceFirearmDeductionScore(@Param("policeId") String policeId,@Param("date") String date);
+
+	/**
+	 * 分页查询枪械训练数据
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param firearmId
+	 * @param position
+	 * @param key
+	 * @param searchFlag
+	 * @return
+	 */
+	List<TrainFirearmAchievement> findTrainFirearmAchievementPage(@Param("pageIndex") Integer pageIndex,
+																  @Param("pageSize") Integer pageSize,
+																  @Param("firearmId") Integer firearmId,
+																  @Param("position") Integer position,
+																  @Param("key") String key, @Param("searchFlag") Integer searchFlag);
+
+	/**
+	 * 统计分页数据条数
+	 * @param firearmId
+	 * @param position
+	 * @param key
+	 * @param searchFlag
+	 * @return
+	 */
+	Integer countTrainFirearmAchievementPage(@Param("firearmId") Integer firearmId, @Param("position") Integer position,
+											 @Param("key") String key,@Param("searchFlag") Integer searchFlag);
 
 }

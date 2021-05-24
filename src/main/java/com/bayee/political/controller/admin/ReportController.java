@@ -202,16 +202,17 @@ public class ReportController {
 
     private String createPoliceRiskReportDetails(Map<String, Object> o, String fileName) {
         // 模板路径
-//        String templatePath = "/mnt/qiantang/police_risk_template_V1.pdf";
-        String templatePath = "C:\\Users\\颜世旺\\Desktop\\police_risk_template_V1.pdf";
+        String templatePath = "/mnt/qiantang/police_risk_template_V1.pdf";
+//        String templatePath = "C:\\Users\\颜世旺\\Desktop\\police_risk_template_V1.pdf";
         // 生成的新文件路径
-//        String newPDFPath = "/mnt/qiantang/policeRiskReport/"+fileName+".pdf";
-        String newPDFPath = "C:\\Users\\颜世旺\\Desktop\\"+fileName+".pdf";
+        String newPDFPath = "/mnt/qiantang/policeRiskReport/"+fileName+".pdf";
+//        String newPDFPath = "C:\\Users\\颜世旺\\Desktop\\"+fileName+".pdf";
 
-        String fontStylePath = "C:\\Windows\\Fonts\\simfang.ttf";
-//        String fontStylePath = "/usr/share/font/simfang.ttf";
+//        String fontStylePath = "C:\\Windows\\Fonts\\simfang.ttf";
+        String fontStylePath = "/usr/share/font/simfang.ttf";
 
-        String returnPath = "http://8.136.146.186:8099/static/policeRiskReport/"+fileName+".pdf";
+//        String returnPath = "http://8.136.146.186:8099/static/policeRiskReport/"+fileName+".pdf";
+        String returnPath = "http://41.190.128.250:8080/static/policeRiskReport/"+fileName+".pdf";
 //        String returnPath = newPDFPath;
 
         PdfReader reader;

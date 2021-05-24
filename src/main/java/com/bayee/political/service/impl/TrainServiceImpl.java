@@ -1439,6 +1439,11 @@ public class TrainServiceImpl implements TrainService {
 	}
 
 	@Override
+	public Integer firearmUnQualifiedNum(Integer trainFirearmId) {
+		return trainFirearmAchievementMapper.firearmUnQualifiedNum(trainFirearmId);
+	}
+
+	@Override
 	public Integer firearmSignInNum(Integer trainFirearmId) {
 		return trainFirearmAchievementMapper.firearmSignInNum(trainFirearmId);
 	}
@@ -1786,6 +1791,11 @@ public class TrainServiceImpl implements TrainService {
 	@Override
 	public void addTrainPhysicalAchievement(TrainPhysicalAchievement trainPhysicalAchievement) {
 		trainPhysicalAchievementMapper.trainPhysicalAchievementCreat(trainPhysicalAchievement);
+	}
+
+	@Override
+	public Integer getNotEligibleCount(Integer physicalId, Integer startNum, Integer endNum) {
+		return trainPhysicalAchievementMapper.getNotEligibleCount(physicalId, startNum, endNum);
 	}
 
 }

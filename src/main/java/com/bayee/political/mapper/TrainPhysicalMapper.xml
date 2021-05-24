@@ -1969,4 +1969,32 @@ order by ifnull(b.bnum/a.anum,0) desc limit 5
 		select count(1) from train_physical
 	</select>
 
+	<select id="findTrainPhysicalPage" resultMap="BaseResultMap">
+		select
+			*
+		from train_physical ph
+		where 1 = 1
+		<if test="trainName != null and trainName != ''">
+			and ph.name like concat('%', #{trainName}, '%')
+		</if>
+		<if test="date != null and date != ''">
+			and DATE_FORMAT(ph.train_start_date,'%Y-%m-%d') = #{date}
+		</if>
+		order by id desc
+		limit #{pageIndex}, #{pageSize}
+	</select>
+
+	<select id="countTrainPhysicalPage" resultType="Integer">
+		select
+			count(1)
+		from train_physical ph
+		where 1 = 1
+		<if test="trainName != null and trainName != ''">
+			and ph.name like concat('%', #{trainName}, '%')
+		</if>
+		<if test="date != null and date != ''">
+			and DATE_FORMAT(ph.train_start_date,'%Y-%m-%d') = #{date}
+		</if>
+	</select>
+
 </mapper>

@@ -85,4 +85,9 @@ public class RiskCaseLawEnforcementRecordServiceImpl implements RiskCaseLawEnfor
 		return riskCaseLawEnforcementRecordMapper.countAll();
 	}
 
+	@Override
+	public Integer getPoliceReplaceErrorCount(String policeId, Integer type) {
+		return riskCaseLawEnforcementRecordMapper.getPoliceReplaceErrorCount(policeId, type);
+	}
+
 }

@@ -122,4 +122,27 @@ public interface TrainFirearmMapper {
 	 */
 	Integer countAll();
 
+	/**
+	 * 分页查询枪械训练数据
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param date
+	 * @param trainName
+	 * @param position
+	 * @return
+	 */
+	List<TrainFirearm> findTrainFirearmPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize,
+											@Param("date") String date, @Param("trainName") String trainName,
+											@Param("position") Integer position);
+
+	/**
+	 * 统计分页数据条数
+	 * @param date
+	 * @param trainName
+	 * @param position
+	 * @return
+	 */
+	Integer countTrainFirearmPage(@Param("date") String date, @Param("trainName") String trainName,
+								  @Param("position") Integer position);
+
 }

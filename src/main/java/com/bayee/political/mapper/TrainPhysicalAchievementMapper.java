@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.pojo.dto.TrainProjectDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.ReportDataFillTime;
@@ -141,5 +142,63 @@ public interface TrainPhysicalAchievementMapper {
 	 */
 	TrainPhysicalAchievement findTrainPhysicalAchievementByPolice(@Param("physicalId") Integer physicalId,
 																  @Param("policeId") String policeId);
+
+	/**
+	 *
+	 * @param startNum
+	 * @param endNum
+	 * @return
+	 */
+	Integer getNotEligibleCount(@Param("physicalId") Integer physicalId, @Param("startNum") Integer startNum, @Param("endNum") Integer endNum);
+
+	/**
+	 * 分页查询综合训练数据
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param physicalId
+	 * @param position
+	 * @param key
+	 * @param trainList
+	 * @param trainFlag
+	 * @param searchFlag
+	 * @return
+	 */
+	List<TrainPhysicalAchievement> findTrainPhysicalAchievementPage(@Param("pageIndex") Integer pageIndex,
+																	@Param("pageSize") Integer pageSize,
+																	@Param("physicalId") Integer physicalId,
+																	@Param("position") Integer position,@Param("key") String key,
+																	@Param("list") List<Integer> trainList,
+																	@Param("trainFlag") Integer trainFlag,@Param("searchFlag") Integer searchFlag);
+
+	/**
+	 * 统计分页数据条数
+	 * @param physicalId
+	 * @param position
+	 * @param key
+	 * @param trainList
+	 * @param trainFlag
+	 * @param searchFlag
+	 * @return
+	 */
+	Integer countTrainPhysicalAchievementPage(@Param("physicalId") Integer physicalId,
+											  @Param("position") Integer position,@Param("key") String key,
+											  @Param("list") List<Integer> trainList,
+											  @Param("trainFlag") Integer trainFlag,@Param("searchFlag") Integer searchFlag);
+
+	/**
+	 * 根据合格状态统计警员数据条数
+	 * @param physicalId
+	 * @param policeId
+	 * @param grade
+	 * @return
+	 */
+	Integer countPhysicalByAchievementGrade(@Param("physicalId") Integer physicalId, @Param("policeId") String policeId,
+											@Param("grade") Integer grade);
+
+	/**
+	 * 查询所有综合训练项目类型
+	 * @return
+	 */
+	List<TrainProjectDO> findAllPhysicalTrainProject();
 
 }

@@ -285,4 +285,12 @@
     select count(1) from risk_duty_deal_police_record
   </select>
 
+  <select id="getReplaceErrorCount" resultType="Integer">
+    select
+      ifnull(count(1), 0)
+    from risk_duty_deal_police_record
+    where police_id = #{policeId} and error_id = #{type}
+    group by police_id, error_id having count(1) >= 2
+  </select>
+
 </mapper>

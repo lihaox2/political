@@ -357,4 +357,34 @@ select * from train_firearm where train_firearm_type = (select project_id from t
     select count(1) from train_firearm
   </select>
 
+  <select id="findTrainFirearmPage" resultMap="BaseResultMap">
+    select
+        a.*,b.name as train_firearm_type_name
+    from train_firearm a
+      left join train_project b on a.train_firearm_type = b.id
+    where 1 = 1
+    <if test="trainName != null and trainName != ''">
+        and a.name like concat('%', #{trainName}, '%')
+    </if>
+    <if test="date != null and date != ''">
+      and DATE_FORMAT(a.train_start_date,'%Y-%m-%d') = #{date}
+    </if>
+    order by a.id desc
+    limit #{pageIndex}, #{pageSize}
+  </select>
+
+  <select id="countTrainFirearmPage" resultType="Integer">
+    select
+        count(1)
+    from train_firearm a
+    left join train_project b on a.train_firearm_type = b.id
+    where 1 = 1
+    <if test="trainName != null and trainName != ''">
+      and a.name like concat('%', #{trainName}, '%')
+    </if>
+    <if test="date != null and date != ''">
+      and DATE_FORMAT(a.train_start_date,'%Y-%m-%d') = #{date}
+    </if>
+  </select>
+
 </mapper>

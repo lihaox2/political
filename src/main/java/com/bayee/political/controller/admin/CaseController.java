@@ -318,6 +318,8 @@ public class CaseController {
         result.setDesc(detailsDO.getDesc());
         result.setDeductScore(detailsDO.getDeductScore());
         result.setDate(detailsDO.getDate());
+        result.setReplaceErrorCount(riskCaseLawEnforcementRecordService.
+                getPoliceReplaceErrorCount(detailsDO.getPoliceId(), detailsDO.getTypeId()));
 
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
     }

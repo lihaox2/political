@@ -469,4 +469,102 @@ order by a.creation_date desc
         where train_physical_id = #{physicalId} and police_id = #{policeId}
     </select>
 
+    <select id="getNotEligibleCount" resultType="Integer">
+        select count(1) from (
+         select police_id, count(1) as count from train_physical_achievement
+         where train_physical_id = #{physicalId}
+           and is_sign = 2
+           and achievement_grade = 1
+         group by police_id) a where 1 = 1
+        <if test="startNum != null">
+            and count >= #{startNum}
+        </if>
+        <if test="endNum != null">
+            and count &lt;= #{endNum}
+        </if>
+    </select>
+
+    <select id="countPhysicalByAchievementGrade" resultType="Integer">
+        select count(1) from train_physical_achievement
+        where train_physical_id = #{physicalId}
+        and police_id = #{policeId} and achievement_grade = #{grade}
+    </select>
+
+    <select id="findAllPhysicalTrainProject" resultType="com.bayee.political.pojo.dto.TrainProjectDO">
+        select p.id, p.`name` from train_project p where p.type = 1
+    </select>
+
+    <select id="findTrainPhysicalAchievementPage" resultMap="BaseResultMap">
+        select
+            u.name, d.name as department_name,pa.*
+        from train_physical_achievement pa
+            left join user u on pa.police_id = u.police_id
+            left join department d on d.id = u.department_id
+            left join (select police_id, count(1) as count from train_physical_achievement
+                where train_physical_id = 1
+                and is_sign = 2
+                and achievement_grade = 1
+                group by police_id
+                ) ac on ac.police_id = u.police_id
+        where pa.train_physical_id = #{physicalId}
+        <if test="key != null and key != ''">
+            and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%'))
+        </if>
+        <if test="searchFlag != null">
+            <if test="searchFlag == 1">
+                and pa.achievement_grade = 2
+            </if>
+            <if test="searchFlag == 2">
+                and ac.count BETWEEN 1 and 2
+            </if>
+            <if test="searchFlag == 3">
+                and ac.count BETWEEN 3 and 4
+            </if>
+            <if test="searchFlag == 4">
+                and ac.count >= 5
+            </if>
+        </if>
+        <if test="list.size > 0 and trainFlag != null">
+
+        </if>
+        group by pa.police_id
+        order by pa.id desc
+        limit #{pageIndex}, #{pageSize}
+    </select>
+
+    <select id="countTrainPhysicalAchievementPage" resultType="Integer">
+        select
+            count(distinct(pa.police_id))
+        from train_physical_achievement pa
+            left join user u on pa.police_id = u.police_id
+            left join department d on d.id = u.department_id
+            left join (select police_id, count(1) as count from train_physical_achievement
+                where train_physical_id = 1
+                and is_sign = 2
+                and achievement_grade = 1
+                group by police_id
+                ) ac on ac.police_id = u.police_id
+        where pa.train_physical_id = #{physicalId}
+        <if test="key != null and key != ''">
+            and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%'))
+        </if>
+        <if test="searchFlag != null">
+            <if test="searchFlag == 1">
+                and pa.achievement_grade = 2
+            </if>
+            <if test="searchFlag == 2">
+                and ac.count BETWEEN 1 and 2
+            </if>
+            <if test="searchFlag == 3">
+                and ac.count BETWEEN 3 and 4
+            </if>
+            <if test="searchFlag == 4">
+                and ac.count >= 5
+            </if>
+        </if>
+        <if test="list.size > 0 and trainFlag != null">
+
+        </if>
+    </select>
+
 </mapper>

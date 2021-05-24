@@ -71,6 +71,19 @@ public class DutyDetailsResult {
      */
     private String date;
 
+    /**
+     * 重复发生次数
+     */
+    private Integer replaceErrorCount;
+
+    public Integer getReplaceErrorCount() {
+        return replaceErrorCount;
+    }
+
+    public void setReplaceErrorCount(Integer replaceErrorCount) {
+        this.replaceErrorCount = replaceErrorCount;
+    }
+
     public String getPoliceListCode() {
         return policeListCode;
     }

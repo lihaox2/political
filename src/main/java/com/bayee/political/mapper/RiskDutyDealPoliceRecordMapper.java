@@ -90,4 +90,12 @@ public interface RiskDutyDealPoliceRecordMapper {
 	 */
 	Integer countAll();
 
+	/**
+	 * 获取重复次数
+	 * @param policeId
+	 * @param type
+	 * @return
+	 */
+	Integer getReplaceErrorCount(@Param("policeId") String policeId,@Param("type") Integer type);
+
 }

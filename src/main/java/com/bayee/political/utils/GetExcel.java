@@ -52,7 +52,7 @@ public class GetExcel {
             
             List<String> list = new ArrayList<String>();
             
-            if (null == row.getCell(0) || "".equals(GetString(row.getCell(0)))) {
+            if (row == null || null == row.getCell(0) || "".equals(GetString(row.getCell(0)))) {
             	break;
             }
             
@@ -69,7 +69,6 @@ public class GetExcel {
                     	val = null;
                     	
                     } else {
-                    	                        	 
                         	 CellType type = cell.getCellTypeEnum();
                              if (type == CellType.NUMERIC) {
                             	//判断是否是时间格式

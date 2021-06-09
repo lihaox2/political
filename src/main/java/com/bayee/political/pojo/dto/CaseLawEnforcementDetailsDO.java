@@ -61,6 +61,19 @@ public class CaseLawEnforcementDetailsDO {
      */
     private String date;
 
+    /**
+     * 文件集合
+     */
+    private String imgArr;
+
+    public String getImgArr() {
+        return imgArr;
+    }
+
+    public void setImgArr(String imgArr) {
+        this.imgArr = imgArr;
+    }
+
     public String getPoliceId() {
         return policeId;
     }

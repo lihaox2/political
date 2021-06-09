@@ -83,7 +83,8 @@ public class RiskController extends BaseController {
 				@RequestParam(value = "sortType", required = false) Integer sortType,
 				@RequestParam(value = "pageSize", required = false) Integer pageSize,
 				@RequestParam(value = "pageNum", required = false) Integer pageNum,
-				@RequestParam(value = "num", required = false) Double num) throws ApiException, ParseException {
+				@RequestParam(value = "num", required = false) Double num,
+				@RequestParam("deptId") Integer deptId) throws ApiException, ParseException {
 			DataListPage dlr = new DataListPage();
 			
 			if(num==null) {
@@ -134,7 +135,7 @@ public class RiskController extends BaseController {
 			pageNum = ((pageNum) - 1) * pageSize;
 			// 警员风险分页查询
 			List<RiskReportRecord> list = riskService.riskPageList(keyWords, alarmType, sortName, dateTime, lastDateTime,
-					lastMonthTime, pageSize, pageNum,(int)(userNum*num),orderName);
+					lastMonthTime, pageSize, pageNum,(int)(userNum*num),orderName, deptId);
 			for (int i = 0; i < list.size(); i++) {
 				// 警员健康风险指数查询
 				RiskHealth item = riskService.riskHealthIndexNewestItem(list.get(i).getPoliceId());
@@ -154,7 +155,7 @@ public class RiskController extends BaseController {
 				list.get(i).setChartList(list2);
 			}
 			// 警员风险列表总数
-			int total = riskService.riskPageCount(keyWords, alarmType, dateTime, lastDateTime, lastMonthTime,(int)(userNum*num),orderName);
+			int total = riskService.riskPageCount(keyWords, alarmType, dateTime, lastDateTime, lastMonthTime,(int)(userNum*num),orderName, deptId);
 			dlr.setStatus(true);
 			dlr.setMessage("success");
 			if(sortType == null || sortType == 11001) {
@@ -246,7 +247,7 @@ public class RiskController extends BaseController {
 				String lastMonthTime = DateUtils.lastMonthTime();
 				// 警员风险分页查询
 				List<RiskReportRecord> list = riskService.riskPageList(keyWords, alarmType, sortName, dateTime, lastDateTime,
-						lastMonthTime, 10, 0,(int)(userNum*num),orderName);
+						lastMonthTime, 10, 0,(int)(userNum*num),orderName, null);
 				
 				for (int i = 0; i < list.size(); i++) {
 					// 警员健康风险指数查询

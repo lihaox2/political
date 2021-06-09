@@ -557,7 +557,7 @@ public class RiskCaseController extends BaseController {
 			ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
 			itemChart1.setId(2);
 			itemChart1.setName("本月");
-			itemChart1.setValue(item3.getIndexNum());
+			itemChart1.setValue(item3 == null ? 0 : item3.getIndexNum());
 			list.add(itemChart1);
 
 			item.setList(list);

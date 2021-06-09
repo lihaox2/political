@@ -42,6 +42,19 @@ public class RiskConductBureauRuleRecord {
 
     private String rootName;
 
+    /**
+     * 图片集合
+     */
+    private String imgArr;
+
+    public String getImgArr() {
+        return imgArr;
+    }
+
+    public void setImgArr(String imgArr) {
+        this.imgArr = imgArr;
+    }
+
     public String getRootName() {
         return rootName;
     }

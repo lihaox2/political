@@ -283,6 +283,9 @@ where 1=1
     <if test="keyWords != null and keyWords !=''">
 	    and (a.police_id like '%${keyWords}%' or b.name like '%${keyWords}%')
 	</if>
+    <if test="deptId != null and deptId != ''">
+        and c.id = #{deptId}
+    </if>
 order by ${sortName} desc limit #{pageNum},#{pageSize}
 </select>
 <!-- 警员风险列表总数 -->
@@ -318,7 +321,10 @@ where 1=1
 	</if> -->
     <if test="keyWords != null and keyWords !=''">
 	    and (a.police_id like '%${keyWords}%' or b.name like '%${keyWords}%')
-	</if>) as t
+	</if>
+    <if test="deptId != null and deptId != ''">
+      and c.id = #{deptId}
+    </if>) as t
 </select>
   <!-- 警员风险雷达图 -->
 <select id="riskChartList" parameterType="com.bayee.political.domain.ScreenDoubeChart" resultMap="ScreenDoubeChartMap">

@@ -99,6 +99,7 @@ public class ConductController {
         record.setDeductionScore(ruleType.getDeductScore());
         record.setRemarks(saveParam.getRemarks());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
+        record.setImgArr(saveParam.getFileList());
 
         riskConductBureauRuleRecordService.insert(record);
         totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
@@ -122,6 +123,7 @@ public class ConductController {
         record.setRemarks(saveParam.getRemarks());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
         record.setUpdateDate(new Date());
+        record.setImgArr(saveParam.getFileList());
 
         riskConductBureauRuleRecordService.updateByPrimaryKey(record);
         totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
@@ -149,6 +151,9 @@ public class ConductController {
         result.setDeductScore(detailsDTO.getDeductScore());
         result.setDate(detailsDTO.getDate());
         result.setRemarks(detailsDTO.getRemarks());
+        if(detailsDTO.getImgArr() != null && !"".equals(detailsDTO.getImgArr())) {
+            result.setFileList(detailsDTO.getImgArr().split(","));
+        }
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }

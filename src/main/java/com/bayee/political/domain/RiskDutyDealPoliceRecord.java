@@ -49,7 +49,20 @@ public class RiskDutyDealPoliceRecord {
 
     private Date updateDate;
 
+    /**
+     * 图片地址
+     */
+    private String imgArr;
+
     private String typeName;
+
+    public String getImgArr() {
+        return imgArr;
+    }
+
+    public void setImgArr(String imgArr) {
+        this.imgArr = imgArr;
+    }
 
     public Integer getInformationId() {
         return informationId;

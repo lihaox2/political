@@ -278,6 +278,7 @@ public class CaseController {
         record.setInputTime(new Date());
         record.setDeductionScore(saveParam.getDeductScore());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
+        record.setImgArr(saveParam.getFileList());
 
         riskCaseLawEnforcementRecordService.insert(record);
         totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));
@@ -288,7 +289,6 @@ public class CaseController {
     public ResponseEntity<?> updateCaseLawEnforcement(@PathVariable("id") Integer id,
                                                       @RequestBody CaseLawEnforcementSaveParam saveParam) {
         RiskCaseLawEnforcementRecord record = riskCaseLawEnforcementRecordService.selectByPrimaryKey(id);
-
         record.setDeptName(saveParam.getDeptName());
         record.setCaseCode(saveParam.getCaseCode());
         record.setPoliceId(saveParam.getPoliceId());
@@ -297,6 +297,7 @@ public class CaseController {
         record.setDeductionScore(saveParam.getDeductScore());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
         record.setUpdateDate(new Date());
+        record.setImgArr(saveParam.getFileList());
 
         riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(record);
         totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));
@@ -320,6 +321,9 @@ public class CaseController {
         result.setDate(detailsDO.getDate());
         result.setReplaceErrorCount(riskCaseLawEnforcementRecordService.
                 getPoliceReplaceErrorCount(detailsDO.getPoliceId(), detailsDO.getTypeId()));
+        if (detailsDO.getImgArr() != null && !"".equals(detailsDO.getImgArr())) {
+            result.setFileList(detailsDO.getImgArr().split(","));
+        }
 
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
     }

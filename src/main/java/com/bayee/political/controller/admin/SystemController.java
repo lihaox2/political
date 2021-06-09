@@ -13,12 +13,11 @@ import com.itextpdf.text.pdf.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
@@ -280,6 +279,26 @@ public class SystemController {
         }).collect(Collectors.toList());
 
         return new ResponseEntity<>(DataListReturn.ok(resultList), HttpStatus.OK);
+    }
+
+    @PostMapping("/upload/img")
+    public ResponseEntity<?> uploadImg(@RequestParam("fileArr") MultipartFile[] fileArr) throws IOException {
+        if (fileArr == null || fileArr.length == 0 || fileArr[0].getContentType() == null) {
+            return new ResponseEntity<>(DataListReturn.error("请添加图片"), HttpStatus.OK);
+        }
+
+        String path = "C:/file_upload_test/";
+        List<String> filePathList = new ArrayList<>();
+        for (MultipartFile file : fileArr) {
+            String fileName = System.currentTimeMillis()+file.getOriginalFilename();
+            fileName = fileName.replace(",","y");
+
+            File newFile = new File(path, fileName);
+            file.transferTo(newFile);
+
+            filePathList.add(path + fileName);
+        }
+        return new ResponseEntity<>(DataListReturn.ok(filePathList), HttpStatus.OK);
     }
 
     /**

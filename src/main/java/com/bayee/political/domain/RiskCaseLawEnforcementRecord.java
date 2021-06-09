@@ -28,8 +28,21 @@ public class RiskCaseLawEnforcementRecord {
     private Date creationDate;
 
     private Date updateDate;
+
+    /**
+     * 文件集合
+     */
+    private String imgArr;
     
     private String typeName;
+
+    public String getImgArr() {
+        return imgArr;
+    }
+
+    public void setImgArr(String imgArr) {
+        this.imgArr = imgArr;
+    }
 
     public String getDeptName() {
         return deptName;

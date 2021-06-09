@@ -88,6 +88,7 @@ public class DutyController {
         record.setInputTime(new Date());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
         record.setDeductionScore(saveParam.getDeductScore());
+        record.setImgArr(saveParam.getFileList());
 
         riskDutyDealPoliceRecordService.insert(record);
         totalRiskDetailsService.dutyRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));
@@ -108,6 +109,7 @@ public class DutyController {
         record.setUpdateDate(new Date());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
         record.setDeductionScore(saveParam.getDeductScore());
+        record.setImgArr(saveParam.getFileList());
 
         riskDutyDealPoliceRecordService.updateByPrimaryKeySelective(record);
         totalRiskDetailsService.dutyRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));
@@ -131,6 +133,9 @@ public class DutyController {
         result.setDesc(detailsDO.getDesc());
         result.setDeductScore(detailsDO.getDeductScore());
         result.setDate(detailsDO.getDate());
+        if (detailsDO.getImgArr() != null && !"".equals(detailsDO.getImgArr())) {
+            result.setFileList(detailsDO.getImgArr().split(","));
+        }
         result.setReplaceErrorCount(riskDutyDealPoliceRecordService.getReplaceErrorCount(detailsDO.getPoliceId(), detailsDO.getErrorId()));
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);

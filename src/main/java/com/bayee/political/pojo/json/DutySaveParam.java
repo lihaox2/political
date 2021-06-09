@@ -56,6 +56,19 @@ public class DutySaveParam {
      */
     private String date;
 
+    /**
+     * 文件集合
+     */
+    private String fileList;
+
+    public String getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(String fileList) {
+        this.fileList = fileList;
+    }
+
     public String getPoliceListCode() {
         return policeListCode;
     }

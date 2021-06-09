@@ -36,12 +36,15 @@ public interface RiskReportRecordMapper {
 	List<RiskReportRecord> riskPageList(@Param("keyWords") String keyWords, @Param("alarmType") Integer alarmType,
 			@Param("sortName") String sortName, @Param("dateTime") String dateTime,
 			@Param("lastDateTime") String lastDateTime, @Param("lastMonthTime") String lastMonthTime,
-			@Param("pageSize") Integer pageSize, @Param("pageNum") Integer pageNum,@Param("num")Integer num,@Param("orderName") String orderName);
+			@Param("pageSize") Integer pageSize, @Param("pageNum") Integer pageNum,
+										@Param("num")Integer num, @Param("orderName") String orderName,
+										@Param("deptId") Integer deptId);
 
 	// 警员风险列表总数
 	int riskPageCount(@Param("keyWords") String keyWords, @Param("alarmType") Integer alarmType,
 			@Param("dateTime") String dateTime, @Param("lastDateTime") String lastDateTime,
-			@Param("lastMonthTime") String lastMonthTime,@Param("num")Integer num,@Param("orderName") String orderName);
+			@Param("lastMonthTime") String lastMonthTime,@Param("num")Integer num,@Param("orderName") String orderName,
+					  @Param("deptId") Integer deptId);
 
 	// 警员风险雷达图
 	List<ScreenDoubeChart> riskChartList(@Param("policeId") String policeId, @Param("dateTime") String dateTime,

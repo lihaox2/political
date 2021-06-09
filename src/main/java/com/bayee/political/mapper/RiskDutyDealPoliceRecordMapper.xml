@@ -17,10 +17,11 @@
     <result column="jurisdiction" property="jurisdiction" jdbcType="VARCHAR" />
     <result column="police_list_info" property="policeListInfo" jdbcType="VARCHAR" />
     <result column="is_verified" property="isVerified" jdbcType="INTEGER" />
+    <result column="img_arr" property="imgArr" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, police_id, type, content, input_time, creation_date, update_date, deduction_score, information_id, error_id,
-    police_list_code, jurisdiction, police_list_info, is_verified
+    police_list_code, jurisdiction, police_list_info, is_verified, img_arr
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -35,11 +36,12 @@
   <insert id="insert" parameterType="com.bayee.political.domain.RiskDutyDealPoliceRecord" >
     insert into risk_duty_deal_police_record (id, police_id, type, 
       content, input_time, creation_date, 
-      update_date, deduction_score, information_id, error_id, police_list_code, jurisdiction, police_list_info, is_verified)
+      update_date, deduction_score, information_id, error_id, police_list_code, jurisdiction,
+      police_list_info, is_verified, img_arr)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{content,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP}, 
       #{updateDate,jdbcType=TIMESTAMP}, #{deductionScore}, #{informationId}, #{errorId}, #{policeListCode},
-            #{jurisdiction}, #{policeListInfo}, #{isVerified})
+            #{jurisdiction}, #{policeListInfo}, #{isVerified}, #{imgArr})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskDutyDealPoliceRecord" >
     insert into risk_duty_deal_police_record
@@ -86,6 +88,9 @@
         <if test="isVerified != null">
           is_verified,
         </if>
+        <if test="imgArr != null">
+          img_arr,
+        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -129,6 +134,9 @@
       </if>
       <if test="isVerified != null">
         #{isVerified},
+      </if>
+      <if test="imgArr != null">
+        #{imgArr},
       </if>
     </trim>
   </insert>
@@ -174,6 +182,9 @@
       <if test="isVerified != null">
         is_verified = #{isVerified},
       </if>
+      <if test="imgArr != null">
+        img_arr = #{imgArr},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -191,6 +202,7 @@
         police_list_info = #{policeListInfo},
         is_verified = #{isVerified},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
+        img_arr = #{imgArr},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -273,7 +285,7 @@
       u.police_id as policeId, u.name as policeName, record.police_list_code as policeListCode, record.jurisdiction,
       itype.id as informationId, itype.name as informationName, record.police_list_info as policeListInfo, etype.id as errorId,
       etype.name as errorName, record.is_verified as isVerified, record.content as `desc`, record.deduction_score as deductScore,
-      DATE_FORMAT(record.creation_date, '%Y-%m-%d %H:%i:%s') as date
+      DATE_FORMAT(record.creation_date, '%Y-%m-%d %H:%i:%s') as date, record.img_arr as imgArr
     from risk_duty_deal_police_record record
       left join user u on record.police_id = u.police_id
       left join risk_duty_information_type itype on record.information_id = itype.id

@@ -153,16 +153,16 @@ public class RiskServiceImpl implements RiskService {
 	// 警员风险分页查询
 	@Override
 	public List<RiskReportRecord> riskPageList(String keyWords, Integer alarmType, String sortName, String dateTime,
-			String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum,Integer num,String orderName) {
+			String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum,Integer num,String orderName, Integer deptId) {
 		return riskReportRecordMapper.riskPageList(keyWords, alarmType, sortName, dateTime, lastDateTime, lastMonthTime,
-				pageSize, pageNum,num,orderName);
+				pageSize, pageNum,num,orderName,deptId);
 	}
 
 	// 警员风险列表总数
 	@Override
 	public int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime,
-							 String lastMonthTime,Integer num,String orderName) {
-		return riskReportRecordMapper.riskPageCount(keyWords, alarmType, dateTime, lastDateTime, lastMonthTime,num,orderName);
+							 String lastMonthTime,Integer num,String orderName, Integer deptId) {
+		return riskReportRecordMapper.riskPageCount(keyWords, alarmType, dateTime, lastDateTime, lastMonthTime,num,orderName, deptId);
 	}
 
 	// 警员预警类型查询

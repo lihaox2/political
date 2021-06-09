@@ -281,7 +281,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				indexNum+=0.5;
 			}
 			
-			if(r.getIsHyperlipidemia()==1) {
+			if(r.getIsHyperlipidemia() != null && r.getIsHyperlipidemia()==1) {
 				riskHealth.setHyperlipidemiaNum(0.75);
 				indexNum+=0.75;
 			}

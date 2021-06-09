@@ -71,6 +71,19 @@ public class DutyDetailsDO {
      */
     private String date;
 
+    /**
+     * 图片字符数组
+     */
+    private String imgArr;
+
+    public String getImgArr() {
+        return imgArr;
+    }
+
+    public void setImgArr(String imgArr) {
+        this.imgArr = imgArr;
+    }
+
     public String getPoliceListCode() {
         return policeListCode;
     }

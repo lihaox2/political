@@ -7,8 +7,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bayee.political.domain.*;
 import com.bayee.political.service.*;
+import com.bayee.political.utils.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,15 +18,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bayee.political.mapper.RiskDrinkRecordMapper;
-import com.bayee.political.utils.DataListReturn;
-import com.bayee.political.utils.DateUtils;
-import com.bayee.political.utils.GetExcel;
-import com.bayee.political.utils.StatusCode;
 
 @Component
 @EnableScheduling
@@ -90,6 +90,201 @@ public class RiskExportExcelDataController {
 
 	@Autowired
 	RiskDutyErrorTypeService riskDutyErrorTypeService;
+
+//	@PostMapping("/risk/healthy/import/excel/data")
+	public ResponseEntity<?> importHealthData(@RequestParam("file") MultipartFile file) {
+		List<JSONObject> importData = ExcelUtil.dataImport(file, 0, 1);
+		if (importData == null) {
+			return new ResponseEntity<>(DataListReturn.error("导入失败"), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		String yearStr = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
+
+		for (JSONObject jsonObject : importData) {
+			String policeId = jsonObject.getString("5");
+			User user = userService.findByPoliceId(policeId);
+
+			if (user == null || user.getName() == null) {
+				continue;
+			}
+
+			Integer riskHealthRecordId = riskHealthRecordService.getByIdAndYear(policeId, yearStr, null);
+
+			// 警员体检
+			RiskHealthRecord riskHealthRecord = new RiskHealthRecord();
+			riskHealthRecord.setHeight(0d);
+			riskHealthRecord.setWeight(0d);
+			riskHealthRecord.setBmi(0d);
+			riskHealthRecord.setIsOverweight(0);
+			riskHealthRecord.setIsHyperlipidemia(0);
+			riskHealthRecord.setIsHypertension(0);
+			riskHealthRecord.setIsHyperglycemia(0);
+			riskHealthRecord.setIsHyperuricemia(0);
+			riskHealthRecord.setIsProstate(0);
+			riskHealthRecord.setIsMajorDiseases(0);
+			riskHealthRecord.setIsHeart(0);
+			riskHealthRecord.setIsTumorAntigen(0);
+			riskHealthRecord.setIsOrthopaedics(0);
+
+			RiskHealthRecordInfo recordInfo = new RiskHealthRecordInfo();
+
+			riskHealthRecord.setPoliceId(policeId);
+			recordInfo.setPoliceId(policeId);
+			riskHealthRecord.setYear(yearStr);
+
+			if(jsonObject.getString("6").indexOf("\\")==-1) {
+				riskHealthRecord.setHeight(Double.valueOf(jsonObject.getString("6")));
+				recordInfo.setHeight(Double.valueOf(jsonObject.getString("6")));
+			}
+			if(jsonObject.getString("7").indexOf("\\")==-1) {
+				riskHealthRecord.setWeight(Double.valueOf(jsonObject.getString("7")));
+				recordInfo.setWeight(Double.valueOf(jsonObject.getString("7")));
+			}
+
+			if(jsonObject.getString("6").indexOf("\\")==-1 &&  jsonObject.getString("7").indexOf("\\")==-1) {
+
+				Double bmi=Double.valueOf(jsonObject.getString("7"))/Math.pow(Double.valueOf(jsonObject.getString("6"))/100,2);
+				riskHealthRecord.setBmi(bmi);
+				riskHealthRecord.setIsOverweight(0);
+				if(bmi<=18.40) {
+					riskHealthRecord.setBmiId(1);
+				}else if(bmi>=18.41 && bmi<=23.99) {
+					riskHealthRecord.setBmiId(2);
+				}else if(bmi>=24 && bmi<=27.99) {
+					riskHealthRecord.setBmiId(3);
+					riskHealthRecord.setIsOverweight(1);
+				}else if(bmi>=28 && bmi<=100.00) {
+					riskHealthRecord.setBmiId(4);
+					riskHealthRecord.setIsOverweight(1);
+				}
+			}
+
+			riskHealthRecord.setBlood(jsonObject.getString("8"));
+			if (!jsonObject.getString("10").isEmpty()) {
+				recordInfo.setHighDensityLipoprotein(Double.valueOf(jsonObject.getString("10")));
+			}
+
+			if (!jsonObject.getString("11").isEmpty()) {
+				recordInfo.setLowDensityLipoprotein(Double.valueOf(jsonObject.getString("11")));
+			}
+
+			if (!jsonObject.getString("12").isEmpty()) {
+				recordInfo.setTriglyceride(Double.valueOf(jsonObject.getString("12")));
+				if (Double.valueOf(jsonObject.getString("12")) > 1.7) {
+					riskHealthRecord.setIsHyperlipidemia(1);
+				}
+			}
+
+			if (!jsonObject.getString("13").isEmpty()) {
+				recordInfo.setCholesterol(Double.valueOf(jsonObject.getString("13")));
+				if (Double.valueOf(jsonObject.getString("13")) > 5.72) {
+					riskHealthRecord.setIsHyperlipidemia(1);
+				}
+			}
+
+			if (!jsonObject.getString("14").isEmpty() && !jsonObject.getString("14").equals("弃检")) {
+				recordInfo.setReceiveCompression(Double.valueOf(jsonObject.getString("14")));
+				if (Double.valueOf(jsonObject.getString("14")) > 140) {
+					riskHealthRecord.setIsHypertension(1);
+				}
+			}
+
+			if (!jsonObject.getString("15").isEmpty() && !jsonObject.getString("15").equals("弃检")) {
+
+				recordInfo.setDiastolicPressure(Double.valueOf(jsonObject.getString("15")));
+				if (Double.valueOf(jsonObject.getString("15")) > 90) {
+					riskHealthRecord.setIsHypertension(1);
+				}
+			}
+
+			if (!jsonObject.getString("16").isEmpty()) {
+				recordInfo.setBloodSugar(Double.valueOf(jsonObject.getString("16")));
+				if (Double.valueOf(jsonObject.getString("16")) > 6.1) {
+					riskHealthRecord.setIsHyperglycemia(1);
+				}
+			}
+
+			if (!jsonObject.getString("17").isEmpty()) {
+				recordInfo.setSerumUricAcid(Double.valueOf(jsonObject.getString("17")));
+				if (Double.valueOf(jsonObject.getString("17")) > 420) {
+					riskHealthRecord.setIsHyperuricemia(1);
+				}
+			}
+
+			riskHealthRecord.setIsProstate(0);
+			recordInfo.setIsProstate(0);
+
+			if (!jsonObject.getString("18").isEmpty()) {
+				recordInfo.setProstateDesc(jsonObject.getString("18"));
+				if (jsonObject.getString("18").equals("异常")) {
+					riskHealthRecord.setIsProstate(1);
+					recordInfo.setIsProstate(1);
+				}
+			}
+
+			if (!jsonObject.getString("19").isEmpty()) {
+				riskHealthRecord.setIsMajorDiseases(1);
+				recordInfo.setIsMajorDiseases(1);
+				riskHealthRecord.setMajorDiseasesDescribe(jsonObject.getString("19"));
+				recordInfo.setMajorDiseasesDesc(jsonObject.getString("19"));
+			} else {
+				riskHealthRecord.setIsMajorDiseases(0);
+				recordInfo.setIsMajorDiseases(0);
+			}
+
+			if (!jsonObject.getString("20").isEmpty()) {
+				riskHealthRecord.setIsHeart(1);
+				recordInfo.setIsHeart(1);
+				riskHealthRecord.setHeartDescribe(jsonObject.getString("20"));
+				recordInfo.setHeartDesc(jsonObject.getString("20"));
+			} else {
+				riskHealthRecord.setIsHeart(0);
+				recordInfo.setIsHeart(0);
+			}
+
+			if (!jsonObject.getString("21").isEmpty()) {
+				riskHealthRecord.setIsTumorAntigen(1);
+				recordInfo.setIsTumorAntigen(1);
+				riskHealthRecord.setTumorAntigenDescribe(jsonObject.getString("21"));
+				recordInfo.setTumorAntigenDesc(jsonObject.getString("21"));
+			} else {
+				riskHealthRecord.setIsTumorAntigen(0);
+				recordInfo.setIsTumorAntigen(0);
+			}
+
+			if (!jsonObject.getString("22").isEmpty()) {
+				riskHealthRecord.setIsOrthopaedics(1);
+				recordInfo.setIsOrthopaedics(1);
+				riskHealthRecord.setOrthopaedicsDescribe(jsonObject.getString("22"));
+				recordInfo.setOrthopaedicsDesc(jsonObject.getString("22"));
+			} else {
+				riskHealthRecord.setIsOrthopaedics(0);
+				recordInfo.setIsOrthopaedics(0);
+			}
+
+			if(riskHealthRecordId!=null) {
+				riskHealthRecord.setId(riskHealthRecordId);
+				riskHealthRecord.setUpdateDate(new Date());
+				riskHealthRecordService.updateByPrimaryKeySelective(riskHealthRecord);
+
+				riskHealthRecordInfoService.deleteByRecordId(riskHealthRecordId);
+
+				recordInfo.setRecordId(riskHealthRecord.getId());
+				recordInfo.setCreationDate(new Date());
+
+				riskHealthRecordInfoService.insert(recordInfo);
+			}else {
+				riskHealthRecord.setCreationDate(new Date());
+				riskHealthRecordService.insert(riskHealthRecord);
+
+				recordInfo.setRecordId(riskHealthRecord.getId());
+				recordInfo.setCreationDate(new Date());
+
+				riskHealthRecordInfoService.insert(recordInfo);
+			}
+		}
+
+		return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
+	}
 
 	/**
 	 * 	导入Excel警员健康数据
@@ -165,6 +360,7 @@ public class RiskExportExcelDataController {
 					Double bmi=Double.valueOf(excel.get(7))/Math.pow(Double.valueOf(excel.get(6))/100,2);
 					riskHealthRecord.setBmi(bmi);
 					riskHealthRecord.setIsOverweight(0);
+					riskHealthRecord.setBmiId(0);
 					if(bmi<=18.40) {
 						riskHealthRecord.setBmiId(1);
 					}else if(bmi>=18.41 && bmi<=23.99) {
@@ -206,8 +402,6 @@ public class RiskExportExcelDataController {
 					}
 
 					if (!excel.get(14).isEmpty() && !excel.get(14).equals("弃检")) {
-
-
 						recordInfo.setReceiveCompression(Double.valueOf(excel.get(14)));
 						if (Double.valueOf(excel.get(14)) > 140) {
 							riskHealthRecord.setIsHypertension(1);
@@ -240,7 +434,7 @@ public class RiskExportExcelDataController {
 
 					riskHealthRecord.setIsProstate(0);
 					recordInfo.setIsProstate(0);
-					if (excel.size() > 19 && !excel.get(18).isEmpty()) {
+					if (!excel.get(18).isEmpty()) {
 						recordInfo.setProstateDesc(excel.get(18));
 						if (excel.get(18).equals("异常")) {
 							riskHealthRecord.setIsProstate(1);
@@ -609,16 +803,16 @@ public class RiskExportExcelDataController {
 					User user = userService.findByPoliceId(policeId);
 
 					if (user == null || user.getName() == null) {
-						throw new RuntimeException();
+						continue;
 					}
 				}else {
-					throw new RuntimeException();
+					continue;
 				}
 
 				Integer informationId = riskDutyInformationTypeService.findIdByName(excel.get(6));
 				Integer errorId = riskDutyErrorTypeService.findIdByName(excel.get(8));
 				if (informationId == null || errorId == null) {
-					throw new RuntimeException();
+					continue;
 				}
 
 				RiskDutyDealPoliceRecord policeRecord = new RiskDutyDealPoliceRecord();
@@ -631,7 +825,7 @@ public class RiskExportExcelDataController {
 				policeRecord.setPoliceId(policeId);
 				policeRecord.setContent(excel.get(9));
 				policeRecord.setInputTime(new Date());
-				policeRecord.setCreationDate(DateUtils.parseDate(excel.get(3), "yyyy-MM-dd HH:mm:ss"));
+				policeRecord.setCreationDate(DateUtils.parseDate(excel.get(3), "yyyy-MM-dd HH:mm"));
 				policeRecord.setDeductionScore(Double.valueOf(excel.get(11)));
 
 				riskDutyDealPoliceRecordService.insert(policeRecord);

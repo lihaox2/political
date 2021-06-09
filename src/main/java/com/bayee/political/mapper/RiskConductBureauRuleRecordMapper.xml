@@ -19,10 +19,11 @@
     <result column="type_name" property="typeName" jdbcType="VARCHAR" />
     <result column="parentTypeId" property="parentTypeId" jdbcType="INTEGER" />
     <result column="rootName" property="rootName" jdbcType="VARCHAR" />
+    <result column="img_arr" property="imgArr" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, police_id, type, input_time, content, deduction_score, remarks, creation_date, update_date,
-    scoring_level, scoring_dept, measures
+    scoring_level, scoring_dept, measures,img_arr
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select r1.*, (select name from risk_conduct_bureau_rule_type t where t.id = r2.parent_id) as type_name,
@@ -38,12 +39,12 @@
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
     insert into risk_conduct_bureau_rule_record (id, police_id, type, 
       input_time, content, deduction_score, 
-      remarks, creation_date, update_date, scoring_level, scoring_dept, measures
+      remarks, creation_date, update_date, scoring_level, scoring_dept, measures,img_arr
       )
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{deductionScore,jdbcType=DOUBLE}, 
       #{remarks,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},
-            #{scoringLevel}, #{scoringDept}, #{measures}
+            #{scoringLevel}, #{scoringDept}, #{measures},#{imgArr}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
@@ -85,6 +86,9 @@
       <if test="measures != null">
         measures,
       </if>
+      <if test="imgArr != null">
+        img_arr,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -122,6 +126,9 @@
       </if>
       <if test="measures != null">
         #{measures},
+      </if>
+      <if test="imgArr != null">
+        #{imgArr},
       </if>
     </trim>
   </insert>
@@ -161,6 +168,9 @@
       <if test="measures != null">
         measures = #{measures},
       </if>
+      <if test="imgArr != null">
+        img_arr = #{imgArr},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -176,6 +186,7 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP},
         scoring_level = #{scoringLevel},
         scoring_dept = #{scoringDept},
+        img_arr = #{imgArr},
         measures = #{measures}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -261,7 +272,7 @@
       rt.parent_id as scoringType, (select name from risk_conduct_bureau_rule_type where id = rt.parent_id) as scoringTypeName,
       rb.type as scoringOption, rb.content as scoringOptionName,
       rb.measures as measures, m.name as measuresName,
-      rb.deduction_score as deductScore, DATE_FORMAT(rb.creation_date,'%Y-%m-%d') as date, rb.remarks as remarks
+      rb.deduction_score as deductScore, DATE_FORMAT(rb.creation_date,'%Y-%m-%d') as date, rb.remarks as remarks, rb.img_arr as imgArr
     from risk_conduct_bureau_rule_record rb
       left join user u on rb.police_id = u.police_id
       left join measures m on rb.measures = m.id

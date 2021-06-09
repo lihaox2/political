@@ -12,10 +12,12 @@
     <result column="deduction_score" jdbcType="DOUBLE" property="deductionScore" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="img_arr" property="imgArr" jdbcType="VARCHAR" />
+
     <result column="name" jdbcType="VARCHAR" property="typeName" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, police_id, type, content, input_time, deduction_score, dept_name, case_code, creation_date, update_date
+    id, police_id, type, content, input_time, deduction_score, dept_name, case_code, creation_date, update_date, img_arr
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select a.*,b.name as typeName from risk_case_law_enforcement_record a
@@ -29,11 +31,11 @@
   <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord">
     insert into risk_case_law_enforcement_record (id, police_id, type, 
       content, input_time, deduction_score, dept_name, case_code,
-      creation_date, update_date)
+      creation_date, update_date, img_arr)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{content,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, #{deductionScore,jdbcType=DOUBLE},
       #{deptName}, #{caseCode},
-      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{imgArr})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord">
     insert into risk_case_law_enforcement_record
@@ -68,6 +70,9 @@
       <if test="updateDate != null">
         update_date,
       </if>
+        <if test="imgArr != null">
+          img_arr,
+        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -99,6 +104,9 @@
       </if>
       <if test="updateDate != null">
         #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="imgArr != null">
+        #{imgArr},
       </if>
     </trim>
   </insert>
@@ -132,6 +140,9 @@
       <if test="updateDate != null">
         update_date = #{updateDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="imgArr != null">
+        img_arr = #{imgArr},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -144,6 +155,7 @@
       deduction_score = #{deductionScore,jdbcType=DOUBLE},
         dept_name = #{deptName},
         case_code = #{caseCode},
+        img_arr = #{imgArr},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
@@ -237,8 +249,8 @@
     select
         record.police_id as policeId, u.name as policeName, record.dept_name as deptName, record.case_code as caseCode,
         parend_type.id as parentId, parend_type.name as parentName, type.id as typeId, type.name as typeName,
-        record.content, record.deduction_score as deductScore,
-        DATE_FORMAT(record.creation_date, '%Y-%m-%d %H:%i:%s') as date
+        record.content as `desc`, record.deduction_score as deductScore,
+        DATE_FORMAT(record.creation_date, '%Y-%m-%d %H:%i:%s') as date,record.img_arr as imgArr
     from risk_case_law_enforcement_record record
       left join user u on record.police_id = u.police_id
       left join risk_case_law_enforcement_type type on type.id = record.type

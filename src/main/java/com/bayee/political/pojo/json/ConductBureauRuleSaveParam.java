@@ -38,6 +38,19 @@ public class ConductBureauRuleSaveParam {
      */
     private String remarks;
 
+    /**
+     * 图片集合
+     */
+    private String fileList;
+
+    public String getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(String fileList) {
+        this.fileList = fileList;
+    }
+
     public Integer getScoringLevel() {
         return scoringLevel;
     }

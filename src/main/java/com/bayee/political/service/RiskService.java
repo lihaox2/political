@@ -32,10 +32,12 @@ public interface RiskService {
 
 	// 警员风险分页查询
 	List<RiskReportRecord> riskPageList(String keyWords, Integer alarmType, String sortName, String dateTime,
-			String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum,Integer num,String orderName);
+			String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum,Integer num,
+										String orderName, Integer deptId);
 
 	// 警员风险列表总数
-	int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime, String lastMonthTime,Integer num,String orderName);
+	int riskPageCount(String keyWords, Integer alarmType, String dateTime, String lastDateTime, String lastMonthTime,
+					  Integer num,String orderName, Integer deptId);
 
 	// 警员预警类型查询
 	List<RiskAlarmType> riskAlarmTypeList(Integer id);

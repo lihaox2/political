@@ -66,6 +66,19 @@ public class CaseLawEnforcementDetailsResult {
      */
     private Integer replaceErrorCount;
 
+    /**
+     * 文件集合
+     */
+    private String[] fileList;
+
+    public String[] getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(String[] fileList) {
+        this.fileList = fileList;
+    }
+
     public Integer getReplaceErrorCount() {
         return replaceErrorCount;
     }

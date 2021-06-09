@@ -92,6 +92,19 @@ public class ConductBureauRuleDetailsResult {
      */
     private String remarks;
 
+    /**
+     * 图片集合
+     */
+    private String[] fileList;
+
+    public String[] getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(String[] fileList) {
+        this.fileList = fileList;
+    }
+
     public Integer getScoringRootType() {
         return scoringRootType;
     }

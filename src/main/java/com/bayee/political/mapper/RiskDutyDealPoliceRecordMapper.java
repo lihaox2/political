@@ -65,7 +65,8 @@ public interface RiskDutyDealPoliceRecordMapper {
 												  @Param("pageSize") Integer pageSize,
 												  @Param("informationId") Integer informationId,
 												  @Param("errorId") Integer errorId,
-												  @Param("key") String key);
+												  @Param("key") String key,
+												  @Param("deptId") Integer deptId);
 
 	/**
 	 * 统计分页数据数据条数
@@ -75,7 +76,8 @@ public interface RiskDutyDealPoliceRecordMapper {
 	 * @return
 	 */
 	Integer riskDutyDealPoliceRecordPageCount(@Param("informationId") Integer informationId,
-											  @Param("errorId") Integer errorId, @Param("key") String key);
+											  @Param("errorId") Integer errorId, @Param("key") String key,
+											  @Param("deptId") Integer deptId);
 
 	/**
 	 * 通过id查询接警执勤详情

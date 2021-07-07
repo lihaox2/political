@@ -29,7 +29,8 @@ public interface RiskCaseLawEnforcementRecordService {
 	 * @param key
 	 * @return
 	 */
-	List<CaseLawEnforcementPageDO> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize, String type, String key);
+	List<CaseLawEnforcementPageDO> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize, String type,
+																	String key, Integer deptId);
 
 	/**
 	 * 分页数据条数统计
@@ -37,7 +38,7 @@ public interface RiskCaseLawEnforcementRecordService {
 	 * @param key
 	 * @return
 	 */
-	Integer riskCaseLawEnforcementRecordPageCount(String type, String key);
+	Integer riskCaseLawEnforcementRecordPageCount(String type, String key, Integer deptId);
 
 	/**
 	 * 通过id查询执法管理数据

@@ -60,13 +60,18 @@ public class CaseController {
                                              @RequestParam("type") String type,
                                              @RequestParam("typeFlag") Integer typeFlag,
                                              @RequestParam("key") String key,
-                                             @RequestParam("date") String date) {
+                                             @RequestParam("date") String date,
+                                             @RequestParam("deptId") Integer deptId) {
+        if (deptId != null && deptId == 1) {
+            deptId = null;
+        }
+
         List<String> columnList = new ArrayList<>();
         if (type != null && !"".equals(type)) {
             columnList = Arrays.asList(type.split(","));
         }
         List<RiskCaseAbilityRecord> recordList = riskCaseAbilityRecordService.riskCaseAbilityRecordPage(pageIndex,
-                pageSize, columnList, typeFlag, key, date);
+                pageSize, columnList, typeFlag, key, date, deptId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -136,7 +141,7 @@ public class CaseController {
             pageResult.setErrorCount(errorCount);
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskCaseAbilityRecordService.getRiskCaseAbilityRecordPageCount(columnList, typeFlag, key, date));
+        result.put("totalCount", riskCaseAbilityRecordService.getRiskCaseAbilityRecordPageCount(columnList, typeFlag, key, date, deptId));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
@@ -240,9 +245,14 @@ public class CaseController {
     public ResponseEntity<?> caseLawEnforcementPage(@RequestParam("pageIndex") Integer pageIndex,
                                                     @RequestParam("pageSize") Integer pageSize,
                                                     @RequestParam("type") String type,
-                                                    @RequestParam("key") String key) {
+                                                    @RequestParam("key") String key,
+                                                    @RequestParam("deptId") Integer deptId) {
+        if (deptId != null && deptId == 1) {
+            deptId = null;
+        }
+
         List<CaseLawEnforcementPageDO> recordList = riskCaseLawEnforcementRecordService.
-                riskCaseLawEnforcementRecordPage(pageIndex, pageSize, type, key);
+                riskCaseLawEnforcementRecordPage(pageIndex, pageSize, type, key, deptId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -260,7 +270,7 @@ public class CaseController {
 
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskCaseLawEnforcementRecordService.riskCaseLawEnforcementRecordPageCount(type, key));
+        result.put("totalCount", riskCaseLawEnforcementRecordService.riskCaseLawEnforcementRecordPageCount(type, key, deptId));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
@@ -346,9 +356,16 @@ public class CaseController {
     @GetMapping("/test/page")
     public ResponseEntity<?> caseTestPage(@RequestParam("pageIndex") Integer pageIndex,
                                           @RequestParam("pageSize") Integer pageSize,
-                                          @RequestParam("date") String date, @RequestParam("passFlag") Integer passFlag,
-                                          @RequestParam("key") String key) {
-        List<RiskCaseTestRecord> recordList = riskCaseTestRecordService.riskCaseTestRecordPage(pageIndex, pageSize, date,passFlag,key);
+                                          @RequestParam("date") String date,
+                                          @RequestParam("passFlag") Integer passFlag,
+                                          @RequestParam("key") String key,
+                                          @RequestParam("deptId") Integer deptId) {
+        if (deptId != null && deptId == 1) {
+            deptId = null;
+        }
+
+        List<RiskCaseTestRecord> recordList = riskCaseTestRecordService.riskCaseTestRecordPage(pageIndex, pageSize,
+                date, passFlag, key, deptId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -365,7 +382,7 @@ public class CaseController {
             return pageResult;
         }).collect(Collectors.toList()));
 
-        result.put("totalCount", riskCaseTestRecordService.riskCaseTestRecordPageCount(date,passFlag,key));
+        result.put("totalCount", riskCaseTestRecordService.riskCaseTestRecordPageCount(date,passFlag,key, deptId));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);

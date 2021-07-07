@@ -73,17 +73,17 @@ public class RiskCaseTestRecordServiceImpl implements RiskCaseTestRecordService{
 
 	@Override
 	public List<RiskCaseTestRecord> riskCaseTestRecordPage(Integer pageIndex, Integer pageSize,
-														   String date,Integer passFlag,String key) {
+														   String date,Integer passFlag,String key, Integer deptId) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
-		return riskCaseTestRecordMapper.riskCaseTestRecordPage(pageIndex, pageSize, date, passFlag,key);
+		return riskCaseTestRecordMapper.riskCaseTestRecordPage(pageIndex, pageSize, date, passFlag,key, deptId);
 	}
 
 	@Override
-	public Integer riskCaseTestRecordPageCount(String date,Integer passFlag,String key) {
-		return riskCaseTestRecordMapper.riskCaseTestRecordPageCount(date, passFlag,key);
+	public Integer riskCaseTestRecordPageCount(String date,Integer passFlag,String key, Integer deptId) {
+		return riskCaseTestRecordMapper.riskCaseTestRecordPageCount(date, passFlag,key, deptId);
 	}
 
 

@@ -50,8 +50,13 @@ public class DutyController {
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam("informationId") Integer informationId,
                                       @RequestParam("errorId") Integer errorId,
-                                      @RequestParam("key") String key) {
-        List<DutyPageDO> recordList = riskDutyDealPoliceRecordService.riskDutyDealPoliceRecordPage(pageIndex, pageSize, informationId, errorId,key);
+                                      @RequestParam("key") String key,
+                                      @RequestParam("deptId") Integer deptId) {
+        if (deptId != null && deptId == 1) {
+            deptId = null;
+        }
+
+        List<DutyPageDO> recordList = riskDutyDealPoliceRecordService.riskDutyDealPoliceRecordPage(pageIndex, pageSize, informationId, errorId, key, deptId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -68,7 +73,7 @@ public class DutyController {
 
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskDutyDealPoliceRecordService.riskDutyDealPoliceRecordPageCount(informationId, errorId, key));
+        result.put("totalCount", riskDutyDealPoliceRecordService.riskDutyDealPoliceRecordPageCount(informationId, errorId, key, deptId));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);

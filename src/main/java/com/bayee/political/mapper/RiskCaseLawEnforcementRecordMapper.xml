@@ -217,6 +217,9 @@
       </foreach>
       ))
     </if>
+    <if test="deptId != null">
+      and u.department_id = #{deptId}
+    </if>
     order by record.id desc
     limit #{pageIndex}, #{pageSize}
   </select>
@@ -242,6 +245,9 @@
         #{value }
       </foreach>
       ))
+    </if>
+    <if test="deptId != null">
+      and u.department_id = #{deptId}
     </if>
   </select>
 

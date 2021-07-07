@@ -57,7 +57,8 @@ public class RiskConductBureauRuleRecordServiceImpl implements RiskConductBureau
 	}
 
 	@Override
-	public List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(Integer pageIndex, Integer pageSize,String type, String key) {
+	public List<RiskConductBureauRuleRecord> riskConductBureauRuleRecordPage(Integer pageIndex, Integer pageSize,
+																			 String type, String key, Integer deptId) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
@@ -67,17 +68,17 @@ public class RiskConductBureauRuleRecordServiceImpl implements RiskConductBureau
 			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
 		}
 
-		return riskConductBureauRuleRecordMapper.riskConductBureauRuleRecordPage(pageIndex, pageSize, typeList,key);
+		return riskConductBureauRuleRecordMapper.riskConductBureauRuleRecordPage(pageIndex, pageSize, typeList,key, deptId);
 	}
 
 	@Override
-	public Integer getRiskConductBureauRuleRecordPageCount(String type, String key) {
+	public Integer getRiskConductBureauRuleRecordPageCount(String type, String key, Integer deptId) {
 		List<Integer> typeList = new ArrayList<>();
 		if (type != null && !"".equals(type)) {
 			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
 		}
 
-		return riskConductBureauRuleRecordMapper.getRiskConductBureauRuleRecordPageCount(typeList,key);
+		return riskConductBureauRuleRecordMapper.getRiskConductBureauRuleRecordPageCount(typeList,key, deptId);
 	}
 
 	@Override

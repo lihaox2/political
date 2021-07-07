@@ -218,4 +218,11 @@ public interface UserMapper {
 	 */
 	Integer countAllPolice();
 
+	/**
+	 * 根据部门查询警员
+	 * @param deptId
+	 * @return
+	 */
+	List<User> findUserByDeptId(@Param("deptId") Integer deptId);
+
 }

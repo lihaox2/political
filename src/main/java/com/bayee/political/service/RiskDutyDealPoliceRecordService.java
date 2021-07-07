@@ -28,7 +28,7 @@ public interface RiskDutyDealPoliceRecordService {
 	 * @return
 	 */
 	List<DutyPageDO> riskDutyDealPoliceRecordPage(Integer pageIndex, Integer pageSize,
-												  Integer informationId, Integer errorId, String key);
+												  Integer informationId, Integer errorId, String key, Integer deptId);
 
 	/**
 	 * 统计分页数据数据条数
@@ -37,7 +37,7 @@ public interface RiskDutyDealPoliceRecordService {
 	 * @param key
 	 * @return
 	 */
-	Integer riskDutyDealPoliceRecordPageCount(Integer informationId, Integer errorId, String key);
+	Integer riskDutyDealPoliceRecordPageCount(Integer informationId, Integer errorId, String key, Integer deptId);
 
 	/**
 	 * 通过id查询接警执勤详情

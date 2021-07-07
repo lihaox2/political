@@ -633,4 +633,12 @@ where 1=1 and department_id!=47
         select count(1) from user where police_id not in (000001)
     </select>
 
+    <select id="findUserByDeptId" resultMap="userResult">
+        select name,police_id from user where 1 = 1
+        <if test="deptId != null">
+            and department_id = #{deptId}
+        </if>
+        and police_id != '000001'
+    </select>
+
 </mapper>

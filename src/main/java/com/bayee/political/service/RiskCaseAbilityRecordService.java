@@ -30,7 +30,7 @@ public interface RiskCaseAbilityRecordService {
 	 */
 	List<RiskCaseAbilityRecord> riskCaseAbilityRecordPage(Integer pageIndex, Integer pageSize,
 														  List<String> columnList, Integer typeFlag,
-														  String key, String date);
+														  String key, String date, Integer deptId);
 
 	/**
 	 * 统计分页数据条数
@@ -40,7 +40,7 @@ public interface RiskCaseAbilityRecordService {
 	 * @param date
 	 * @return
 	 */
-	Integer getRiskCaseAbilityRecordPageCount(List<String> columnList, Integer typeFlag, String key, String date);
+	Integer getRiskCaseAbilityRecordPageCount(List<String> columnList, Integer typeFlag, String key, String date, Integer deptId);
 
 	/**
 	 * 根据时间和警号查询id

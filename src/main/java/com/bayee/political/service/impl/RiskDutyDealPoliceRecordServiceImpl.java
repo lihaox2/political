@@ -46,17 +46,17 @@ public class RiskDutyDealPoliceRecordServiceImpl implements RiskDutyDealPoliceRe
 
 	@Override
 	public List<DutyPageDO> riskDutyDealPoliceRecordPage(Integer pageIndex, Integer pageSize,
-														 Integer informationId, Integer errorId, String key) {
+														 Integer informationId, Integer errorId, String key, Integer deptId) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
-		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPage(pageIndex, pageSize, informationId, errorId, key);
+		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPage(pageIndex, pageSize, informationId, errorId, key, deptId);
 	}
 
 	@Override
-	public Integer riskDutyDealPoliceRecordPageCount(Integer informationId, Integer errorId, String key) {
-		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPageCount(informationId, errorId, key);
+	public Integer riskDutyDealPoliceRecordPageCount(Integer informationId, Integer errorId, String key, Integer deptId) {
+		return riskDutyDealPoliceRecordMapper.riskDutyDealPoliceRecordPageCount(informationId, errorId, key, deptId);
 	}
 
 	@Override

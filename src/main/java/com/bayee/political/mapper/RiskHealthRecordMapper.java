@@ -33,7 +33,7 @@ public interface RiskHealthRecordMapper {
      */
     List<RiskHealthRecord> riskRiskHealthRecordPage(@Param("pageIndex") Integer pageIndex,@Param("pageSize") Integer pageSize,
     		@Param("columnList") List<String> columnList, @Param("typeFlag") Integer typeFlag,
-            @Param("key") String key);
+            @Param("key") String key,@Param("deptId") Integer deptId);
 
     /**
      * 统计分页数据条数
@@ -41,7 +41,7 @@ public interface RiskHealthRecordMapper {
      */
     Integer getRiskReportRecordPageCount(
             @Param("columnList") List<String> columnList, @Param("typeFlag") Integer typeFlag,
-            @Param("key") String key);
+            @Param("key") String key, @Param("deptId") Integer deptId);
 
     /**
      * 统计所有数据条数

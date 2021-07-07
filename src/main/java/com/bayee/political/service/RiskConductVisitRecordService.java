@@ -29,14 +29,15 @@ public interface RiskConductVisitRecordService {
      * @param key
      * @return
      */
-    List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize, String type, String key);
+    List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize, String type, String key,
+                                                            Integer deptId);
 
     /**
      * 统计分页数据条数
      * @param key
      * @return
      */
-    Integer getRiskConductVisitRecordPageCount(String type, String key);
+    Integer getRiskConductVisitRecordPageCount(String type, String key, Integer deptId);
 
     /**
      * 根绝类型统计数据条数

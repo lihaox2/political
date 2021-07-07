@@ -65,7 +65,8 @@ public interface RiskCaseLawEnforcementRecordMapper {
     List<CaseLawEnforcementPageDO> riskCaseLawEnforcementRecordPage(@Param("pageIndex") Integer pageIndex,
                                                                     @Param("pageSize") Integer pageSize,
                                                                     @Param("list") List<Integer> type,
-                                                                    @Param("key") String key);
+                                                                    @Param("key") String key,
+                                                                    @Param("deptId") Integer deptId);
 
     /**
      * 统计分页数据条数
@@ -73,7 +74,8 @@ public interface RiskCaseLawEnforcementRecordMapper {
      * @param key
      * @return
      */
-    Integer riskCaseLawEnforcementRecordPageCount(@Param("list") List<Integer> type, @Param("key") String key);
+    Integer riskCaseLawEnforcementRecordPageCount(@Param("list") List<Integer> type, @Param("key") String key,
+                                                  @Param("deptId") Integer deptId);
 
     /**
      * 通过id查询执法管理数据

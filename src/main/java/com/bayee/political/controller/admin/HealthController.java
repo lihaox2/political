@@ -60,16 +60,19 @@ public class HealthController {
     public ResponseEntity<?> healthPage(@RequestParam("pageIndex") Integer pageIndex,
                                         @RequestParam("pageSize") Integer pageSize,
                                         @RequestParam("type") String type, @RequestParam("typeFlag") Integer typeFlag,
-                                        @RequestParam("key") String key) {
-    	
+                                        @RequestParam("key") String key,
+                                        @RequestParam("deptId") Integer deptId) {
+        if (deptId != null && deptId == 1) {
+            deptId = null;
+        }
+
     	List<String> columnList=new ArrayList<String>();
     	
     	if(type!=null && !"".equals(type)) {
     		columnList=Arrays.asList(type.split(","));
     	}
-    	
-    	
-        List<RiskHealthRecord> recordList = riskHealthRecordService.riskRiskHealthRecordPage(pageIndex, pageSize,columnList,typeFlag,key);
+
+        List<RiskHealthRecord> recordList = riskHealthRecordService.riskRiskHealthRecordPage(pageIndex, pageSize,columnList,typeFlag,key, deptId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -88,7 +91,7 @@ public class HealthController {
             pageResult.setYear(DateUtils.formatDate(e.getCreationDate(), "yyyy"));
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskHealthRecordService.getRiskReportRecordPageCount(columnList,typeFlag,key));
+        result.put("totalCount", riskHealthRecordService.getRiskReportRecordPageCount(columnList,typeFlag,key, deptId));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);

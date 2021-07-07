@@ -217,6 +217,9 @@
       <if test="key!=null and key!=''">
           AND  (u.`name` like CONCAT('%',#{key},'%') OR u.police_id like CONCAT('%',#{key},'%') OR r.`name` like CONCAT('%',#{key},'%'))
       </if>
+    <if test="deptId != null">
+      and u.department_id = #{deptId}
+    </if>
     order by r.id desc
     limit #{pageIndex}, #{pageSize}
   </select>
@@ -236,6 +239,9 @@
       <if test="key!=null and key!=''">
           AND  (u.`name` like CONCAT('%',#{key},'%') OR u.police_id like CONCAT('%',#{key},'%') OR r.`name` like CONCAT('%',#{key},'%'))
       </if>
+    <if test="deptId != null">
+      and u.department_id = #{deptId}
+    </if>
   </select>
 
 </mapper>

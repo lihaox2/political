@@ -257,6 +257,9 @@
     <if test="errorId != null">
       AND etype.id = #{errorId}
     </if>
+    <if test="deptId != null">
+      and u.department_id = #{deptId}
+    </if>
     order by record.id desc
     limit #{pageIndex}, #{pageSize}
   </select>
@@ -277,6 +280,9 @@
     </if>
     <if test="errorId != null">
       AND etype.id = #{errorId}
+    </if>
+    <if test="deptId != null">
+      and u.department_id = #{deptId}
     </if>
   </select>
 

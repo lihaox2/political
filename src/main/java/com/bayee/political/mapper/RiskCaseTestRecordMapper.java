@@ -55,7 +55,8 @@ public interface RiskCaseTestRecordMapper {
 	 */
 	List<RiskCaseTestRecord> riskCaseTestRecordPage(@Param("pageIndex") Integer pageIndex,
 													@Param("pageSize") Integer pageSize, @Param("date") String date,
-													@Param("passFlag") Integer passFlag, @Param("key") String key);
+													@Param("passFlag") Integer passFlag, @Param("key") String key,
+													@Param("deptId") Integer deptId);
 
 	/**
 	 * 统计数据条数
@@ -65,6 +66,6 @@ public interface RiskCaseTestRecordMapper {
 	 * @return
 	 */
 	Integer riskCaseTestRecordPageCount(@Param("date") String date, @Param("passFlag") Integer passFlag,
-										@Param("key") String key);
+										@Param("key") String key, @Param("deptId") Integer deptId);
 
 }

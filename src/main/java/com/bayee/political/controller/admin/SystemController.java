@@ -10,6 +10,7 @@ import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,8 +68,12 @@ public class SystemController {
     RiskDutyInformationTypeService riskDutyInformationTypeService;
 
     @GetMapping("/police/list")
-    public ResponseEntity<?> policeList() {
-        return new ResponseEntity<>(DataListReturn.ok(userService.findAll().stream().map(e -> {
+    public ResponseEntity<?> policeList(@Param("deptId") Integer deptId) {
+        if (deptId != null && deptId == 1) {
+            deptId = null;
+        }
+
+        return new ResponseEntity<>(DataListReturn.ok(userService.findUserByDeptId(deptId).stream().map(e -> {
             PoliceListResult result = new PoliceListResult();
             result.setPoliceId(e.getPoliceId());
             result.setPoliceName(e.getName());
@@ -287,7 +292,8 @@ public class SystemController {
             return new ResponseEntity<>(DataListReturn.error("请添加图片"), HttpStatus.OK);
         }
 
-        String path = "C:/file_upload_test/";
+        String path = "/mnt/qiantang/img/";
+        String returnPath = "/img/";
         List<String> filePathList = new ArrayList<>();
         for (MultipartFile file : fileArr) {
             String fileName = System.currentTimeMillis()+file.getOriginalFilename();
@@ -296,7 +302,7 @@ public class SystemController {
             File newFile = new File(path, fileName);
             file.transferTo(newFile);
 
-            filePathList.add(path + fileName);
+            filePathList.add(returnPath + fileName);
         }
         return new ResponseEntity<>(DataListReturn.ok(filePathList), HttpStatus.OK);
     }

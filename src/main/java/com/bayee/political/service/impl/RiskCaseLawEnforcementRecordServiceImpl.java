@@ -52,7 +52,8 @@ public class RiskCaseLawEnforcementRecordServiceImpl implements RiskCaseLawEnfor
 	}
 
 	@Override
-	public List<CaseLawEnforcementPageDO> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize, String type, String key) {
+	public List<CaseLawEnforcementPageDO> riskCaseLawEnforcementRecordPage(Integer pageIndex, Integer pageSize,
+																		   String type, String key, Integer deptId) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
@@ -62,17 +63,17 @@ public class RiskCaseLawEnforcementRecordServiceImpl implements RiskCaseLawEnfor
 			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
 		}
 
-		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPage(pageIndex, pageSize, typeList, key);
+		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPage(pageIndex, pageSize, typeList, key, deptId);
 	}
 
 	@Override
-	public Integer riskCaseLawEnforcementRecordPageCount(String type, String key) {
+	public Integer riskCaseLawEnforcementRecordPageCount(String type, String key, Integer deptId) {
 		List<Integer> typeList = new ArrayList<>();
 		if (type != null && !"".equals(type)) {
 			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
 		}
 
-		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPageCount(typeList, key);
+		return riskCaseLawEnforcementRecordMapper.riskCaseLawEnforcementRecordPageCount(typeList, key, deptId);
 	}
 
 	@Override

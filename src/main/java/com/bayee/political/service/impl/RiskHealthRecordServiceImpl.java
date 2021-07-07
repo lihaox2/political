@@ -73,18 +73,18 @@ public class RiskHealthRecordServiceImpl implements RiskHealthRecordService{
 	@Override
 	public List<RiskHealthRecord> riskRiskHealthRecordPage(Integer pageIndex, Integer pageSize,
 														   List<String> columnList,Integer typeFlag,
-            String key) {
+														   String key, Integer deptId) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
 		pageIndex = (pageIndex - 1) * pageSize;
-		return riskHealthRecordMapper.riskRiskHealthRecordPage(pageIndex, pageSize,columnList,typeFlag,key);
+		return riskHealthRecordMapper.riskRiskHealthRecordPage(pageIndex, pageSize,columnList,typeFlag,key, deptId);
 	}
 
 	@Override
 	public Integer getRiskReportRecordPageCount(List<String> columnList,Integer typeFlag,
-            String key) {
-		return riskHealthRecordMapper.getRiskReportRecordPageCount(columnList,typeFlag,key);
+            String key, Integer deptId) {
+		return riskHealthRecordMapper.getRiskReportRecordPageCount(columnList,typeFlag,key, deptId);
 	}
 
 	@Override

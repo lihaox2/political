@@ -87,7 +87,7 @@ public class AppConfiguration {
 	public SqlSessionFactory sqlSessionFactory() throws Exception {
 		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
 		sqlSessionFactory.setDataSource(dataSource());
-		//sqlSessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
+		sqlSessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
 		sqlSessionFactory.getObject().getConfiguration().addMapper(DepartmentMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(HomePageMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(LeaveProcessCodeMapper.class);

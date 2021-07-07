@@ -44,7 +44,7 @@ public interface RiskCaseAbilityRecordMapper {
                                                           @Param("pageSize") Integer pageSize,
                                                           @Param("columnList") List<String> columnList,
                                                           @Param("typeFlag") Integer typeFlag, @Param("key") String key,
-                                                          @Param("date") String date);
+                                                          @Param("date") String date,@Param("deptId") Integer deptId);
 
     /**
      * 统计数据条数
@@ -56,7 +56,7 @@ public interface RiskCaseAbilityRecordMapper {
      */
     Integer getRiskCaseAbilityRecordPageCount(@Param("columnList") List<String> columnList,
                                               @Param("typeFlag") Integer typeFlag, @Param("key") String key,
-                                              @Param("date") String date);
+                                              @Param("date") String date, @Param("deptId") Integer deptId);
 
     /**
      * 根据时间和警号查询id

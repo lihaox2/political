@@ -30,14 +30,14 @@ public interface RiskHealthRecordService {
      * @return
      */
     List<RiskHealthRecord> riskRiskHealthRecordPage(Integer pageIndex, Integer pageSize, List<String> columnList,
-                                                    Integer typeFlag, String key);
+                                                    Integer typeFlag, String key, Integer deptId);
 
     /**
      * 统计分页数据条数
      * @return
      */
     Integer getRiskReportRecordPageCount(List<String> columnList,Integer typeFlag,
-            String key);
+            String key, Integer deptId);
 
     /**
      * 统计所有数据条数

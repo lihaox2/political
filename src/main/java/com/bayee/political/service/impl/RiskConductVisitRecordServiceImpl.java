@@ -71,7 +71,8 @@ public class RiskConductVisitRecordServiceImpl implements RiskConductVisitRecord
 	}
 
 	@Override
-	public List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize, String type, String key) {
+	public List<RiskConductVisitRecord> riskConductVisitRecordPage(Integer pageIndex, Integer pageSize, String type,
+																   String key, Integer deptId) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
@@ -81,17 +82,17 @@ public class RiskConductVisitRecordServiceImpl implements RiskConductVisitRecord
 			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
 		}
 
-		return riskConductVisitRecordMapper.riskConductVisitRecordPage(pageIndex, pageSize, typeList, key);
+		return riskConductVisitRecordMapper.riskConductVisitRecordPage(pageIndex, pageSize, typeList, key, deptId);
 	}
 
 	@Override
-	public Integer getRiskConductVisitRecordPageCount(String type, String key) {
+	public Integer getRiskConductVisitRecordPageCount(String type, String key, Integer deptId) {
 		List<Integer> typeList = new ArrayList<>();
 		if (type != null && !"".equals(type)) {
 			typeList = Arrays.asList(type.split(",")).stream().map(e -> Integer.valueOf(e)).collect(Collectors.toList());
 		}
 
-		return riskConductVisitRecordMapper.getRiskConductVisitRecordPageCount(typeList, key);
+		return riskConductVisitRecordMapper.getRiskConductVisitRecordPageCount(typeList, key, deptId);
 	}
 
 	@Override

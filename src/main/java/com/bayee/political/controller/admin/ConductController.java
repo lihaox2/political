@@ -56,9 +56,15 @@ public class ConductController {
     @GetMapping("/bureau/rule/page")
     public ResponseEntity<?> conductBureauRulePage(@RequestParam("pageIndex") Integer pageIndex,
                                                    @RequestParam("pageSize") Integer pageSize,
-                                                   @RequestParam("type") String type, @RequestParam("key") String key) {
+                                                   @RequestParam("type") String type,
+                                                   @RequestParam("key") String key,
+                                                   @RequestParam("deptId") Integer deptId) {
+        if (deptId != null && deptId == 1) {
+            deptId = null;
+        }
+
         List<RiskConductBureauRuleRecord> recordList = riskConductBureauRuleRecordService.
-                riskConductBureauRuleRecordPage(pageIndex, pageSize,type,key);
+                riskConductBureauRuleRecordPage(pageIndex, pageSize,type,key, deptId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -77,7 +83,7 @@ public class ConductController {
 
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskConductBureauRuleRecordService.getRiskConductBureauRuleRecordPageCount(type,key));
+        result.put("totalCount", riskConductBureauRuleRecordService.getRiskConductBureauRuleRecordPageCount(type,key, deptId));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
 
@@ -177,8 +183,13 @@ public class ConductController {
     public ResponseEntity<?> conductVisitPage(@RequestParam("pageIndex") Integer pageIndex,
                                               @RequestParam("pageSize") Integer pageSize,
                                               @RequestParam("type") String type,
-                                              @RequestParam("key") String key) {
-        List<RiskConductVisitRecord> recordList = riskConductVisitRecordService.riskConductVisitRecordPage(pageIndex, pageSize, type, key);
+                                              @RequestParam("key") String key,
+                                              @RequestParam("deptId") Integer deptId) {
+        if (deptId != null && deptId == 1) {
+            deptId = null;
+        }
+
+        List<RiskConductVisitRecord> recordList = riskConductVisitRecordService.riskConductVisitRecordPage(pageIndex, pageSize, type, key, deptId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", recordList.stream().map(e -> {
@@ -197,7 +208,7 @@ public class ConductController {
             pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy-MM-dd"));
             return pageResult;
         }).collect(Collectors.toList()));
-        result.put("totalCount", riskConductVisitRecordService.getRiskConductVisitRecordPageCount(type, key));
+        result.put("totalCount", riskConductVisitRecordService.getRiskConductVisitRecordPageCount(type, key, deptId));
         result.put("pageIndex", pageIndex);
         result.put("pageSize", pageSize);
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);

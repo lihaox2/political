@@ -341,6 +341,9 @@
     			AND ${item}=#{typeFlag}
     		</foreach>
     	</if>
+        <if test="deptId != null">
+            and u.department_id = #{deptId}
+        </if>
     </where>
     order by r.id desc
     limit #{pageIndex}, #{pageSize}
@@ -358,6 +361,9 @@
         <foreach collection="columnList" separator=" " item="item">
           AND ${item}=#{typeFlag}
         </foreach>
+      </if>
+      <if test="deptId != null">
+        and u.department_id = #{deptId}
       </if>
     </where>
   </select>

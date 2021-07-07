@@ -266,4 +266,9 @@ public class UserServiceImpl implements UserService {
 		return userMapper.countAllPolice();
 	}
 
+	@Override
+	public List<User> findUserByDeptId(Integer deptId) {
+		return userMapper.findUserByDeptId(deptId);
+	}
+
 }

@@ -48,7 +48,8 @@ public interface RiskConductVisitRecordMapper {
     List<RiskConductVisitRecord> riskConductVisitRecordPage(@Param("pageIndex") Integer pageIndex,
                                                             @Param("pageSize") Integer pageSize,
                                                             @Param("list") List<Integer> type,
-                                                            @Param("key") String key);
+                                                            @Param("key") String key,
+                                                            @Param("deptId") Integer deptId);
 
     /**
      * 统计分页数据条数
@@ -56,7 +57,8 @@ public interface RiskConductVisitRecordMapper {
      * @param key
      * @return
      */
-    Integer getRiskConductVisitRecordPageCount(@Param("list") List<Integer> type, @Param("key") String key);
+    Integer getRiskConductVisitRecordPageCount(@Param("list") List<Integer> type, @Param("key") String key,
+                                               @Param("deptId") Integer deptId);
 
     /**
      * 统计所有信访投诉数据

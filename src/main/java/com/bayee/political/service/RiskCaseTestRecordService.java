@@ -36,7 +36,8 @@ public interface RiskCaseTestRecordService {
      * @param key
      * @return
      */
-	List<RiskCaseTestRecord> riskCaseTestRecordPage(Integer pageIndex, Integer pageSize,String date,Integer passFlag,String key);
+	List<RiskCaseTestRecord> riskCaseTestRecordPage(Integer pageIndex, Integer pageSize,String date,
+                                                    Integer passFlag,String key, Integer deptId);
 
     /**
      * 统计数据条数
@@ -45,6 +46,6 @@ public interface RiskCaseTestRecordService {
      * @param key
      * @return
      */
-	Integer riskCaseTestRecordPageCount(String date,Integer passFlag,String key);
+	Integer riskCaseTestRecordPageCount(String date,Integer passFlag,String key, Integer deptId);
 
 }

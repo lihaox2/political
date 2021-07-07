@@ -210,4 +210,11 @@ public interface UserService {
 	 */
 	Integer countAllPolice();
 
+	/**
+	 * 根据部门查询警员
+	 * @param deptId
+	 * @return
+	 */
+	List<User> findUserByDeptId(Integer deptId);
+
 }

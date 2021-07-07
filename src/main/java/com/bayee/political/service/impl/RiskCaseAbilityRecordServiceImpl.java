@@ -46,7 +46,7 @@ public class RiskCaseAbilityRecordServiceImpl implements RiskCaseAbilityRecordSe
 	@Override
 	public List<RiskCaseAbilityRecord> riskCaseAbilityRecordPage(Integer pageIndex, Integer pageSize,
 																 List<String> columnList, Integer typeFlag,
-																 String key, String date) {
+																 String key, String date, Integer deptId) {
 		if (pageIndex < 1) {
 			pageIndex = 1;
 		}
@@ -55,12 +55,13 @@ public class RiskCaseAbilityRecordServiceImpl implements RiskCaseAbilityRecordSe
 			columnList = null;
 		}
 
-		return riskCaseAbilityRecordMapper.riskCaseAbilityRecordPage(pageIndex, pageSize, columnList, typeFlag, key, date);
+		return riskCaseAbilityRecordMapper.riskCaseAbilityRecordPage(pageIndex, pageSize, columnList, typeFlag, key, date, deptId);
 	}
 
 	@Override
-	public Integer getRiskCaseAbilityRecordPageCount(List<String> columnList, Integer typeFlag, String key, String date) {
-		return riskCaseAbilityRecordMapper.getRiskCaseAbilityRecordPageCount(columnList, typeFlag, key, date);
+	public Integer getRiskCaseAbilityRecordPageCount(List<String> columnList, Integer typeFlag, String key,
+													 String date, Integer deptId) {
+		return riskCaseAbilityRecordMapper.getRiskCaseAbilityRecordPageCount(columnList, typeFlag, key, date, deptId);
 	}
 
 	@Override

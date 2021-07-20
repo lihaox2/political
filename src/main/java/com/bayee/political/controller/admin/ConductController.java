@@ -47,6 +47,9 @@ public class ConductController {
     @Autowired
     TotalRiskDetailsService totalRiskDetailsService;
 
+    @Autowired
+    RiskConductVisitOriginService riskConductVisitOriginService;
+
     /**
      * 局规计分
      * @param pageIndex
@@ -227,6 +230,8 @@ public class ConductController {
         record.setRemarks(saveParam.getRemarks());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() +" "+time, "yyyy-MM-dd HH:mm:ss"));
         record.setDeductionScore(saveParam.getDeductScore());
+        record.setIsReally(saveParam.getIsReally());
+        record.setOriginId(saveParam.getOriginId());
 
         riskConductVisitRecordService.insert(record);
         totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
@@ -248,6 +253,8 @@ public class ConductController {
         record.setRemarks(saveParam.getRemarks());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() +" "+ time, "yyyy-MM-dd HH:mm:ss"));
         record.setUpdateDate(new Date());
+        record.setIsReally(saveParam.getIsReally());
+        record.setOriginId(saveParam.getOriginId());
 
         riskConductVisitRecordService.updateByPrimaryKey(record);
         totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
@@ -257,6 +264,8 @@ public class ConductController {
     @GetMapping("/visit/details")
     public ResponseEntity<?> conductVisitDetails(@RequestParam("id") Integer id) {
         RiskConductVisitRecord record = riskConductVisitRecordService.selectByPrimaryKey(id);
+        RiskConductVisitOrigin visitOrigin = riskConductVisitOriginService.findById(record.getOriginId());
+
         ConductVisitDetailsResult result = new ConductVisitDetailsResult();
         User user = userService.findByPoliceId(record.getPoliceId());
         result.setPoliceId(record.getPoliceId());
@@ -271,6 +280,11 @@ public class ConductController {
         result.setDeductScore(record.getDeductionScore());
         result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd"));
         result.setRemarks(record.getRemarks());
+        result.setIdReally(record.getIsReally());
+        result.setOriginId(record.getOriginId());
+        if (visitOrigin != null ){
+            result.setOriginName(visitOrigin.getName());
+        }
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
@@ -451,6 +465,12 @@ public class ConductController {
         riskConductVisitTypeService.deleteByPrimaryKey(id);
 
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
+    }
+
+    @GetMapping("/visit/origin")
+    public ResponseEntity<?> conductVisitOrigin() {
+
+        return new ResponseEntity<>(DataListReturn.ok(riskConductVisitOriginService.findAllVisitOrigin()), HttpStatus.OK);
     }
 
 }

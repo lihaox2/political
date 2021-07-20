@@ -16,9 +16,11 @@
     <result column="smallTypeName" jdbcType="VARCHAR" property="smallTypeName" />
     <result column="bigType" jdbcType="INTEGER" property="bigType" />
     <result column="smallType" jdbcType="INTEGER" property="smallType" />
+    <result column="origin_id" property="originId" jdbcType="INTEGER" />
+    <result column="is_really" property="isReally" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, police_id, type, input_time, content, remarks,deduction_score, creation_date, update_date
+    id, police_id, type, input_time, content, remarks,deduction_score, creation_date, update_date,origin_id,is_really
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select r.*,t.name as type_name, t.id as smallType, t.name as smallTypeName, (
@@ -32,115 +34,137 @@
     delete from risk_conduct_visit_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.bayee.political.domain.RiskConductVisitRecord">
-    insert into risk_conduct_visit_record (id, police_id, type, 
-      input_time, content, remarks, deduction_score,
-      creation_date, update_date)
-    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
-      #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{deductionScore},
-      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskConductVisitRecord" >
+    insert into risk_conduct_visit_record (id, police_id, type,
+                                           input_time, content, remarks,
+                                           deduction_score, origin_id, is_really,
+                                           creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+            #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR},
+            #{deductionScore,jdbcType=DOUBLE}, #{originId,jdbcType=INTEGER}, #{isReally,jdbcType=INTEGER},
+            #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductVisitRecord">
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductVisitRecord" >
     insert into risk_conduct_visit_record
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="policeId != null">
+      <if test="policeId != null" >
         police_id,
       </if>
-      <if test="type != null">
+      <if test="type != null" >
         type,
       </if>
-      <if test="inputTime != null">
+      <if test="inputTime != null" >
         input_time,
       </if>
-      <if test="content != null">
+      <if test="content != null" >
         content,
       </if>
-      <if test="remarks != null">
+      <if test="remarks != null" >
         remarks,
       </if>
-      <if test="deductionScore != null">
+      <if test="deductionScore != null" >
         deduction_score,
       </if>
-      <if test="creationDate != null">
+      <if test="originId != null" >
+        origin_id,
+      </if>
+      <if test="isReally != null" >
+        is_really,
+      </if>
+      <if test="creationDate != null" >
         creation_date,
       </if>
-      <if test="updateDate != null">
+      <if test="updateDate != null" >
         update_date,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="policeId != null">
+      <if test="policeId != null" >
         #{policeId,jdbcType=VARCHAR},
       </if>
-      <if test="type != null">
+      <if test="type != null" >
         #{type,jdbcType=INTEGER},
       </if>
-      <if test="inputTime != null">
+      <if test="inputTime != null" >
         #{inputTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="content != null">
+      <if test="content != null" >
         #{content,jdbcType=VARCHAR},
       </if>
-      <if test="remarks != null">
+      <if test="remarks != null" >
         #{remarks,jdbcType=VARCHAR},
       </if>
-      <if test="deductionScore != null">
-        #{deductionScore},
+      <if test="deductionScore != null" >
+        #{deductionScore,jdbcType=DOUBLE},
       </if>
-      <if test="creationDate != null">
+      <if test="originId != null" >
+        #{originId,jdbcType=INTEGER},
+      </if>
+      <if test="isReally != null" >
+        #{isReally,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateDate != null">
+      <if test="updateDate != null" >
         #{updateDate,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskConductVisitRecord">
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskConductVisitRecord" >
     update risk_conduct_visit_record
-    <set>
-      <if test="policeId != null">
+    <set >
+      <if test="policeId != null" >
         police_id = #{policeId,jdbcType=VARCHAR},
       </if>
-      <if test="type != null">
+      <if test="type != null" >
         type = #{type,jdbcType=INTEGER},
       </if>
-      <if test="inputTime != null">
+      <if test="inputTime != null" >
         input_time = #{inputTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="content != null">
+      <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
       </if>
-      <if test="remarks != null">
+      <if test="remarks != null" >
         remarks = #{remarks,jdbcType=VARCHAR},
       </if>
-      <if test="deductionScore != null">
-        deduction_score = #{deductionScore},
+      <if test="deductionScore != null" >
+        deduction_score = #{deductionScore,jdbcType=DOUBLE},
       </if>
-      <if test="creationDate != null">
+      <if test="originId != null" >
+        origin_id = #{originId,jdbcType=INTEGER},
+      </if>
+      <if test="isReally != null" >
+        is_really = #{isReally,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateDate != null">
+      <if test="updateDate != null" >
         update_date = #{updateDate,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskConductVisitRecord">
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskConductVisitRecord" >
     update risk_conduct_visit_record
     set police_id = #{policeId,jdbcType=VARCHAR},
-      type = #{type,jdbcType=INTEGER},
-      input_time = #{inputTime,jdbcType=TIMESTAMP},
-      content = #{content,jdbcType=VARCHAR},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      creation_date = #{creationDate,jdbcType=TIMESTAMP},
-      deduction_score = #{deductionScore},
-      update_date = #{updateDate,jdbcType=TIMESTAMP}
+        type = #{type,jdbcType=INTEGER},
+        input_time = #{inputTime,jdbcType=TIMESTAMP},
+        content = #{content,jdbcType=VARCHAR},
+        remarks = #{remarks,jdbcType=VARCHAR},
+        deduction_score = #{deductionScore,jdbcType=DOUBLE},
+        origin_id = #{originId,jdbcType=INTEGER},
+        is_really = #{isReally,jdbcType=INTEGER},
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+        update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   

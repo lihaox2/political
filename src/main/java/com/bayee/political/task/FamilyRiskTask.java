@@ -19,7 +19,7 @@ public class FamilyRiskTask {
     @Autowired
     RiskReportRecordService riskReportRecordService;
 
-    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
+//    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
     public void familyRiskTaskDetails() {
         LocalDate localDate = LocalDate.now();
 

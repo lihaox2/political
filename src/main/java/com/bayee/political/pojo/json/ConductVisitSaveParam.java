@@ -33,6 +33,32 @@ public class ConductVisitSaveParam {
      */
     private String remarks;
 
+    /**
+     * 是否属实（1.属实，2.不属实）
+     */
+    private Integer isReally;
+
+    /**
+     * 信访来源id
+     */
+    private Integer originId;
+
+    public Integer getIsReally() {
+        return isReally;
+    }
+
+    public void setIsReally(Integer isReally) {
+        this.isReally = isReally;
+    }
+
+    public Integer getOriginId() {
+        return originId;
+    }
+
+    public void setOriginId(Integer originId) {
+        this.originId = originId;
+    }
+
     public Double getDeductScore() {
         return deductScore;
     }

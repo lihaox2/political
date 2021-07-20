@@ -34,7 +34,7 @@ public class DutyRiskTask {
     @Autowired
     DutyRiskService dutyRiskService;
 
-    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
+//    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
     public void dutyRiskTaskDetails() {
         LocalDate localDate = LocalDate.now();
         List<User> userList = userService.userAllList();

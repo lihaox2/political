@@ -31,6 +31,32 @@ public class RiskConductVisitRecord {
 
     private String smallTypeName;
 
+    /**
+     * 信访来源
+     */
+    private Integer originId;
+
+    /**
+     * 是否属实（1.属实，2.不属实）
+     */
+    private Integer isReally;
+
+    public Integer getOriginId() {
+        return originId;
+    }
+
+    public void setOriginId(Integer originId) {
+        this.originId = originId;
+    }
+
+    public Integer getIsReally() {
+        return isReally;
+    }
+
+    public void setIsReally(Integer isReally) {
+        this.isReally = isReally;
+    }
+
     public Integer getBigType() {
         return bigType;
     }

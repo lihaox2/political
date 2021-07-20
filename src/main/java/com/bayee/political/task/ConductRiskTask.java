@@ -38,7 +38,7 @@ public class ConductRiskTask {
     @Autowired
     RiskConductService riskConductService;
 
-    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
+//    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
     public void conductRiskTaskDetails() {
         LocalDate localDate = LocalDate.now();
         List<User> userList = userService.userAllList();

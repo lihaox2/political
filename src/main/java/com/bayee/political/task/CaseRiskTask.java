@@ -39,7 +39,7 @@ public class CaseRiskTask {
     @Autowired
     HandlingCasesRiskService handlingCasesRiskService;
 
-    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
+//    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
 //    @RequestMapping("/case/task")
     public void caseRiskTaskDetails() {
         LocalDate localDate = LocalDate.now();

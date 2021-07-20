@@ -37,7 +37,7 @@ public class SkillRiskTask {
     @Autowired
     RiskSkillService riskSkillService;
 
-    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
+//    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
 //    @RequestMapping("/skill/task")
     public void skillRiskTaskDetails() {
         LocalDate localDate = LocalDate.now();

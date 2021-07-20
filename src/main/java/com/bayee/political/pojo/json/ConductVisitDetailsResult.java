@@ -44,6 +44,45 @@ public class ConductVisitDetailsResult {
      */
     private String remarks;
 
+    /**
+     * 是否属实（1.属实，2.不属实）
+     */
+    private Integer idReally;
+
+    /**
+     * 信访来源id
+     */
+    private Integer originId;
+
+    /**
+     * 来源名称
+     */
+    private String originName;
+
+    public Integer getIdReally() {
+        return idReally;
+    }
+
+    public void setIdReally(Integer idReally) {
+        this.idReally = idReally;
+    }
+
+    public Integer getOriginId() {
+        return originId;
+    }
+
+    public void setOriginId(Integer originId) {
+        this.originId = originId;
+    }
+
+    public String getOriginName() {
+        return originName;
+    }
+
+    public void setOriginName(String originName) {
+        this.originName = originName;
+    }
+
     public Integer getBigTypeId() {
         return bigTypeId;
     }

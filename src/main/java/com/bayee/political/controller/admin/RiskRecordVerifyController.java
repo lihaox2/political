@@ -4,6 +4,7 @@ import com.bayee.political.domain.RiskRecordVerify;
 import com.bayee.political.domain.RiskRecordVerifyType;
 import com.bayee.political.domain.User;
 import com.bayee.political.pojo.json.AppealSaveParam;
+import com.bayee.political.pojo.json.CheckRiskRecordParam;
 import com.bayee.political.pojo.json.RiskRecordVerifyPageQueryParam;
 import com.bayee.political.pojo.json.RiskRecordVerifyToVerifyResult;
 import com.bayee.political.service.RiskRecordVerifyService;
@@ -14,10 +15,7 @@ import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -48,6 +46,26 @@ public class RiskRecordVerifyController {
 
         return new ResponseEntity<>(DataListReturn.ok(riskRecordVerifyService.riskRecordVerifyPage(queryParam)),
                 HttpStatus.OK);
+    }
+
+    /**
+     * 数据项审核
+     * @param param
+     * @return
+     */
+    @PostMapping("/check/record")
+    public ResponseEntity<?> checkRiskRecord(@RequestBody CheckRiskRecordParam param) {
+        RiskRecordVerify recordVerify = riskRecordVerifyService.findById(param.getId());
+        recordVerify.setCheckContent(param.getCheckContent());
+        recordVerify.setIsAgree(param.getIsAgree());
+        recordVerify.setCheckDeductionScore(param.getCheckDeductionScore());
+        recordVerify.setCheckDeductionPoliceId(param.getCheckDeductionPolice());
+        recordVerify.setCheckPoliceId(param.getCheckPoliceId());
+        recordVerify.setCheckDate(new Date());
+        recordVerify.setUpdateDate(new Date());
+
+        riskRecordVerifyService.checkRecord(recordVerify);
+        return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     /**

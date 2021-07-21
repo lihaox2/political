@@ -8,22 +8,22 @@
     <result column="input_time" property="inputTime" jdbcType="TIMESTAMP" />
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="deduction_score" property="deductionScore" jdbcType="DOUBLE" />
-    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
-
     <result column="scoring_level" property="scoringLevel" jdbcType="INTEGER" />
     <result column="scoring_dept" property="scoringDept" jdbcType="INTEGER" />
     <result column="measures" property="measures" jdbcType="INTEGER" />
-
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="img_arr" property="imgArr" jdbcType="VARCHAR" />
+    <result column="is_effective" property="isEffective" jdbcType="INTEGER" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="type_name" property="typeName" jdbcType="VARCHAR" />
     <result column="parentTypeId" property="parentTypeId" jdbcType="INTEGER" />
     <result column="rootName" property="rootName" jdbcType="VARCHAR" />
-    <result column="img_arr" property="imgArr" jdbcType="VARCHAR" />
+    <result column="appealState" property="appealState" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, police_id, type, input_time, content, deduction_score, remarks, creation_date, update_date,
-    scoring_level, scoring_dept, measures,img_arr
+    id, police_id, type, input_time, content, deduction_score, scoring_level, scoring_dept, 
+    measures, remarks, img_arr, is_effective, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select r1.*, (select name from risk_conduct_bureau_rule_type t where t.id = r2.parent_id) as type_name,
@@ -39,13 +39,14 @@
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
     insert into risk_conduct_bureau_rule_record (id, police_id, type, 
       input_time, content, deduction_score, 
-      remarks, creation_date, update_date, scoring_level, scoring_dept, measures,img_arr
-      )
+      scoring_level, scoring_dept, measures, 
+      remarks, img_arr, is_effective, 
+      creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{deductionScore,jdbcType=DOUBLE}, 
-      #{remarks,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},
-            #{scoringLevel}, #{scoringDept}, #{measures},#{imgArr}
-      )
+      #{scoringLevel,jdbcType=INTEGER}, #{scoringDept,jdbcType=INTEGER}, #{measures,jdbcType=INTEGER}, 
+      #{remarks,jdbcType=VARCHAR}, #{imgArr,jdbcType=VARCHAR}, #{isEffective,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
     insert into risk_conduct_bureau_rule_record
@@ -68,26 +69,29 @@
       <if test="deductionScore != null" >
         deduction_score,
       </if>
+      <if test="scoringLevel != null" >
+        scoring_level,
+      </if>
+      <if test="scoringDept != null" >
+        scoring_dept,
+      </if>
+      <if test="measures != null" >
+        measures,
+      </if>
       <if test="remarks != null" >
         remarks,
+      </if>
+      <if test="imgArr != null" >
+        img_arr,
+      </if>
+      <if test="isEffective != null" >
+        is_effective,
       </if>
       <if test="creationDate != null" >
         creation_date,
       </if>
       <if test="updateDate != null" >
         update_date,
-      </if>
-        <if test="scoringLevel != null">
-          scoring_level,
-        </if>
-      <if test="scoringDept != null">
-        scoring_dept,
-      </if>
-      <if test="measures != null">
-        measures,
-      </if>
-      <if test="imgArr != null">
-        img_arr,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -109,26 +113,29 @@
       <if test="deductionScore != null" >
         #{deductionScore,jdbcType=DOUBLE},
       </if>
+      <if test="scoringLevel != null" >
+        #{scoringLevel,jdbcType=INTEGER},
+      </if>
+      <if test="scoringDept != null" >
+        #{scoringDept,jdbcType=INTEGER},
+      </if>
+      <if test="measures != null" >
+        #{measures,jdbcType=INTEGER},
+      </if>
       <if test="remarks != null" >
         #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="imgArr != null" >
+        #{imgArr,jdbcType=VARCHAR},
+      </if>
+      <if test="isEffective != null" >
+        #{isEffective,jdbcType=INTEGER},
       </if>
       <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updateDate != null" >
         #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="scoringLevel != null">
-        #{scoringLevel},
-      </if>
-      <if test="scoringDept != null">
-        #{scoringDept},
-      </if>
-      <if test="measures != null">
-        #{measures},
-      </if>
-      <if test="imgArr != null">
-        #{imgArr},
       </if>
     </trim>
   </insert>
@@ -150,26 +157,29 @@
       <if test="deductionScore != null" >
         deduction_score = #{deductionScore,jdbcType=DOUBLE},
       </if>
+      <if test="scoringLevel != null" >
+        scoring_level = #{scoringLevel,jdbcType=INTEGER},
+      </if>
+      <if test="scoringDept != null" >
+        scoring_dept = #{scoringDept,jdbcType=INTEGER},
+      </if>
+      <if test="measures != null" >
+        measures = #{measures,jdbcType=INTEGER},
+      </if>
       <if test="remarks != null" >
         remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="imgArr != null" >
+        img_arr = #{imgArr,jdbcType=VARCHAR},
+      </if>
+      <if test="isEffective != null" >
+        is_effective = #{isEffective,jdbcType=INTEGER},
       </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updateDate != null" >
         update_date = #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="scoringLevel != null">
-        scoring_level = #{scoringLevel},
-      </if>
-      <if test="scoringDept != null">
-        scoring_dept = #{scoringDept},
-      </if>
-      <if test="measures != null">
-        measures = #{measures},
-      </if>
-      <if test="imgArr != null">
-        img_arr = #{imgArr},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -181,18 +191,22 @@
       input_time = #{inputTime,jdbcType=TIMESTAMP},
       content = #{content,jdbcType=VARCHAR},
       deduction_score = #{deductionScore,jdbcType=DOUBLE},
+      scoring_level = #{scoringLevel,jdbcType=INTEGER},
+      scoring_dept = #{scoringDept,jdbcType=INTEGER},
+      measures = #{measures,jdbcType=INTEGER},
       remarks = #{remarks,jdbcType=VARCHAR},
+      img_arr = #{imgArr,jdbcType=VARCHAR},
+      is_effective = #{isEffective,jdbcType=INTEGER},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
-      update_date = #{updateDate,jdbcType=TIMESTAMP},
-        scoring_level = #{scoringLevel},
-        scoring_dept = #{scoringDept},
-        img_arr = #{imgArr},
-        measures = #{measures}
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
   <select id="findByPoliceIdAndDate" resultMap="BaseResultMap">
-    select r1.*, r2.name as type_name from risk_conduct_bureau_rule_record r1, risk_conduct_bureau_rule_type r2
+    select
+           r1.*, r2.name as type_name ,
+    ifnull((select state from risk_record_verify where type_id = 1013 and module_id = r1.id), 0) as appealState
+    from risk_conduct_bureau_rule_record r1, risk_conduct_bureau_rule_type r2
     where r1.type = r2.id and r1.police_id = #{policeId}
     <if test="timeType == 1">
             and DATE_FORMAT(r1.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(r1.creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -205,7 +219,8 @@
 
   <select id="findRiskConductBureauRuleRecord" resultMap="BaseResultMap">
     select * from risk_conduct_bureau_rule_record
-    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+    where is_effective = 1 and police_id = #{policeId}
+      and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
   </select>
 
   <select id="riskConductBureauRuleRecordPage" resultMap="BaseResultMap">

@@ -94,6 +94,7 @@ public class DutyController {
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
         record.setDeductionScore(saveParam.getDeductScore());
         record.setImgArr(saveParam.getFileList());
+        record.setIsEffective(1);
 
         riskDutyDealPoliceRecordService.insert(record);
         totalRiskDetailsService.dutyRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));

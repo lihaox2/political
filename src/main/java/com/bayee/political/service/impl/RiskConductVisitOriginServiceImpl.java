@@ -27,4 +27,9 @@ public class RiskConductVisitOriginServiceImpl implements RiskConductVisitOrigin
     public RiskConductVisitOrigin findById(Integer id) {
         return riskConductVisitOriginMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public RiskConductVisitOrigin findByName(String name) {
+        return riskConductVisitOriginMapper.findByName(name);
+    }
 }

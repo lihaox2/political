@@ -18,9 +18,12 @@
     <result column="smallType" jdbcType="INTEGER" property="smallType" />
     <result column="origin_id" property="originId" jdbcType="INTEGER" />
     <result column="is_really" property="isReally" jdbcType="INTEGER" />
+    <result column="is_effective" property="isEffective" jdbcType="INTEGER" />
+    <result column="appealState" property="appealState" jdbcType="INTEGER" />
   </resultMap>
-  <sql id="Base_Column_List">
-    id, police_id, type, input_time, content, remarks,deduction_score, creation_date, update_date,origin_id,is_really
+  <sql id="Base_Column_List" >
+    id, police_id, type, input_time, content, remarks, deduction_score, origin_id, is_really, 
+    is_effective, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select r.*,t.name as type_name, t.id as smallType, t.name as smallTypeName, (
@@ -35,14 +38,16 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductVisitRecord" >
-    insert into risk_conduct_visit_record (id, police_id, type,
-                                           input_time, content, remarks,
-                                           deduction_score, origin_id, is_really,
-                                           creation_date, update_date)
-    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
-            #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR},
-            #{deductionScore,jdbcType=DOUBLE}, #{originId,jdbcType=INTEGER}, #{isReally,jdbcType=INTEGER},
-            #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+    insert into risk_conduct_visit_record (id, police_id, type, 
+      input_time, content, remarks, 
+      deduction_score, origin_id, is_really, 
+      is_effective, creation_date, update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{deductionScore,jdbcType=DOUBLE}, #{originId,jdbcType=INTEGER}, #{isReally,jdbcType=INTEGER}, 
+      #{isEffective,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductVisitRecord" >
     insert into risk_conduct_visit_record
@@ -73,6 +78,9 @@
       </if>
       <if test="isReally != null" >
         is_really,
+      </if>
+      <if test="isEffective != null" >
+        is_effective,
       </if>
       <if test="creationDate != null" >
         creation_date,
@@ -109,6 +117,9 @@
       <if test="isReally != null" >
         #{isReally,jdbcType=INTEGER},
       </if>
+      <if test="isEffective != null" >
+        #{isEffective,jdbcType=INTEGER},
+      </if>
       <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -144,6 +155,9 @@
       <if test="isReally != null" >
         is_really = #{isReally,jdbcType=INTEGER},
       </if>
+      <if test="isEffective != null" >
+        is_effective = #{isEffective,jdbcType=INTEGER},
+      </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -156,20 +170,24 @@
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskConductVisitRecord" >
     update risk_conduct_visit_record
     set police_id = #{policeId,jdbcType=VARCHAR},
-        type = #{type,jdbcType=INTEGER},
-        input_time = #{inputTime,jdbcType=TIMESTAMP},
-        content = #{content,jdbcType=VARCHAR},
-        remarks = #{remarks,jdbcType=VARCHAR},
-        deduction_score = #{deductionScore,jdbcType=DOUBLE},
-        origin_id = #{originId,jdbcType=INTEGER},
-        is_really = #{isReally,jdbcType=INTEGER},
-        creation_date = #{creationDate,jdbcType=TIMESTAMP},
-        update_date = #{updateDate,jdbcType=TIMESTAMP}
+      type = #{type,jdbcType=INTEGER},
+      input_time = #{inputTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      deduction_score = #{deductionScore,jdbcType=DOUBLE},
+      origin_id = #{originId,jdbcType=INTEGER},
+      is_really = #{isReally,jdbcType=INTEGER},
+      is_effective = #{isEffective,jdbcType=INTEGER},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
   <select id="riskConductVisitRecordList" resultMap="BaseResultMap">
-  	SELECT r.*,t.name as type_name FROM risk_conduct_visit_record r,risk_conduct_visit_type t WHERE
+  	SELECT
+  	    r.*,t.name as type_name,
+    ifnull((select state from risk_record_verify where type_id = 1013 and module_id = r.id), 0) as appealState
+  	FROM risk_conduct_visit_record r,risk_conduct_visit_type t WHERE
 	 r.police_id=#{policeId} and r.type=t.id
 	 <if test="timeType == 1">
 	    and DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -182,7 +200,8 @@
 
   <select id="findRiskConductVisitRecordList" resultMap="BaseResultMap">
     select * from risk_conduct_visit_record
-    where police_id=#{policeId} and DATE_FORMAT(creation_date, '%Y-%m')=DATE_FORMAT(#{date}, '%Y-%m')
+    where is_effective = 1 and is_really = 1 and police_id=#{policeId}
+      and DATE_FORMAT(creation_date, '%Y-%m')=DATE_FORMAT(#{date}, '%Y-%m')
   </select>
 
   <select id="countByTypeId" resultType="Integer">

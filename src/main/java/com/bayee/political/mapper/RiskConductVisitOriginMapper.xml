@@ -73,4 +73,8 @@
     select * from risk_conduct_visit_origin order by id
   </select>
 
+  <select id="findByName" resultMap="BaseResultMap">
+    select * from risk_conduct_visit_origin where name = #{name}
+  </select>
+
 </mapper>

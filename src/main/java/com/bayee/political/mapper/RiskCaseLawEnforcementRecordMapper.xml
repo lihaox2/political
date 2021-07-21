@@ -1,161 +1,176 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bayee.political.mapper.RiskCaseLawEnforcementRecordMapper">
-  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskCaseLawEnforcementRecord">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="police_id" jdbcType="VARCHAR" property="policeId" />
-    <result column="type" jdbcType="INTEGER" property="type" />
-    <result column="content" jdbcType="VARCHAR" property="content" />
-    <result column="input_time" jdbcType="TIMESTAMP" property="inputTime" />
-    <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
-    <result column="case_code" jdbcType="VARCHAR" property="caseCode" />
-    <result column="deduction_score" jdbcType="DOUBLE" property="deductionScore" />
-    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
-    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskCaseLawEnforcementRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskCaseLawEnforcementRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="input_time" property="inputTime" jdbcType="TIMESTAMP" />
+    <result column="deduction_score" property="deductionScore" jdbcType="DOUBLE" />
+    <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+    <result column="case_code" property="caseCode" jdbcType="VARCHAR" />
     <result column="img_arr" property="imgArr" jdbcType="VARCHAR" />
-
+    <result column="is_effective" property="isEffective" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="name" jdbcType="VARCHAR" property="typeName" />
+    <result column="appealState" property="appealState" jdbcType="INTEGER" />
   </resultMap>
-  <sql id="Base_Column_List">
-    id, police_id, type, content, input_time, deduction_score, dept_name, case_code, creation_date, update_date, img_arr
+  <sql id="Base_Column_List" >
+    id, police_id, type, content, input_time, deduction_score, dept_name, case_code, 
+    img_arr, is_effective, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select a.*,b.name as typeName from risk_case_law_enforcement_record a
     left join risk_case_law_enforcement_type b on b.id = a.type
     where a.id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from risk_case_law_enforcement_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord">
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord" >
     insert into risk_case_law_enforcement_record (id, police_id, type, 
-      content, input_time, deduction_score, dept_name, case_code,
-      creation_date, update_date, img_arr)
+      content, input_time, deduction_score, 
+      dept_name, case_code, img_arr, 
+      is_effective, creation_date, update_date
+      )
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
-      #{content,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, #{deductionScore,jdbcType=DOUBLE},
-      #{deptName}, #{caseCode},
-      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{imgArr})
+      #{content,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, #{deductionScore,jdbcType=DOUBLE}, 
+      #{deptName,jdbcType=VARCHAR}, #{caseCode,jdbcType=VARCHAR}, #{imgArr,jdbcType=VARCHAR}, 
+      #{isEffective,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord">
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord" >
     insert into risk_case_law_enforcement_record
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="policeId != null">
+      <if test="policeId != null" >
         police_id,
       </if>
-      <if test="type != null">
+      <if test="type != null" >
         type,
       </if>
-      <if test="content != null">
+      <if test="content != null" >
         content,
       </if>
-      <if test="inputTime != null">
+      <if test="inputTime != null" >
         input_time,
       </if>
-      <if test="deductionScore != null">
+      <if test="deductionScore != null" >
         deduction_score,
       </if>
-        <if test="deptName != null">
-          dept_name,
-        </if>
-        <if test="caseCode != null">
-          case_code,
-        </if>
-      <if test="creationDate != null">
+      <if test="deptName != null" >
+        dept_name,
+      </if>
+      <if test="caseCode != null" >
+        case_code,
+      </if>
+      <if test="imgArr != null" >
+        img_arr,
+      </if>
+      <if test="isEffective != null" >
+        is_effective,
+      </if>
+      <if test="creationDate != null" >
         creation_date,
       </if>
-      <if test="updateDate != null">
+      <if test="updateDate != null" >
         update_date,
       </if>
-        <if test="imgArr != null">
-          img_arr,
-        </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="policeId != null">
+      <if test="policeId != null" >
         #{policeId,jdbcType=VARCHAR},
       </if>
-      <if test="type != null">
+      <if test="type != null" >
         #{type,jdbcType=INTEGER},
       </if>
-      <if test="content != null">
+      <if test="content != null" >
         #{content,jdbcType=VARCHAR},
       </if>
-      <if test="inputTime != null">
+      <if test="inputTime != null" >
         #{inputTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="deductionScore != null">
+      <if test="deductionScore != null" >
         #{deductionScore,jdbcType=DOUBLE},
       </if>
-      <if test="deptName != null">
-        #{deptName},
+      <if test="deptName != null" >
+        #{deptName,jdbcType=VARCHAR},
       </if>
-      <if test="caseCode != null">
-        #{caseCode},
+      <if test="caseCode != null" >
+        #{caseCode,jdbcType=VARCHAR},
       </if>
-      <if test="creationDate != null">
+      <if test="imgArr != null" >
+        #{imgArr,jdbcType=VARCHAR},
+      </if>
+      <if test="isEffective != null" >
+        #{isEffective,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateDate != null">
+      <if test="updateDate != null" >
         #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="imgArr != null">
-        #{imgArr},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord">
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord" >
     update risk_case_law_enforcement_record
-    <set>
-      <if test="policeId != null">
+    <set >
+      <if test="policeId != null" >
         police_id = #{policeId,jdbcType=VARCHAR},
       </if>
-      <if test="type != null">
+      <if test="type != null" >
         type = #{type,jdbcType=INTEGER},
       </if>
-      <if test="content != null">
+      <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
       </if>
-      <if test="inputTime != null">
+      <if test="inputTime != null" >
         input_time = #{inputTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="deductionScore != null">
+      <if test="deductionScore != null" >
         deduction_score = #{deductionScore,jdbcType=DOUBLE},
       </if>
-      <if test="deptName != null">
-        dept_name = #{deptName},
+      <if test="deptName != null" >
+        dept_name = #{deptName,jdbcType=VARCHAR},
       </if>
-      <if test="caseCode != null">
-        case_code = #{caseCode},
+      <if test="caseCode != null" >
+        case_code = #{caseCode,jdbcType=VARCHAR},
       </if>
-      <if test="creationDate != null">
+      <if test="imgArr != null" >
+        img_arr = #{imgArr,jdbcType=VARCHAR},
+      </if>
+      <if test="isEffective != null" >
+        is_effective = #{isEffective,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateDate != null">
+      <if test="updateDate != null" >
         update_date = #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="imgArr != null">
-        img_arr = #{imgArr},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord">
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord" >
     update risk_case_law_enforcement_record
     set police_id = #{policeId,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
       content = #{content,jdbcType=VARCHAR},
       input_time = #{inputTime,jdbcType=TIMESTAMP},
       deduction_score = #{deductionScore,jdbcType=DOUBLE},
-        dept_name = #{deptName},
-        case_code = #{caseCode},
-        img_arr = #{imgArr},
+      dept_name = #{deptName,jdbcType=VARCHAR},
+      case_code = #{caseCode,jdbcType=VARCHAR},
+      img_arr = #{imgArr,jdbcType=VARCHAR},
+      is_effective = #{isEffective,jdbcType=INTEGER},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
@@ -163,7 +178,10 @@
   
   
   <select id="riskCaseLawEnforcementRecordList" resultMap="BaseResultMap">
-    select a.id,a.police_id,a.type,a.content,a.input_time,a.creation_date,b.name as typeName,a.deduction_score from risk_case_law_enforcement_record a
+    select
+        a.id,a.police_id,a.type,a.content,a.input_time,a.creation_date,b.name as typeName,a.deduction_score, a.is_effective,
+        ifnull((select state from risk_record_verify where type_id = 1013 and module_id = a.id), 0) as appealState
+    from risk_case_law_enforcement_record a
     left join risk_case_law_enforcement_type b on b.id=a.type
     where a.police_id=#{policeId,jdbcType=VARCHAR}
     <if test="timeType == 1">
@@ -190,7 +208,8 @@
 
   <select id="findPoliceCaseData" resultMap="BaseResultMap">
     select * from risk_case_law_enforcement_record
-    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+    where is_effective = 1 and police_id = #{policeId}
+      and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
   </select>
 
   <select id="riskCaseLawEnforcementRecordPage" resultType="com.bayee.political.pojo.dto.CaseLawEnforcementPageDO">

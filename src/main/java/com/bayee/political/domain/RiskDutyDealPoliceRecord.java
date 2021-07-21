@@ -54,7 +54,33 @@ public class RiskDutyDealPoliceRecord {
      */
     private String imgArr;
 
+    /**
+     * 状态 0.可申诉，1.申诉中，2.申诉通过，3.申诉不通过，4.已撤销申诉
+     */
+    private Integer appealState;
+
     private String typeName;
+
+    /**
+     * 是否有效（1.有效，2.无效）
+     */
+    private Integer isEffective;
+
+    public Integer getAppealState() {
+        return appealState;
+    }
+
+    public void setAppealState(Integer appealState) {
+        this.appealState = appealState;
+    }
+
+    public Integer getIsEffective() {
+        return isEffective;
+    }
+
+    public void setIsEffective(Integer isEffective) {
+        this.isEffective = isEffective;
+    }
 
     public String getImgArr() {
         return imgArr;

@@ -76,4 +76,9 @@ public class RiskConductVisitTypeServiceImpl implements RiskConductVisitTypeServ
     public Integer countByNameAndParentId(String name, Integer parentId, Integer id) {
         return riskConductVisitTypeMapper.countByNameAndParentId(name, parentId, id);
     }
+
+    @Override
+    public RiskConductVisitType findByName(String name) {
+        return riskConductVisitTypeMapper.findByName(name);
+    }
 }

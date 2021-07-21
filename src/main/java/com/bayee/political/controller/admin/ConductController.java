@@ -109,6 +109,7 @@ public class ConductController {
         record.setRemarks(saveParam.getRemarks());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
         record.setImgArr(saveParam.getFileList());
+        record.setIsEffective(1);
 
         riskConductBureauRuleRecordService.insert(record);
         totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
@@ -232,6 +233,7 @@ public class ConductController {
         record.setDeductionScore(saveParam.getDeductScore());
         record.setIsReally(saveParam.getIsReally());
         record.setOriginId(saveParam.getOriginId());
+        record.setIsEffective(1);
 
         riskConductVisitRecordService.insert(record);
         totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));

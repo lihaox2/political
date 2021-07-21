@@ -23,4 +23,11 @@ public interface RiskConductVisitOriginService {
      */
     RiskConductVisitOrigin findById(Integer id);
 
+    /**
+     * 通过名字查询信访来源
+     * @param name
+     * @return
+     */
+    RiskConductVisitOrigin findByName(String name);
+
 }

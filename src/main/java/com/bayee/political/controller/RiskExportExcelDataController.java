@@ -91,6 +91,12 @@ public class RiskExportExcelDataController {
 	@Autowired
 	RiskDutyErrorTypeService riskDutyErrorTypeService;
 
+	@Autowired
+	RiskConductVisitOriginService riskConductVisitOriginService;
+
+	@Autowired
+	RiskConductVisitTypeService riskConductVisitTypeService;
+
 //	@PostMapping("/risk/healthy/import/excel/data")
 	public ResponseEntity<?> importHealthData(@RequestParam("file") MultipartFile file) {
 		List<JSONObject> importData = ExcelUtil.dataImport(file, 0, 1);
@@ -827,6 +833,7 @@ public class RiskExportExcelDataController {
 				policeRecord.setInputTime(new Date());
 				policeRecord.setCreationDate(DateUtils.parseDate(excel.get(3), "yyyy-MM-dd HH:mm"));
 				policeRecord.setDeductionScore(Double.valueOf(excel.get(11)));
+				policeRecord.setIsEffective(1);
 
 				riskDutyDealPoliceRecordService.insert(policeRecord);
 				totalRiskDetailsService.dutyRiskDetails(policeId, LocalDate.parse(DateUtils.formatDate(policeRecord.getCreationDate(), "yyyy-MM-dd")));
@@ -898,6 +905,7 @@ public class RiskExportExcelDataController {
 				record.setInputTime(new Date());
 				record.setDeductionScore(Double.valueOf(excel.get(8)));
 				record.setCreationDate(DateUtils.parseDate(excel.get(7), "yyyy-MM-dd HH:mm:ss"));
+				record.setIsEffective(1);
 
 				riskCaseLawEnforcementRecordService.insert(record);
 				totalRiskDetailsService.caseRiskDetails(policeId, LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
@@ -1217,6 +1225,7 @@ public class RiskExportExcelDataController {
 				riskConductBureauRuleRecord.setContent(excel.get(3));
 				riskConductBureauRuleRecord.setInputTime(DateUtils.toDate2(excel.get(5)));
 				riskConductBureauRuleRecord.setRemarks(excel.get(6));
+				riskConductBureauRuleRecord.setIsEffective(1);
 				
 				riskConductBureauRuleRecord.setCreationDate(DateUtils.toDate2(excel.get(5)));
 				riskConductBureauRuleRecordService.insertSelective(riskConductBureauRuleRecord);
@@ -1275,57 +1284,28 @@ public class RiskExportExcelDataController {
 					throw new RuntimeException();
 				}
 
-				//
+
 				RiskConductVisitRecord riskConductVisitRecord=new RiskConductVisitRecord();
-				
+				String really = excel.get(6);
+				riskConductVisitRecord.setIsEffective(1);
+				riskConductVisitRecord.setIsReally(really == null ? 1 : "否".equals(really) ? 2 : 1);
 				riskConductVisitRecord.setPoliceId(excel.get(0));
-				
-				if(excel.get(2).equals("党纪处分") && excel.get(3).equals("警告")) {
-					riskConductVisitRecord.setType(11);
-					riskConductVisitRecord.setDeductionScore(3.0);
-				}else if(excel.get(2).equals("政纪处分") && excel.get(3).equals("警告")) {
-					riskConductVisitRecord.setType(16);
-					riskConductVisitRecord.setDeductionScore(1.0);
-				}else {
-					Integer typeId=riskConductVisitRecordService.selectByName(excel.get(3));
-					
-					if(typeId==null) {
-						typeId=riskConductVisitRecordService.selectByName(excel.get(2));
-					}
-					riskConductVisitRecord.setType(typeId);
-				}
-				
-				if(excel.get(2).equals("追究刑事责任") ||  excel.get(3).equals("撤销党内职务") ||  excel.get(3).equals("开除党籍") ||  excel.get(3).equals("开除")) {
-					riskConductVisitRecord.setDeductionScore(10.0);
-				}else if( excel.get(2).equals("追究民事责任") ){
-					riskConductVisitRecord.setDeductionScore(9.0);
-				}
-				
-				if(excel.get(3).equals("责令检查") || excel.get(3).equals("提醒谈话") || excel.get(3).equals("函询")) {
-					riskConductVisitRecord.setDeductionScore(1.0);
-				}else if(excel.get(3).equals("批评教育")|| excel.get(3).equals("诫勉") || excel.get(3).equals("记过")) {
-					riskConductVisitRecord.setDeductionScore(2.0);
-				}else if(excel.get(3).equals("记大过")) {
-					riskConductVisitRecord.setDeductionScore(3.0);
-				}else if(excel.get(3).equals("严重警告") || excel.get(3).equals("降级")) {
-					riskConductVisitRecord.setDeductionScore(4.0);
-				}else if(excel.get(3).equals("留党察看")) {
-					riskConductVisitRecord.setDeductionScore(5.0);
-				}else if(excel.get(3).equals("撤职")) {
-					riskConductVisitRecord.setDeductionScore(7.0);
-				}
-				
-				if(excel.get(2).equals("局规记分") ||  excel.get(3).equals("局规记分")) {
-					riskConductVisitRecord.setDeductionScore(Double.valueOf(excel.get(5)));;
-				}
-				
+				riskConductVisitRecord.setInputTime(DateUtils.toDate2(excel.get(9)));
+				riskConductVisitRecord.setContent(excel.get(7));
+				riskConductVisitRecord.setRemarks(excel.get(10));
+				riskConductVisitRecord.setCreationDate(DateUtils.toDate2(excel.get(9)));
+				riskConductVisitRecord.setDeductionScore(Double.valueOf(excel.get(8)));
 
-				riskConductVisitRecord.setContent(excel.get(4));
-				riskConductVisitRecord.setInputTime(DateUtils.toDate2(excel.get(6)));
-				riskConductVisitRecord.setRemarks(excel.get(7));
-				riskConductVisitRecord.setCreationDate(DateUtils.toDate2(excel.get(6)));
+				RiskConductVisitType visitType = riskConductVisitTypeService.findByName(excel.get(5));
+				if (visitType != null) {
+					riskConductVisitRecord.setType(visitType.getId());
+				}
+				RiskConductVisitOrigin visitOrigin = riskConductVisitOriginService.findByName(excel.get(3));
+				if (visitOrigin != null) {
+					riskConductVisitRecord.setOriginId(visitOrigin.getId());
+				}
+
 				riskConductVisitRecordService.insertSelective(riskConductVisitRecord);
-
 				totalRiskDetailsService.conductRiskDetails(policeId, LocalDate.parse(DateUtils.formatDate(riskConductVisitRecord.getCreationDate(), "yyyy-MM-dd")));
 			}
 

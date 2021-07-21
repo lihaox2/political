@@ -6,11 +6,8 @@
     <result column="police_id" property="policeId" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="deduction_score" property="deductionScore" jdbcType="DOUBLE" />
     <result column="input_time" property="inputTime" jdbcType="TIMESTAMP" />
-    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
-    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
-
+    <result column="deduction_score" property="deductionScore" jdbcType="DOUBLE" />
     <result column="information_id" property="informationId" jdbcType="INTEGER" />
     <result column="error_id" property="errorId" jdbcType="INTEGER" />
     <result column="police_list_code" property="policeListCode" jdbcType="VARCHAR" />
@@ -18,10 +15,15 @@
     <result column="police_list_info" property="policeListInfo" jdbcType="VARCHAR" />
     <result column="is_verified" property="isVerified" jdbcType="INTEGER" />
     <result column="img_arr" property="imgArr" jdbcType="VARCHAR" />
+    <result column="is_effective" property="isEffective" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="appealState" property="appealState" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, police_id, type, content, input_time, creation_date, update_date, deduction_score, information_id, error_id,
-    police_list_code, jurisdiction, police_list_info, is_verified, img_arr
+    id, police_id, type, content, input_time, deduction_score, information_id, error_id, 
+    police_list_code, jurisdiction, police_list_info, is_verified, img_arr, is_effective, 
+    creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -35,13 +37,17 @@
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskDutyDealPoliceRecord" >
     insert into risk_duty_deal_police_record (id, police_id, type, 
-      content, input_time, creation_date, 
-      update_date, deduction_score, information_id, error_id, police_list_code, jurisdiction,
-      police_list_info, is_verified, img_arr)
+      content, input_time, deduction_score, 
+      information_id, error_id, police_list_code, 
+      jurisdiction, police_list_info, is_verified, 
+      img_arr, is_effective, creation_date, 
+      update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
-      #{content,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP}, 
-      #{updateDate,jdbcType=TIMESTAMP}, #{deductionScore}, #{informationId}, #{errorId}, #{policeListCode},
-            #{jurisdiction}, #{policeListInfo}, #{isVerified}, #{imgArr})
+      #{content,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, #{deductionScore,jdbcType=DOUBLE}, 
+      #{informationId,jdbcType=INTEGER}, #{errorId,jdbcType=INTEGER}, #{policeListCode,jdbcType=VARCHAR}, 
+      #{jurisdiction,jdbcType=VARCHAR}, #{policeListInfo,jdbcType=VARCHAR}, #{isVerified,jdbcType=INTEGER}, 
+      #{imgArr,jdbcType=VARCHAR}, #{isEffective,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskDutyDealPoliceRecord" >
     insert into risk_duty_deal_police_record
@@ -61,36 +67,39 @@
       <if test="inputTime != null" >
         input_time,
       </if>
+      <if test="deductionScore != null" >
+        deduction_score,
+      </if>
+      <if test="informationId != null" >
+        information_id,
+      </if>
+      <if test="errorId != null" >
+        error_id,
+      </if>
+      <if test="policeListCode != null" >
+        police_list_code,
+      </if>
+      <if test="jurisdiction != null" >
+        jurisdiction,
+      </if>
+      <if test="policeListInfo != null" >
+        police_list_info,
+      </if>
+      <if test="isVerified != null" >
+        is_verified,
+      </if>
+      <if test="imgArr != null" >
+        img_arr,
+      </if>
+      <if test="isEffective != null" >
+        is_effective,
+      </if>
       <if test="creationDate != null" >
         creation_date,
       </if>
       <if test="updateDate != null" >
         update_date,
       </if>
-        <if test="deductionScore != null">
-          deduction_score,
-        </if>
-        <if test="informationId != null">
-          information_id,
-        </if>
-        <if test="errorId != null">
-          error_id,
-        </if>
-        <if test="policeListCode != null">
-          police_list_code,
-        </if>
-        <if test="jurisdiction != null">
-          jurisdiction,
-        </if>
-        <if test="policeListInfo != null">
-          police_list_info,
-        </if>
-        <if test="isVerified != null">
-          is_verified,
-        </if>
-        <if test="imgArr != null">
-          img_arr,
-        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -108,35 +117,38 @@
       <if test="inputTime != null" >
         #{inputTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="deductionScore != null" >
+        #{deductionScore,jdbcType=DOUBLE},
+      </if>
+      <if test="informationId != null" >
+        #{informationId,jdbcType=INTEGER},
+      </if>
+      <if test="errorId != null" >
+        #{errorId,jdbcType=INTEGER},
+      </if>
+      <if test="policeListCode != null" >
+        #{policeListCode,jdbcType=VARCHAR},
+      </if>
+      <if test="jurisdiction != null" >
+        #{jurisdiction,jdbcType=VARCHAR},
+      </if>
+      <if test="policeListInfo != null" >
+        #{policeListInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="isVerified != null" >
+        #{isVerified,jdbcType=INTEGER},
+      </if>
+      <if test="imgArr != null" >
+        #{imgArr,jdbcType=VARCHAR},
+      </if>
+      <if test="isEffective != null" >
+        #{isEffective,jdbcType=INTEGER},
+      </if>
       <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updateDate != null" >
         #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deductionScore != null">
-        #{deductionScore},
-      </if>
-      <if test="informationId != null">
-        #{informationId},
-      </if>
-      <if test="errorId != null">
-        #{errorId},
-      </if>
-      <if test="policeListCode != null">
-        #{policeListCode},
-      </if>
-      <if test="jurisdiction != null">
-        #{jurisdiction},
-      </if>
-      <if test="policeListInfo != null">
-        #{policeListInfo},
-      </if>
-      <if test="isVerified != null">
-        #{isVerified},
-      </if>
-      <if test="imgArr != null">
-        #{imgArr},
       </if>
     </trim>
   </insert>
@@ -152,38 +164,41 @@
       <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
       </if>
-      <if test="deductionScore != null" >
-        deduction_score = #{deductionScore},
-      </if>
       <if test="inputTime != null" >
         input_time = #{inputTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deductionScore != null" >
+        deduction_score = #{deductionScore,jdbcType=DOUBLE},
+      </if>
+      <if test="informationId != null" >
+        information_id = #{informationId,jdbcType=INTEGER},
+      </if>
+      <if test="errorId != null" >
+        error_id = #{errorId,jdbcType=INTEGER},
+      </if>
+      <if test="policeListCode != null" >
+        police_list_code = #{policeListCode,jdbcType=VARCHAR},
+      </if>
+      <if test="jurisdiction != null" >
+        jurisdiction = #{jurisdiction,jdbcType=VARCHAR},
+      </if>
+      <if test="policeListInfo != null" >
+        police_list_info = #{policeListInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="isVerified != null" >
+        is_verified = #{isVerified,jdbcType=INTEGER},
+      </if>
+      <if test="imgArr != null" >
+        img_arr = #{imgArr,jdbcType=VARCHAR},
+      </if>
+      <if test="isEffective != null" >
+        is_effective = #{isEffective,jdbcType=INTEGER},
       </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updateDate != null" >
         update_date = #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="informationId != null">
-        information_id = #{informationId},
-      </if>
-      <if test="errorId != null">
-        error_id = #{errorId},
-      </if>
-      <if test="policeListCode != null">
-        police_list_code = #{policeListCode},
-      </if>
-      <if test="jurisdiction != null">
-        jurisdiction = #{jurisdiction},
-      </if>
-      <if test="policeListInfo != null">
-        police_list_info = #{policeListInfo},
-      </if>
-      <if test="isVerified != null">
-        is_verified = #{isVerified},
-      </if>
-      <if test="imgArr != null">
-        img_arr = #{imgArr},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -193,22 +208,26 @@
     set police_id = #{policeId,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
       content = #{content,jdbcType=VARCHAR},
-      deduction_score = #{deductionScore},
       input_time = #{inputTime,jdbcType=TIMESTAMP},
-        information_id = #{informationId},
-        error_id = #{errorId},
-        police_list_code = #{policeListCode},
-        jurisdiction = #{jurisdiction},
-        police_list_info = #{policeListInfo},
-        is_verified = #{isVerified},
+      deduction_score = #{deductionScore,jdbcType=DOUBLE},
+      information_id = #{informationId,jdbcType=INTEGER},
+      error_id = #{errorId,jdbcType=INTEGER},
+      police_list_code = #{policeListCode,jdbcType=VARCHAR},
+      jurisdiction = #{jurisdiction,jdbcType=VARCHAR},
+      police_list_info = #{policeListInfo,jdbcType=VARCHAR},
+      is_verified = #{isVerified,jdbcType=INTEGER},
+      img_arr = #{imgArr,jdbcType=VARCHAR},
+      is_effective = #{isEffective,jdbcType=INTEGER},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
-        img_arr = #{imgArr},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <!-- 警员接警执勤数据列表查询 -->
 <select id="riskDutyRecordList" parameterType="com.bayee.political.domain.RiskDutyDealPoliceRecord" resultMap="BaseResultMap">
-  select a.*,b.name as typeName,a.deduction_score as deductionScore from risk_duty_deal_police_record a
+  select
+         a.*,b.name as typeName,a.deduction_score as deductionScore,
+        ifnull((select state from risk_record_verify where type_id = 1013 and module_id = a.id), 0) as appealState
+  from risk_duty_deal_police_record a
   left join risk_case_law_enforcement_type b on b.id=a.type
   where a.police_id=#{policeId,jdbcType=VARCHAR}
   <if test="timeType == 1">
@@ -222,7 +241,8 @@
 
   <select id="findRiskDutyDealPoliceRecordList" resultMap="BaseResultMap">
     select * from risk_duty_deal_police_record
-    where police_id = #{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+    where is_effective = 1 and police_id = #{policeId}
+      and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
   </select>
 
   <select id="countPoliceCaseData" resultType="Integer">

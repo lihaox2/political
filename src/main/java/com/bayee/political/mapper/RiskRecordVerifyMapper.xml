@@ -233,14 +233,14 @@
          left join risk_record_verify_type vt on v.type_id = vt.id
          left join user au on au.police_id = v.appeal_police_id
     where v.state != 4
-    <if test="param.verifyType != null and param.verifyType != ''">
+    <if test="param.appealType != null and param.appealType != ''">
       and vt.id = #{param.verifyType}
     </if>
     <if test="param.deptId != null and param.deptId != ''">
       and au.department_id = #{param.deptId}
     </if>
-    <if test="param.key key != null and param.key != ''">
-      and (au.name like concat('%', #{key}, '%') or au.police_id like  concat('%', #{key}, '%'))
+    <if test="param.key != null and param.key != ''">
+      and (au.name like concat('%', #{param.key}, '%') or au.police_id like  concat('%', #{param.key}, '%'))
     </if>
     order by v.appeal_date desc
     limit #{param.pageIndex}, #{param.pageSize}

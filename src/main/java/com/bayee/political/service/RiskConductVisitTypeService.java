@@ -48,4 +48,11 @@ public interface RiskConductVisitTypeService {
      */
     Integer countByNameAndParentId(String name, Integer parentId, Integer id);
 
+    /**
+     * 通过名称查询
+     * @param name
+     * @return
+     */
+    RiskConductVisitType findByName(String name);
+
 }

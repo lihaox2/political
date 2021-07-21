@@ -289,6 +289,7 @@ public class CaseController {
         record.setDeductionScore(saveParam.getDeductScore());
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
         record.setImgArr(saveParam.getFileList());
+        record.setIsEffective(1);
 
         riskCaseLawEnforcementRecordService.insert(record);
         totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));

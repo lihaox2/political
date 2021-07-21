@@ -142,4 +142,8 @@
     </if>
   </select>
 
+  <select id="findByName" resultMap="BaseResultMap">
+    select * from risk_conduct_visit_type where name = #{name}
+  </select>
+
 </mapper>

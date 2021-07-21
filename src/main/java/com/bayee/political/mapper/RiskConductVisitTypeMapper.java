@@ -49,4 +49,11 @@ public interface RiskConductVisitTypeMapper {
      */
     Integer countByNameAndParentId(@Param("name") String name,@Param("parentId") Integer parentId, @Param("id") Integer id);
 
+    /**
+     * 通过名称查询
+     * @param name
+     * @return
+     */
+    RiskConductVisitType findByName(@Param("name") String name);
+
 }

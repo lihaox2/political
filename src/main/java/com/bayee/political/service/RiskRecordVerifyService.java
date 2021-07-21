@@ -55,4 +55,10 @@ public interface RiskRecordVerifyService {
      */
     RiskRecordVerifyDetailsDO appealDetails(Integer typeId, Integer moduleId);
 
+    /**
+     * 数据项审核
+     * @param verify
+     */
+    void checkRecord(RiskRecordVerify verify);
+
 }

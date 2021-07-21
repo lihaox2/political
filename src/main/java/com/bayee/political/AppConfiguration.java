@@ -220,6 +220,8 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskDutyErrorTypeMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskDutyInformationTypeMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductVisitOriginMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRecordVerifyMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRecordVerifyTypeMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -248,6 +250,18 @@ public class AppConfiguration {
 				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		velocityEngine.setVelocityPropertiesMap(velocityPropertiesMap);
 		return velocityEngine.createVelocityEngine();
+	}
+
+	@Bean
+	public RiskRecordVerifyTypeMapper riskRecordVerifyTypeMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskRecordVerifyTypeMapper.class);
+	}
+
+	@Bean
+	public RiskRecordVerifyMapper riskRecordVerifyMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(RiskRecordVerifyMapper.class);
 	}
 
 	@Bean

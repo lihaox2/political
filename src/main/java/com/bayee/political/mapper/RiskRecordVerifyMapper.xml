@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskRecordVerifyMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskRecordVerify" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
+    <result column="module_id" property="moduleId" jdbcType="INTEGER" />
+    <result column="appeal_police_id" property="appealPoliceId" jdbcType="VARCHAR" />
+    <result column="appeal_content" property="appealContent" jdbcType="VARCHAR" />
+    <result column="appeal_score" property="appealScore" jdbcType="DOUBLE" />
+    <result column="appeal_date" property="appealDate" jdbcType="TIMESTAMP" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="check_content" property="checkContent" jdbcType="VARCHAR" />
+    <result column="is_agree" property="isAgree" jdbcType="INTEGER" />
+    <result column="check_deduction_score" property="checkDeductionScore" jdbcType="DOUBLE" />
+    <result column="check_deduction_police_id" property="checkDeductionPoliceId" jdbcType="VARCHAR" />
+    <result column="check_police_id" property="checkPoliceId" jdbcType="VARCHAR" />
+    <result column="check_date" property="checkDate" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type_id, module_id, appeal_police_id, appeal_content, appeal_score, appeal_date,
+    state, check_content, is_agree, check_deduction_score, check_deduction_police_id,
+    check_police_id, check_date, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from risk_record_verify
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_record_verify
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskRecordVerify" >
+    insert into risk_record_verify (id, type_id, module_id,
+                                    appeal_police_id, appeal_content, appeal_score,
+                                    appeal_date, state, check_content,
+                                    is_agree, check_deduction_score, check_deduction_police_id,
+                                    check_police_id, check_date, creation_date,
+                                    update_date)
+    values (#{id,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, #{moduleId,jdbcType=INTEGER},
+            #{appealPoliceId,jdbcType=VARCHAR}, #{appealContent,jdbcType=VARCHAR}, #{appealScore,jdbcType=DOUBLE},
+            #{appealDate,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}, #{checkContent,jdbcType=VARCHAR},
+            #{isAgree,jdbcType=INTEGER}, #{checkDeductionScore,jdbcType=DOUBLE}, #{checkDeductionPoliceId,jdbcType=VARCHAR},
+            #{checkPoliceId,jdbcType=VARCHAR}, #{checkDate,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP},
+            #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskRecordVerify" >
+    insert into risk_record_verify
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="moduleId != null" >
+        module_id,
+      </if>
+      <if test="appealPoliceId != null" >
+        appeal_police_id,
+      </if>
+      <if test="appealContent != null" >
+        appeal_content,
+      </if>
+      <if test="appealScore != null" >
+        appeal_score,
+      </if>
+      <if test="appealDate != null" >
+        appeal_date,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="checkContent != null" >
+        check_content,
+      </if>
+      <if test="isAgree != null" >
+        is_agree,
+      </if>
+      <if test="checkDeductionScore != null" >
+        check_deduction_score,
+      </if>
+      <if test="checkDeductionPoliceId != null" >
+        check_deduction_police_id,
+      </if>
+      <if test="checkPoliceId != null" >
+        check_police_id,
+      </if>
+      <if test="checkDate != null" >
+        check_date,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="moduleId != null" >
+        #{moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="appealPoliceId != null" >
+        #{appealPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="appealContent != null" >
+        #{appealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="appealScore != null" >
+        #{appealScore,jdbcType=DOUBLE},
+      </if>
+      <if test="appealDate != null" >
+        #{appealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="checkContent != null" >
+        #{checkContent,jdbcType=VARCHAR},
+      </if>
+      <if test="isAgree != null" >
+        #{isAgree,jdbcType=INTEGER},
+      </if>
+      <if test="checkDeductionScore != null" >
+        #{checkDeductionScore,jdbcType=DOUBLE},
+      </if>
+      <if test="checkDeductionPoliceId != null" >
+        #{checkDeductionPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkPoliceId != null" >
+        #{checkPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkDate != null" >
+        #{checkDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskRecordVerify" >
+    update risk_record_verify
+    <set >
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="moduleId != null" >
+        module_id = #{moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="appealPoliceId != null" >
+        appeal_police_id = #{appealPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="appealContent != null" >
+        appeal_content = #{appealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="appealScore != null" >
+        appeal_score = #{appealScore,jdbcType=DOUBLE},
+      </if>
+      <if test="appealDate != null" >
+        appeal_date = #{appealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="checkContent != null" >
+        check_content = #{checkContent,jdbcType=VARCHAR},
+      </if>
+      <if test="isAgree != null" >
+        is_agree = #{isAgree,jdbcType=INTEGER},
+      </if>
+      <if test="checkDeductionScore != null" >
+        check_deduction_score = #{checkDeductionScore,jdbcType=DOUBLE},
+      </if>
+      <if test="checkDeductionPoliceId != null" >
+        check_deduction_police_id = #{checkDeductionPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkPoliceId != null" >
+        check_police_id = #{checkPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkDate != null" >
+        check_date = #{checkDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskRecordVerify" >
+    update risk_record_verify
+    set type_id = #{typeId,jdbcType=INTEGER},
+        module_id = #{moduleId,jdbcType=INTEGER},
+        appeal_police_id = #{appealPoliceId,jdbcType=VARCHAR},
+        appeal_content = #{appealContent,jdbcType=VARCHAR},
+        appeal_score = #{appealScore,jdbcType=DOUBLE},
+        appeal_date = #{appealDate,jdbcType=TIMESTAMP},
+        state = #{state,jdbcType=INTEGER},
+        check_content = #{checkContent,jdbcType=VARCHAR},
+        is_agree = #{isAgree,jdbcType=INTEGER},
+        check_deduction_score = #{checkDeductionScore,jdbcType=DOUBLE},
+        check_deduction_police_id = #{checkDeductionPoliceId,jdbcType=VARCHAR},
+        check_police_id = #{checkPoliceId,jdbcType=VARCHAR},
+        check_date = #{checkDate,jdbcType=TIMESTAMP},
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+        update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="riskRecordVerifyPage" resultType="com.bayee.political.pojo.dto.RiskRecordVerifyPageResultDO"
+          parameterType="com.bayee.political.pojo.json.RiskRecordVerifyPageQueryParam">
+    select
+      v.id, au.police_id as appealPoliceId, au.`name` as appealName, v.appeal_score as appealScore,
+      vt.`name` as appealTypeName, (case v.state when 1 then '待复核' when 2 then '申诉通过' when 3 then
+          '申诉不通过' when 4 then '已撤销' end) as stateName,
+      DATE_FORMAT(v.appeal_date, '%Y-%m-%d %H:%i') as appealDate, v.state
+    from risk_record_verify v
+         left join risk_record_verify_type vt on v.type_id = vt.id
+         left join user au on au.police_id = v.appeal_police_id
+    where v.state != 4
+    <if test="param.verifyType != null and param.verifyType != ''">
+      and vt.id = #{param.verifyType}
+    </if>
+    <if test="param.deptId != null and param.deptId != ''">
+      and au.department_id = #{param.deptId}
+    </if>
+    <if test="param.key key != null and param.key != ''">
+      and (au.name like concat('%', #{key}, '%') or au.police_id like  concat('%', #{key}, '%'))
+    </if>
+    order by v.appeal_date desc
+    limit #{param.pageIndex}, #{param.pageSize}
+  </select>
+
+  <select id="findVerifyDOById" resultType="com.bayee.political.pojo.dto.RiskRecordVerifyDetailsDO">
+    select
+      au.`name` as appealPoliceName, au.police_id as appealPoliceId, vt.id as appealType, vt.`name` as appealTypeName, v.appeal_content as appealContent,
+      v.appeal_score as appealScore, v.module_id as moduleId, DATE_FORMAT(v.appeal_date, '%Y-%m-%d %H:%i:%s') as appealDate,
+      v.is_agree as isAgree, v.check_content as checkContent, v.check_deduction_score as checkDeductionScore,
+      cdu.name as checkDeductionPoliceName, cu.`name` as checkPoliceName, DATE_FORMAT(v.check_date, '%Y-%m-%d %H:%i:%s')
+    from risk_record_verify v
+           left join risk_record_verify_type vt on v.type_id = vt.id
+           left join user au on au.police_id = v.appeal_police_id
+           left join user cdu on cdu.police_id = v.check_deduction_police_id
+           left join user cu on cu.police_id = v.check_police_id
+    where v.id = #{id} limit 1
+  </select>
+
+  <update id="cancelAppeal">
+    update risk_record_verify set state = 4 where type_id = #{typeId,jdbcType=INTEGER} and module_id = #{moduleId,jdbcType=INTEGER}
+  </update>
+
+  <select id="appealDetails" resultType="com.bayee.political.pojo.dto.RiskRecordVerifyDetailsDO">
+    select
+      au.`name` as appealPoliceName, au.police_id as appealPoliceId, vt.id as appealType, vt.`name` as appealTypeName, v.appeal_content as appealContent,
+      v.appeal_score as appealScore, v.module_id as moduleId, DATE_FORMAT(v.appeal_date, '%Y-%m-%d %H:%i:%s') as appealDate,
+      v.is_agree as isAgree, v.check_content as checkContent, v.check_deduction_score as checkDeductionScore,
+      cdu.name as checkDeductionPoliceName, cu.`name` as checkPoliceName, DATE_FORMAT(v.check_date, '%Y-%m-%d %H:%i:%s')
+    from risk_record_verify v
+           left join risk_record_verify_type vt on v.type_id = vt.id
+           left join user au on au.police_id = v.appeal_police_id
+           left join user cdu on cdu.police_id = v.check_deduction_police_id
+           left join user cu on cu.police_id = v.check_police_id
+    where type_id = #{typeId,jdbcType=INTEGER} and module_id = #{moduleId,jdbcType=INTEGER} limit 1
+  </select>
+
+</mapper>

@@ -71,6 +71,21 @@
 
   <select id="findAllVerifyType" resultMap="BaseResultMap">
     select * from risk_record_verify_type
+    where 1 = 1
+    <if test="scorer != null">
+        <if test="scorer == 4 or scorer == 5">
+            and id in (1011)
+        </if>
+        <if test="scorer == 6">
+            and id in (1014)
+        </if>
+        <if test="scorer == 7">
+            and id in (1013)
+        </if>
+        <if test="scorer == 9">
+          and id in (1011, 1012)
+        </if>
+    </if>
   </select>
 
 </mapper>

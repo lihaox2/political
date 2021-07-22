@@ -36,6 +36,19 @@ public class RiskRecordVerifyPageQueryParam {
      */
     private String key;
 
+    /**
+     * 状态  1.待复核，2.已复核
+     */
+    private Integer state;
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
     public Integer getPageIndex() {
         return pageIndex;
     }

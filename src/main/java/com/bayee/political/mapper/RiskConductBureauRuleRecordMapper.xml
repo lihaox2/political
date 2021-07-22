@@ -204,10 +204,12 @@
   
   <select id="findByPoliceIdAndDate" resultMap="BaseResultMap">
     select
-           r1.*, r2.name as type_name ,
-    ifnull((select state from risk_record_verify where type_id = 1013 and module_id = r1.id), 0) as appealState
-    from risk_conduct_bureau_rule_record r1, risk_conduct_bureau_rule_type r2
-    where r1.type = r2.id and r1.police_id = #{policeId}
+           r1.*, r3.name as type_name ,
+        ifnull((select state from risk_record_verify where type_id = 1011 and module_id = r1.id), 0) as appealState
+    from risk_conduct_bureau_rule_record r1
+        left join risk_conduct_bureau_rule_type r2 on r1.type = r2.id
+        left join risk_conduct_bureau_rule_type r3 on r2.parent_id = r3.id
+    where r1.police_id = #{policeId}
     <if test="timeType == 1">
             and DATE_FORMAT(r1.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(r1.creation_date, '%Y-%m')&lt;=#{dateTime}
         </if>

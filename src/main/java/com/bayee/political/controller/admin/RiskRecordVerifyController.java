@@ -1,12 +1,10 @@
 package com.bayee.political.controller.admin;
 
+import cn.hutool.core.util.StrUtil;
 import com.bayee.political.domain.RiskRecordVerify;
 import com.bayee.political.domain.RiskRecordVerifyType;
 import com.bayee.political.domain.User;
-import com.bayee.political.pojo.json.AppealSaveParam;
-import com.bayee.political.pojo.json.CheckRiskRecordParam;
-import com.bayee.political.pojo.json.RiskRecordVerifyPageQueryParam;
-import com.bayee.political.pojo.json.RiskRecordVerifyToVerifyResult;
+import com.bayee.political.pojo.json.*;
 import com.bayee.political.service.RiskRecordVerifyService;
 import com.bayee.political.service.RiskRecordVerifyTypeService;
 import com.bayee.political.service.UserService;
@@ -17,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * @author xxl
@@ -36,6 +34,14 @@ public class RiskRecordVerifyController {
     @Autowired
     UserService userService;
 
+    List<Integer> scorerList = new ArrayList<>(Arrays.asList(3, 4, 5, 6, 7, 9, 10));
+
+    @GetMapping("/record/statistics")
+    public ResponseEntity<?> riskRecordVerifyStatistics() {
+
+        return new ResponseEntity<>(DataListReturn.ok(riskRecordVerifyService.riskRecordVerifyStatistics()), HttpStatus.OK);
+    }
+
     /**
      * 数据项审核列表
      * @param queryParam
@@ -43,9 +49,37 @@ public class RiskRecordVerifyController {
      */
     @GetMapping("/record/page")
     public ResponseEntity<?> riskRecordVerifyPage(RiskRecordVerifyPageQueryParam queryParam) {
+        User user = userService.findByPoliceId(queryParam.getCurrentPolice());
+        if (!scorerList.contains(user.getScorer())) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("data", new ArrayList<>());
+            result.put("totalCount", 0);
+            result.put("pageIndex", queryParam.getPageIndex());
+            result.put("pageSize", queryParam.getPageSize());
+            return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
+        }
 
-        return new ResponseEntity<>(DataListReturn.ok(riskRecordVerifyService.riskRecordVerifyPage(queryParam)),
-                HttpStatus.OK);
+        Integer typeId = null;
+        switch (user.getScorer()) {
+            case 4:
+            case 5: typeId = 1011; break;
+            case 6: typeId = 1014; break;
+            case 7: typeId = 1013; break;
+            case 9: typeId = 999; break;
+            case 3:
+            case 10: typeId = null; break;
+        }
+        if (queryParam.getAppealType() == null) {
+            queryParam.setAppealType(typeId);
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", riskRecordVerifyService.riskRecordVerifyPage(queryParam));
+        result.put("totalCount", riskRecordVerifyService.countRiskRecordVerifyPage(queryParam));
+        result.put("pageIndex", queryParam.getPageIndex());
+        result.put("pageSize", queryParam.getPageSize());
+
+        return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
 
     /**
@@ -55,6 +89,9 @@ public class RiskRecordVerifyController {
      */
     @PostMapping("/check/record")
     public ResponseEntity<?> checkRiskRecord(@RequestBody CheckRiskRecordParam param) {
+        if (!StrUtil.isNotBlank(param.getCheckPoliceId()) || !StrUtil.isNotBlank(param.getCheckContent()) || param.getId() == null) {
+            return new ResponseEntity<>(DataListReturn.error("数据提交异常"), HttpStatus.OK);
+        }
         RiskRecordVerify recordVerify = riskRecordVerifyService.findById(param.getId());
         recordVerify.setCheckContent(param.getCheckContent());
         recordVerify.setIsAgree(param.getIsAgree());
@@ -74,9 +111,12 @@ public class RiskRecordVerifyController {
      * @return
      */
     @PostMapping("/add/appeal")
-    public ResponseEntity<?> addAppeal(AppealSaveParam saveParam) {
+    public ResponseEntity<?> addAppeal(@RequestBody AppealSaveParam saveParam) {
         if (saveParam.getTypeId() == null || saveParam.getModuleId() == null || saveParam.getAppealPoliceId() == null) {
             return new ResponseEntity<>(DataListReturn.error("数据提交异常"), HttpStatus.OK);
+        }
+        if (riskRecordVerifyService.checkRecordFlag(saveParam.getTypeId(), saveParam.getModuleId(), null)) {
+            return new ResponseEntity<>(DataListReturn.error("改项数据已申诉过"), HttpStatus.OK);
         }
 
         RiskRecordVerify recordVerify = new RiskRecordVerify();
@@ -100,9 +140,16 @@ public class RiskRecordVerifyController {
      * @return
      */
     @PostMapping("/cancel/appeal")
-    public ResponseEntity<?> cancelAppeal(Integer typeId, Integer moduleId) {
+    public ResponseEntity<?> cancelAppeal(@RequestBody CancelAppealParam appealParam) {
+        Integer typeId = appealParam.getTypeId();
+        Integer moduleId = appealParam.getModuleId();
         if (typeId == null || typeId == 0 || moduleId == null || moduleId == 0) {
-            return new ResponseEntity<>(DataListReturn.error("数据提交异常"), HttpStatus.OK);
+            return new ResponseEntity<>(DataListReturn.error("数据提交异常！"), HttpStatus.OK);
+        }
+        boolean flag = riskRecordVerifyService.checkRecordFlag(typeId, moduleId, 2)
+                || riskRecordVerifyService.checkRecordFlag(typeId, moduleId, 3);
+        if (flag) {
+            return new ResponseEntity<>(DataListReturn.error("撤销失败，数据项已不能撤销！"), HttpStatus.OK);
         }
 
         riskRecordVerifyService.cancelAppeal(typeId, moduleId);
@@ -159,9 +206,13 @@ public class RiskRecordVerifyController {
      * @return
      */
     @GetMapping("/type/list")
-    public ResponseEntity<?> verifyTypeList() {
+    public ResponseEntity<?> verifyTypeList(@RequestParam("policeId") String policeId) {
+        User user = userService.findByPoliceId(policeId);
+        if (!scorerList.contains(user.getScorer())) {
+            return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
+        }
 
-        return new ResponseEntity<>(DataListReturn.ok(riskRecordVerifyTypeService.findAllVerifyType()), HttpStatus.OK);
+        return new ResponseEntity<>(DataListReturn.ok(riskRecordVerifyTypeService.findAllVerifyType(user.getScorer())), HttpStatus.OK);
     }
 
 }

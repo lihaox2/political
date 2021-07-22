@@ -3,6 +3,7 @@ package com.bayee.political.service;
 import com.bayee.political.domain.RiskRecordVerify;
 import com.bayee.political.pojo.dto.RiskRecordVerifyDetailsDO;
 import com.bayee.political.pojo.dto.RiskRecordVerifyPageResultDO;
+import com.bayee.political.pojo.dto.RiskRecordVerifyStatisticsDO;
 import com.bayee.political.pojo.json.RiskRecordVerifyPageQueryParam;
 
 import java.util.List;
@@ -19,6 +20,13 @@ public interface RiskRecordVerifyService {
      * @return
      */
     List<RiskRecordVerifyPageResultDO> riskRecordVerifyPage(RiskRecordVerifyPageQueryParam queryParam);
+
+    /**
+     * 统计分页数据条数
+     * @param queryParam
+     * @return
+     */
+    Integer countRiskRecordVerifyPage(RiskRecordVerifyPageQueryParam queryParam);
 
     /**
      * 通过id查询
@@ -60,5 +68,19 @@ public interface RiskRecordVerifyService {
      * @param verify
      */
     void checkRecord(RiskRecordVerify verify);
+
+    /**
+     * 数据项 申诉统计
+     * @return
+     */
+    RiskRecordVerifyStatisticsDO riskRecordVerifyStatistics();
+
+    /**
+     * 校验数据是否已申诉过
+     * @param typeId
+     * @param moduleId
+     * @return
+     */
+    boolean checkRecordFlag(Integer typeId, Integer moduleId, Integer state);
 
 }

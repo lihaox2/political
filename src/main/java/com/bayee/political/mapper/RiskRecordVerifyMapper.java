@@ -3,6 +3,7 @@ package com.bayee.political.mapper;
 import com.bayee.political.domain.RiskRecordVerify;
 import com.bayee.political.pojo.dto.RiskRecordVerifyDetailsDO;
 import com.bayee.political.pojo.dto.RiskRecordVerifyPageResultDO;
+import com.bayee.political.pojo.dto.RiskRecordVerifyStatisticsDO;
 import com.bayee.political.pojo.json.RiskRecordVerifyPageQueryParam;
 import org.apache.ibatis.annotations.Param;
 
@@ -29,6 +30,13 @@ public interface RiskRecordVerifyMapper {
     List<RiskRecordVerifyPageResultDO> riskRecordVerifyPage(@Param("param") RiskRecordVerifyPageQueryParam queryParam);
 
     /**
+     * 统计分页数据条数
+     * @param queryParam
+     * @return
+     */
+    Integer countRiskRecordVerifyPage(@Param("param") RiskRecordVerifyPageQueryParam queryParam);
+
+    /**
      *
      * @param id
      * @return
@@ -49,4 +57,19 @@ public interface RiskRecordVerifyMapper {
      * @return
      */
     RiskRecordVerifyDetailsDO appealDetails(@Param("typeId") Integer typeId,@Param("moduleId") Integer moduleId);
+
+    /**
+     * 数据项 申诉统计
+     * @return
+     */
+    RiskRecordVerifyStatisticsDO riskRecordVerifyStatistics();
+
+    /**
+     * 校验数据是否已申诉过
+     * @param typeId
+     * @param moduleId
+     * @return
+     */
+    Integer checkRecordFlag(@Param("typeId") Integer typeId, @Param("moduleId") Integer moduleId, @Param("state") Integer state);
+
 }

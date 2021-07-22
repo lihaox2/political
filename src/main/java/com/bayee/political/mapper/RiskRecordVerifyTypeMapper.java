@@ -1,6 +1,7 @@
 package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskRecordVerifyType;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,5 +22,5 @@ public interface RiskRecordVerifyTypeMapper {
      * 查询所有申诉类型
      * @return
      */
-    List<RiskRecordVerifyType> findAllVerifyType();
+    List<RiskRecordVerifyType> findAllVerifyType(@Param("scorer") Integer scorer);
 }

@@ -19,8 +19,8 @@ public class RiskRecordVerifyTypeServiceImpl implements RiskRecordVerifyTypeServ
     RiskRecordVerifyTypeMapper riskRecordVerifyTypeMapper;
 
     @Override
-    public List<RiskRecordVerifyType> findAllVerifyType() {
-        return riskRecordVerifyTypeMapper.findAllVerifyType();
+    public List<RiskRecordVerifyType> findAllVerifyType(Integer scorer) {
+        return riskRecordVerifyTypeMapper.findAllVerifyType(scorer);
     }
 
     @Override

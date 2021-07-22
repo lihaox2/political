@@ -232,9 +232,22 @@
     from risk_record_verify v
          left join risk_record_verify_type vt on v.type_id = vt.id
          left join user au on au.police_id = v.appeal_police_id
-    where v.state != 4
+    where 1 = 1
+    <if test="param.state != null and param.state != ''">
+      <if test="param.state == 1">
+        and v.state = 1
+      </if>
+      <if test="param.state == 2">
+        and v.state in (2,3,4)
+      </if>
+    </if>
     <if test="param.appealType != null and param.appealType != ''">
-      and vt.id = #{param.verifyType}
+        <if test="param.appealType == 999">
+          and vt.id in (1011, 1012)
+        </if>
+        <if test="param.appealType != 999">
+          and vt.id = #{param.appealType}
+        </if>
     </if>
     <if test="param.deptId != null and param.deptId != ''">
       and au.department_id = #{param.deptId}
@@ -246,12 +259,38 @@
     limit #{param.pageIndex}, #{param.pageSize}
   </select>
 
+  <select id="countRiskRecordVerifyPage" resultType="Integer" parameterType="com.bayee.political.pojo.json.RiskRecordVerifyPageQueryParam">
+    select
+      count(1)
+    from risk_record_verify v
+      left join risk_record_verify_type vt on v.type_id = vt.id
+      left join user au on au.police_id = v.appeal_police_id
+    where 1 = 1
+    <if test="param.state != null and param.state != ''">
+      <if test="param.state == 1">
+        and v.state = 1
+      </if>
+      <if test="param.state == 2">
+        and v.state in (2,3,4)
+      </if>
+    </if>
+    <if test="param.appealType != null and param.appealType != ''">
+      and vt.id = #{param.appealType}
+    </if>
+    <if test="param.deptId != null and param.deptId != ''">
+      and au.department_id = #{param.deptId}
+    </if>
+    <if test="param.key != null and param.key != ''">
+      and (au.name like concat('%', #{param.key}, '%') or au.police_id like  concat('%', #{param.key}, '%'))
+    </if>
+  </select>
+
   <select id="findVerifyDOById" resultType="com.bayee.political.pojo.dto.RiskRecordVerifyDetailsDO">
     select
       au.`name` as appealPoliceName, au.police_id as appealPoliceId, vt.id as appealType, vt.`name` as appealTypeName, v.appeal_content as appealContent,
       v.appeal_score as appealScore, v.module_id as moduleId, DATE_FORMAT(v.appeal_date, '%Y-%m-%d %H:%i:%s') as appealDate,
       v.is_agree as isAgree, v.check_content as checkContent, v.check_deduction_score as checkDeductionScore,
-      cdu.name as checkDeductionPoliceName, cu.`name` as checkPoliceName, DATE_FORMAT(v.check_date, '%Y-%m-%d %H:%i:%s')
+      cdu.name as checkDeductionPoliceName, cu.`name` as checkPoliceName, DATE_FORMAT(v.check_date, '%Y-%m-%d %H:%i:%s') as checkDate
     from risk_record_verify v
            left join risk_record_verify_type vt on v.type_id = vt.id
            left join user au on au.police_id = v.appeal_police_id
@@ -276,6 +315,27 @@
            left join user cdu on cdu.police_id = v.check_deduction_police_id
            left join user cu on cu.police_id = v.check_police_id
     where type_id = #{typeId,jdbcType=INTEGER} and module_id = #{moduleId,jdbcType=INTEGER} limit 1
+  </select>
+
+  <select id="riskRecordVerifyStatistics" resultType="com.bayee.political.pojo.dto.RiskRecordVerifyStatisticsDO">
+    select
+      ifnull((select count(1) from risk_record_verify), 0) as totalCount,
+      (select count(1) from risk_record_verify where state = 1) as unCheckCount,
+      (select count(1) from risk_record_verify where state in (2,3,4)) as isCheckCount,
+      (select count(1) from risk_record_verify where type_id = 1011) as conductBureauRuleCount,
+      (select count(1) from risk_record_verify where type_id = 1012) as conductVisitCount,
+      (select count(1) from risk_record_verify where type_id = 1013) as dutyDealCount,
+      (select count(1) from risk_record_verify where type_id = 1014) as lawEnforcementCount
+  </select>
+
+  <select id="checkRecordFlag" resultType="Integer">
+    select
+        count(1)
+    from risk_record_verify
+    where type_id = #{typeId,jdbcType=INTEGER} and module_id = #{moduleId,jdbcType=INTEGER}
+    <if test="state != null">
+      and state = #{state}
+    </if>
   </select>
 
 </mapper>

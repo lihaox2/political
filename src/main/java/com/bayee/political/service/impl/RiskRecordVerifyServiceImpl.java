@@ -4,12 +4,14 @@ import com.bayee.political.domain.*;
 import com.bayee.political.mapper.RiskRecordVerifyMapper;
 import com.bayee.political.pojo.dto.RiskRecordVerifyDetailsDO;
 import com.bayee.political.pojo.dto.RiskRecordVerifyPageResultDO;
+import com.bayee.political.pojo.dto.RiskRecordVerifyStatisticsDO;
 import com.bayee.political.pojo.json.RiskRecordVerifyPageQueryParam;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +41,8 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
     @Autowired
     TotalRiskDetailsService totalRiskDetailsService;
 
+    DecimalFormat df = new DecimalFormat("#.00");
+
     @Override
     public List<RiskRecordVerifyPageResultDO> riskRecordVerifyPage(RiskRecordVerifyPageQueryParam queryParam) {
         if (queryParam == null) {
@@ -52,6 +56,11 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
         queryParam.setPageIndex((queryParam.getPageIndex() - 1) * queryParam.getPageSize());
 
         return riskRecordVerifyMapper.riskRecordVerifyPage(queryParam);
+    }
+
+    @Override
+    public Integer countRiskRecordVerifyPage(RiskRecordVerifyPageQueryParam queryParam) {
+        return riskRecordVerifyMapper.countRiskRecordVerifyPage(queryParam);
     }
 
     @Override
@@ -107,6 +116,21 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
         } else if (1014 == appealType) {
             riskCaseLawEnforcementDetails(verify.getModuleId(), checkDeductionPoliceId, checkDeductionScore);
         }
+    }
+
+    @Override
+    public RiskRecordVerifyStatisticsDO riskRecordVerifyStatistics() {
+        RiskRecordVerifyStatisticsDO statisticsDO = riskRecordVerifyMapper.riskRecordVerifyStatistics();
+        statisticsDO.setIsCheckRatio(Double.valueOf(df.format((double)statisticsDO.getIsCheckCount() / statisticsDO.getTotalCount() * 100)));
+        statisticsDO.setUnCheckRatio(Double.valueOf(df.format((double)statisticsDO.getUnCheckCount() / statisticsDO.getTotalCount() * 100)));
+
+        return statisticsDO;
+    }
+
+    @Override
+    public boolean checkRecordFlag(Integer typeId, Integer moduleId, Integer state) {
+        Integer flag = riskRecordVerifyMapper.checkRecordFlag(typeId, moduleId, state);
+        return flag != null && flag > 0;
     }
 
     /**

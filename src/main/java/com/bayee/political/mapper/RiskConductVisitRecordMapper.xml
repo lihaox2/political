@@ -186,7 +186,7 @@
   <select id="riskConductVisitRecordList" resultMap="BaseResultMap">
   	SELECT
   	    r.*,t.name as type_name,
-    ifnull((select state from risk_record_verify where type_id = 1013 and module_id = r.id), 0) as appealState
+    ifnull((select state from risk_record_verify where type_id = 1012 and module_id = r.id), 0) as appealState
   	FROM risk_conduct_visit_record r,risk_conduct_visit_type t WHERE
 	 r.police_id=#{policeId} and r.type=t.id
 	 <if test="timeType == 1">

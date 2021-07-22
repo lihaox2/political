@@ -14,7 +14,7 @@ public interface RiskRecordVerifyTypeService {
      * 查询所有申诉类型
      * @return
      */
-    List<RiskRecordVerifyType> findAllVerifyType();
+    List<RiskRecordVerifyType> findAllVerifyType(Integer scorer);
 
     /**
      * 通过id查询

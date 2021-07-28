@@ -2,11 +2,10 @@ package com.bayee.political.controller.admin;
 
 import com.bayee.political.domain.RiskHealthRecord;
 import com.bayee.political.domain.RiskHealthRecordInfo;
-import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.User;
-import com.bayee.political.pojo.json.HealthDetailsResult;
-import com.bayee.political.pojo.json.HealthPageResult;
-import com.bayee.political.pojo.json.HealthSaveParam;
+import com.bayee.political.json.HealthDetailsResult;
+import com.bayee.political.json.HealthPageResult;
+import com.bayee.political.json.HealthSaveParam;
 import com.bayee.political.service.RiskHealthRecordInfoService;
 import com.bayee.political.service.RiskHealthRecordService;
 import com.bayee.political.service.TotalRiskDetailsService;
@@ -99,6 +98,10 @@ public class HealthController {
 
     @PostMapping("/add/health")
     public ResponseEntity<?> addHealth(@RequestBody HealthSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
         String monthDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd HH:mm:ss"));
 
         Integer id = riskHealthRecordService.getByIdAndYear(saveParam.getPoliceId(), saveParam.getYear(), null);
@@ -198,6 +201,10 @@ public class HealthController {
 
     @PostMapping("/update/health/{id}")
     public ResponseEntity<?> updateHealth(@PathVariable("id") Integer id, @RequestBody HealthSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
 //        String year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
         String monthDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd HH:mm:ss"));
 

@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.bayee.political.domain.RiskAlarm;
 import com.bayee.political.domain.RiskHealth;
 import com.bayee.political.domain.RiskReportRecord;
-import com.bayee.political.pojo.json.RiskProportionResult;
-import com.bayee.political.pojo.json.RiskTrendResult;
+import com.bayee.political.json.RiskProportionResult;
+import com.bayee.political.json.RiskTrendResult;
 import com.bayee.political.service.RiskService;
 import com.bayee.political.service.RiskTrendsService;
 import com.bayee.political.service.UserService;
@@ -76,7 +76,7 @@ public class CockpitController {
 		riskTrendResult.setAlarmPoliceCount(0);
 		riskTrendResult.setPoliceTotal(policeTotal);
 		riskTrendResult.setRisktotal(risktotal);
-		riskTrendResult.setProportion(Double.valueOf(risktotal)/Double.valueOf(policeTotal)*100);
+		riskTrendResult.setProportion(Double.valueOf(df.format(Double.valueOf(risktotal)/Double.valueOf(policeTotal)*100)));
 		riskTrendResult.setRiskTrends(riskTrends);
 		
 		

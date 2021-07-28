@@ -217,4 +217,11 @@ public interface UserService {
 	 */
 	List<User> findUserByDeptId(Integer deptId);
 
+	/**
+	 * 判断警员是否存在
+	 * @param policeId
+	 * @return
+	 */
+	boolean checkPoliceExists(String policeId);
+
 }

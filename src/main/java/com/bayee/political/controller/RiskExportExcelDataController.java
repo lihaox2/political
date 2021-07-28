@@ -801,43 +801,45 @@ public class RiskExportExcelDataController {
 		// 记录错误行
 		int index = 0;
 
-		try {
+		for (List<String> excel : readExcel) {
+			String policeId = excel.get(2);
+			if (policeId != null && !"".equals(policeId)) {
+				User user = userService.findByPoliceId(policeId);
 
-			for (List<String> excel : readExcel) {
-				String policeId = excel.get(2);
-				if (policeId != null && !"".equals(policeId)) {
-					User user = userService.findByPoliceId(policeId);
-
-					if (user == null || user.getName() == null) {
-						continue;
-					}
-				}else {
+				if (user == null || user.getName() == null) {
 					continue;
 				}
-
-				Integer informationId = riskDutyInformationTypeService.findIdByName(excel.get(6));
-				Integer errorId = riskDutyErrorTypeService.findIdByName(excel.get(8));
-				if (informationId == null || errorId == null) {
-					continue;
-				}
-
-				RiskDutyDealPoliceRecord policeRecord = new RiskDutyDealPoliceRecord();
-				policeRecord.setInformationId(informationId);
-				policeRecord.setErrorId(errorId);
-				policeRecord.setPoliceListCode(excel.get(4));
-				policeRecord.setJurisdiction(excel.get(5));
-				policeRecord.setPoliceListInfo(excel.get(7));
-				policeRecord.setIsVerified("已核实".equals(excel.get(10)) ? 1 : 0);
-				policeRecord.setPoliceId(policeId);
-				policeRecord.setContent(excel.get(9));
-				policeRecord.setInputTime(new Date());
-				policeRecord.setCreationDate(DateUtils.parseDate(excel.get(3), "yyyy-MM-dd HH:mm"));
-				policeRecord.setDeductionScore(Double.valueOf(excel.get(11)));
-				policeRecord.setIsEffective(1);
-
-				riskDutyDealPoliceRecordService.insert(policeRecord);
-				totalRiskDetailsService.dutyRiskDetails(policeId, LocalDate.parse(DateUtils.formatDate(policeRecord.getCreationDate(), "yyyy-MM-dd")));
+			} else {
+				continue;
 			}
+
+			Integer informationId = riskDutyInformationTypeService.findIdByName(excel.get(6));
+			Integer errorId = riskDutyErrorTypeService.findIdByName(excel.get(8));
+			if (informationId == null || errorId == null) {
+				continue;
+			}
+
+			RiskDutyDealPoliceRecord policeRecord = new RiskDutyDealPoliceRecord();
+			policeRecord.setInformationId(informationId);
+			policeRecord.setErrorId(errorId);
+			policeRecord.setPoliceListCode(excel.get(4));
+			policeRecord.setJurisdiction(excel.get(5));
+			policeRecord.setPoliceListInfo(excel.get(7));
+			policeRecord.setIsVerified("已核实".equals(excel.get(10)) ? 1 : 0);
+			policeRecord.setPoliceId(policeId);
+			policeRecord.setContent(excel.get(9));
+			policeRecord.setInputTime(new Date());
+			policeRecord.setCreationDate(DateUtils.parseDate(excel.get(3), "yyyy-MM-dd HH:mm"));
+			policeRecord.setDeductionScore(Double.valueOf(excel.get(11)));
+			policeRecord.setIsEffective(1);
+
+			riskDutyDealPoliceRecordService.insert(policeRecord);
+			totalRiskDetailsService.dutyRiskDetails(policeId, LocalDate.parse(DateUtils.formatDate(policeRecord.getCreationDate(), "yyyy-MM-dd")));
+		}
+
+		/*try {
+
+
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -848,7 +850,7 @@ public class RiskExportExcelDataController {
 			dataListReturn.setResult("第" + index + "条数据错误,导入失败!");
 			dataListReturn.setStatus(true);
 			return new ResponseEntity<DataListReturn>(dataListReturn, HttpStatus.OK);
-		}
+		}*/
 
 		// 添加到数据库
 		DataListReturn dataListReturn = new DataListReturn();

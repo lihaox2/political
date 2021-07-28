@@ -6,11 +6,10 @@ import com.bayee.political.domain.RiskCaseTestRecord;
 import com.bayee.political.domain.User;
 import com.bayee.political.pojo.dto.CaseLawEnforcementDetailsDO;
 import com.bayee.political.pojo.dto.CaseLawEnforcementPageDO;
-import com.bayee.political.pojo.json.*;
+import com.bayee.political.json.*;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -149,6 +148,10 @@ public class CaseController {
 
     @PostMapping("/add/ability")
     public ResponseEntity<?> addCaseAbility(@RequestBody CaseAbilitySaveParam caseAbilitySaveParam) {
+        if (!userService.checkPoliceExists(caseAbilitySaveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
         RiskCaseAbilityRecord record = new RiskCaseAbilityRecord();
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
@@ -177,6 +180,10 @@ public class CaseController {
     @PostMapping("/update/ability/{id}")
     public ResponseEntity<?> updateCaseAbility(@PathVariable("id") Integer id,
                                                @RequestBody CaseAbilitySaveParam caseAbilitySaveParam) {
+        if (!userService.checkPoliceExists(caseAbilitySaveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
         RiskCaseAbilityRecord record = riskCaseAbilityRecordService.selectByPrimaryKey(id);
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
@@ -278,6 +285,10 @@ public class CaseController {
 
     @PostMapping("/add/law/enforcement")
     public ResponseEntity<?> addCaseLawEnforcement(@RequestBody CaseLawEnforcementSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
         RiskCaseLawEnforcementRecord record = new RiskCaseLawEnforcementRecord();
 
         record.setDeptName(saveParam.getDeptName());
@@ -299,6 +310,10 @@ public class CaseController {
     @PostMapping("/update/law/enforcement/{id}")
     public ResponseEntity<?> updateCaseLawEnforcement(@PathVariable("id") Integer id,
                                                       @RequestBody CaseLawEnforcementSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
         RiskCaseLawEnforcementRecord record = riskCaseLawEnforcementRecordService.selectByPrimaryKey(id);
         record.setDeptName(saveParam.getDeptName());
         record.setCaseCode(saveParam.getCaseCode());
@@ -391,6 +406,10 @@ public class CaseController {
 
     @PostMapping("/add/test")
     public ResponseEntity<?> addCaseTest(@RequestBody CaseTestSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
         String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
         RiskCaseTestRecord record = new RiskCaseTestRecord();
@@ -414,6 +433,10 @@ public class CaseController {
     @PostMapping("/update/test/{id}")
     public ResponseEntity<?> updateCaseTest(@PathVariable("id") Integer id,
                                             @RequestBody CaseTestSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
         String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         RiskCaseTestRecord oldRecord = riskCaseTestRecordService.selectByPrimaryKey(id);
         oldRecord.setDeductionScore(saveParam.getScore() >= 60 ? 0d : 2d);

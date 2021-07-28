@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.bayee.political.domain.RiskRecordVerify;
 import com.bayee.political.domain.RiskRecordVerifyType;
 import com.bayee.political.domain.User;
-import com.bayee.political.pojo.json.*;
+import com.bayee.political.json.*;
 import com.bayee.political.service.RiskRecordVerifyService;
 import com.bayee.political.service.RiskRecordVerifyTypeService;
 import com.bayee.political.service.UserService;

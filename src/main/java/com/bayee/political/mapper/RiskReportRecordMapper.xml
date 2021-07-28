@@ -289,41 +289,39 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
 </select>
 <!-- 警员风险列表总数 -->
 <select id="riskPageCount" parameterType="com.bayee.political.domain.RiskReportRecord" resultType="Integer">
-  select count(*) from 
-(select a.*,b.name,b.head_image as headImage,
-c.name as departmentName,d.position_name as positionName,
-g.total_num as currentTotalNum,
-round(ifnull((g.total_num-e.total_num)/e.total_num*100,0),2) as riskRate,
-e.total_num as lastTotalNum,f.alarmTypes
-from (select police_id,sum(total_num) as total_num,sum(conduct_num) as conduct_num, 
-sum(handling_case_num) as handling_case_num, sum(duty_num) as duty_num, 
-sum(train_num) as train_num, sum(social_contact_num) as social_contact_num, 
-sum(amily_evaluation_num) as amily_evaluation_num, sum(drink_num) as drink_num,
-sum(study_num) as study_num,sum(health_num) as health_num,sum(work_num) as work_num
-from risk_report_record where DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime}
-and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime} 
-GROUP BY police_id limit #{num}) a
-left join user b on b.police_id=a.police_id
-left join department c on c.id=b.department_id
-left join police_position d on d.id=b.position_id
-left join (select * from risk_report_record 
-where DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) g on g.police_id=a.police_id
-left join (select * from risk_report_record 
-where DATE_FORMAT(creation_date, '%Y-%m')=#{lastDateTime}) e on e.police_id=a.police_id
-left join
-(select GROUP_CONCAT(alarm_type) as alarmTypes,police_id from(SELECT distinct police_id,alarm_type FROM risk_alarm 
-where DATE_FORMAT(creation_date,'%Y-%m')=#{dateTime}) as a
-GROUP BY police_id) f on f.police_id=a.police_id
-where 1=1
-    <!-- <if test="alarmType != null and alarmType !=''">
-	    and FIND_IN_SET(#{alarmType},f.alarmTypes)>0
-	</if> -->
-    <if test="keyWords != null and keyWords !=''">
-	    and (a.police_id like '%${keyWords}%' or b.name like '%${keyWords}%')
-	</if>
-    <if test="deptId != null and deptId != ''">
-      and c.id = #{deptId}
-    </if>) as t
+  select count(1)  from (
+  select a.*,b.name,b.head_image as headImage,
+  c.name as departmentName,d.position_name as positionName,
+  (select total_num from risk_report_record
+  where DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime} and police_id = a.police_id limit 1) as currentTotalNum,
+  (select total_num from risk_report_record
+  where DATE_FORMAT(creation_date, '%Y-%m')=#{lastDateTime} and police_id = a.police_id limit 1) as lastTotalNum,
+  f.alarmTypes
+  from (select police_id,sum(total_num) as total_num,sum(conduct_num) as conduct_num,
+  round(sum(handling_case_num),2) as handling_case_num, sum(duty_num) as duty_num,
+  sum(train_num) as train_num, sum(social_contact_num) as social_contact_num,
+  sum(amily_evaluation_num) as amily_evaluation_num, sum(drink_num) as drink_num,
+  sum(study_num) as study_num,sum(health_num) as health_num,sum(work_num) as work_num
+  from risk_report_record where DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime}
+  and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+  GROUP BY police_id order by ${orderName} desc limit #{num}) a
+  left join user b on b.police_id=a.police_id
+  left join department c on c.id=b.department_id
+  left join police_position d on d.id=b.position_id
+  left join
+  (select GROUP_CONCAT(alarm_type) as alarmTypes,police_id from(SELECT distinct police_id,alarm_type FROM risk_alarm
+  where DATE_FORMAT(creation_date,'%Y-%m')=#{dateTime}) as a
+  GROUP BY police_id) f on f.police_id=a.police_id
+  where 1=1
+  <!--  <if test="alarmType != null and alarmType !=''">
+       and FIND_IN_SET(#{alarmType},f.alarmTypes)>0
+   </if> -->
+  <if test="keyWords != null and keyWords !=''">
+    and (a.police_id like '%${keyWords}%' or b.name like '%${keyWords}%')
+  </if>
+  <if test="deptId != null and deptId != ''">
+    and c.id = #{deptId}
+  </if>) z
 </select>
   <!-- 警员风险雷达图 -->
 <select id="riskChartList" parameterType="com.bayee.political.domain.ScreenDoubeChart" resultMap="ScreenDoubeChartMap">

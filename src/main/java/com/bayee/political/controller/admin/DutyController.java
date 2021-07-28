@@ -1,12 +1,11 @@
 package com.bayee.political.controller.admin;
 
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
-import com.bayee.political.domain.User;
 import com.bayee.political.pojo.dto.DutyDetailsDO;
 import com.bayee.political.pojo.dto.DutyPageDO;
-import com.bayee.political.pojo.json.DutyDetailsResult;
-import com.bayee.political.pojo.json.DutyPageResult;
-import com.bayee.political.pojo.json.DutySaveParam;
+import com.bayee.political.json.DutyDetailsResult;
+import com.bayee.political.json.DutyPageResult;
+import com.bayee.political.json.DutySaveParam;
 import com.bayee.political.service.RiskDutyDealPoliceRecordService;
 import com.bayee.political.service.TotalRiskDetailsService;
 import com.bayee.political.service.UserService;
@@ -18,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -81,6 +78,10 @@ public class DutyController {
 
     @PostMapping("/add/duty")
     public ResponseEntity<?> addDuty(@RequestBody DutySaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
         RiskDutyDealPoliceRecord record = new RiskDutyDealPoliceRecord();
         record.setInformationId(saveParam.getInformationId());
         record.setErrorId(saveParam.getErrorId());
@@ -103,6 +104,10 @@ public class DutyController {
 
     @PostMapping("/update/duty/{id}")
     public ResponseEntity<?> updateDuty(@PathVariable("id") Integer id,@RequestBody DutySaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
         RiskDutyDealPoliceRecord record = riskDutyDealPoliceRecordService.selectByPrimaryKey(id);
         record.setInformationId(saveParam.getInformationId());
         record.setErrorId(saveParam.getErrorId());

@@ -1,8 +1,6 @@
 package com.bayee.political.controller.admin;
 
-import com.bayee.political.mapper.TrainFirearmAchievementMapper;
-import com.bayee.political.mapper.TrainPhysicalAchievementMapper;
-import com.bayee.political.pojo.json.*;
+import com.bayee.political.json.*;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;

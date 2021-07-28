@@ -287,7 +287,7 @@
   </update>
   <!-- 警员健康风险指数查询 -->
 <select id="riskHealthIndexItem" parameterType="com.bayee.political.domain.RiskHealth" resultMap="BaseResultMap">
-select a.*,b.name as bmiName,c.major_diseases_describe,
+select a.*,(case when a.bmi is not null then b.name else '' end) as bmiName,c.major_diseases_describe,
 c.heart_describe,c.tumor_antigen_describe,c.orthopaedics_describe
 from risk_health a
 left join risk_health_bmi_standard b on b.id=a.bmi_id

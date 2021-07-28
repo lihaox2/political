@@ -271,4 +271,11 @@ public class UserServiceImpl implements UserService {
 		return userMapper.findUserByDeptId(deptId);
 	}
 
+	@Override
+	public boolean checkPoliceExists(String policeId) {
+		User user = userMapper.findByPoliceId(policeId);
+
+		return user != null && user.getPoliceId() != null;
+	}
+
 }

@@ -223,7 +223,7 @@
   </update>
 
   <select id="riskRecordVerifyPage" resultType="com.bayee.political.pojo.dto.RiskRecordVerifyPageResultDO"
-          parameterType="com.bayee.political.pojo.json.RiskRecordVerifyPageQueryParam">
+          parameterType="com.bayee.political.json.RiskRecordVerifyPageQueryParam">
     select
       v.id, au.police_id as appealPoliceId, au.`name` as appealName, v.appeal_score as appealScore,
       vt.`name` as appealTypeName, (case v.state when 1 then '待复核' when 2 then '申诉通过' when 3 then
@@ -238,8 +238,11 @@
         and v.state = 1
       </if>
       <if test="param.state == 2">
-        and v.state in (2,3,4)
+        and v.state in (2,3)
       </if>
+    </if>
+    <if test="param.verifyState != null and param.verifyState != ''">
+      and v.state = #{param.verifyState}
     </if>
     <if test="param.appealType != null and param.appealType != ''">
         <if test="param.appealType == 999">
@@ -259,7 +262,7 @@
     limit #{param.pageIndex}, #{param.pageSize}
   </select>
 
-  <select id="countRiskRecordVerifyPage" resultType="Integer" parameterType="com.bayee.political.pojo.json.RiskRecordVerifyPageQueryParam">
+  <select id="countRiskRecordVerifyPage" resultType="Integer" parameterType="com.bayee.political.json.RiskRecordVerifyPageQueryParam">
     select
       count(1)
     from risk_record_verify v
@@ -271,8 +274,11 @@
         and v.state = 1
       </if>
       <if test="param.state == 2">
-        and v.state in (2,3,4)
+        and v.state in (2,3)
       </if>
+    </if>
+    <if test="param.verifyState != null and param.verifyState != ''">
+      and v.state = #{param.verifyState}
     </if>
     <if test="param.appealType != null and param.appealType != ''">
       and vt.id = #{param.appealType}
@@ -308,7 +314,7 @@
       au.`name` as appealPoliceName, au.police_id as appealPoliceId, vt.id as appealType, vt.`name` as appealTypeName, v.appeal_content as appealContent,
       v.appeal_score as appealScore, v.module_id as moduleId, DATE_FORMAT(v.appeal_date, '%Y-%m-%d %H:%i:%s') as appealDate,
       v.is_agree as isAgree, v.check_content as checkContent, v.check_deduction_score as checkDeductionScore,
-      cdu.name as checkDeductionPoliceName, cu.`name` as checkPoliceName, DATE_FORMAT(v.check_date, '%Y-%m-%d %H:%i:%s')
+      cdu.name as checkDeductionPoliceName, cu.`name` as checkPoliceName, DATE_FORMAT(v.check_date, '%Y-%m-%d %H:%i:%s') as checkDate
     from risk_record_verify v
            left join risk_record_verify_type vt on v.type_id = vt.id
            left join user au on au.police_id = v.appeal_police_id

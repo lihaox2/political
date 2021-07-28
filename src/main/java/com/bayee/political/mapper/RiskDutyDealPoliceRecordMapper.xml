@@ -225,10 +225,10 @@
   <!-- 警员接警执勤数据列表查询 -->
 <select id="riskDutyRecordList" parameterType="com.bayee.political.domain.RiskDutyDealPoliceRecord" resultMap="BaseResultMap">
   select
-         a.*,b.name as typeName,a.deduction_score as deductionScore,
+         a.*,itype.name as typeName,a.deduction_score as deductionScore,
         ifnull((select state from risk_record_verify where type_id = 1013 and module_id = a.id), 0) as appealState
   from risk_duty_deal_police_record a
-  left join risk_case_law_enforcement_type b on b.id=a.type
+    left join risk_duty_information_type itype on a.information_id = itype.id
   where a.police_id=#{policeId,jdbcType=VARCHAR}
   <if test="timeType == 1">
     and DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}

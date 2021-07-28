@@ -1,15 +1,9 @@
 package com.bayee.political.controller.admin;
 
 import com.bayee.political.domain.*;
-import com.bayee.political.mapper.RiskCaseLawEnforcementTypeMapper;
-import com.bayee.political.mapper.TrainFirearmAchievementMapper;
-import com.bayee.political.mapper.TrainPhysicalAchievementDetailsMapper;
-import com.bayee.political.pojo.json.*;
+import com.bayee.political.json.*;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DataListReturn;
-import com.bayee.political.utils.DateUtils;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,14 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;

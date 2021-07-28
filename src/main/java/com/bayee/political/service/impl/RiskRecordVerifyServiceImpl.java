@@ -5,7 +5,7 @@ import com.bayee.political.mapper.RiskRecordVerifyMapper;
 import com.bayee.political.pojo.dto.RiskRecordVerifyDetailsDO;
 import com.bayee.political.pojo.dto.RiskRecordVerifyPageResultDO;
 import com.bayee.political.pojo.dto.RiskRecordVerifyStatisticsDO;
-import com.bayee.political.pojo.json.RiskRecordVerifyPageQueryParam;
+import com.bayee.political.json.RiskRecordVerifyPageQueryParam;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;

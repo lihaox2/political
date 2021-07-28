@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.ServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -69,6 +70,9 @@ public class ReportController {
     RiskSkillService riskSkillService;
 
     SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
+
+//    final String HOST = "http://8.136.146.186:8099";
+    final String HOST = "http://41.190.128.250:8080";
 
     @GetMapping("/create/policeRisk/report")
     public ResponseEntity<?> createPoliceRiskReport(@RequestParam("policeId") String policeId,
@@ -146,6 +150,16 @@ public class ReportController {
                     train.getIndexNum() + socialContact.getIndexNum() + familyEvaluation.getIndexNum() + health.getIndexNum();
 
             Map<String,String> map = new HashMap<>();
+            String dateUnit = "月";
+            String inputDate = DateUtils.formatDate(reportRecord.getCreationDate(), "yyyy年MM月");
+            if (timeType == 1) {
+                dateUnit = "年";
+                inputDate = DateUtils.formatDate(DateUtils.parseDate(lastMonthTime, "yyyy-MM"), "yyyy年MM月")
+                        + "~" + DateUtils.formatDate(reportRecord.getCreationDate(), "yyyy年MM月");
+            }
+            map.put("dateUnit", dateUnit);
+            map.put("inputDate", inputDate);
+
             map.put("policeName", user.getName());
             map.put("deptName", user.getDepartmentName());
             map.put("position", user.getPositionName());
@@ -162,7 +176,6 @@ public class ReportController {
             map.put("familyAssessScore", familyEvaluation.getIndexNum() == null ? "0" : familyEvaluation.getIndexNum().toString());
             map.put("healthScore", health.getIndexNum() == null ? "0" : health.getIndexNum().toString());
 
-            map.put("inputDate", DateUtils.formatDate(reportRecord.getCreationDate(), "yyyy年MM月"));
             map.put("reportCreateDate", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日")));
             map.put("bureauRuleScore",  conduct.getBureauRuleScore() == null ? "0" : conduct.getBureauRuleScore().toString());
             map.put("visitScore", conduct.getVisitScore() == null ? "0" : conduct.getVisitScore().toString());
@@ -182,10 +195,10 @@ public class ReportController {
             map.put("heartFlag", health.getHeartNum() == null ? "0" : health.getHeartNum().toString());
             map.put("tumorAntigenFlag", health.getTumorAntigenNum() == null ? "0" : health.getTumorAntigenNum().toString());
             map.put("orthopaedicsFlag", health.getOrthopaedicsNum() == null ? "0" : health.getOrthopaedicsNum().toString());
-            map.put("content","1) 描述1");
+            map.put("content","");
 
             Map<String,String> map2 = new HashMap();
-            map2.put("headImg","http://8.136.146.186:8099/static"+user.getHeadImage());
+            map2.put("headImg",HOST + "/static"+user.getHeadImage());
 
             Map<String, Object> data = new HashMap<>();
             data.put("datemap",map);
@@ -211,8 +224,7 @@ public class ReportController {
 //        String fontStylePath = "C:\\Windows\\Fonts\\simfang.ttf";
         String fontStylePath = "/usr/share/font/simfang.ttf";
 
-//        String returnPath = "http://8.136.146.186:8099/static/policeRiskReport/"+fileName+".pdf";
-        String returnPath = "http://41.190.128.250:8080/static/policeRiskReport/"+fileName+".pdf";
+        String returnPath = HOST + "/static/policeRiskReport/"+fileName+".pdf";
 //        String returnPath = newPDFPath;
 
         PdfReader reader;
@@ -221,9 +233,6 @@ public class ReportController {
         PdfStamper stamper;
         try {
             BaseFont bf = BaseFont.createFont(fontStylePath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            /*Font fontChinese = new Font(bf, 5, Font.NORMAL);
-            Font font = new Font(bf, 32);
-            font.setColor(BaseColor.RED);*/
 
             // 输出流
             out = new FileOutputStream(newPDFPath);
@@ -280,6 +289,7 @@ public class ReportController {
 
     public static void main(String[] args) {
         Map<String,String> map = new HashMap();
+        map.put("dateUnit", "年");
         map.put("policeName", "吴静静");
         map.put("deptName", "南太湖新区分局");
         map.put("position", "局领导");
@@ -294,7 +304,7 @@ public class ReportController {
         map.put("socialContactScore","0");
         map.put("familyAssessScore","0");
         map.put("healthScore","2.25");
-        map.put("inputDate","2021年05月");
+        map.put("inputDate","2020年4月 ~ 2021年05月");
         map.put("reportCreateDate","2021年05月18日");
         map.put("bureauRuleScore","2.5");
         map.put("visitScore","12");
@@ -325,9 +335,9 @@ public class ReportController {
 
 
         // 模板路径
-        String templatePath = "C:\\Users\\颜世旺\\Desktop\\警员风险月度报告_template_V1.pdf";
+        String templatePath = "C:\\Users\\Lenovo\\Desktop\\police_risk_template_V2.pdf";
         // 生成的新文件路径
-        String newPDFPath = "C:\\Users\\颜世旺\\Desktop\\警员风险月度报告_test.pdf";
+        String newPDFPath = "C:\\Users\\Lenovo\\Desktop\\警员风险月度报告_test.pdf";
 
         PdfReader reader;
         FileOutputStream out;

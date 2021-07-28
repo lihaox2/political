@@ -3,7 +3,7 @@ package com.bayee.political.controller.admin;
 import com.bayee.political.domain.*;
 import com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO;
 import com.bayee.political.pojo.dto.ConductBureauRuleTypeDetailsDO;
-import com.bayee.political.pojo.json.*;
+import com.bayee.political.json.*;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
@@ -95,6 +95,10 @@ public class ConductController {
 
     @PostMapping("/add/bureau/rule")
     public ResponseEntity<?> addConductBureauRule(@RequestBody ConductBureauRuleSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
         RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(saveParam.getTypeId());
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         RiskConductBureauRuleRecord record = new RiskConductBureauRuleRecord();
@@ -119,6 +123,10 @@ public class ConductController {
     @PostMapping("/update/bureau/rule/{id}")
     public ResponseEntity<?> updateConductBureauRule(@PathVariable("id") Integer id,
                                                      @RequestBody ConductBureauRuleSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
         RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductBureauRuleRecord record = riskConductBureauRuleRecordService.selectByPrimaryKey(id);
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -220,6 +228,10 @@ public class ConductController {
 
     @PostMapping("/add/visit")
     public ResponseEntity<?> addConductVisit(@RequestBody ConductVisitSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
 //        RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductVisitRecord record = new RiskConductVisitRecord();
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -243,6 +255,10 @@ public class ConductController {
     @PostMapping("/update/visit/{id}")
     public ResponseEntity<?> updateConductVisit(@PathVariable("id") Integer id,
                                                 @RequestBody ConductVisitSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
 //        RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductVisitRecord record = riskConductVisitRecordService.selectByPrimaryKey(id);
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));

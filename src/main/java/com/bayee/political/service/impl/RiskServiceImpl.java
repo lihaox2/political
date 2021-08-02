@@ -5,8 +5,9 @@ import java.util.List;
 
 import com.bayee.political.domain.*;
 import com.bayee.political.mapper.*;
-import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
+import com.bayee.political.pojo.dto.*;
 
+import com.bayee.political.service.RiskConductVisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -114,6 +115,9 @@ public class RiskServiceImpl implements RiskService {
 
 	@Autowired
 	RiskConductTrafficViolationRecordMapper riskConductTrafficViolationRecordMapper;
+
+	@Autowired
+	RiskConductVisitMapper riskConductVisitMapper;
 	
 	@Override
 	public int insertSelective(RiskHealth record) {
@@ -465,5 +469,40 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public List<String> getAllByYear(String year) {
 		return riskHealthMapper.getAllByYear(year);
+	}
+
+	@Override
+	public RiskCaseLawEnforcementReportDO lawEnforcementReportDOQuery(String policeId, String dateTime,
+																	  String lastMonthTime, Integer timeType) {
+		return riskCaseLawEnforcementMapper.lawEnforcementReportDOQuery(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	@Override
+	public RiskConductVisitReportDO visitReportDOQuery(String policeId, String dateTime,
+													   String lastMonthTime, Integer timeType) {
+		return riskConductVisitMapper.visitReportDOQuery(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	@Override
+	public RiskConductBureauRuleReportDO bureauRuleReportDOQuery(String policeId, String dateTime,
+																 String lastMonthTime, Integer timeType) {
+		return riskConductBureauRuleMapper.bureauRuleReportDOQuery(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	@Override
+	public RiskConductTrafficViolationReportDO trafficViolationReportDOQuery(String policeId, String dateTime,
+																			 String lastMonthTime, Integer timeType) {
+		return riskConductTrafficViolationRecordMapper.trafficViolationReportDOQuery(policeId, dateTime,
+				lastMonthTime, timeType);
+	}
+
+	@Override
+	public RiskDutyReportDO dutyReportDOQuery(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
+		return riskDutyMapper.dutyReportDOQuery(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	@Override
+	public RiskHealthReportDO healthReportDOQuery(String policeId) {
+		return riskHealthMapper.healthReportDOQuery(policeId);
 	}
 }

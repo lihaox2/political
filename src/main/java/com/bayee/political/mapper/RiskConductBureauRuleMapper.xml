@@ -161,4 +161,28 @@
     </if>
   </select>
 
+  <select id="bureauRuleReportDOQuery" resultType="com.bayee.political.pojo.dto.RiskConductBureauRuleReportDO">
+    select
+      max(deduction_score) as maxDeductionScore, min(deduction_score) as minDeductionScore,count(1) as totalCount,
+        (select name from risk_conduct_bureau_rule_type where id = (
+        select parent_id from risk_conduct_bureau_rule_type where id = (
+          select parent_id from risk_conduct_bureau_rule_type where id = (
+            select type from risk_conduct_bureau_rule_record where police_id = #{policeId}
+              <if test="timeType == 1">
+                and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+              </if>
+              <if test="timeType == 2">
+                and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+              </if>
+            group by type order by count(1) desc limit 1)))
+      ) typeName
+    from risk_conduct_bureau_rule_record where police_id = #{policeId}
+    <if test="timeType == 1">
+      and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+    </if>
+  </select>
+
 </mapper>

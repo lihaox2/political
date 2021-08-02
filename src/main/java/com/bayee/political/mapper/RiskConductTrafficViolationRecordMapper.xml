@@ -148,4 +148,16 @@
     where police_id=#{policeId} and DATE_FORMAT(creation_date, '%Y-%m')=DATE_FORMAT(#{date}, '%Y-%m')
   </select>
 
+  <select id="trafficViolationReportDOQuery" resultType="com.bayee.political.pojo.dto.RiskConductTrafficViolationReportDO">
+    select
+      count(1) as totalCount, max(deduction_score) as maxDeductionScore
+    from risk_conduct_traffic_violation_record where police_id = #{policeId}
+    <if test="timeType == 1">
+      and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+    </if>
+  </select>
+
 </mapper>

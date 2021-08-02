@@ -163,4 +163,29 @@ order by a.year_month
     order by id desc limit 1
   </select>
 
+  <select id="lawEnforcementReportDOQuery" resultType="com.bayee.political.pojo.dto.RiskCaseLawEnforcementReportDO">
+    select
+        MAX(a.deduction_score) as maxDeductionScore, min(a.deduction_score) as minDeductionScore, count(1) as totalCount,
+          (select name from risk_case_law_enforcement_type et where id = (
+          select parent_id from risk_case_law_enforcement_type where id = (
+          select type from risk_case_law_enforcement_record a
+          where police_id=#{policeId}
+          <if test="timeType == 1">
+            and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+          </if>
+          <if test="timeType == 2">
+            and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+          </if>
+          group by a.type order by count(a.type) desc limit 1))
+        ) as typeName
+    from risk_case_law_enforcement_record a
+    where police_id=#{policeId}
+      <if test="timeType == 1">
+        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+      </if>
+      <if test="timeType == 2">
+        and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+      </if>
+  </select>
+
 </mapper>

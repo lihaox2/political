@@ -49,4 +49,12 @@ public interface RiskHealthRecordMapper {
      */
     Integer countAll();
 
+    /**
+     * 通过警号和年份查匈奴
+     * @param policeId
+     * @param year
+     * @return
+     */
+    RiskHealthRecord findByPoliceIdAndYear(@Param("policeId") String policeId, @Param("year") String year);
+
 }

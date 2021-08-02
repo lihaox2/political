@@ -92,4 +92,9 @@ public class RiskHealthRecordServiceImpl implements RiskHealthRecordService{
 		return riskHealthRecordMapper.countAll();
 	}
 
+	@Override
+	public RiskHealthRecord findByPoliceIdAndYear(String policeId, String year) {
+		return riskHealthRecordMapper.findByPoliceIdAndYear(policeId, year);
+	}
+
 }

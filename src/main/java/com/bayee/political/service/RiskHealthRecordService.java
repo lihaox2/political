@@ -45,4 +45,12 @@ public interface RiskHealthRecordService {
      */
     Integer countAll();
 
+    /**
+     * 通过警号和年份查匈奴
+     * @param policeId
+     * @param year
+     * @return
+     */
+    RiskHealthRecord findByPoliceIdAndYear(String policeId, String year);
+
 }

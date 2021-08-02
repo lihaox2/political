@@ -74,7 +74,7 @@ public class ReportController {
 //    final String HOST = "http://8.136.146.186:8099";
     final String HOST = "http://41.190.128.250:8080";
 
-    @GetMapping("/create/policeRisk/report")
+//    @GetMapping("/create/policeRisk/report")
     public ResponseEntity<?> createPoliceRiskReport(@RequestParam("policeId") String policeId,
                                                     @RequestParam("timeType") Integer timeType,
                                                     @RequestParam("dateTime") String dateTime) throws ParseException {
@@ -155,7 +155,7 @@ public class ReportController {
             if (timeType == 1) {
                 dateUnit = "年";
                 inputDate = DateUtils.formatDate(DateUtils.parseDate(lastMonthTime, "yyyy-MM"), "yyyy年MM月")
-                        + "~" + DateUtils.formatDate(reportRecord.getCreationDate(), "yyyy年MM月");
+                        + "~" + DateUtils.formatDate(DateUtils.parseDate(dateTime, "yyyy-MM"), "yyyy年MM月");
             }
             map.put("dateUnit", dateUnit);
             map.put("inputDate", inputDate);

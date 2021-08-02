@@ -123,7 +123,8 @@
      <!-- 警员接警执勤指数查询 -->
 <select id="riskDutyIndexItem" parameterType="com.bayee.political.domain.RiskDuty" resultMap="BaseResultMap">
   select police_id, sum(index_num) as index_num,
-  sum(deduction_score_count) as deduction_score_count, sum(total_deduction_score) as total_deduction_score from risk_duty
+    sum(deduction_score_count) as deduction_score_count, sum(total_deduction_score) as total_deduction_score
+  from risk_duty
   where police_id=#{policeId,jdbcType=VARCHAR}
   <if test="timeType == 1">
     and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -163,5 +164,18 @@ order by a.year_month
       #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
     </foreach>
   </insert>
+
+  <select id="dutyReportDOQuery" resultType="com.bayee.political.pojo.dto.RiskDutyReportDO">
+    select
+        max(deduction_score) as maxDeductionScore, min(deduction_score) as minDeductionScore
+    from risk_duty_deal_police_record
+    where police_id = #{policeId}
+    <if test="timeType == 1">
+      and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+    </if>
+  </select>
 
 </mapper>

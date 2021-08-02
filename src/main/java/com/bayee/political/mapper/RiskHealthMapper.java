@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.pojo.dto.RiskHealthReportDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskHealth;
@@ -32,4 +33,11 @@ public interface RiskHealthMapper {
 
 	// 警员最新一条健康风险指数查询
 	RiskHealth riskHealthIndexNewestItem(@Param("policeId") String policeId);
+
+	/**
+	 * 健康风险-报表查询
+	 * @param policeId
+	 * @return
+	 */
+	RiskHealthReportDO healthReportDOQuery(String policeId);
 }

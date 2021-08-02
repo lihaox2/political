@@ -3,7 +3,7 @@ package com.bayee.political.service;
 import java.util.List;
 
 import com.bayee.political.domain.*;
-import com.bayee.political.pojo.dto.RiskConductBureauRoleResultDTO;
+import com.bayee.political.pojo.dto.*;
 import org.springframework.stereotype.Service;
 
 /**
@@ -189,5 +189,66 @@ public interface RiskService {
 	Integer insertRiskReportRecord(RiskReportRecord record);
 	
 	List<String> getAllByYear(String year);
+
+	/**
+	 * 执法能力-报表查询
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastMonthTime
+	 * @param timeType
+	 * @return
+	 */
+	RiskCaseLawEnforcementReportDO lawEnforcementReportDOQuery(String policeId, String dateTime, String lastMonthTime,
+															   Integer timeType);
+
+	/**
+	 * 信访投诉-报表查询
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastMonthTime
+	 * @param timeType
+	 * @return
+	 */
+	RiskConductVisitReportDO visitReportDOQuery(String policeId, String dateTime, String lastMonthTime,
+												Integer timeType);
+
+	/**
+	 * 局规记分-报表查询
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastMonthTime
+	 * @param timeType
+	 * @return
+	 */
+	RiskConductBureauRuleReportDO bureauRuleReportDOQuery(String policeId, String dateTime, String lastMonthTime,
+														  Integer timeType);
+
+	/**
+	 * 交通违章-报表查询
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastMonthTime
+	 * @param timeType
+	 * @return
+	 */
+	RiskConductTrafficViolationReportDO trafficViolationReportDOQuery(String policeId, String dateTime,
+																	  String lastMonthTime, Integer timeType);
+
+	/**
+	 * 接警执勤-报表查询
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastMonthTime
+	 * @param timeType
+	 * @return
+	 */
+	RiskDutyReportDO dutyReportDOQuery(String policeId, String dateTime, String lastMonthTime, Integer timeType);
+
+	/**
+	 * 健康风险-报表查询
+	 * @param policeId
+	 * @return
+	 */
+	RiskHealthReportDO healthReportDOQuery(String policeId);
 
 }

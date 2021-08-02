@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.pojo.dto.RiskDutyReportDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskDuty;
@@ -42,4 +43,14 @@ public interface RiskDutyMapper {
 	 */
 	void insertRiskDutys(List<RiskDuty> riskDutyList);
 
+	/**
+	 * 接警执勤-报表查询
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastMonthTime
+	 * @param timeType
+	 * @return
+	 */
+	RiskDutyReportDO dutyReportDOQuery(@Param("policeId") String policeId, @Param("dateTime") String dateTime,
+									   @Param("lastMonthTime") String lastMonthTime, @Param("timeType") Integer timeType);
 }

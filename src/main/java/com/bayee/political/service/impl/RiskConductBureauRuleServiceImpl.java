@@ -186,7 +186,8 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
             int deductionCount = 0;
             double deductionScore = 0;
             for (RiskConductVisitRecord record : visitRecordList) {
-                deductionCount++;
+                deductionCount += record.getDeductionScore();
+                /*deductionCount++;
                 if (VisitRecordType.ORDER_INSPECTION.getTypeId().equals(record.getType())) {
                     //责令检查
                     deductionScore += 1;
@@ -241,7 +242,7 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
                 } else if (VisitRecordType.INVESTIGATION_OF_CIVIL_LIABILITY.getTypeId().equals(record.getType())) {
                     //追究民事责任
                     deductionScore += 9;
-                }
+                }*/
             }
             riskConductVisit.setIndexNum(deductionScore);
             riskConductVisit.setDeductionScoreCount(deductionCount);

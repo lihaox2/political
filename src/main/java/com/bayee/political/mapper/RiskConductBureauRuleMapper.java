@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskConductBureauRule;
 import com.bayee.political.domain.ScreenDoubeChart;
+import com.bayee.political.pojo.dto.RiskConductBureauRuleReportDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -45,4 +46,16 @@ public interface RiskConductBureauRuleMapper {
                                                          @Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime,
                                                          @Param("timeType") Integer timeType);
 
+    /**
+     * 局规记分-报表查询
+     * @param policeId
+     * @param dateTime
+     * @param lastMonthTime
+     * @param timeType
+     * @return
+     */
+    RiskConductBureauRuleReportDO bureauRuleReportDOQuery(@Param("policeId") String policeId,
+                                                          @Param("dateTime") String dateTime,
+                                                          @Param("lastMonthTime") String lastMonthTime,
+                                                          @Param("timeType") Integer timeType);
 }

@@ -45,6 +45,10 @@ public class TrainPhysicalAchievement {
 
 	private Integer isSign;
 
+    /**
+     * 是否免测（1.免测，2.正常测试）
+     */
+    private Integer isTestFree;
 	private Date creationDate;
 
 	private Date updateDate;

@@ -1,5 +1,6 @@
 package com.bayee.political.controller.admin;
 
+import cn.hutool.core.util.StrUtil;
 import com.bayee.political.domain.*;
 import com.bayee.political.pojo.dto.*;
 import com.bayee.political.service.*;
@@ -389,11 +390,15 @@ public class RiskReportController {
         } else {
             summary += "，一切正常";
         }
-        summary += "，体重"+riskHealth.getBmiName();
-        if (!"健康".equals(riskHealth.getBmiName())) {
-            summary += "，多锻炼，关爱身体。";
+
+        if (StrUtil.isNotBlank(riskHealth.getBmiName())) {
+            summary += "，体重"+riskHealth.getBmiName();
+            if (!"正常".equals(riskHealth.getBmiName())) {
+                summary += "，多锻炼，关爱身体";
+            }
         }
-        map.put("summary", textParser(summary, 43));
+        summary += "。";
+        map.put("summary", textParser(summary, 48));
         map.put("createDate", DateUtils.formatDate(new Date(), "yyyy年MM月dd日"));
 
         String fileName = policeId+"_"+dateTime+"_riskReport_"+System.currentTimeMillis();
@@ -464,8 +469,13 @@ public class RiskReportController {
             return str;
         }
 
-        for (int i=0; i<Math.ceil(str.length() / fontLength); i++) {
-            result += str.substring((fontLength * i), fontLength * (i + 1)) + "\n";
+        for (int i=0; i<Math.ceil((double)str.length() / fontLength); i++) {
+            int lastIndex = fontLength * (i + 1);
+            if (i+1 == Math.ceil((double)str.length() / fontLength)) {
+                lastIndex = str.length();
+            }
+
+            result += str.substring((fontLength * i), lastIndex) + "\n";
         }
 
         return result;

@@ -12,6 +12,7 @@
     <result column="qr_code" property="qrCode" jdbcType="VARCHAR" />
     <result column="achievement_grade" property="achievementGrade" jdbcType="INTEGER" />
     <result column="is_sign" property="isSign" jdbcType="INTEGER" />
+    <result column="is_test_free" property="isTestFree" jdbcType="INTEGER" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="police_weight" property="policeWeight" jdbcType="DOUBLE" />
@@ -48,8 +49,9 @@
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, police_id, registration_date, achievement_date, train_physical_id, train_group_id, 
-    qr_code,is_sign, creation_date, update_date
+    id, train_physical_id, police_id, registration_date, achievement_date, sign_date, 
+    train_group_id, qr_code, achievement_grade, is_sign, is_test_free, creation_date, 
+    update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -63,36 +65,39 @@
   </delete>
   <!-- 综合体能项目报名新增 -->
   <insert id="trainPhysicalAchievementCreat" keyColumn="id" keyProperty="id" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" useGeneratedKeys="true">
-    insert into train_physical_achievement (police_id, registration_date, 
-      achievement_date,sign_date, train_physical_id, train_group_id, 
-      qr_code,achievement_grade,is_sign, creation_date, update_date
-      )
-    values (#{policeId,jdbcType=VARCHAR}, #{registrationDate,jdbcType=TIMESTAMP}, 
-      #{achievementDate,jdbcType=TIMESTAMP}, #{signDate,jdbcType=TIMESTAMP}, 
-      #{trainPhysicalId,jdbcType=INTEGER}, #{trainGroupId,jdbcType=INTEGER}, 
-      #{qrCode,jdbcType=VARCHAR},#{achievementGrade,jdbcType=INTEGER},#{isSign,jdbcType=INTEGER}, 
-      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
-      )
+    insert into train_physical_achievement (id, train_physical_id, police_id, 
+      registration_date, achievement_date, 
+      sign_date, train_group_id, qr_code, 
+      achievement_grade, is_sign, is_test_free, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{trainPhysicalId,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
+      #{registrationDate,jdbcType=TIMESTAMP}, #{achievementDate,jdbcType=TIMESTAMP}, 
+      #{signDate,jdbcType=TIMESTAMP}, #{trainGroupId,jdbcType=INTEGER}, #{qrCode,jdbcType=VARCHAR}, 
+      #{achievementGrade,jdbcType=INTEGER}, #{isSign,jdbcType=INTEGER}, #{isTestFree,jdbcType=INTEGER}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <!-- 训练报名批量新增 -->
   <insert id="trainPhysicalAchievementCreatBatch" keyProperty="id" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" useGeneratedKeys="true">
     insert into train_physical_achievement (police_id, registration_date, 
       achievement_date,sign_date, train_physical_id, train_group_id, 
-      qr_code,achievement_grade,is_sign, creation_date, update_date)
+      qr_code,achievement_grade,is_sign, is_test_free, creation_date, update_date)
       values 
          <foreach collection="list" index="index" item="item" separator=",">
             (#{item.policeId,jdbcType=VARCHAR},#{item.registrationDate,jdbcType=TIMESTAMP},
             #{item.achievementDate,jdbcType=TIMESTAMP},#{item.signDate,jdbcType=TIMESTAMP},
             #{item.trainPhysicalId,jdbcType=INTEGER}, #{item.trainGroupId,jdbcType=INTEGER}, 
             #{item.qrCode,jdbcType=VARCHAR},#{item.achievementGrade,jdbcType=INTEGER},
-            #{item.isSign,jdbcType=INTEGER}, 
-            #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
+            #{item.isSign,jdbcType=INTEGER},  #{item.isTestFree,jdbcType=INTEGER},
+             #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
         </foreach>
     </insert>
   <!-- 综合体能项目报名修改 -->
   <update id="trainPhysicalAchievementUpdate" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" >
     update train_physical_achievement
     <set >
+      <if test="trainPhysicalId != null" >
+        train_physical_id = #{trainPhysicalId,jdbcType=INTEGER},
+      </if>
       <if test="policeId != null" >
         police_id = #{policeId,jdbcType=VARCHAR},
       </if>
@@ -105,9 +110,6 @@
       <if test="signDate != null" >
         sign_date = #{signDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="trainPhysicalId != null" >
-        train_physical_id = #{trainPhysicalId,jdbcType=INTEGER},
-      </if>
       <if test="trainGroupId != null" >
         train_group_id = #{trainGroupId,jdbcType=INTEGER},
       </if>
@@ -119,6 +121,9 @@
       </if>
       <if test="isSign != null" >
         is_sign = #{isSign,jdbcType=INTEGER},
+      </if>
+      <if test="isTestFree != null" >
+        is_test_free = #{isTestFree,jdbcType=INTEGER},
       </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -180,6 +185,9 @@
       <if test="isSign != null" >
         is_sign = #{isSign,jdbcType=INTEGER},
       </if>
+      <if test="isTestFree != null">
+        is_test_free = #{isTestFree},
+      </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -201,6 +209,7 @@
       qr_code = #{qrCode,jdbcType=VARCHAR},
       achievement_grade = #{achievementGrade,jdbcType=INTEGER},
       is_sign = #{isSign,jdbcType=INTEGER},
+      is_test_free = #{isTestFree},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

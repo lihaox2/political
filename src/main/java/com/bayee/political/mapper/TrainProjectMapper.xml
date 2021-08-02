@@ -196,4 +196,9 @@ where b.train_firearm_id = #{trainFirearmId} and b.police_id = #{policeId}
      <select id="trainProjectIdItem" parameterType="com.bayee.political.domain.TrainProject" resultMap="BaseResultMap" >
   select * from train_project where name = #{name} 
   </select>
+
+  <select id="findTrainProjectByType" resultMap="BaseResultMap">
+    select * from train_project where `type` = #{type}
+  </select>
+
 </mapper>

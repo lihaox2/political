@@ -127,4 +127,11 @@ public interface TrainProjectMapper {
 	// 根据项目名查询项目id
 	TrainProject trainProjectIdItem(@Param("name") String name);
 
+	/**
+	 * 根据类型查询训练项目
+	 * @param type 1综合体能 2枪械
+	 * @return
+	 */
+	List<TrainProject> findTrainProjectByType(@Param("type") Integer type);
+
 }

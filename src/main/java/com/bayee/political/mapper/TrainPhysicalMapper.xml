@@ -28,6 +28,7 @@
 		<result column="is_limit" property="isLimit" jdbcType="INTEGER" />
 		<result column="limit_type" property="limitType" jdbcType="INTEGER" />
 		<result column="limit_num" property="limitNum" jdbcType="DOUBLE" />
+		<result column="train_type" property="trainType" jdbcType="INTEGER" />
 		<result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
 		<result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
 	</resultMap>
@@ -136,8 +137,7 @@
 		train_start_date, train_end_date, train_group_ids,
 		sign_up_status,status,scorer_police_id,cover_img,
 		train_img,is_submit,symbol,is_limit,limit_type,limit_num,
-		submit_date,creation_date, update_date, train_content
-		)
+		submit_date,creation_date, update_date, train_content, train_type)
 		values
 		(#{type,jdbcType=INTEGER},#{departmentId,jdbcType=INTEGER},
 		#{name,jdbcType=VARCHAR}, #{place,jdbcType=VARCHAR},
@@ -153,7 +153,8 @@
 		#{submitDate,jdbcType=TIMESTAMP},
 		#{creationDate,jdbcType=TIMESTAMP},
 		#{updateDate,jdbcType=TIMESTAMP},
-		#{trainContent,jdbcType=LONGVARCHAR}
+		#{trainContent,jdbcType=LONGVARCHAR},
+		#{trainType}
 		)
 	</insert>
 	<!-- 综合体能修改 -->
@@ -229,6 +230,9 @@
 			<if test="trainContent != null">
 				train_content = #{trainContent,jdbcType=LONGVARCHAR},
 			</if>
+		    <if test="trainType != null">
+				train_type = #{trainType},
+			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
@@ -301,6 +305,9 @@
 			<if test="trainContent != null">
 				train_content = #{trainContent,jdbcType=LONGVARCHAR},
 			</if>
+			<if test="trainType != null">
+				train_type = #{trainType},
+			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
@@ -326,6 +333,7 @@
 		is_limit = #{isLimit,jdbcType=INTEGER},
 		limit_type = #{limitType,jdbcType=INTEGER},
 		limit_num = #{limitNum,jdbcType=DOUBLE},
+		train_type = #{trainType},
 		submit_date = #{submitDate,jdbcType=TIMESTAMP},
 		creation_date =#{creationDate,jdbcType=TIMESTAMP},
 		update_date =#{updateDate,jdbcType=TIMESTAMP}

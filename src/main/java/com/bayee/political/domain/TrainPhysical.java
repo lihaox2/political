@@ -78,7 +78,12 @@ public class TrainPhysical {
 
 	private Double limitNum;// 限制人数或（比例1-100）
 
-	private Date creationDate;
+	/**
+     * 训练类型(1.全局，2.抽测)
+     */
+    private Integer trainType;
+
+    private Date creationDate;
 
 	private Integer timeChange;
 
@@ -89,6 +94,14 @@ public class TrainPhysical {
 	private Date updateDate;
 
 	private List<CalculationChart> headImageList;
+
+	public Integer getTrainType() {
+		return trainType;
+	}
+
+	public void setTrainType(Integer trainType) {
+		this.trainType = trainType;
+	}
 
 	public Integer getId() {
 		return id;

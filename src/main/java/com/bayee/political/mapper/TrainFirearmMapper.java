@@ -145,4 +145,9 @@ public interface TrainFirearmMapper {
 	Integer countTrainFirearmPage(@Param("date") String date, @Param("trainName") String trainName,
 								  @Param("position") Integer position);
 
+	/**
+	 * 获取枪械训练总数
+	 * @return
+	 */
+	Integer getCount();
 }

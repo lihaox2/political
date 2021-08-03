@@ -1233,4 +1233,40 @@ order by a.is_sign desc,a.project_id asc
                    where achievement_grade = 1 and  police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m'))  as b_count) physical_train
     </select>
 
+    <select id="getParticipantsTotal" resultType="com.bayee.political.json.TrainIsEntryResult">
+        select DISTINCT police_id as policeId,is_entry as isEntry from train_physical_achievement_details
+    </select>
+
+    <select id="trainPhysicalQualifiedRate" resultType="com.bayee.political.json.TrainRankingResult">
+        select a.police_id as policeId,ifnull(sum(a.achievement_grade=2),0)/count(a.id)*100 as qualifiedRate,b.name as policeName,
+        c.name as departmentName
+        from train_physical_achievement_details a
+        LEFT JOIN `user` b on a.police_id=b.police_id
+        LEFT JOIN department c on b.department_id=c.id
+        GROUP BY a.police_id
+    </select>
+
+    <select id="totalQualifiedRate" resultType="com.bayee.political.json.TrainRankingResult">
+        select police_id as policeId,policeName,departmentName,SUM(num)/SUM(total)*100 as qualifiedRate
+        from (
+            (
+                select a.police_id,count(a.id) as total,b.name as policeName,c.name as departmentName
+                ,ifnull(sum(a.achievement_grade=2),0) as num
+                from train_physical_achievement_details a
+                LEFT JOIN `user` b on a.police_id=b.police_id
+                LEFT JOIN department c on b.department_id=c.id
+                GROUP BY a.police_id
+            )
+        UNION ALL
+            (
+                select a.police_id,count(a.id) as total,b.name as policeName,c.name as departmentName
+                ,ifnull(sum(a.achievement_grade>1),0) as num
+                from train_firearm_achievement a
+                LEFT JOIN `user` b on a.police_id=b.police_id
+                LEFT JOIN department c on b.department_id=c.id
+                GROUP BY a.police_id
+            )
+        ) c GROUP BY police_id
+    </select>
+
 </mapper>

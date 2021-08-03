@@ -2,6 +2,8 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.json.TrainIsEntryResult;
+import com.bayee.political.json.TrainRankingResult;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskTrainPhysicalAchievementDetails;
@@ -324,4 +326,21 @@ public interface TrainPhysicalAchievementDetailsMapper {
 	 */
 	Double getPolicePhysicalDeductionScore(@Param("policeId") String policeId,@Param("date") String date);
 
+	/**
+	 * 获取警号及合格情况 并去重
+	 * @return
+	 */
+	List<TrainIsEntryResult> getParticipantsTotal();
+
+	/**
+	 * 综合体能合格率集合
+	 * @return
+	 */
+	List<TrainRankingResult> trainPhysicalQualifiedRate();
+
+	/**
+	 * 总体合格率集合
+	 * @return
+	 */
+	List<TrainRankingResult> totalQualifiedRate();
 }

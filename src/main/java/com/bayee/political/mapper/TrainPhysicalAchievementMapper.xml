@@ -576,4 +576,19 @@ order by a.creation_date desc
         </if>
     </select>
 
+    <select id="getQualifiedRate" resultType="java.lang.Double">
+        select sum(achievement_grade=2)/count(id)*100 as proportion from train_physical_achievement
+    </select>
+
+    <select id="getLineChartData" resultType="com.bayee.political.json.TrainLineChartResult">
+        select MONTH(sign_date) as `name`,ifnull(SUM(achievement_grade=2),0)/count(id) as qualifiedRate,
+        ifnull(SUM(achievement_grade=2),0) as `value`
+        from train_physical_achievement
+        where DATE_SUB(CURDATE(), INTERVAL 6 MONTH) &lt;= date(sign_date)
+        <if test="type!=null and type!=0">
+            and train_physical_id in (select id from train_physical where train_type=2)
+        </if>
+        GROUP BY `name`
+    </select>
+
 </mapper>

@@ -2005,4 +2005,19 @@ order by ifnull(b.bnum/a.anum,0) desc limit 5
 		</if>
 	</select>
 
+	<select id="getTotalAndThisMonthCount" resultType="com.bayee.political.json.TrainCensusResult">
+		select count(id) as total,
+		(SELECT count(id) FROM train_physical WHERE DATE_FORMAT( train_start_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )) as thisMonthCount
+		from train_physical
+	</select>
+
+	<select id="getCountByTrainType" resultType="java.lang.Integer">
+		select count(id) from train_physical
+		<where>
+			<if test="type!=null and type!=0">
+				and train_type=#{type}
+			</if>
+		</where>
+	</select>
+
 </mapper>

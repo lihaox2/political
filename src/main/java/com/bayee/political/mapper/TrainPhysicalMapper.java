@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.json.TrainCensusResult;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -361,5 +362,18 @@ public interface TrainPhysicalMapper {
 	 */
 	Integer countTrainPhysicalPage(@Param("date") String date, @Param("trainName") String trainName,
 								   @Param("position") Integer position);
+
+	/**
+	 * 统计训练总数及本月训练数
+	 * @return
+	 */
+	TrainCensusResult getTotalAndThisMonthCount();
+
+	/**
+	 * 查询综合体能训练总数及抽测数
+	 * @param type
+	 * @return
+	 */
+	Integer getCountByTrainType(@Param("type") Integer type);
 
 }

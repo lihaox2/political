@@ -550,4 +550,21 @@ order by a.creation_date desc
         </if>
     </select>
 
+    <select id="trainFirearmQualifiedRate" resultType="com.bayee.political.json.TrainRankingResult">
+        select a.police_id as policeId,ifnull(sum(a.achievement_grade>1),0)/count(a.id)*100 as qualifiedRate,
+        b.name as policeName,c.name as departmentName
+        from train_firearm_achievement a
+        LEFT JOIN `user` b on a.police_id=b.police_id
+        LEFT JOIN department c on b.department_id=c.id
+        GROUP BY a.police_id
+    </select>
+
+    <select id="getLineChartData" resultType="com.bayee.political.json.TrainLineChartResult">
+        select MONTH(sign_date) as `name`,ifnull(SUM(achievement_grade>1),0)/count(id) as qualifiedRate,
+        ifnull(SUM(achievement_grade>1),0) as `value`
+        from train_firearm_achievement
+        where DATE_SUB(CURDATE(), INTERVAL 6 MONTH) &lt;= date(sign_date)
+        GROUP BY `name`
+    </select>
+
 </mapper>

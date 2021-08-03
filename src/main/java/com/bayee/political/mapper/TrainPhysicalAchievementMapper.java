@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.json.TrainLineChartResult;
 import com.bayee.political.pojo.dto.TrainProjectDO;
 import org.apache.ibatis.annotations.Param;
 
@@ -201,4 +202,16 @@ public interface TrainPhysicalAchievementMapper {
 	 */
 	List<TrainProjectDO> findAllPhysicalTrainProject();
 
+	/**
+	 * 计算合格率
+	 * @return
+	 */
+	double getQualifiedRate();
+
+	/**
+	 * 近6月综合体能及抽测合格情况数据
+	 * @param type
+	 * @return
+	 */
+	List<TrainLineChartResult> getLineChartData(@Param("type") Integer type);
 }

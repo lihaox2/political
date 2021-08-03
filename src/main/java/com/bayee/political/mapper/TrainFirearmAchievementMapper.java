@@ -2,6 +2,8 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.json.TrainLineChartResult;
+import com.bayee.political.json.TrainRankingResult;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskTrainFirearmRecord;
@@ -191,4 +193,15 @@ public interface TrainFirearmAchievementMapper {
 	Integer countTrainFirearmAchievementPage(@Param("firearmId") Integer firearmId, @Param("position") Integer position,
 											 @Param("key") String key,@Param("searchFlag") Integer searchFlag);
 
+	/**
+	 * 枪械合格率集合
+	 * @return
+	 */
+	List<TrainRankingResult> trainFirearmQualifiedRate();
+
+	/**
+	 * 近6月枪械合格情况数据
+	 * @return
+	 */
+	List<TrainLineChartResult> getLineChartData();
 }

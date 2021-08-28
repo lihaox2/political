@@ -5,6 +5,8 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.pojo.dto.DepartmentDO;
+import com.bayee.political.pojo.dto.HolographicDeptListDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.Department;
@@ -59,5 +61,18 @@ public interface DepartmentMapper {
 
 	// 加分型统计分析部门查询
 	List<Department> alarmDepAddItem(@Param("policeId") String policeId, @Param("dateTime") String dateTime);
+
+	/**
+	 * 警员全息首页-部门列表查询
+	 * @param policeId
+	 * @return
+	 */
+	List<HolographicDeptListDO> findHolographicDeptList(@Param("policeId") String policeId);
+
+	/**
+	 * 宣传报道单位排名TOP5
+	 * @return
+	 */
+	List<DepartmentDO> findPublicityCountNum();
 
 }

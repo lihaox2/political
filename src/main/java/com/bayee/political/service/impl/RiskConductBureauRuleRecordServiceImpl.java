@@ -101,4 +101,12 @@ public class RiskConductBureauRuleRecordServiceImpl implements RiskConductBureau
 		return riskConductBureauRuleRecordMapper.getConductBureauChart();
 	}
 
+	@Override
+	public List<RiskConductBureauRuleRecord> findConductBureauRuleRecordYearAndMont(String conductBureauRuleRecordYear,
+																					String conductBureauRuleRecordMonth,
+																					String policeId) {
+		return riskConductBureauRuleRecordMapper.findConductBureauRuleRecordYearAndMonth(conductBureauRuleRecordYear,
+				conductBureauRuleRecordMonth, policeId);
+	}
+
 }

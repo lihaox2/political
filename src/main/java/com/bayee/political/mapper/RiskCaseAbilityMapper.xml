@@ -209,4 +209,14 @@ order by a.year_month
     where id = #{id}
   </update>
 
+  <select id="checkPoliceDeductionStatus" resultType="Integer">
+    select
+        count(1)
+    from risk_case_ability
+    where index_num > 0
+      and police_id = #{policeId}
+      and DATE_FORMAT(creation_date, '%Y-%m') >= #{beginDate}
+      and DATE_FORMAT(creation_date, '%Y-%m') &lt;= #{endDate}
+  </select>
+
 </mapper>

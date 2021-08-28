@@ -66,4 +66,16 @@ public interface RiskCaseAbilityRecordMapper {
      */
     Integer getIdByDateAndPoliceId(@Param("date") String date,@Param("policeId") String policeId, @Param("id") Integer id);
 
+    /**
+     * 根据年份和月份进行查询
+     * @param caseAbilityRecordYear
+     * @param caseAbilityRecordMonth
+     * @param policeId
+     * @return
+     */
+    List<RiskCaseAbilityRecord> findCaseAbilityRecordYearAndMonth(
+            @Param("caseAbilityRecordYear") String caseAbilityRecordYear,
+            @Param("caseAbilityRecordMonth") String caseAbilityRecordMonth,
+            @Param("policeId") String policeId
+    );
 }

@@ -1,7 +1,9 @@
 package com.bayee.political.service.impl;
 
+import com.bayee.political.domain.RiskConductVisitRecord;
 import com.bayee.political.pojo.dto.DutyDetailsDO;
 import com.bayee.political.pojo.dto.DutyPageDO;
+import com.bayee.political.pojo.dto.RiskPoliceDutyResultDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,5 +74,11 @@ public class RiskDutyDealPoliceRecordServiceImpl implements RiskDutyDealPoliceRe
 	@Override
 	public Integer getReplaceErrorCount(String policeId, Integer type) {
 		return riskDutyDealPoliceRecordMapper.getReplaceErrorCount(policeId, type);
+	}
+
+	@Override
+	public List<RiskPoliceDutyResultDO> findDutyRecordYearAndMont(String year,
+																  String month, String policeId) {
+		return riskDutyDealPoliceRecordMapper.findDutyRecordYearAndMont(year, month, policeId);
 	}
 }

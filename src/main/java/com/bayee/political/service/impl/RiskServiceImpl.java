@@ -2,9 +2,12 @@ package com.bayee.political.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.bayee.political.domain.*;
+import com.bayee.political.json.ChartResult;
 import com.bayee.political.mapper.*;
+import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
 import com.bayee.political.pojo.dto.*;
 
 import com.bayee.political.service.RiskConductVisitService;
@@ -118,7 +121,7 @@ public class RiskServiceImpl implements RiskService {
 
 	@Autowired
 	RiskConductVisitMapper riskConductVisitMapper;
-	
+
 	@Override
 	public int insertSelective(RiskHealth record) {
 		return riskHealthMapper.insertSelective(record);
@@ -504,5 +507,34 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public RiskHealthReportDO healthReportDOQuery(String policeId) {
 		return riskHealthMapper.healthReportDOQuery(policeId);
+	}
+
+	@Override
+	public List<Map<String, String>> riskHistoryYearList(String policeId) {
+		return riskReportRecordMapper.riskHistoryYearList(policeId);
+	}
+
+	@Override
+	public List<RiskReportTypeStatisticsDO> lawEnforcementReportTypeDOQuery(String policeId, String dateTime,
+																			String lastMonthTime, Integer timeType) {
+		return riskCaseLawEnforcementTypeMapper.lawEnforcementReportTypeDOQuery(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	@Override
+	public List<RiskReportTypeStatisticsDO> conductVisitReportTypeDOQuery(String policeId, String dateTime,
+																		  String lastMonthTime, Integer timeType) {
+		return riskConductVisitMapper.conductVisitReportTypeDOQuery(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	@Override
+	public List<RiskReportTypeStatisticsDO> conductBureauRuleReportTypeDOQuery(String policeId, String dateTime,
+																			   String lastMonthTime, Integer timeType) {
+		return riskConductBureauRuleRecordMapper.conductBureauRuleReportTypeDOQuery(policeId, dateTime, lastMonthTime, timeType);
+	}
+
+	@Override
+	public List<RiskReportTypeStatisticsDO> dutyReportTypeDOQuery(String policeId, String dateTime,
+																  String lastMonthTime, Integer timeType) {
+		return riskDutyDealPoliceRecordMapper.dutyReportTypeDOQuery(policeId, dateTime, lastMonthTime, timeType);
 	}
 }

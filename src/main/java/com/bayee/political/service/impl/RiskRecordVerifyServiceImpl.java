@@ -108,13 +108,13 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
 
         Integer appealType = verify.getTypeId();
         if (1011 == appealType) {
-            conductBureauRuleDetails(verify.getModuleId(), checkDeductionPoliceId, checkDeductionScore);
+            conductBureauRuleDetails(verify.getModuleId(), checkDeductionPoliceId, checkDeductionScore, appealScore);
         } else if (1012 == appealType) {
-            conductVisitDetails(verify.getModuleId(), checkDeductionPoliceId, checkDeductionScore);
+            conductVisitDetails(verify.getModuleId(), checkDeductionPoliceId, checkDeductionScore, appealScore);
         } else if (1013 == appealType) {
-            riskDutyDealPoliceDetails(verify.getModuleId(), checkDeductionPoliceId, checkDeductionScore);
+            riskDutyDealPoliceDetails(verify.getModuleId(), checkDeductionPoliceId, checkDeductionScore, appealScore);
         } else if (1014 == appealType) {
-            riskCaseLawEnforcementDetails(verify.getModuleId(), checkDeductionPoliceId, checkDeductionScore);
+            riskCaseLawEnforcementDetails(verify.getModuleId(), checkDeductionPoliceId, checkDeductionScore, appealScore);
         }
     }
 
@@ -139,7 +139,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
      * @param checkDeductionPoliceId
      * @param checkDeductionScore
      */
-    public void conductVisitDetails(Integer id, String checkDeductionPoliceId, Double checkDeductionScore) {
+    public void conductVisitDetails(Integer id, String checkDeductionPoliceId, Double checkDeductionScore, Double appealScore) {
         RiskConductVisitRecord visitRecord = riskConductVisitRecordService.selectByPrimaryKey(id);
         if (visitRecord.getPoliceId().equals(checkDeductionPoliceId)) {
             visitRecord.setDeductionScore(checkDeductionScore);
@@ -166,7 +166,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
                     LocalDate.parse(DateUtils.formatDate(newVisitRecord.getCreationDate(), "yyyy-MM-dd")));
 
             visitRecord.setIsEffective(2);
-            visitRecord.setDeductionScore(checkDeductionScore);
+            visitRecord.setDeductionScore(appealScore);
             visitRecord.setUpdateDate(new Date());
             riskConductVisitRecordService.updateByPrimaryKey(visitRecord);
             totalRiskDetailsService.conductRiskDetails(visitRecord.getPoliceId(),
@@ -180,7 +180,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
      * @param checkDeductionPoliceId
      * @param checkDeductionScore
      */
-    public void conductBureauRuleDetails(Integer id, String checkDeductionPoliceId, Double checkDeductionScore) {
+    public void conductBureauRuleDetails(Integer id, String checkDeductionPoliceId, Double checkDeductionScore, Double appealScore) {
         RiskConductBureauRuleRecord bureauRuleRecord = riskConductBureauRuleRecordService.selectByPrimaryKey(id);
         if (checkDeductionPoliceId.equals(bureauRuleRecord.getPoliceId())) {
             bureauRuleRecord.setDeductionScore(checkDeductionScore);
@@ -201,7 +201,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
             newBureauRuleRecord.setType(bureauRuleRecord.getType());
             newBureauRuleRecord.setInputTime(bureauRuleRecord.getInputTime());
             newBureauRuleRecord.setContent(bureauRuleRecord.getContent());
-            newBureauRuleRecord.setDeductionScore(bureauRuleRecord.getDeductionScore());
+            newBureauRuleRecord.setDeductionScore(checkDeductionScore);
             newBureauRuleRecord.setRemarks(bureauRuleRecord.getRemarks());
             newBureauRuleRecord.setCreationDate(bureauRuleRecord.getCreationDate());
             newBureauRuleRecord.setUpdateDate(new Date());
@@ -211,7 +211,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
                     LocalDate.parse(DateUtils.formatDate(newBureauRuleRecord.getCreationDate(), "yyyy-MM-dd")));
 
             bureauRuleRecord.setIsEffective(2);
-            bureauRuleRecord.setDeductionScore(checkDeductionScore);
+            bureauRuleRecord.setDeductionScore(appealScore);
             bureauRuleRecord.setUpdateDate(new Date());
             riskConductBureauRuleRecordService.updateByPrimaryKey(bureauRuleRecord);
             totalRiskDetailsService.conductRiskDetails(bureauRuleRecord.getPoliceId(),
@@ -225,7 +225,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
      * @param checkDeductionPoliceId
      * @param checkDeductionScore
      */
-    public void riskCaseLawEnforcementDetails(Integer id, String checkDeductionPoliceId, Double checkDeductionScore) {
+    public void riskCaseLawEnforcementDetails(Integer id, String checkDeductionPoliceId, Double checkDeductionScore, Double appealScore) {
         RiskCaseLawEnforcementRecord lawEnforcementRecord = riskCaseLawEnforcementRecordService.selectByPrimaryKey(id);
         if (checkDeductionPoliceId.equals(lawEnforcementRecord.getPoliceId())) {
             lawEnforcementRecord.setDeductionScore(checkDeductionScore);
@@ -253,7 +253,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
                     LocalDate.parse(DateUtils.formatDate(newLawEnforcementRecord.getCreationDate(), "yyyy-MM-dd")));
 
             lawEnforcementRecord.setIsEffective(2);
-            lawEnforcementRecord.setDeductionScore(checkDeductionScore);
+            lawEnforcementRecord.setDeductionScore(appealScore);
             lawEnforcementRecord.setUpdateDate(new Date());
             riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(lawEnforcementRecord);
             totalRiskDetailsService.caseRiskDetails(lawEnforcementRecord.getPoliceId(),
@@ -267,7 +267,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
      * @param checkDeductionPoliceId
      * @param checkDeductionScore
      */
-    public void riskDutyDealPoliceDetails(Integer id, String checkDeductionPoliceId, Double checkDeductionScore) {
+    public void riskDutyDealPoliceDetails(Integer id, String checkDeductionPoliceId, Double checkDeductionScore, Double appealScore) {
         RiskDutyDealPoliceRecord dutyDealPoliceRecord = riskDutyDealPoliceRecordService.selectByPrimaryKey(id);
         if (checkDeductionPoliceId.equals(dutyDealPoliceRecord.getPoliceId())) {
             dutyDealPoliceRecord.setDeductionScore(checkDeductionScore);
@@ -299,7 +299,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
                     LocalDate.parse(DateUtils.formatDate(newDutyDealPoliceRecord.getCreationDate(), "yyyy-MM-dd")));
 
             dutyDealPoliceRecord.setIsEffective(2);
-            dutyDealPoliceRecord.setDeductionScore(checkDeductionScore);
+            dutyDealPoliceRecord.setDeductionScore(appealScore);
             dutyDealPoliceRecord.setUpdateDate(new Date());
             totalRiskDetailsService.dutyRiskDetails(dutyDealPoliceRecord.getPoliceId(),
                     LocalDate.parse(DateUtils.formatDate(dutyDealPoliceRecord.getCreationDate(), "yyyy-MM-dd")));

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.PoliceCommentMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.PoliceComment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="create_police_id" property="createPoliceId" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, comment, create_police_id, creation_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from police_comment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from police_comment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.PoliceComment" >
+    insert into police_comment (id, police_id, comment, 
+      create_police_id, creation_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, 
+      #{createPoliceId,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.PoliceComment" >
+    update police_comment
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR},
+      create_police_id = #{createPoliceId,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="findCommentByPoliceId" resultMap="BaseResultMap">
+    select * from police_comment where police_id = #{policeId} order by id desc
+  </select>
+
+  <select id="findNewCommentByPoliceId" resultMap="BaseResultMap">
+    select * from police_comment where police_id = #{policeId} order by id desc limit 1
+  </select>
+
+  <select id="findCommentByPoliceIdAndYearAndMonth" resultMap="BaseResultMap">
+    select
+        *
+    from police_comment
+    where police_id = #{policeId}
+    <if test="year != null and year != ''">
+      and DATE_FORMAT(creation_date, '%Y') = #{year}
+    </if>
+    <if test="month != null and month != ''">
+      and DATE_FORMAT(creation_date, '%m') = #{month}
+    </if>
+  </select>
+
+  <select id="findPoliceCommentByPoliceIdAndDate" resultMap="BaseResultMap">
+    select
+      *
+    from police_comment
+    where police_id = #{policeId}
+    <if test="date != null and date != ''">
+      and DATE_FORMAT(creation_date, '%Y-%m') = #{date}
+    </if>
+  </select>
+
+</mapper>

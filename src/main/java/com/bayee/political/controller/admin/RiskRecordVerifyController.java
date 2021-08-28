@@ -101,6 +101,7 @@ public class RiskRecordVerifyController {
         recordVerify.setCheckDate(new Date());
         recordVerify.setUpdateDate(new Date());
 
+        //数据处理
         riskRecordVerifyService.checkRecord(recordVerify);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }

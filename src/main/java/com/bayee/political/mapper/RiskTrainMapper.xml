@@ -306,12 +306,12 @@ order by a.year_month
     <!-- 警员警务技能统计查询 -->
 <select id="riskTrainStatisticsItem" parameterType="com.bayee.political.domain.RiskTrain" resultMap="BaseResultMap">
 select 
-ifnull(a.anum,0) as physicalNum,
-ifnull(b.bnum,0) as physicalPassNum,
-ifnull(a.anum-ifnull(b.bnum,0),0) as physicalFailNum,
-ifnull(c.cnum,0) as firearmNum,
-ifnull(d.dnum,0) as firearmPassNum,
-ifnull(c.cnum-ifnull(d.dnum,0),0) as firearmFailNum
+  ifnull(a.anum,0) as physicalNum,
+  ifnull(b.bnum,0) as physicalPassNum,
+  ifnull(a.anum-ifnull(b.bnum,0),0) as physicalFailNum,
+  ifnull(c.cnum,0) as firearmNum,
+  ifnull(d.dnum,0) as firearmPassNum,
+  ifnull(c.cnum-ifnull(d.dnum,0),0) as firearmFailNum
 from 
 (select count(*) as anum from train_physical_achievement where police_id=#{policeId,jdbcType=VARCHAR}
 and (select count(1) from train_physical_achievement_details where achievement is not null and police_id=#{policeId,jdbcType=VARCHAR}) >0
@@ -349,7 +349,7 @@ and achievement_grade >1 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) d
   <select id="findRiskTrainByPoliceIdAndDate" resultMap="BaseResultMap">
     select *
     from risk_train
-    where police_id=#{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+    where police_id=#{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m') limit 1
   </select>
 
 </mapper>

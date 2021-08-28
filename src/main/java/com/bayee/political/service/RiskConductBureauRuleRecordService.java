@@ -3,6 +3,7 @@ package com.bayee.political.service;
 import com.bayee.political.domain.RiskConductBureauRuleRecord;
 import com.bayee.political.domain.ScreenChart;
 import com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -61,4 +62,16 @@ public interface RiskConductBureauRuleRecordService {
      */
     List<ScreenChart> getConductBureauChart();
 
+    /**
+     * 根据年份和月份进行查询
+     * @param conductBureauRuleRecordYear
+     * @param conductBureauRuleRecordMonth
+     * @param policeId
+     * @return
+     */
+    List<RiskConductBureauRuleRecord> findConductBureauRuleRecordYearAndMont(
+            @Param("conductBureauRuleRecordYear") String conductBureauRuleRecordYear,
+            @Param("conductBureauRuleRecordMonth") String conductBureauRuleRecordMonth,
+            @Param("policeId") String policeId
+    );
 }

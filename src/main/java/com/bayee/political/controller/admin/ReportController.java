@@ -72,7 +72,7 @@ public class ReportController {
     SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
 
 //    final String HOST = "http://8.136.146.186:8099";
-    final String HOST = "http://41.190.128.250:8080";
+    final static String HOST = "http://41.190.128.250:8080";
 
 //    @GetMapping("/create/policeRisk/report")
     public ResponseEntity<?> createPoliceRiskReport(@RequestParam("policeId") String policeId,
@@ -327,7 +327,7 @@ public class ReportController {
         map.put("content","1) 描述1\n2) 描述2");
 
         Map<String,String> map2 = new HashMap();
-        map2.put("headImg","http://8.136.146.186:8099/static/police/1000966e8cb38-a554-48a9-9ef8-b638ce982132.png");
+        map2.put("headImg",HOST+"/static/police/1000966e8cb38-a554-48a9-9ef8-b638ce982132.png");
 
         Map<String,Object> o=new HashMap();
         o.put("datemap",map);

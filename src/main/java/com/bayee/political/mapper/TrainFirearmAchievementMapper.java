@@ -180,7 +180,9 @@ public interface TrainFirearmAchievementMapper {
 																  @Param("pageSize") Integer pageSize,
 																  @Param("firearmId") Integer firearmId,
 																  @Param("position") Integer position,
-																  @Param("key") String key, @Param("searchFlag") Integer searchFlag);
+																  @Param("key") String key,
+																  @Param("searchFlag") Integer searchFlag,
+																  @Param("deptId") Integer deptId);
 
 	/**
 	 * 统计分页数据条数
@@ -191,7 +193,8 @@ public interface TrainFirearmAchievementMapper {
 	 * @return
 	 */
 	Integer countTrainFirearmAchievementPage(@Param("firearmId") Integer firearmId, @Param("position") Integer position,
-											 @Param("key") String key,@Param("searchFlag") Integer searchFlag);
+											 @Param("key") String key,@Param("searchFlag") Integer searchFlag,
+											 @Param("deptId") Integer deptId);
 
 	/**
 	 * 枪械合格率集合
@@ -204,4 +207,34 @@ public interface TrainFirearmAchievementMapper {
 	 * @return
 	 */
 	List<TrainLineChartResult> getLineChartData();
+
+	/**
+	 * 删除枪械训练成绩
+	 * @param firearmId
+	 */
+	void deleteTrainFirearmAchievementByFirearmId(@Param("firearmId") Integer firearmId);
+
+	/**
+	 * 根据年份和月份进行查询
+	 * @param firearmRecordYear
+	 * @param firearmRecordMonth
+	 * @param policeId
+	 * @return
+	 */
+	List<TrainFirearmAchievement> findFirearmRecordYearAndMonth(
+			@Param("firearmRecordYear") String firearmRecordYear,
+			@Param("firearmRecordMonth") String firearmRecordMonth,
+			@Param("policeId") String policeId
+	);
+
+	/**
+	 * 统计警员平均射击成绩
+	 * @param policeId
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	Integer policeFirearmAchievementAvg(@Param("policeId") String policeId, @Param("beginDate") String beginDate,
+										@Param("endDate") String endDate);
+
 }

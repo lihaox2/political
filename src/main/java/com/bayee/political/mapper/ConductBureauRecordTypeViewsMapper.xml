@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bayee.political.mapper.ConductBureauRecordTypeViewsMapper">
+
+    <select id="findAll" resultType="com.bayee.political.domain.ConductBureauRecordTypeViews">
+        select
+            m.id, m.name, m.parent_id as parentId, m.flag, m.type_level as typeLevel, m.sort
+        from mark_question_type_v as m
+    </select>
+
+</mapper>

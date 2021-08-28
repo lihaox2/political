@@ -179,10 +179,11 @@
   
   <select id="riskCaseLawEnforcementRecordList" resultMap="BaseResultMap">
     select
-        a.id,a.police_id,a.type,a.content,a.input_time,a.creation_date,b.name as typeName,a.deduction_score, a.is_effective,
+        a.id,a.police_id,a.type,a.content,a.input_time,a.creation_date,c.name as typeName,a.deduction_score, a.is_effective,
         ifnull((select state from risk_record_verify where type_id = 1014 and module_id = a.id), 0) as appealState
     from risk_case_law_enforcement_record a
-    left join risk_case_law_enforcement_type b on b.id=a.type
+      left join risk_case_law_enforcement_type b on b.id=a.type
+      LEFT JOIN risk_case_law_enforcement_type c ON b.`parent_id` = c.id
     where a.police_id=#{policeId,jdbcType=VARCHAR}
     <if test="timeType == 1">
       and DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -293,6 +294,30 @@
     from risk_case_law_enforcement_record
     where police_id = #{policeId} and type = #{type}
     group by police_id, type having count(1) >= 2
+  </select>
+
+  <select id="findCaseLawEnforcementRecordYearAndMonth" resultMap="BaseResultMap">
+    select * from risk_case_law_enforcement_record a where 1 = 1
+    <if test="caseLawEnforcementRecordYear != null and caseLawEnforcementRecordYear != ''">
+      and DATE_FORMAT(creation_date,'%Y') = #{caseLawEnforcementRecordYear}
+    </if>
+    <if test="caseLawEnforcementRecordMonth != null and caseLawEnforcementRecordMonth != ''">
+      and DATE_FORMAT(creation_date,'%m') = #{caseLawEnforcementRecordMonth}
+    </if>
+    <if test="policeId != null and policeId != ''">
+      and a.police_id = #{policeId}
+    </if>
+    order by creation_date desc
+  </select>
+
+  <select id="checkPoliceDeductionScoreStatus" resultType="Integer">
+    SELECT
+      COUNT(1)
+    FROM risk_case_law_enforcement_record
+    WHERE is_effective = 1
+      AND police_id = #{policeId}
+      and DATE_FORMAT(creation_date,'%Y-%m') >= #{beginDate}
+      and DATE_FORMAT(creation_date,'%Y-%m') &lt;= #{endDate}
   </select>
 
 </mapper>

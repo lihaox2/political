@@ -28,6 +28,19 @@ public class TrainPhysicalPageResult {
      */
     private Integer notEligibleCount;
 
+    /**
+     * 训练类型（1.全局，2.抽测）
+     */
+    private Integer trainType;
+
+    public Integer getTrainType() {
+        return trainType;
+    }
+
+    public void setTrainType(Integer trainType) {
+        this.trainType = trainType;
+    }
+
     public Integer getId() {
         return id;
     }

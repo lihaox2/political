@@ -23,4 +23,13 @@ public interface RiskCaseAbilityService {
     
     // 执法办案风险指数图例
  	List<ScreenDoubeChart> riskCaseAbilityChart(String policeId);
+
+    /**
+     * 判断警员扣分情况
+     * @param policeId
+     * @param beginDate
+     * @param endDate
+     * @return
+     */
+ 	boolean checkPoliceDeductionStatus(String policeId, String beginDate, String endDate);
 }

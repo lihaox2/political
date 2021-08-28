@@ -13,6 +13,7 @@
     <result column="achievement_grade" property="achievementGrade" jdbcType="INTEGER" />
     <result column="is_sign" property="isSign" jdbcType="INTEGER" />
     <result column="is_test_free" property="isTestFree" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="INTEGER" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="police_weight" property="policeWeight" jdbcType="DOUBLE" />
@@ -50,7 +51,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, train_physical_id, police_id, registration_date, achievement_date, sign_date, 
-    train_group_id, qr_code, achievement_grade, is_sign, is_test_free, creation_date, 
+    train_group_id, qr_code, achievement_grade, is_sign, is_test_free, remark, creation_date,
     update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -68,26 +69,27 @@
     insert into train_physical_achievement (id, train_physical_id, police_id, 
       registration_date, achievement_date, 
       sign_date, train_group_id, qr_code, 
-      achievement_grade, is_sign, is_test_free, 
+      achievement_grade, is_sign, is_test_free, remark,
       creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{trainPhysicalId,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
       #{registrationDate,jdbcType=TIMESTAMP}, #{achievementDate,jdbcType=TIMESTAMP}, 
       #{signDate,jdbcType=TIMESTAMP}, #{trainGroupId,jdbcType=INTEGER}, #{qrCode,jdbcType=VARCHAR}, 
-      #{achievementGrade,jdbcType=INTEGER}, #{isSign,jdbcType=INTEGER}, #{isTestFree,jdbcType=INTEGER}, 
+      #{achievementGrade,jdbcType=INTEGER}, #{isSign,jdbcType=INTEGER}, #{isTestFree,jdbcType=INTEGER},
+      #{remark},
       #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <!-- 训练报名批量新增 -->
   <insert id="trainPhysicalAchievementCreatBatch" keyProperty="id" parameterType="com.bayee.political.domain.TrainPhysicalAchievement" useGeneratedKeys="true">
     insert into train_physical_achievement (police_id, registration_date, 
       achievement_date,sign_date, train_physical_id, train_group_id, 
-      qr_code,achievement_grade,is_sign, is_test_free, creation_date, update_date)
+      qr_code,achievement_grade,is_sign, is_test_free, remark, creation_date, update_date)
       values 
          <foreach collection="list" index="index" item="item" separator=",">
             (#{item.policeId,jdbcType=VARCHAR},#{item.registrationDate,jdbcType=TIMESTAMP},
             #{item.achievementDate,jdbcType=TIMESTAMP},#{item.signDate,jdbcType=TIMESTAMP},
             #{item.trainPhysicalId,jdbcType=INTEGER}, #{item.trainGroupId,jdbcType=INTEGER}, 
             #{item.qrCode,jdbcType=VARCHAR},#{item.achievementGrade,jdbcType=INTEGER},
-            #{item.isSign,jdbcType=INTEGER},  #{item.isTestFree,jdbcType=INTEGER},
+            #{item.isSign,jdbcType=INTEGER},  #{item.isTestFree,jdbcType=INTEGER}, #{remark},
              #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
         </foreach>
     </insert>
@@ -125,6 +127,9 @@
       <if test="isTestFree != null" >
         is_test_free = #{isTestFree,jdbcType=INTEGER},
       </if>
+        <if test="remark != null" >
+            remark = #{remark},
+        </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -188,6 +193,9 @@
       <if test="isTestFree != null">
         is_test_free = #{isTestFree},
       </if>
+        <if test="remark != null" >
+            remark = #{remark},
+        </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -210,6 +218,7 @@
       achievement_grade = #{achievementGrade,jdbcType=INTEGER},
       is_sign = #{isSign,jdbcType=INTEGER},
       is_test_free = #{isTestFree},
+      remark = #{remark},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
@@ -431,7 +440,7 @@ and is_sign = 2
 select count(distinct(police_id)) as count from train_physical_achievement 
 where train_physical_id = #{trainPhysicalId} 
 and is_sign = 2 
-and achievement_grade = 2 
+and achievement_grade = #{grade}
 </select>
 
 <!-- 综合体能单位报名数 -->
@@ -480,7 +489,7 @@ order by a.creation_date desc
 
     <select id="getNotEligibleCount" resultType="Integer">
         select count(1) from (
-         select police_id, count(1) as count from train_physical_achievement
+         select police_id, count(1) as count from train_physical_achievement_details
          where train_physical_id = #{physicalId}
            and is_sign = 2
            and achievement_grade = 1
@@ -494,8 +503,8 @@ order by a.creation_date desc
     </select>
 
     <select id="countPhysicalByAchievementGrade" resultType="Integer">
-        select count(1) from train_physical_achievement
-        where train_physical_id = #{physicalId}
+        select count(1) from train_physical_achievement_details
+        where train_physical_achievement_id = #{physicalId}
         and police_id = #{policeId} and achievement_grade = #{grade}
     </select>
 
@@ -534,7 +543,17 @@ order by a.creation_date desc
             </if>
         </if>
         <if test="list.size > 0 and trainFlag != null">
-
+            and pa.id in (
+                select train_physical_achievement_id from train_physical_achievement_details where project_id in (
+                    <foreach collection="list" separator="," item="item">
+                        #{item}
+                    </foreach>
+                )
+                and achievement_grade = #{trainFlag}
+            )
+        </if>
+        <if test="deptId != null and deptId != ''">
+            and u.department_id = #{deptId}
         </if>
         group by pa.police_id
         order by pa.id desc
@@ -572,23 +591,74 @@ order by a.creation_date desc
             </if>
         </if>
         <if test="list.size > 0 and trainFlag != null">
-
+            and pa.id in (
+                select train_physical_achievement_id from train_physical_achievement_details where project_id in (
+                    <foreach collection="list" separator="," item="item">
+                        #{item}
+                    </foreach>
+                )
+                and achievement_grade = #{trainFlag}
+            )
+        </if>
+        <if test="deptId != null and deptId != ''">
+            and u.department_id = #{deptId}
         </if>
     </select>
 
     <select id="getQualifiedRate" resultType="java.lang.Double">
-        select sum(achievement_grade=2)/count(id)*100 as proportion from train_physical_achievement
+        select truncate(sum(achievement_grade=2)/count(id)*100, 2) as proportion from train_physical_achievement
     </select>
 
     <select id="getLineChartData" resultType="com.bayee.political.json.TrainLineChartResult">
-        select MONTH(sign_date) as `name`,ifnull(SUM(achievement_grade=2),0)/count(id) as qualifiedRate,
-        ifnull(SUM(achievement_grade=2),0) as `value`
-        from train_physical_achievement
-        where DATE_SUB(CURDATE(), INTERVAL 6 MONTH) &lt;= date(sign_date)
+        SELECT
+            MONTH(CONCAT(m.date, '-01')) AS `name`,
+            TRUNCATE(IFNULL(IFNULL(SUM(achievement_grade=2),0)/COUNT(id), 0), 2) AS qualifiedRate,
+            IFNULL(SUM(achievement_grade=2),0) AS `value`
+        FROM (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `date`) `m`
+        LEFT JOIN train_physical_achievement pa ON m.date = DATE_FORMAT(sign_date, '%Y-%m')
         <if test="type!=null and type!=0">
             and train_physical_id in (select id from train_physical where train_type=2)
         </if>
-        GROUP BY `name`
+        GROUP BY m.date
+    </select>
+
+    <select id="unTestPoliceCount" resultType="Integer">
+        select count(distinct(police_id)) as count from train_physical_achievement
+        where train_physical_id = #{trainPhysicalId}
+          and is_sign = 2
+          and is_test_free = 1
+    </select>
+
+    <select id="findPhysicalTrainingRecordYearAndMonth" resultMap="BaseResultMap">
+        SELECT * FROM train_physical_achievement
+        WHERE police_id = #{policeId}
+        <if test="physicalTrainingRecordYear != null and physicalTrainingRecordYear != ''">
+            and DATE_FORMAT(registration_date,'%Y') = #{physicalTrainingRecordYear}
+        </if>
+        <if test="physicalTrainingRecordMonth != null and physicalTrainingRecordMonth != ''">
+            and DATE_FORMAT(registration_date,'%m') = #{physicalTrainingRecordMonth}
+        </if>
+    </select>
+
+    <select id="physicalTrainingRecordStatistics" resultType="Integer">
+        SELECT
+            count(1)
+        FROM train_physical_achievement
+        where police_id = #{policeId} and comprehensive_flag = #{state}
+          and DATE_FORMAT(business_time,'%Y-%m') >= #{beginDate}
+          and DATE_FORMAT(business_time,'%Y-%m') &lt;= #{endDate}
     </select>
 
 </mapper>

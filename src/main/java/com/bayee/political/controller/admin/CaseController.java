@@ -4,6 +4,7 @@ import com.bayee.political.domain.RiskCaseAbilityRecord;
 import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
 import com.bayee.political.domain.RiskCaseTestRecord;
 import com.bayee.political.domain.User;
+import com.bayee.political.filter.UserSession;
 import com.bayee.political.pojo.dto.CaseLawEnforcementDetailsDO;
 import com.bayee.political.pojo.dto.CaseLawEnforcementPageDO;
 import com.bayee.political.json.*;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -60,8 +63,14 @@ public class CaseController {
                                              @RequestParam("typeFlag") Integer typeFlag,
                                              @RequestParam("key") String key,
                                              @RequestParam("date") String date,
-                                             @RequestParam("deptId") Integer deptId) {
-        if (deptId != null && deptId == 1) {
+                                             @RequestParam("deptId") Integer deptId,
+                                             HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
+//        if (loginUser == null) {
+//            return new ResponseEntity(DataListReturn.error("请重新登录"), HttpStatus.OK);
+//        }
+        if (deptId != null && deptId == 1 || (loginUser != null && loginUser.getIsActive() != null
+                && loginUser.getIsActive() == 999)) {
             deptId = null;
         }
 
@@ -253,8 +262,14 @@ public class CaseController {
                                                     @RequestParam("pageSize") Integer pageSize,
                                                     @RequestParam("type") String type,
                                                     @RequestParam("key") String key,
-                                                    @RequestParam("deptId") Integer deptId) {
-        if (deptId != null && deptId == 1) {
+                                                    @RequestParam("deptId") Integer deptId,
+                                                    HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
+//        if (loginUser == null) {
+//            return new ResponseEntity(DataListReturn.error("请重新登录"), HttpStatus.OK);
+//        }
+        if (deptId != null && deptId == 1 || (loginUser != null && loginUser.getIsActive() != null
+                && loginUser.getIsActive() == 999)) {
             deptId = null;
         }
 
@@ -375,8 +390,14 @@ public class CaseController {
                                           @RequestParam("date") String date,
                                           @RequestParam("passFlag") Integer passFlag,
                                           @RequestParam("key") String key,
-                                          @RequestParam("deptId") Integer deptId) {
-        if (deptId != null && deptId == 1) {
+                                          @RequestParam("deptId") Integer deptId,
+                                          HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
+//        if (loginUser == null) {
+//            return new ResponseEntity(DataListReturn.error("请重新登录"), HttpStatus.OK);
+//        }
+        if (deptId != null && deptId == 1 || (loginUser != null && loginUser.getIsActive() != null
+                && loginUser.getIsActive() == 999)) {
             deptId = null;
         }
 
@@ -468,7 +489,7 @@ public class CaseController {
         }
         result.setTestName(record.getName());
         result.setScore(record.getScore());
-        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
+        result.setDate(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd"));
 
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
     }

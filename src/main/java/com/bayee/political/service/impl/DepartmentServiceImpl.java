@@ -5,6 +5,7 @@ package com.bayee.political.service.impl;
 
 import java.util.List;
 
+import com.bayee.political.pojo.dto.HolographicDeptListDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -106,6 +107,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<Department> alarmDepAddItem(String policeId, String dateTime) {
 		return mapper.alarmDepAddItem(policeId, dateTime);
+	}
+
+	@Override
+	public List<HolographicDeptListDO> findHolographicDeptList(String policeId) {
+		return mapper.findHolographicDeptList(policeId);
 	}
 
 }

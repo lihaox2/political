@@ -50,4 +50,16 @@ public interface RiskCaseAbilityRecordService {
 	 */
 	Integer getIdByDateAndPoliceId(String date, String policeId, Integer id);
 
+	/**
+	 * 根据年份和月份进行查询
+	 * @param caseAbilityRecordYear
+	 * @param caseAbilityRecordMonth
+	 * @param policeId
+	 * @return
+	 */
+	List<RiskCaseAbilityRecord> findCaseAbilityRecordYearAndMont(
+			@Param("caseAbilityRecordYear") String caseAbilityRecordYear,
+			@Param("caseAbilityRecordMonth") String caseAbilityRecordMonth,
+			@Param("policeId") String policeId
+	);
 }

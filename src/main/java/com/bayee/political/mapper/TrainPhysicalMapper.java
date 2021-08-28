@@ -2,7 +2,9 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.json.PhysicalTrainPageQueryParam;
 import com.bayee.political.json.TrainCensusResult;
+import com.bayee.political.pojo.dto.PhysicalTrainPageResultDO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -350,7 +352,9 @@ public interface TrainPhysicalMapper {
 	 * @return
 	 */
 	List<TrainPhysical> findTrainPhysicalPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize,
-											  @Param("date") String date, @Param("trainName") String trainName,
+											  @Param("trainBeginDate") String trainBeginDate,
+											  @Param("trainEndDate") String trainEndDate,
+											  @Param("trainName") String trainName,
 											  @Param("position") Integer position);
 
 	/**
@@ -360,7 +364,9 @@ public interface TrainPhysicalMapper {
 	 * @param position
 	 * @return
 	 */
-	Integer countTrainPhysicalPage(@Param("date") String date, @Param("trainName") String trainName,
+	Integer countTrainPhysicalPage(@Param("trainBeginDate") String trainBeginDate,
+								   @Param("trainEndDate") String trainEndDate,
+								   @Param("trainName") String trainName,
 								   @Param("position") Integer position);
 
 	/**

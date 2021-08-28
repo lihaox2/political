@@ -244,4 +244,27 @@
     </if>
   </select>
 
+  <select id="findCaseTestRecordYearAndMonth" resultMap="BaseResultMap">
+    select * from risk_case_test_record a where 1 = 1
+    <if test="caseTestRecordYear != null and caseTestRecordYear != ''">
+      and DATE_FORMAT(creation_date,'%Y') = #{caseTestRecordYear}
+    </if>
+    <if test="caseTestRecordMonth != null and caseTestRecordMonth != ''">
+      and DATE_FORMAT(creation_date,'%m') = #{caseTestRecordMonth}
+    </if>
+    <if test="policeId != null and policeId != ''">
+      and a.police_id = #{policeId}
+    </if>
+    order by creation_date desc
+  </select>
+
+  <select id="riskCaseTestScoreAvg" resultType="Integer">
+    SELECT
+        CEIL(AVG(score))
+    FROM risk_case_test_record
+    WHERE police_id = #{policeId}
+        and DATE_FORMAT(creation_date,'%Y-%m') >= #{beginDate}
+        and DATE_FORMAT(creation_date,'%Y-%m') &lt;= #{endDate}
+  </select>
+
 </mapper>

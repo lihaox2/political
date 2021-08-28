@@ -100,7 +100,7 @@ public interface TrainPhysicalAchievementMapper {
 	 * @param trainPhysicalId 体能训练id
 	 * @return
 	 */
-	Integer qualifiedNum(@Param("trainPhysicalId") Integer trainPhysicalId);
+	Integer qualifiedNum(@Param("trainPhysicalId") Integer trainPhysicalId,@Param("grade") Integer grade);
 
 	/**
 	 * 综合体能单位报名数
@@ -167,9 +167,12 @@ public interface TrainPhysicalAchievementMapper {
 	List<TrainPhysicalAchievement> findTrainPhysicalAchievementPage(@Param("pageIndex") Integer pageIndex,
 																	@Param("pageSize") Integer pageSize,
 																	@Param("physicalId") Integer physicalId,
-																	@Param("position") Integer position,@Param("key") String key,
+																	@Param("position") Integer position,
+																	@Param("key") String key,
 																	@Param("list") List<Integer> trainList,
-																	@Param("trainFlag") Integer trainFlag,@Param("searchFlag") Integer searchFlag);
+																	@Param("trainFlag") Integer trainFlag,
+																	@Param("searchFlag") Integer searchFlag,
+																	@Param("deptId") Integer deptId);
 
 	/**
 	 * 统计分页数据条数
@@ -184,7 +187,8 @@ public interface TrainPhysicalAchievementMapper {
 	Integer countTrainPhysicalAchievementPage(@Param("physicalId") Integer physicalId,
 											  @Param("position") Integer position,@Param("key") String key,
 											  @Param("list") List<Integer> trainList,
-											  @Param("trainFlag") Integer trainFlag,@Param("searchFlag") Integer searchFlag);
+											  @Param("trainFlag") Integer trainFlag,@Param("searchFlag") Integer searchFlag,
+											  @Param("deptId") Integer deptId);
 
 	/**
 	 * 根据合格状态统计警员数据条数
@@ -214,4 +218,34 @@ public interface TrainPhysicalAchievementMapper {
 	 * @return
 	 */
 	List<TrainLineChartResult> getLineChartData(@Param("type") Integer type);
+
+	/**
+	 * 免测人数统计
+	 * @param trainPhysicalId
+	 * @return
+	 */
+	Integer unTestPoliceCount(@Param("trainPhysicalId") Integer trainPhysicalId);
+
+	/**
+	 * 警员职业生涯查询
+	 * @param physicalTrainingRecordYear
+	 * @param physicalTrainingRecordMonth
+	 * @param policeId
+	 * @return
+	 */
+	List<TrainPhysicalAchievement> findPhysicalTrainingRecordYearAndMonth(
+			@Param("physicalTrainingRecordYear") String physicalTrainingRecordYear,
+			@Param("physicalTrainingRecordMonth") String physicalTrainingRecordMonth,
+			@Param("policeId") String policeId);
+
+	/**
+	 * 综合训练
+	 * @param policeId
+	 * @param count
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	Integer physicalTrainingRecordStatistics(@Param("policeId") String policeId, @Param("state") Integer state,
+											 @Param("beginDate") String beginDate, @Param("endDate") String endDate);
 }

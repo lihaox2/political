@@ -1,5 +1,6 @@
 package com.bayee.political.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.bayee.political.domain.*;
 import com.bayee.political.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
         }else {
             reportRecord = new RiskReportRecord(0d);
             reportRecord.setPoliceId(user.getPoliceId());
-            reportRecord.setCreationDate(new Date());
+            reportRecord.setCreationDate(DateUtil.parseDate(date));
             reportRecord.setYear(year);
             reportRecord.setMonth(month);
             reportRecord.setHandlingCaseNum(riskCase.getIndexNum());
@@ -99,7 +100,7 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
         }else {
             reportRecord = new RiskReportRecord(0d);
             reportRecord.setPoliceId(user.getPoliceId());
-            reportRecord.setCreationDate(new Date());
+            reportRecord.setCreationDate(DateUtil.parseDate(date));
             reportRecord.setYear(year);
             reportRecord.setMonth(month);
             reportRecord.setConductNum(riskConduct.getIndexNum());
@@ -132,7 +133,7 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
         }else {
             reportRecord = new RiskReportRecord(0d);
             reportRecord.setPoliceId(user.getPoliceId());
-            reportRecord.setCreationDate(new Date());
+            reportRecord.setCreationDate(DateUtil.parseDate(date));
             reportRecord.setYear(year);
             reportRecord.setMonth(month);
             reportRecord.setDutyNum(riskDuty.getIndexNum());
@@ -150,12 +151,17 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
     @Override
     public void skillRiskDetails(LocalDate localDate) {
         String dateTime = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
+        String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
+
         List<User> userList = userService.userInfoAllList();
         for (int i = 0; i < userList.size(); i++) {
             // 警员警务技能指数查询
             RiskTrain ritem = riskService.riskTrainIndexItem(userList.get(i).getPoliceId(), dateTime,null,2);
             // 警员警务技能统计查询
             RiskTrain item = riskService.riskTrainStatisticsItem(userList.get(i).getPoliceId(), dateTime);
+
             if (ritem == null) {
                 item.setPoliceId(userList.get(i).getPoliceId());
                 item.setIndexNum(0.0);
@@ -173,13 +179,31 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
                 ritem.setUpdateDate(new Date());
                 riskService.riskTrainUpdate(ritem);
             }
+
+            RiskTrain riskTrain = riskSkillService.riskSkillDetails(userList.get(i), date);
+            if (riskTrain == null || riskTrain.getIndexNum() == null) {
+                continue;
+            }
+
+            RiskReportRecord reportRecord = riskReportRecordService.findRiskReportRecord(userList.get(i).getPoliceId(), year, month);
+            if (reportRecord != null) {
+                reportRecord.setTrainNum(riskTrain.getIndexNum());
+                riskReportRecordService.updateRiskReportRecord(reportRecord);
+            }else {
+                reportRecord = new RiskReportRecord(0d);
+                reportRecord.setPoliceId(userList.get(i).getPoliceId());
+                reportRecord.setCreationDate(DateUtil.parseDate(date));
+                reportRecord.setYear(year);
+                reportRecord.setMonth(month);
+                reportRecord.setTrainNum(riskTrain.getIndexNum());
+                reportRecord.setTotalNum(reportRecord.getTrainNum());
+                riskReportRecordService.insert(reportRecord);
+            }
         }
 
-        String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
-        String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
 
-        for (User user : userList) {
+
+       /* for (User user : userList) {
             RiskReportRecord reportRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
             //警务技能
             RiskTrain riskTrain = riskSkillService.riskSkillDetails(user, date);
@@ -200,7 +224,7 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
                 reportRecord.setTotalNum(reportRecord.getTrainNum());
                 riskReportRecordService.insert(reportRecord);
             }
-        }
+        }*/
     }
 
 }

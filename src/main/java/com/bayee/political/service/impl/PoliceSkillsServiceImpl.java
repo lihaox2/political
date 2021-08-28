@@ -39,7 +39,7 @@ public class PoliceSkillsServiceImpl implements PoliceSkillsService {
         List<TrainIsEntryResult> list= trainPhysicalAchievementDetailsMapper.getParticipantsTotal();
         //未参加数量
         Integer notJoin=list.stream().filter(s->s.getIsEntry()==1).collect(Collectors.toList()).size();
-        result.setParticipantsTotal(list.size()-notJoin);
+        result.setParticipantsTotal(list.size());
         //总合格率
         Double qualifiedRate=trainPhysicalAchievementMapper.getQualifiedRate();
         result.setQualifiedRate(qualifiedRate);
@@ -109,8 +109,8 @@ public class PoliceSkillsServiceImpl implements PoliceSkillsService {
         List<TrainLineChartResult> firearmList=trainFirearmAchievementMapper.getLineChartData();
         map.put("firearmList",firearmList);
         //抽测
-        List<TrainLineChartResult> drawList=trainPhysicalAchievementMapper.getLineChartData(2);
-        map.put("drawList",drawList);
+        /*List<TrainLineChartResult> drawList=trainPhysicalAchievementMapper.getLineChartData(2);
+        map.put("drawList",drawList);*/
         return map;
     }
 
@@ -141,10 +141,10 @@ public class PoliceSkillsServiceImpl implements PoliceSkillsService {
         result.setValue(numberFormat.format((float)firearmCount/(float)total*100));
         list.add(result);
 
-        result=new TrainQuantityResult();
-        result.setName("抽测");
-        result.setValue(numberFormat.format((float)drawCount/(float)total*100));
-        list.add(result);
+//        result=new TrainQuantityResult();
+//        result.setName("抽测");
+//        result.setValue(numberFormat.format((float)drawCount/(float)total*100));
+//        list.add(result);
 
         return list;
     }

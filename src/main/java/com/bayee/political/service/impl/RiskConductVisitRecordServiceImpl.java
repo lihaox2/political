@@ -105,4 +105,11 @@ public class RiskConductVisitRecordServiceImpl implements RiskConductVisitRecord
 		return riskConductVisitRecordMapper.countAll();
 	}
 
+	@Override
+	public List<RiskConductVisitRecord> findConductVisitRecordYearAndMont(String conductVisitRecordYear,
+																		  String conductVisitRecordMonth, String policeId) {
+		return riskConductVisitRecordMapper.findConductVisitRecordYearAndMonth(conductVisitRecordYear,
+				conductVisitRecordMonth,policeId);
+	}
+
 }

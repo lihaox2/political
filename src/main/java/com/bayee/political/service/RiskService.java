@@ -1,8 +1,11 @@
 package com.bayee.political.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.bayee.political.domain.*;
+import com.bayee.political.json.ChartResult;
+import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
 import com.bayee.political.pojo.dto.*;
 import org.springframework.stereotype.Service;
 
@@ -251,4 +254,53 @@ public interface RiskService {
 	 */
 	RiskHealthReportDO healthReportDOQuery(String policeId);
 
+	/**
+	 * 警员风险报告-年度查询
+	 * @param policeId
+	 * @return
+	 */
+	List<Map<String, String>> riskHistoryYearList(String policeId);
+
+	/**
+	 * 执法管理-扣分类型统计
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastMonthTime
+	 * @param timeType
+	 */
+	List<RiskReportTypeStatisticsDO> lawEnforcementReportTypeDOQuery(String policeId, String dateTime,
+																	 String lastMonthTime, Integer timeType);
+
+	/**
+	 * 信访投诉-扣分类型统计
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastMonthTime
+	 * @param timeType
+	 * @return
+	 */
+	List<RiskReportTypeStatisticsDO> conductVisitReportTypeDOQuery(String policeId, String dateTime,
+																   String lastMonthTime, Integer timeType);
+
+	/**
+	 * 局规记分-扣分类型统计
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastMonthTime
+	 * @param timeType
+	 * @return
+	 */
+	List<RiskReportTypeStatisticsDO> conductBureauRuleReportTypeDOQuery(String policeId, String dateTime,
+																		String lastMonthTime, Integer timeType);
+
+	/**
+	 * 接警执勤-扣分类型统计
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastMonthTime
+	 * @param timeType
+	 * @return
+	 */
+	List<RiskReportTypeStatisticsDO> dutyReportTypeDOQuery(String policeId, String dateTime,
+														   String lastMonthTime, Integer timeType);
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bayee.political.mapper.ConductBureauRecordViewsMapper">
+
+    <select id="findAll" resultType="com.bayee.political.domain.ConductBureauRecordViews">
+        select
+            m.id, m.police_no as policeNo, m.police_name as policeName, m.flag, m.name, m.mark_type as markType,
+            m.mark_org_id as markOrgId, m.short_name as shortName, m.hfyj, m.jftk, m.jfnr, m.mark_score as markScore,
+            m.mark_desc as markDesc, m.mark_time as markTime, m.cqcs
+        from mark_info_v as m
+    </select>
+
+</mapper>

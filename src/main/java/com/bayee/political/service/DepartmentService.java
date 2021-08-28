@@ -5,6 +5,7 @@ package com.bayee.political.service;
 
 import java.util.List;
 
+import com.bayee.political.pojo.dto.HolographicDeptListDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -72,5 +73,12 @@ public interface DepartmentService {
 
 	// 加分型统计分析部门查询
 	List<Department> alarmDepAddItem(String policeId, String dateTime);
+
+	/**
+	 * 警员全息首页-部门列表查询
+	 * @param policeId
+	 * @return
+	 */
+	List<HolographicDeptListDO> findHolographicDeptList(String policeId);
 
 }

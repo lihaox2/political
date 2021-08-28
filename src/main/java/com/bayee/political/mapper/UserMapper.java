@@ -5,6 +5,11 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.json.TalentsParticularsResult;
+import com.bayee.political.json.TalentsUserParam;
+import com.bayee.political.json.TalentsUserResult;
+import com.bayee.political.pojo.dto.HolographicPoliceListDO;
+import com.bayee.political.pojo.dto.UserDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.User;
@@ -225,4 +230,44 @@ public interface UserMapper {
 	 */
 	List<User> findUserByDeptId(@Param("deptId") Integer deptId);
 
+	/**
+	 * 警员全息 通过key 查询警员信息
+	 * @param key 警号、警员姓名
+	 * @return
+	 */
+	List<HolographicPoliceListDO> holographicFindPoliceByKey(@Param("key") String key);
+
+	/**
+	 * 根据部门id查询
+	 * @param deptId
+	 * @return
+	 */
+	List<User> findByDeptId(@Param("deptId") Integer deptId);
+
+	/**
+	 * 人才库 俩名警员对比查询
+	 * @param id
+	 * @return
+	 */
+	TalentsParticularsResult findTalentsUserInfo(@Param("id") String id);
+
+	/**
+	 * 人才库列表
+	 * @param talentsUserParam
+	 * @return
+	 */
+	List<TalentsUserResult> talentsFindPageList(TalentsUserParam talentsUserParam);
+
+	/**
+	 * 人才列表分页查询
+	 * @param talentsUserParam
+	 * @return
+	 */
+	Integer talentsFindPageCount(TalentsUserParam talentsUserParam);
+
+	/**
+	 * 查询宣传报道警员排名TOP5
+	 * @return
+	 */
+	List<UserDO> findUserRanKing();
 }

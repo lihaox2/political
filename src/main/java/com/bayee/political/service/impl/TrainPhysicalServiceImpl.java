@@ -24,18 +24,18 @@ public class TrainPhysicalServiceImpl implements TrainPhysicalService {
     }
 
     @Override
-    public List<TrainPhysical> findTrainPhysicalPage(Integer pageIndex, Integer pageSize, String date,
-                                                     String trainName, Integer position) {
+    public List<TrainPhysical> findTrainPhysicalPage(Integer pageIndex, Integer pageSize, String trainBeginDate,
+                                                     String trainEndDate, String trainName, Integer position) {
         if (pageIndex < 1) {
             pageIndex = 1;
         }
         pageIndex = (pageIndex - 1) * pageSize;
 
-        return trainPhysicalMapper.findTrainPhysicalPage(pageIndex, pageSize, date, trainName, position);
+        return trainPhysicalMapper.findTrainPhysicalPage(pageIndex, pageSize, trainBeginDate, trainEndDate, trainName, position);
     }
 
     @Override
-    public Integer countTrainPhysicalPage(String date, String trainName, Integer position) {
-        return trainPhysicalMapper.countTrainPhysicalPage(date, trainName, position);
+    public Integer countTrainPhysicalPage(String trainBeginDate, String trainEndDate, String trainName, Integer position) {
+        return trainPhysicalMapper.countTrainPhysicalPage(trainBeginDate, trainEndDate, trainName, position);
     }
 }

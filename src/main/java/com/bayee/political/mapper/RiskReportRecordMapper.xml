@@ -43,6 +43,10 @@
     <result column="total_num" property="totalNum" />
     <result column="dateTime" property="dateTime" />
   </resultMap>
+  <resultMap id="RiskReportRecordMapResult" type="com.bayee.political.pojo.dto.RiskReportRecordDO" extends="BaseResultMap">
+
+  </resultMap>
+
   <sql id="Base_Column_List" >
      id, police_id, year, month, total_num, conduct_num, handling_case_num, duty_num, 
     train_num, social_contact_num, amily_evaluation_num, health_num,drink_num,study_num,
@@ -599,11 +603,11 @@ and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) c
 </select>
 <!-- 警员历史风险报告查询 -->
 <select id="riskHistoryReportList" parameterType="com.bayee.political.domain.RiskHistoryReport" resultMap="RiskHistoryReportMap">
-SELECT a.*,CONCAT(b.id,'月') as dateTimeMonth,DATE_FORMAT(a.creation_date, '%Y-%m') as dateTime
+SELECT a.*,DATE_FORMAT(a.creation_date, '%Y年%m月') as dateTimeMonth,DATE_FORMAT(a.creation_date, '%Y-%m') as dateTime
 FROM risk_report_record a
-left join month b on b.num_name=a.month
-where a.police_id=#{policeId} and DATE_FORMAT(a.creation_date, '%Y')=#{dateTime}
-order by b.id desc
+left join month b on b.num_name=MONTH(a.creation_date)
+where a.police_id=#{policeId}
+order by DATE_FORMAT(a.creation_date, '%Y-%m') desc
 </select>
 
   <select id="findRiskReportRecord" resultMap="BaseResultMap">
@@ -649,4 +653,68 @@ GROUP BY DATE_FORMAT(creation_date, '%Y') order by DATE_FORMAT(creation_date, '%
   <select id="findNotFamilyTotalNum" resultType="Double">
   	select conduct_num+handling_case_num+duty_num+train_num+social_contact_num+health_num+drink_num+study_num+work_num FROM risk_report_record WHERE id=#{id}
   </select>
+
+  <select id="findRiskReportByPoliceIdToMonth" resultMap="RiskReportRecordMapResult">
+    SELECT
+      tr.*, tr.total_num AS thisMonthScore, lr.total_num AS lastMonthScore,
+      TRUNCATE(((tr.total_num - lr.total_num) / lr.total_num) * 100, 2) AS qoq, rah.`name` AS healthDesc,
+      rah.index_num AS healthScore
+    FROM risk_report_record tr
+           LEFT JOIN risk_report_record lr ON tr.police_id = lr.police_id
+      AND DATE_FORMAT(tr.creation_date, '%Y-%m') = DATE_FORMAT(DATE_ADD(lr.creation_date,INTERVAL 1 MONTH), '%Y-%m')
+           LEFT JOIN (SELECT rh.index_num, rh.police_id, rh.`year`, ra.`name` FROM risk_health rh
+                    LEFT JOIN risk_health_bmi_standard ra ON rh.bmi_id = ra.id) rah
+                ON rah.police_id = tr.police_id AND rah.`year` = DATE_FORMAT(tr.creation_date, '%Y')
+    where tr.police_id = #{policeId} and DATE_FORMAT(tr.creation_date, '%Y-%m') = #{date}
+  </select>
+
+  <select id="findPoliceAllRiskMonth" resultType="com.bayee.political.json.ChartResult">
+    select
+      (case DATE_FORMAT(creation_date,'%m')
+      when 1 then '一月'
+      when 2 then '二月'
+      when 3 then '三月'
+      when 4 then '四月'
+      when 5 then '五月'
+      when 6 then '六月'
+      when 7 then '七月'
+      when 8 then '八月'
+      when 9 then '九月'
+      when 10 then '十月'
+      when 11 then '十一月'
+      when 12 then '十二月' end) as name, month(creation_date) as value
+    from risk_report_record where police_id = #{police}
+    <if test="year != null and year != ''">
+      and DATE_FORMAT(creation_date,'%Y') = #{year}
+    </if>
+    group by DATE_FORMAT(creation_date,'%m')
+  </select>
+
+  <select id="findRiskReportByPoliceIdToYear" resultMap="RiskReportRecordMapResult">
+    SELECT
+      SUM(tr.conduct_num) AS conduct_num,
+      SUM(tr.`handling_case_num`) AS handling_case_num,
+      SUM(tr.`train_num`) AS train_num,
+      sum(tr.duty_num) as duty_num,
+      sum(tr.social_contact_num) as social_contact_num,
+      sum(tr.amily_evaluation_num) as amily_evaluation_num,
+      rh.index_num AS health_num
+    FROM risk_report_record tr
+           LEFT JOIN risk_health rh ON tr.police_id = rh.police_id AND DATE_FORMAT(tr.`creation_date`, '%Y') = rh.year
+    WHERE tr.police_id = #{policeId} and DATE_FORMAT(tr.creation_date, '%Y-%m') &lt;= #{date}
+      AND DATE_FORMAT(tr.creation_date, '%Y-%m') >= #{lastDate}
+  </select>
+
+  <select id="riskHistoryYearList" resultType="HashMap">
+    SELECT
+      DATE_FORMAT(a.creation_date, '%Y年') AS dateTimeMonth,CONCAT(DATE_FORMAT(a.creation_date, '%Y'), '-01') AS `dateTime`,
+      police_id AS policeId,
+      SUM(total_num) AS totalNum
+--       (case when SUM(total_num) > 100 then 100 else SUM(total_num) end) AS totalNum
+    FROM risk_report_record a
+        WHERE a.police_id=#{policeId}
+    GROUP BY DATE_FORMAT(a.creation_date, '%Y')
+    ORDER BY DATE_FORMAT(a.creation_date, '%Y') DESC;
+  </select>
+
 </mapper>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.PublicityInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.bayee.political.domain.PublicityInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title_name" property="titleName" jdbcType="VARCHAR"/>
+        <result column="type_id" property="typeId" jdbcType="INTEGER"/>
+        <result column="level_name" property="levelName" jdbcType="INTEGER"/>
+        <result column="media_name" property="mediaName" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="img_url" property="imgUrl" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <resultMap id="BaseResultMapDO" type="com.bayee.political.pojo.dto.PublicityInfoDO" extends="BaseResultMap">
+        <result column="typeName" property="typeName" />
+        <result column="userName" property="userName" />
+        <result column="deptName" property="deptName" />
+    </resultMap>
+
+
+    <!-- 新增宣传信息 -->
+    <insert id="addPublicityInfo" parameterType="com.bayee.political.domain.PublicityInfo"
+            keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO publicity_info ( title_name, type_id, level_name, media_name, content,
+                                        img_url, create_time, update_time )
+        VALUES
+            (#{titleName},#{typeId},#{levelName},#{mediaName},#{content},#{imgUrl},#{createTime},#{updateTime})
+    </insert>
+
+
+    <!-- 修改宣传信息 -->
+    <update id="updatePublicityInfo" parameterType="com.bayee.political.domain.PublicityInfo">
+        update publicity_info set
+                title_name = #{titleName,jdbcType=VARCHAR},
+                type_id = #{typeId,jdbcType=INTEGER},
+                level_name = #{levelName,jdbcType=INTEGER},
+                media_name = #{mediaName,jdbcType=VARCHAR},
+                content = #{content,jdbcType=VARCHAR},
+                img_url = #{imgUrl,jdbcType=VARCHAR},
+                update_time = #{updateTime,jdbcType=TIMESTAMP}
+                where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <!-- 删除宣传信息 -->
+    <delete id="deletePublicityInfo" parameterType="java.lang.Integer">
+        delete from publicity_info
+            where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+
+    <!-- 根据id查询类型名称 -->
+    <select id="findPublicityInfo" resultMap="BaseResultMapDO" parameterType="java.lang.Integer">
+        SELECT
+            a.*,
+            b.type_name typeName
+        FROM
+            publicity_info a
+            LEFT JOIN publicity_type b ON a.type_id = b.id
+        WHERE
+            a.id = #{id}
+    </select>
+
+
+    <!-- 列表 -->
+    <!--/*and a.create_time BETWEEN a.create_time AND #{inputDate}*/-->
+    <select id="findPageList" resultMap="BaseResultMapDO">
+        SELECT
+            a.*,
+            t.type_name typeName,
+            j.NAME userName,
+            d.NAME deptName
+        FROM
+            publicity_info a
+            LEFT JOIN publicity_user_info b ON b.info_id = a.id
+            LEFT JOIN `user` j ON b.police_id = j.police_id
+            LEFT JOIN publicity_type t ON a.type_id = t.id
+            LEFT JOIN department d ON j.department_id = d.id
+            where 1 = 1
+        <if test="typeId != null and typeId != ''">
+            and t.id = #{typeId}
+        </if>
+        <if test="levelName != null and levelName != ''">
+            and a.level_name = #{levelName}
+        </if>
+        <if test="deptId != null and deptId != ''">
+            and d.id = #{deptId}
+        </if>
+        <if test="inputDate != null and inputDate !=''">
+            and DATE_FORMAT(a.create_time,'%Y-%m-%d') = DATE_FORMAT(#{inputDate},'%Y-%m-%d')
+        </if>
+        <if test="likeName != null and likeName != ''">
+            and (j.name rlike #{likeName} or j.police_id rlike #{likeName} or a.title_name rlike #{likeName} or a.content rlike #{likeName} )
+        </if>
+        GROUP BY
+            a.id
+        ORDER BY
+            a.create_time DESC
+        limit #{pageIndex}, #{pageSize}
+    </select>
+
+    <select id="findPageListCount" resultType="Integer">
+        SELECT
+            count(1)
+        FROM
+            publicity_info a
+            LEFT JOIN publicity_user_info b ON b.info_id = a.id
+            LEFT JOIN `user` j ON b.police_id = j.police_id
+            LEFT JOIN publicity_type t ON a.type_id = t.id
+            LEFT JOIN department d ON j.department_id = d.id
+        where 1 = 1
+        <if test="typeId != null and typeId != ''">
+            and t.id = #{typeId}
+        </if>
+        <if test="levelName != null and levelName != ''">
+            and a.level_name = #{levelName}
+        </if>
+        <if test="deptId != null and deptId != ''">
+            and d.id = #{deptId}
+        </if>
+        <if test="inputDate != null and inputDate !=''">
+            and DATE_FORMAT(a.create_time,'%Y-%m-%d') = DATE_FORMAT(#{inputDate},'%Y-%m-%d')
+        </if>
+        <if test="likeName != null and likeName != ''">
+            and (j.name rlike #{likeName} or j.police_id rlike #{likeName} or a.title_name rlike #{likeName} or a.content rlike #{likeName} )
+        </if>
+    </select>
+
+    <!-- 查询宣传报道该宣传报道的所有警员 -->
+    <select id="findPublicityInfoPoliceById" resultType="com.bayee.political.pojo.dto.UserDO">
+        select
+            u.name as userName, d.name as deptName
+        from publicity_user_info pui
+            left join `user` u on pui.police_id = u.police_id
+            left join department d on u.department_id = d.id
+        where
+            pui.info_id = #{id}
+    </select>
+
+
+
+</mapper>

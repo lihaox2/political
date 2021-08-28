@@ -3,8 +3,18 @@
  */
 package com.bayee.political.service.impl;
 
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.bayee.political.json.*;
+import com.bayee.political.mapper.PoliceLabelMapper;
+import com.bayee.political.pojo.dto.HolographicPoliceListDO;
+import com.bayee.political.pojo.dto.RiskReportRecordDO;
+import com.bayee.political.service.RiskReportRecordService;
+import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +36,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	PolicePositionMapper policePositionMapper;
+
+	@Autowired
+	PoliceLabelMapper policeLabelMapper;
+
+	@Autowired
+	RiskReportRecordService riskReportRecordService;
 
 	// 查询全部警员数据
 	@Override
@@ -276,6 +292,48 @@ public class UserServiceImpl implements UserService {
 		User user = userMapper.findByPoliceId(policeId);
 
 		return user != null && user.getPoliceId() != null;
+	}
+
+	@Override
+	public List<HolographicPoliceListDO> holographicFindPoliceByKey(String key) {
+		return userMapper.holographicFindPoliceByKey(key);
+	}
+
+	@Override
+	public List<User> findByDeptId(Integer deptId) {
+		return userMapper.findByDeptId(deptId);
+	}
+
+	@Override
+	public List<TalentsUserResult> talentsFindPageList(TalentsUserParam talentsUserParam) {
+		if(talentsUserParam.getPageIndex() == null || talentsUserParam.getPageIndex() < 1){
+			talentsUserParam.setPageIndex(1);
+		}
+		talentsUserParam.setPageIndex((talentsUserParam.getPageIndex() - 1) * talentsUserParam.getPageSize());
+
+		return userMapper.talentsFindPageList(talentsUserParam).parallelStream().map(e -> {
+			e.setLabelList(policeLabelMapper.findPoliceLabel(e.getPoliceId()));
+			return e;
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public Integer talentsFindPageCount(TalentsUserParam talentsUserParam) {
+		return userMapper.talentsFindPageCount(talentsUserParam);
+	}
+
+	@Override
+	public TalentsParticularsResultList findTalentsUserInfo(String firstId, String sendId) {
+		//第一个人的信息
+		TalentsParticularsResult firstList = userMapper.findTalentsUserInfo(firstId);
+		//第二人的信息
+		TalentsParticularsResult sendList = userMapper.findTalentsUserInfo(sendId);
+
+		TalentsParticularsResultList resultList = new TalentsParticularsResultList();
+		resultList.setFirstListMessage(firstList);
+		resultList.setSendListMessage(sendList);
+
+		return resultList;
 	}
 
 }

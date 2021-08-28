@@ -24,17 +24,18 @@ public class TrainFirearmServiceImpl implements TrainFirearmService {
     }
 
     @Override
-    public List<TrainFirearm> findTrainFirearmPage(Integer pageIndex, Integer pageSize, String date, String trainName, Integer position) {
+    public List<TrainFirearm> findTrainFirearmPage(Integer pageIndex, Integer pageSize, String trainBeginDate,
+                                                   String trainEndDate, String trainName, Integer position) {
         if (pageIndex < 1) {
             pageIndex = 1;
         }
         pageIndex = (pageIndex - 1) * pageSize;
 
-        return trainFirearmMapper.findTrainFirearmPage(pageIndex, pageSize, date, trainName, position);
+        return trainFirearmMapper.findTrainFirearmPage(pageIndex, pageSize, trainBeginDate, trainEndDate, trainName, position);
     }
 
     @Override
-    public Integer countTrainFirearmPage(String date, String trainName, Integer position) {
-        return trainFirearmMapper.countTrainFirearmPage(date, trainName, position);
+    public Integer countTrainFirearmPage(String trainBeginDate, String trainEndDate, String trainName, Integer position) {
+        return trainFirearmMapper.countTrainFirearmPage(trainBeginDate, trainEndDate, trainName, position);
     }
 }

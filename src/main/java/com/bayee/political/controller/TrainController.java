@@ -3519,12 +3519,16 @@ public class TrainController extends BaseController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/train/train_physical_delete", method = RequestMethod.POST)
-	public ResponseEntity<?> trainPhysicalDelete(@Param("id") Integer id) {
+	@DeleteMapping("/train/train_physical_delete")
+	public ResponseEntity<?> trainPhysicalDelete(Integer id) {
 
+		TrainPhysical trainPhysical = trainService.trainPhysicalItem(id);
 		int del = trainService.trainPhysicalDelete(id);
 		// 删除记录表
 		trainService.deleteByTrainPhysicalId(id);
+		trainService.deleteTrainPhysicalAchievementDetailsByPhysicalId(id);
+
+		totalRiskDetailsService.skillRiskDetails(LocalDate.parse(DateUtils.formatDate(trainPhysical.getTrainStartDate(), "yyyy-MM-dd")));
 
 		DataListReturn dataListReturn = new DataListReturn();
 		dataListReturn.setCode(StatusCode.getSuccesscode());
@@ -5749,9 +5753,14 @@ public class TrainController extends BaseController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/train/train_delete_firearm", method = RequestMethod.POST)
-	public ResponseEntity<?> trainFirearmDelete(@Param("id") Integer id) {
+	@DeleteMapping("/train/train_delete_firearm")
+	public ResponseEntity<?> trainFirearmDelete(Integer id) {
+		TrainFirearm trainFirearm = trainService.getTrainFirearmById(id);
 		int count = trainService.trainFirearmDelete(id);
+		trainService.deleteTrainFirearmAchievementByFirearmId(id);
+
+		totalRiskDetailsService.skillRiskDetails(LocalDate.parse(DateUtils.formatDate(trainFirearm.getTrainStartDate(), "yyyy-MM-dd")));
+
 		DataListReturn dataListReturn = new DataListReturn();
 		dataListReturn.setCode(StatusCode.getSuccesscode());
 		dataListReturn.setMessage("success");
@@ -6036,8 +6045,8 @@ public class TrainController extends BaseController {
 		Integer companyNum = trainService.companyNum(trainPhysicalId);
 		Integer signUpNum = trainService.signUpNum(trainPhysicalId);
 		Integer signInNum = trainService.signInNum(trainPhysicalId);
-		Integer qualifiedNum = trainService.qualifiedNum(trainPhysicalId);
-		Integer unqualifiedNum = signUpNum - qualifiedNum;
+		Integer qualifiedNum = trainService.qualifiedNum(trainPhysicalId, 2);
+		Integer unqualifiedNum = trainService.qualifiedNum(trainPhysicalId, 1);
 
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<String, Integer>();
 		map.put("companyNum", companyNum);
@@ -7073,29 +7082,11 @@ public class TrainController extends BaseController {
 		trainFirearm.setCreationDate(new Date());
 		trainFirearm.setIsLimit(0);
 		trainService.trainFirearmAdd(trainFirearm);
-		// 训练人员列表查询
-		List<User> userList = userService.userTrainList();
-		List<TrainFirearmAchievement> addSignList = new ArrayList<TrainFirearmAchievement>();
-		for (int i = 0; i < userList.size(); i++) {
-			TrainFirearmAchievement item = new TrainFirearmAchievement();
-			item.setTrainFirearmId(trainFirearm.getId());
-			item.setPoliceId(userList.get(i).getPoliceId());
-			item.setRegistrationDate(trainFirearm.getRegistrationStartDate());
-			item.setSignDate(trainFirearm.getRegistrationStartDate());
-			item.setIsSign(2);
-			item.setIsSubmit(1);
-			item.setQrCode("/train-qrcode/physical-870c515b-6d06-445f-bf11-c143bdc6a878.jpg\"");
-			item.setTrainProjectType(2);
-			item.setCreationDate(new Date());
-			addSignList.add(item);
-		}
-		// 枪械报名批量新增
-		trainService.trainFirearmAchievementCreatBatch(addSignList);
+
 		List<List<String>> readExcel = null;
 		try {
 			readExcel = GetExcel.ReadExcel(file);
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
 		try {
@@ -7112,54 +7103,31 @@ public class TrainController extends BaseController {
 				if (StringUtils.isEmpty(excel.get(1)) == false
 						&& StringUtils.isEmpty(excel.get(2).toString().replaceAll("\\s*", "")) == false) {
 					score1 = Double.valueOf(excel.get(2).toString().replaceAll("\\s*", ""));
+
 					// 枪械项目报名详情
-					TrainFirearmAchievement fItem = trainService.trainFirearmAchievementItem(null, trainFirearm.getId(),
-							policeId);
-					if (fItem != null) {
-						fItem.setAchievement(score1);
-						fItem.setAchievementStr(score1 + "环");
-						fItem.setUpdateDate(new Date());
-						fItem.setAchievementDate(new Date());
-						// 根据项目id/组别查询算分规则
-						TrainProjectRule ruleItem = trainService.trainProjectPoliceRuleItem(2, null);
-						if (ruleItem.getSymbol() == 1) {// 1>= 2> 3<= 4< 5=
-							if (score1 >= ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 2) {
-							if (score1 > ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 3) {
-							if (score1 <= ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 4) {
-							if (score1 < ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 5) {
-							if (score1 == ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						}
-						fItem.setSignDate(trainFirearm.getRegistrationStartDate());
-						finalList.add(fItem);
+					TrainFirearmAchievement item = new TrainFirearmAchievement();
+					item.setTrainFirearmId(trainFirearm.getId());
+					item.setPoliceId(policeId);
+					item.setRegistrationDate(trainFirearm.getRegistrationStartDate());
+					item.setSignDate(trainFirearm.getRegistrationStartDate());
+					item.setIsSubmit(1);
+					item.setQrCode("/train-qrcode/physical-870c515b-6d06-445f-bf11-c143bdc6a878.jpg\"");
+					item.setTrainProjectType(2);
+					item.setIsSign(2);
+					item.setAchievement(score1);
+					item.setAchievementStr(score1 + "环");
+					item.setAchievementGrade(1);
+					if (score1 > 60) {
+						item.setAchievementGrade(2);
 					}
+					item.setAchievementDate(new Date());
+					item.setSignDate(trainFirearm.getRegistrationStartDate());
+					item.setCreationDate(new Date());
+
+					finalList.add(item);
 				}
 			}
-			// 批量修改警员枪械成绩
-			trainService.trainFirearmAchievementUpdateBatch(finalList);
+			trainService.trainFirearmAchievementCreatBatch(finalList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

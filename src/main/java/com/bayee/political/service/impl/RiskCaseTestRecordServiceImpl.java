@@ -86,5 +86,16 @@ public class RiskCaseTestRecordServiceImpl implements RiskCaseTestRecordService{
 		return riskCaseTestRecordMapper.riskCaseTestRecordPageCount(date, passFlag,key, deptId);
 	}
 
+	@Override
+	public List<RiskCaseTestRecord> findCaseTestRecordYearAndMont(String caseTestRecordYear,
+																  String caseTestRecordMonth, String policeId) {
+		return riskCaseTestRecordMapper.findCaseTestRecordYearAndMonth(caseTestRecordYear,caseTestRecordMonth,policeId);
+	}
+
+	@Override
+	public Integer riskCaseTestScoreAvg(String police, String beginDate, String endDate) {
+		return riskCaseTestRecordMapper.riskCaseTestScoreAvg(police, beginDate, endDate);
+	}
+
 
 }

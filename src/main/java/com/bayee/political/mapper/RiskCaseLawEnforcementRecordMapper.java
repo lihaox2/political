@@ -98,4 +98,26 @@ public interface RiskCaseLawEnforcementRecordMapper {
      */
     Integer getPoliceReplaceErrorCount(@Param("policeId") String policeId, @Param("type") Integer type);
 
+    /**
+     * 根据年份和月份进行查询
+     * @param caseLawEnforcementRecordYear
+     * @param caseLawEnforcementRecordMonth
+     * @param policeId
+     * @return
+     */
+    List<RiskCaseLawEnforcementRecord> findCaseLawEnforcementRecordYearAndMonth(
+            @Param("caseLawEnforcementRecordYear") String caseLawEnforcementRecordYear,
+            @Param("caseLawEnforcementRecordMonth") String caseLawEnforcementRecordMonth,
+            @Param("policeId") String policeId
+    );
+
+    /**
+     * 检查警员执法管理扣分情况
+     * @param policeId
+     * @param beginDate
+     * @param endDate
+     * @return
+     */
+    Integer checkPoliceDeductionScoreStatus(@Param("policeId") String policeId, @Param("beginDate") String beginDate,
+                                            @Param("endDate") String endDate);
 }

@@ -21,17 +21,30 @@ public class TrainFirearmAchievementServiceImpl implements TrainFirearmAchieveme
     @Override
     public List<TrainFirearmAchievement> findTrainFirearmAchievementPage(Integer pageIndex, Integer pageSize,
                                                                          Integer firearmId, Integer position,
-                                                                         String key, Integer searchFlag) {
+                                                                         String key, Integer searchFlag,Integer deptId) {
         if (pageIndex < 1) {
             pageIndex = 1;
         }
         pageIndex = (pageIndex - 1) * pageSize;
 
-        return trainFirearmAchievementMapper.findTrainFirearmAchievementPage(pageIndex, pageSize, firearmId, position, key, searchFlag);
+        return trainFirearmAchievementMapper.findTrainFirearmAchievementPage(pageIndex, pageSize, firearmId, position,
+                key, searchFlag, deptId);
     }
 
     @Override
-    public Integer countTrainFirearmAchievementPage(Integer firearmId, Integer position, String key, Integer searchFlag) {
-        return trainFirearmAchievementMapper.countTrainFirearmAchievementPage(firearmId, position, key, searchFlag);
+    public Integer countTrainFirearmAchievementPage(Integer firearmId, Integer position, String key,
+                                                    Integer searchFlag,Integer deptId) {
+        return trainFirearmAchievementMapper.countTrainFirearmAchievementPage(firearmId, position, key, searchFlag, deptId);
+    }
+
+    @Override
+    public List<TrainFirearmAchievement> findFirearmRecordYearAndMont(String firearmRecordYear,
+                                                                      String firearmRecordMonth, String policeId) {
+        return trainFirearmAchievementMapper.findFirearmRecordYearAndMonth(firearmRecordYear,firearmRecordMonth,policeId);
+    }
+
+    @Override
+    public Integer policeFirearmAchievementAvg(String police, String beginDate, String endDate) {
+        return trainFirearmAchievementMapper.policeFirearmAchievementAvg(police, beginDate, endDate);
     }
 }

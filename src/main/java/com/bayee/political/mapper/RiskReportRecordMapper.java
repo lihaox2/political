@@ -1,7 +1,10 @@
 package com.bayee.political.mapper;
 
 import java.util.List;
+import java.util.Map;
 
+import com.bayee.political.json.ChartResult;
+import com.bayee.political.pojo.dto.RiskReportRecordDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskHistoryReport;
@@ -104,4 +107,37 @@ public interface RiskReportRecordMapper {
 	Double findPoliceHealthScoreByYear(@Param("policeId") String policeId,@Param("year") String year);
 	
 	Double findNotFamilyTotalNum(@Param("id")Integer id);
+
+	/**
+	 * 根据警号和时间
+	 * @param policeId
+	 * @param date
+	 * @return
+	 */
+	RiskReportRecordDO findRiskReportByPoliceIdToMonth(@Param("policeId") String policeId, @Param("date") String date);
+
+	/**
+	 * 查询警员所有月份
+	 * @param police
+	 * @param year
+	 * @return
+	 */
+	List<ChartResult> findPoliceAllRiskMonth(@Param("police") String police, @Param("year") String year);
+
+	/**
+	 * 查询警员近12个月详情信息
+	 * @param policeId
+	 * @param date
+	 * @param lastDate
+	 * @return
+	 */
+	RiskReportRecordDO findRiskReportByPoliceIdToYear(@Param("policeId") String policeId, @Param("date") String date,
+													  @Param("lastDate") String lastDate);
+
+	/**
+	 * 警员风险报告-年度查询
+	 * @param policeId
+	 * @return
+	 */
+	List<Map<String, String>> riskHistoryYearList(String policeId);
 }

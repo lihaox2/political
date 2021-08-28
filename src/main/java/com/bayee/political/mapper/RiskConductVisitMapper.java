@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
 import com.bayee.political.pojo.dto.RiskConductVisitReportDO;
 import org.apache.ibatis.annotations.Param;
 import com.bayee.political.domain.RiskConductVisit;
@@ -48,4 +49,16 @@ public interface RiskConductVisitMapper {
                                                 @Param("lastMonthTime") String lastMonthTime,
                                                 @Param("timeType") Integer timeType);
 
+    /**
+     * 信访投诉-扣分类型统计
+     * @param policeId
+     * @param dateTime
+     * @param lastMonthTime
+     * @param timeType
+     * @return
+     */
+    List<RiskReportTypeStatisticsDO> conductVisitReportTypeDOQuery(@Param("policeId") String policeId,
+                                                                   @Param("dateTime") String dateTime,
+                                                                   @Param("lastMonthTime") String lastMonthTime,
+                                                                   @Param("timeType") Integer timeType);
 }

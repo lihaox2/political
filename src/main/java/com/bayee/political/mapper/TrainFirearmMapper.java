@@ -132,8 +132,9 @@ public interface TrainFirearmMapper {
 	 * @return
 	 */
 	List<TrainFirearm> findTrainFirearmPage(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize,
-											@Param("date") String date, @Param("trainName") String trainName,
-											@Param("position") Integer position);
+											@Param("trainBeginDate") String trainBeginDate,
+											@Param("trainEndDate") String trainEndDate,
+											@Param("trainName") String trainName, @Param("position") Integer position);
 
 	/**
 	 * 统计分页数据条数
@@ -142,12 +143,14 @@ public interface TrainFirearmMapper {
 	 * @param position
 	 * @return
 	 */
-	Integer countTrainFirearmPage(@Param("date") String date, @Param("trainName") String trainName,
-								  @Param("position") Integer position);
+	Integer countTrainFirearmPage(@Param("trainBeginDate") String trainBeginDate,
+								  @Param("trainEndDate") String trainEndDate,
+								  @Param("trainName") String trainName, @Param("position") Integer position);
 
 	/**
 	 * 获取枪械训练总数
 	 * @return
 	 */
 	Integer getCount();
+
 }

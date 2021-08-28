@@ -2,6 +2,7 @@ package com.bayee.political.controller.admin;
 
 import cn.hutool.core.util.StrUtil;
 import com.bayee.political.domain.*;
+import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
 import com.bayee.political.pojo.dto.*;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DataListReturn;
@@ -10,10 +11,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.fragment.IFragmentSpec;
@@ -29,10 +27,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author xxl
@@ -94,11 +89,24 @@ public class RiskReportController {
         colorMap.put("肥胖", "#C72928");
     }
 
+    /**
+     *
+     * @param policeId 警号
+     * @param timeType 时间类型 1.年，2.月，3.自定义
+     * @param dateTime 报告生成时间 yyyy-MM
+     * @param beginDate 报告开始时间 yyyy-MM
+     * @param endDate 报告结束时间 yyyy-MM
+     * @return 警员报告地址
+     * @throws Exception
+     */
     @GetMapping("/create/policeRisk/report")
     public ResponseEntity<?> createPoliceRiskReport(@RequestParam("policeId") String policeId,
                                                     @RequestParam("timeType") Integer timeType,
-                                                    @RequestParam("dateTime") String dateTime) throws Exception {
-        String lastMonthTime = DateUtils.lastMonthTime();
+                                                    @RequestParam("dateTime") String dateTime,
+                                                    @RequestParam(value = "endDate", required = false) String desc,
+                                                    @RequestParam(value = "beginDate", required = false) String beginDate,
+                                                    @RequestParam(value = "endDate", required = false) String endDate) throws Exception {
+        String lastMonthTime = DateUtils.getCurrentYearFirstMonthTime();
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
         if (dateTime == null) {
@@ -107,11 +115,17 @@ public class RiskReportController {
             date = dateTime+"-01";
             year = dateTime.substring(0, 4);
         }
-        Date currDate = sd.parse(dateTime);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currDate);
-        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
-        String lastDateTime = sd.format(calendar.getTime());
+
+        String lastDateTime = "";
+        if (timeType != null && timeType == 1) {
+            lastDateTime = year+"-01";
+            dateTime = year+"-12";
+        } else if(timeType == 2) {
+
+        } else if(timeType == 3) {
+            timeType = 1;
+
+        }
 
         //数据查询
         User user = userService.findByPoliceId(policeId);
@@ -190,12 +204,17 @@ public class RiskReportController {
         if (healthReportDO == null) {
             healthReportDO = new RiskHealthReportDO();
         }
-
         RiskReportRecord reportRecord = riskService.riskReportRecordItem(null, policeId, dateTime, lastDateTime,
                 lastMonthTime, timeType);
         if (reportRecord == null) {
             reportRecord = new RiskReportRecord();
         }
+
+        //新增需求-局规记分、信访投诉、执法管理、接警执勤中增加各类问题的次数统计
+        List<RiskReportTypeStatisticsDO> lawEnforcementTypeList = riskService.lawEnforcementReportTypeDOQuery(policeId, dateTime, lastMonthTime, timeType);
+        List<RiskReportTypeStatisticsDO> conductVisitTypeList = riskService.conductVisitReportTypeDOQuery(policeId, dateTime, lastMonthTime, timeType);
+        List<RiskReportTypeStatisticsDO> conductBureauRuleTypeList = riskService.conductBureauRuleReportTypeDOQuery(policeId, dateTime, lastMonthTime, timeType);
+        List<RiskReportTypeStatisticsDO> dutyTypeList = riskService.dutyReportTypeDOQuery(policeId, dateTime, lastMonthTime, timeType);
 
         Double totalNum = nullToZero(conduct.getIndexNum()) + nullToZero(riskCase.getIndexNum()) + nullToZero(duty.getIndexNum()) +
                 nullToZero(train.getIndexNum()) + nullToZero(socialContact.getIndexNum()) + nullToZero(familyEvaluation.getIndexNum()) +
@@ -218,8 +237,8 @@ public class RiskReportController {
         map.put("policeId", user.getPoliceId());
         map.put("deptName", user.getDepartmentName());
         map.put("positionName", user.getPositionName());
-        map.put("thisMonthScore", nullToZero(reportRecord.getLastTotalNum()));
-        map.put("lastMonthScore", nullToZero(reportRecord.getCurrentTotalNum()));
+        map.put("thisMonthScore", nullToZero(reportRecord.getCurrentTotalNum()));
+        map.put("lastMonthScore", nullToZero(reportRecord.getLastTotalNum()));
 
         map.put("belongingDate", "所属时间："+inputDate);
 
@@ -293,10 +312,15 @@ public class RiskReportController {
         map.put("familyCommentTotalScore", nullToZero(familyEvaluation.getIndexNum()));
         map.put("familyComment", "A");
 
+        map.put("lawEnforcementTypeList", lawEnforcementTypeList);
+        map.put("conductVisitTypeList", conductVisitTypeList);
+        map.put("conductBureauRuleTypeList", conductBureauRuleTypeList);
+        map.put("dutyTypeList", dutyTypeList);
+
         //健康风险
         map.put("healthTotalScore", nullToZero(health.getIndexNum()));
         //体重
-        map.put("weightScore", nullToZero(riskHealth.getOrthopaedicsNum()));
+        map.put("weightScore", nullToZero(riskHealth.getOverweightNum()));
         map.put("height", nullToZero(healthRecordInfo.getHeight())+"cm");
         map.put("weight", nullToZero(healthRecordInfo.getWeight()) + "kg");
         map.put("bmiValue", nullToZero(riskHealth.getBmi()));
@@ -324,9 +348,17 @@ public class RiskReportController {
         map.put("hyperuricemiaText", nullToZero(riskHealth.getHyperuricemiaNum()) <= 0 ? "" :
                 healthReportDO.getHyperuricemia() > 1 ? "连续"+healthReportDO.getHyperuricemia()+"年" : "首次出现");
 
+        map.put("prostateNum", nullToZero(riskHealth.getProstateNum()));
+        map.put("majorDiseasesNum", nullToZero(riskHealth.getMajorDiseasesNum()));
+        map.put("heartNum", nullToZero(riskHealth.getHeartNum()));
+        map.put("tumorAntigenNum", nullToZero(riskHealth.getTumorAntigenNum()));
+        map.put("orthopaedicsNum", nullToZero(riskHealth.getOrthopaedicsNum()));
+
         map.put("prostateDesc", textParser(healthRecordInfo.getProstateDesc(), 36));
         map.put("majorDiseasesDesc", textParser(healthRecordInfo.getMajorDiseasesDesc(), 36));
         map.put("heartDesc", textParser(healthRecordInfo.getHeartDesc(), 36));
+        map.put("tumorAntigenDesc", textParser(healthRecordInfo.getTumorAntigenDesc(), 36));
+        map.put("orthopaedicsDesc", textParser(healthRecordInfo.getOrthopaedicsDesc(), 36));
 
         String summary = "行为规范上";
         if (nullToZero(bureauRuleReportDO.getTotalCount()) > 0 || nullToZero(conduct.getVisitScore()) > 0) {
@@ -398,7 +430,9 @@ public class RiskReportController {
             }
         }
         summary += "。";
+
         map.put("summary", textParser(summary, 48));
+//        map.put("desc", textParser(desc, 48));
         map.put("createDate", DateUtils.formatDate(new Date(), "yyyy年MM月dd日"));
 
         String fileName = policeId+"_"+dateTime+"_riskReport_"+System.currentTimeMillis();
@@ -407,8 +441,8 @@ public class RiskReportController {
     }
 
     private String createPDF(String fileName, Map<String, Object> data) throws Exception {
-        String htmlString = getTemplateContent("/mnt/qiantang/", "risk_report_template", data);
-//        String htmlString = getTemplateContent("E:\\work\\web_\\map_point\\", "risk_report_template", map);
+        String htmlString = getTemplateContent("/mnt/qiantang/", "risk_report_template_nth", data);
+//        String htmlString = getTemplateContent("D:\\codes\\work_web\\web_\\map_point\\", "risk_report_template_nth", data);
 
         DocumentBuilder builder =  DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document doc = builder.parse(new ByteArrayInputStream(htmlString.getBytes("UTF-8")));
@@ -534,7 +568,7 @@ public class RiskReportController {
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("dateType", "年");
-        map.put("policeImg", "http://8.136.146.186:8099/static/police/1000966e8cb38-a554-48a9-9ef8-b638ce982132.png");
+        map.put("policeImg", controller.HOST+"/static/police/1000966e8cb38-a554-48a9-9ef8-b638ce982132.png");
         map.put("totalScore", "风险总值：12.23");
         map.put("policeName", "李亦靓");
         map.put("policeId", "052415");
@@ -612,6 +646,11 @@ public class RiskReportController {
         map.put("familyCommentTotalScore", "0");
         map.put("familyComment", "A");
 
+        map.put("lawEnforcementTypeList", Arrays.asList(new RiskReportTypeStatisticsDO("类型1", 3), new RiskReportTypeStatisticsDO("类型2", 2)));
+        map.put("conductVisitTypeList", Arrays.asList(new RiskReportTypeStatisticsDO("类型3", 3), new RiskReportTypeStatisticsDO("类型4", 2)));
+        map.put("conductBureauRuleTypeList", Arrays.asList(new RiskReportTypeStatisticsDO(), null));
+        map.put("dutyTypeList", Arrays.asList(new RiskReportTypeStatisticsDO("类型7", 3), new RiskReportTypeStatisticsDO("类型8", 2)));
+
         //健康风险
         map.put("healthTotalScore", "1.25");
         //体重
@@ -654,7 +693,7 @@ public class RiskReportController {
                 "家属认可度高。从健康风险上看，有3项指标出现异常，体重超标，多锻炼，关爱身体。", 48));
         map.put("createDate", DateUtils.formatDate(new Date(), "yyyy年MM月dd日"));
 
-        String htmlString = controller.getTemplateContent("E:\\work\\web_\\map_point\\", "risk_report_template", map);
+        String htmlString = controller.getTemplateContent("D:\\codes\\work_web\\web_\\map_point\\", "risk_report_template_nth", map);
 
         DocumentBuilder builder =  DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document doc = builder.parse(new ByteArrayInputStream(htmlString.getBytes("UTF-8")));
@@ -665,7 +704,7 @@ public class RiskReportController {
 
         fontResolver.addFont("C:\\Windows\\Fonts\\simsun.ttc", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-        OutputStream out = new FileOutputStream(new File("C:\\Users\\Lenovo\\Desktop\\sss.pdf"));
+        OutputStream out = new FileOutputStream(new File("C:\\Users\\lw\\Desktop\\sss.pdf"));
 
         renderer.setDocument(doc, null);
         renderer.layout();

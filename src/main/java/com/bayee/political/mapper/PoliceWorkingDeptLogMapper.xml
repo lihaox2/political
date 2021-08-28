@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.PoliceWorkingDeptLogMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.PoliceWorkingDeptLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="dept_id" property="deptId" jdbcType="INTEGER" />
+    <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+    <result column="dept_icon" property="deptIcon" jdbcType="VARCHAR" />
+    <result column="working_begin_date" property="workingBeginDate" jdbcType="TIMESTAMP" />
+    <result column="working_end_date" property="workingEndDate" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, dept_id, dept_name, dept_icon, working_begin_date, working_end_date, 
+    creation_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from police_working_dept_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from police_working_dept_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.PoliceWorkingDeptLog" >
+    insert into police_working_dept_log (id, police_id, dept_id, 
+      dept_name, dept_icon, working_begin_date, 
+      working_end_date, creation_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{deptId,jdbcType=INTEGER}, 
+      #{deptName,jdbcType=VARCHAR}, #{deptIcon,jdbcType=VARCHAR}, #{workingBeginDate,jdbcType=TIMESTAMP}, 
+      #{workingEndDate,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.PoliceWorkingDeptLog" >
+    update police_working_dept_log
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      dept_id = #{deptId,jdbcType=INTEGER},
+      dept_name = #{deptName,jdbcType=VARCHAR},
+      dept_icon = #{deptIcon,jdbcType=VARCHAR},
+      working_begin_date = #{workingBeginDate,jdbcType=TIMESTAMP},
+      working_end_date = #{workingEndDate,jdbcType=TIMESTAMP},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="findPoliceWorkingLog" resultMap="BaseResultMap">
+    select
+        *
+    from police_working_dept_log
+    where police_id = #{policeId}
+    <if test="year != null and year != ''">
+      and year(working_begin_date) = #{year}
+    </if>
+    <if test="month != null and month != ''">
+      and month(working_begin_date) = #{month}
+    </if>
+  </select>
+
+</mapper>

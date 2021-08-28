@@ -2,6 +2,8 @@ package com.bayee.political.service;
 
 import java.util.List;
 
+import com.bayee.political.json.PhysicalTrainPageQueryParam;
+import com.bayee.political.pojo.dto.PhysicalTrainPageResultDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -1201,7 +1203,7 @@ public interface TrainService {
 	 * @param trainPhysicalId 体能训练id
 	 * @return
 	 */
-	Integer qualifiedNum(@Param("trainPhysicalId") Integer trainPhysicalId);
+	Integer qualifiedNum(Integer trainPhysicalId, Integer grade);
 
 	/**
 	 * 枪械报名人数
@@ -1711,5 +1713,24 @@ public interface TrainService {
 	 * @return
 	 */
 	Integer getNotEligibleCount(Integer physicalId, Integer startNum, Integer endNum);
+
+	/**
+	 * 免测人数统计
+	 * @param physicalId
+	 * @return
+	 */
+	Integer unTestPoliceCount(Integer physicalId);
+
+	/**
+	 * 删除枪械训练成绩
+	 * @param firearmId
+	 */
+	void deleteTrainFirearmAchievementByFirearmId(Integer firearmId);
+
+	/**
+	 * 删除综合训练成绩
+	 * @param physicalId
+	 */
+	void deleteTrainPhysicalAchievementDetailsByPhysicalId(Integer physicalId);
 
 }

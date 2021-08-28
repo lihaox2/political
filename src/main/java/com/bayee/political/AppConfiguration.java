@@ -222,6 +222,18 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskConductVisitOriginMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRecordVerifyMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRecordVerifyTypeMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceCommentMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceWorkingDeptLogMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceWorkingPositionLogMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceHotSearchMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceRecentlySearchMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceKindMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceLabelMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceEducationLogMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PublicityInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PublicityUserInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PublicityTypeMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(ExcellentPoliceInfoMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -250,6 +262,78 @@ public class AppConfiguration {
 				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		velocityEngine.setVelocityPropertiesMap(velocityPropertiesMap);
 		return velocityEngine.createVelocityEngine();
+	}
+
+	@Bean
+	public PublicityUserInfoMapper publicityUserInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PublicityUserInfoMapper.class);
+	}
+
+	@Bean
+	public ExcellentPoliceInfoMapper excellentPoliceInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(ExcellentPoliceInfoMapper.class);
+	}
+
+	@Bean
+	public PublicityTypeMapper publicityTypeMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PublicityTypeMapper.class);
+	}
+
+	@Bean
+	public PublicityInfoMapper publicityInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PublicityInfoMapper.class);
+	}
+
+	@Bean
+	public PoliceEducationLogMapper policeEducationLogMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PoliceEducationLogMapper.class);
+	}
+
+	@Bean
+	public PoliceLabelMapper policeLabelMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PoliceLabelMapper.class);
+	}
+
+	@Bean
+	public PoliceKindMapper policeKindMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PoliceKindMapper.class);
+	}
+
+	@Bean
+	public PoliceRecentlySearchMapper policeRecentlySearchMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PoliceRecentlySearchMapper.class);
+	}
+
+	@Bean
+	public PoliceHotSearchMapper policeHotSearchMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PoliceHotSearchMapper.class);
+	}
+
+	@Bean
+	public PoliceWorkingPositionLogMapper policeWorkingPositionLogMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PoliceWorkingPositionLogMapper.class);
+	}
+
+	@Bean
+	public PoliceWorkingDeptLogMapper policeWorkingDeptLogMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PoliceWorkingDeptLogMapper.class);
+	}
+
+	@Bean
+	public PoliceCommentMapper policeCommentMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PoliceCommentMapper.class);
 	}
 
 	@Bean

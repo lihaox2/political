@@ -24,7 +24,7 @@ public class RiskConductBureauRuleRecord {
     /**
      * 采取措施
      */
-    private Integer measures;
+    private String measures;
 
     private String content;
 
@@ -56,6 +56,32 @@ public class RiskConductBureauRuleRecord {
      * 是否有效（1.有效，2.无效）
      */
     private Integer isEffective;
+
+    /**
+     * 警督平台主键
+     */
+    private String inspectorKey;
+
+    /**
+     * 数据来源标识，1.警督平台，2.警员风险系统
+     */
+    private Integer dataOriginFlag;
+
+    public String getInspectorKey() {
+        return inspectorKey;
+    }
+
+    public void setInspectorKey(String inspectorKey) {
+        this.inspectorKey = inspectorKey;
+    }
+
+    public Integer getDataOriginFlag() {
+        return dataOriginFlag;
+    }
+
+    public void setDataOriginFlag(Integer dataOriginFlag) {
+        this.dataOriginFlag = dataOriginFlag;
+    }
 
     public Integer getAppealState() {
         return appealState;
@@ -105,11 +131,11 @@ public class RiskConductBureauRuleRecord {
         this.scoringDept = scoringDept;
     }
 
-    public Integer getMeasures() {
+    public String getMeasures() {
         return measures;
     }
 
-    public void setMeasures(Integer measures) {
+    public void setMeasures(String measures) {
         this.measures = measures;
     }
 

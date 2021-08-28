@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bayee.political.domain.RiskCaseTestRecord;
 import com.bayee.political.domain.ScreenDoubeChart;
+import org.apache.ibatis.annotations.Param;
 
 public interface RiskCaseTestRecordService {
 	
@@ -48,4 +49,25 @@ public interface RiskCaseTestRecordService {
      */
 	Integer riskCaseTestRecordPageCount(String date,Integer passFlag,String key, Integer deptId);
 
+	/**
+     * 根据年份和月份进行查询
+     * @param caseTestRecordYear
+     * @param caseTestRecordMonth
+     * @param policeId
+     * @return
+     */
+    List<RiskCaseTestRecord> findCaseTestRecordYearAndMont(
+            @Param("caseTestRecordYear") String caseTestRecordYear,
+            @Param("caseTestRecordMonth") String caseTestRecordMonth,
+            @Param("policeId") String policeId
+    );
+
+    /**
+     * 统计警员平均考试成绩
+     * @param police
+     * @param beginDate
+     * @param endDate
+     * @return
+     */
+    Integer riskCaseTestScoreAvg(String police, String beginDate, String endDate);
 }

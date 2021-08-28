@@ -2,8 +2,11 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.domain.RiskConductVisitRecord;
+import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
 import com.bayee.political.pojo.dto.DutyDetailsDO;
 import com.bayee.political.pojo.dto.DutyPageDO;
+import com.bayee.political.pojo.dto.RiskPoliceDutyResultDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
@@ -100,4 +103,26 @@ public interface RiskDutyDealPoliceRecordMapper {
 	 */
 	Integer getReplaceErrorCount(@Param("policeId") String policeId,@Param("type") Integer type);
 
+	/**
+	 * 根据年份和月份进行查询
+	 * @param conductVisitRecordYear
+	 * @param conductVisitRecordMonth
+	 * @param policeId
+	 * @return
+	 */
+	List<RiskPoliceDutyResultDO> findDutyRecordYearAndMont(@Param("year") String year, @Param("month") String month,
+														   @Param("policeId") String policeId);
+
+	/**
+	 * 接警执勤-扣分类型统计
+	 * @param policeId
+	 * @param dateTime
+	 * @param lastMonthTime
+	 * @param timeType
+	 * @return
+	 */
+	List<RiskReportTypeStatisticsDO> dutyReportTypeDOQuery(@Param("policeId") String policeId,
+														   @Param("dateTime") String dateTime,
+														   @Param("lastMonthTime") String lastMonthTime,
+														   @Param("timeType") Integer timeType);
 }

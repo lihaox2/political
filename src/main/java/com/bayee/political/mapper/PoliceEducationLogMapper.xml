@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.PoliceEducationLogMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.PoliceEducationLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="school_name" property="schoolName" jdbcType="VARCHAR" />
+    <result column="school_icon" property="schoolIcon" jdbcType="VARCHAR" />
+    <result column="major" property="major" jdbcType="VARCHAR" />
+    <result column="academic_degree" property="academicDegree" jdbcType="VARCHAR" />
+    <result column="begin_date" property="beginDate" jdbcType="DATE" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, school_name, school_icon, major, academic_degree, begin_date, end_date, creation_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from police_education_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from police_education_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.PoliceEducationLog" >
+    insert into police_education_log (id, police_id, school_name, 
+      school_icon, major, academic_degree, begin_date,
+      end_date, creation_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{schoolName,jdbcType=VARCHAR}, 
+      #{schoolIcon,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR}, #{academicDegree}, #{beginDate,jdbcType=DATE},
+      #{endDate,jdbcType=DATE}, #{creationDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.PoliceEducationLog" >
+    update police_education_log
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      school_name = #{schoolName,jdbcType=VARCHAR},
+      school_icon = #{schoolIcon,jdbcType=VARCHAR},
+      major = #{major,jdbcType=VARCHAR},
+      academic_degree = #{academicDegree},
+      begin_date = #{beginDate,jdbcType=DATE},
+      end_date = #{endDate,jdbcType=DATE},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="findEducationLodByPoliceId" resultMap="BaseResultMap">
+    select
+        *
+    from police_education_log
+    where police_id = #{policeId}
+    <if test="year != null and year != ''">
+        and year(begin_date) = #{year}
+    </if>
+    <if test="month != null and month != ''">
+        and month(begin_date) = #{month}
+    </if>
+  </select>
+
+
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.PoliceLabelMapper">
+
+    <resultMap id="BaseResultMap" type="com.bayee.political.domain.PoliceLabel">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="label_name" property="labelName" jdbcType="VARCHAR"/>
+        <result column="award_num" property="awardNum" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <!-- 查询所有标签 -->
+    <select id="findLabelAll" resultMap="BaseResultMap">
+        select * from police_label
+    </select>
+
+    <select id="findByPoliceIdAndDate" resultMap="BaseResultMap">
+        select
+            pl.id, pl.label_name
+        from police_user_label pul
+            left join police_label pl on pul.label_id = pl.id
+        where pul.police_id = #{policeId}
+        <if test="date != null and date != ''">
+            and DATE_FORMAT(pul.creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+        </if>
+    </select>
+
+    <select id="findPoliceLabel" resultType="String">
+        SELECT
+            pl.`label_name`
+        FROM excellent_police_info epi
+            LEFT JOIN police_label pl ON epi.`label` = pl.id
+        where epi.police_id = #{policeId}
+    </select>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select * from police_label where id = #{id}
+    </select>
+
+    <select id="findLabelByName" resultMap="BaseResultMap">
+        select * from police_label where label_name like concat('%', #{labelName}, '%')
+    </select>
+
+    <insert id="insertPoliceLabel" parameterType="com.bayee.political.domain.PoliceLabel" useGeneratedKeys="true" keyProperty="id">
+        insert into police_label (id, label_name, award_num,
+                                  create_time, update_time)
+        values (#{id,jdbcType=INTEGER}, #{labelName,jdbcType=VARCHAR}, #{awardNum,jdbcType=INTEGER},
+                #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <select id="countByLabelName" resultType="Integer">
+        select count(1) from police_label where label_name = #{labelName}
+    </select>
+
+</mapper>

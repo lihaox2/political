@@ -69,4 +69,11 @@ public class RiskCaseAbilityRecordServiceImpl implements RiskCaseAbilityRecordSe
 		return riskCaseAbilityRecordMapper.getIdByDateAndPoliceId(date, policeId, id);
 	}
 
+	@Override
+	public List<RiskCaseAbilityRecord> findCaseAbilityRecordYearAndMont(String caseAbilityRecordYear,
+																		String caseAbilityRecordMonth, String policeId) {
+		return riskCaseAbilityRecordMapper.findCaseAbilityRecordYearAndMonth(caseAbilityRecordYear,
+				caseAbilityRecordMonth,policeId);
+	}
+
 }

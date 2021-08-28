@@ -1,8 +1,11 @@
 package com.bayee.political.service;
 
+import com.bayee.political.domain.RiskConductVisitRecord;
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
 import com.bayee.political.pojo.dto.DutyDetailsDO;
 import com.bayee.political.pojo.dto.DutyPageDO;
+import com.bayee.political.pojo.dto.RiskPoliceDutyResultDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -59,5 +62,14 @@ public interface RiskDutyDealPoliceRecordService {
 	 * @return
 	 */
 	Integer getReplaceErrorCount(String policeId, Integer type);
+
+	/**
+	 * 根据年份和月份进行查询
+	 * @param conductVisitRecordYear
+	 * @param conductVisitRecordMonth
+	 * @param policeId
+	 * @return
+	 */
+	List<RiskPoliceDutyResultDO> findDutyRecordYearAndMont(String year, String month, String policeId);
 
 }

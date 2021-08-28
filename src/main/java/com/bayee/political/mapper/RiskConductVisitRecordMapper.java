@@ -66,4 +66,16 @@ public interface RiskConductVisitRecordMapper {
      */
     Integer countAll();
 
+    /**
+     * 根据年份和月份进行查询
+     * @param conductVisitRecordYear
+     * @param conductVisitRecordMonth
+     * @param policeId
+     * @return
+     */
+    List<RiskConductVisitRecord> findConductVisitRecordYearAndMonth(
+            @Param("conductVisitRecordYear") String conductVisitRecordYear,
+            @Param("conductVisitRecordMonth") String conductVisitRecordMonth,
+            @Param("policeId") String policeId
+    );
 }

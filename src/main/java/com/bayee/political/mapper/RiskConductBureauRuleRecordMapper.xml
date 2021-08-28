@@ -10,7 +10,7 @@
     <result column="deduction_score" property="deductionScore" jdbcType="DOUBLE" />
     <result column="scoring_level" property="scoringLevel" jdbcType="INTEGER" />
     <result column="scoring_dept" property="scoringDept" jdbcType="INTEGER" />
-    <result column="measures" property="measures" jdbcType="INTEGER" />
+    <result column="measures" property="measures" jdbcType="VARCHAR" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     <result column="img_arr" property="imgArr" jdbcType="VARCHAR" />
     <result column="is_effective" property="isEffective" jdbcType="INTEGER" />
@@ -44,7 +44,7 @@
       creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{deductionScore,jdbcType=DOUBLE}, 
-      #{scoringLevel,jdbcType=INTEGER}, #{scoringDept,jdbcType=INTEGER}, #{measures,jdbcType=INTEGER}, 
+      #{scoringLevel,jdbcType=INTEGER}, #{scoringDept,jdbcType=INTEGER}, #{measures},
       #{remarks,jdbcType=VARCHAR}, #{imgArr,jdbcType=VARCHAR}, #{isEffective,jdbcType=INTEGER}, 
       #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
@@ -120,7 +120,7 @@
         #{scoringDept,jdbcType=INTEGER},
       </if>
       <if test="measures != null" >
-        #{measures,jdbcType=INTEGER},
+        #{measures},
       </if>
       <if test="remarks != null" >
         #{remarks,jdbcType=VARCHAR},
@@ -164,7 +164,7 @@
         scoring_dept = #{scoringDept,jdbcType=INTEGER},
       </if>
       <if test="measures != null" >
-        measures = #{measures,jdbcType=INTEGER},
+        measures = #{measures},
       </if>
       <if test="remarks != null" >
         remarks = #{remarks,jdbcType=VARCHAR},
@@ -193,7 +193,7 @@
       deduction_score = #{deductionScore,jdbcType=DOUBLE},
       scoring_level = #{scoringLevel,jdbcType=INTEGER},
       scoring_dept = #{scoringDept,jdbcType=INTEGER},
-      measures = #{measures,jdbcType=INTEGER},
+      measures = #{measures},
       remarks = #{remarks,jdbcType=VARCHAR},
       img_arr = #{imgArr,jdbcType=VARCHAR},
       is_effective = #{isEffective,jdbcType=INTEGER},
@@ -294,11 +294,11 @@
       rt2.parent_id as scoringRootType, (select name from risk_conduct_bureau_rule_type where id = rt2.parent_id) as scoringRootTypeName,
       rt.parent_id as scoringType, (select name from risk_conduct_bureau_rule_type where id = rt.parent_id) as scoringTypeName,
       rb.type as scoringOption, rb.content as scoringOptionName,
-      rb.measures as measures, m.name as measuresName,
+      rb.measures as measuresName,
       rb.deduction_score as deductScore, DATE_FORMAT(rb.creation_date,'%Y-%m-%d') as date, rb.remarks as remarks, rb.img_arr as imgArr
     from risk_conduct_bureau_rule_record rb
       left join user u on rb.police_id = u.police_id
-      left join measures m on rb.measures = m.id
+--       left join measures m on rb.measures = m.id
       left join risk_conduct_bureau_rule_type rt on rt.id = rb.type
       left join risk_conduct_bureau_rule_type rt2 on rt2.id = rt.parent_id
     where rb.id = #{id}
@@ -317,6 +317,37 @@
       group by ptype.parent_id) b on a.id = b.id
     where a.parent_id = 0
     order by a.id
+  </select>
+
+  <select id="findConductBureauRuleRecordYearAndMonth" resultMap="BaseResultMap">
+    select * from risk_conduct_bureau_rule_record a where 1 = 1
+    <if test="conductBureauRuleRecordYear != null and conductBureauRuleRecordYear != ''">
+      and DATE_FORMAT(creation_date,'%Y') = #{conductBureauRuleRecordYear}
+    </if>
+    <if test="conductBureauRuleRecordMonth != null and conductBureauRuleRecordMonth != ''">
+      and DATE_FORMAT(creation_date,'%m') = #{conductBureauRuleRecordMonth}
+    </if>
+    <if test="policeId != null and policeId != ''">
+      and a.police_id = #{policeId}
+    </if>
+    order by creation_date desc
+  </select>
+
+  <select id="conductBureauRuleReportTypeDOQuery" resultType="com.bayee.political.pojo.RiskReportTypeStatisticsDO">
+    SELECT
+      CONCAT(brt3.name, ' -> ', brt2.name) as typeName, COUNT(1) as typeCount
+    FROM risk_conduct_bureau_rule_record brr
+           LEFT JOIN risk_conduct_bureau_rule_type brt1 ON brr.type = brt1.id
+           LEFT JOIN risk_conduct_bureau_rule_type brt2 ON brt1.parent_id = brt2.id
+           LEFT JOIN risk_conduct_bureau_rule_type brt3 ON brt2.parent_id = brt3.id
+    WHERE is_effective = 1 AND `type` IS NOT NULL AND police_id = #{policeId}
+    <if test="timeType == 1">
+      and DATE_FORMAT(brr.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(brr.creation_date, '%Y-%m')&lt;=#{dateTime}
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(brr.creation_date, '%Y-%m')=#{dateTime}
+    </if>
+    GROUP BY brt2.id
   </select>
 
 </mapper>

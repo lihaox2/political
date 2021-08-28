@@ -5,6 +5,10 @@ package com.bayee.political.service;
 
 import java.util.List;
 
+import com.bayee.political.json.TalentsParticularsResultList;
+import com.bayee.political.json.TalentsUserParam;
+import com.bayee.political.json.TalentsUserResult;
+import com.bayee.political.pojo.dto.HolographicPoliceListDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -224,4 +228,39 @@ public interface UserService {
 	 */
 	boolean checkPoliceExists(String policeId);
 
+	/**
+	 * 警员全息 通过key 查询警员信息
+	 * @param key 警号、警员姓名
+	 * @return
+	 */
+	List<HolographicPoliceListDO> holographicFindPoliceByKey(String key);
+
+	/**
+	 * 根据部门id查询
+	 * @param deptId
+	 * @return
+	 */
+	List<User> findByDeptId(Integer deptId);
+
+	/**
+	 * 人才库列表
+	 * @param talentsUserParam
+	 * @return
+	 */
+	List<TalentsUserResult> talentsFindPageList(TalentsUserParam talentsUserParam);
+
+	/**
+	 * 人才库列表-数据条数统计
+	 * @param talentsUserParam
+	 * @return
+	 */
+	Integer talentsFindPageCount(TalentsUserParam talentsUserParam);
+
+	/**
+	 * 人才库 俩名警员对比查询
+	 * @param firstId
+	 * @param sendId
+	 * @return
+	 */
+	TalentsParticularsResultList findTalentsUserInfo(String firstId, String sendId);
 }

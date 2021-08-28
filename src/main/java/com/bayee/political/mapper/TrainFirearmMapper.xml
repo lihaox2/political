@@ -366,8 +366,11 @@ select * from train_firearm where train_firearm_type = (select project_id from t
     <if test="trainName != null and trainName != ''">
         and a.name like concat('%', #{trainName}, '%')
     </if>
-    <if test="date != null and date != ''">
-      and DATE_FORMAT(a.train_start_date,'%Y-%m-%d') = #{date}
+    <if test="trainBeginDate != null and trainBeginDate != ''">
+      and DATE_FORMAT(a.train_start_date,'%Y-%m-%d') >= #{trainBeginDate}
+    </if>
+    <if test="trainEndDate != null and trainEndDate != ''">
+      and DATE_FORMAT(a.train_start_date,'%Y-%m-%d') &lt;= #{trainEndDate}
     </if>
     order by a.id desc
     limit #{pageIndex}, #{pageSize}
@@ -382,8 +385,11 @@ select * from train_firearm where train_firearm_type = (select project_id from t
     <if test="trainName != null and trainName != ''">
       and a.name like concat('%', #{trainName}, '%')
     </if>
-    <if test="date != null and date != ''">
-      and DATE_FORMAT(a.train_start_date,'%Y-%m-%d') = #{date}
+    <if test="trainBeginDate != null and trainBeginDate != ''">
+      and DATE_FORMAT(a.train_start_date,'%Y-%m-%d') >= #{trainBeginDate}
+    </if>
+    <if test="trainEndDate != null and trainEndDate != ''">
+      and DATE_FORMAT(a.train_start_date,'%Y-%m-%d') &lt;= #{trainEndDate}
     </if>
   </select>
 

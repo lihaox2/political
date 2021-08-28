@@ -2,6 +2,8 @@ package com.bayee.political.service.impl;
 
 import java.util.List;
 
+import com.bayee.political.json.PhysicalTrainPageQueryParam;
+import com.bayee.political.pojo.dto.PhysicalTrainPageResultDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1419,8 +1421,8 @@ public class TrainServiceImpl implements TrainService {
 	}
 
 	@Override
-	public Integer qualifiedNum(Integer trainPhysicalId) {
-		return trainPhysicalAchievementMapper.qualifiedNum(trainPhysicalId);
+	public Integer qualifiedNum(Integer trainPhysicalId, Integer grade) {
+		return trainPhysicalAchievementMapper.qualifiedNum(trainPhysicalId, grade);
 	}
 
 	@Override
@@ -1796,6 +1798,21 @@ public class TrainServiceImpl implements TrainService {
 	@Override
 	public Integer getNotEligibleCount(Integer physicalId, Integer startNum, Integer endNum) {
 		return trainPhysicalAchievementMapper.getNotEligibleCount(physicalId, startNum, endNum);
+	}
+
+	@Override
+	public Integer unTestPoliceCount(Integer physicalId) {
+		return trainPhysicalAchievementMapper.unTestPoliceCount(physicalId);
+	}
+
+	@Override
+	public void deleteTrainFirearmAchievementByFirearmId(Integer firearmId) {
+		trainFirearmAchievementMapper.deleteTrainFirearmAchievementByFirearmId(firearmId);
+	}
+
+	@Override
+	public void deleteTrainPhysicalAchievementDetailsByPhysicalId(Integer physicalId) {
+		trainPhysicalAchievementDetailsMapper.deleteTrainPhysicalAchievementDetailsByPhysicalId(physicalId);
 	}
 
 }

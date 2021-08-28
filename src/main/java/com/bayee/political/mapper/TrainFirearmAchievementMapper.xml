@@ -528,6 +528,9 @@ order by a.creation_date desc
         <if test="searchFlag != null and searchFlag == 2">
             and fa.achievement_grade = 1
         </if>
+        <if test="deptId != null and deptId != ''">
+            and u.department_id = #{deptId}
+        </if>
         order by fa.id desc
         limit #{pageIndex}, #{pageSize}
     </select>
@@ -548,6 +551,9 @@ order by a.creation_date desc
         <if test="searchFlag != null and searchFlag == 2">
             and fa.achievement_grade = 1
         </if>
+        <if test="deptId != null and deptId != ''">
+            and u.department_id = #{deptId}
+        </if>
     </select>
 
     <select id="trainFirearmQualifiedRate" resultType="com.bayee.political.json.TrainRankingResult">
@@ -560,11 +566,51 @@ order by a.creation_date desc
     </select>
 
     <select id="getLineChartData" resultType="com.bayee.political.json.TrainLineChartResult">
-        select MONTH(sign_date) as `name`,ifnull(SUM(achievement_grade>1),0)/count(id) as qualifiedRate,
-        ifnull(SUM(achievement_grade>1),0) as `value`
-        from train_firearm_achievement
-        where DATE_SUB(CURDATE(), INTERVAL 6 MONTH) &lt;= date(sign_date)
-        GROUP BY `name`
+        SELECT
+            MONTH(CONCAT(m.date, '-01')) AS `name`,TRUNCATE(IFNULL(IFNULL(SUM(achievement_grade>1),0)/COUNT(id), 0), 2) AS qualifiedRate,
+            IFNULL(SUM(achievement_grade>1),0) AS `value`
+        FROM (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m') AS `date`
+            UNION ALL
+            SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `date`) `m`
+        LEFT JOIN train_firearm_achievement pa ON m.date = DATE_FORMAT(sign_date, '%Y-%m')
+        GROUP BY m.date
+    </select>
+
+    <delete id="deleteTrainFirearmAchievementByFirearmId" >
+        delete from train_firearm_achievement where train_firearm_id = #{firearmId}
+    </delete>
+
+    <select id="findFirearmRecordYearAndMonth" resultMap="BaseResultMap">
+        select * from train_firearm_achievement a where 1 = 1
+        <if test="firearmRecordYear != null and firearmRecordYear != ''">
+            and DATE_FORMAT(sign_date,'%Y') = #{firearmRecordYear}
+        </if>
+        <if test="firearmRecordMonth != null and firearmRecordYear != ''">
+            and DATE_FORMAT(sign_date,'%m') = #{firearmRecordMonth}
+        </if>
+        <if test="policeId != null and policeId != ''">
+            and a.police_id = #{policeId}
+        </if>
+        order by creation_date desc
+    </select>
+
+    <select id="policeFirearmAchievementAvg" resultType="Integer">
+        SELECT
+            CEIL(AVG(achievement))
+        FROM train_firearm_achievement
+        WHERE police_id = #{policeId}
+          and DATE_FORMAT(sign_date,'%Y-%m') >= #{beginDate}
+          and DATE_FORMAT(sign_date,'%Y-%m') &lt;= #{endDate}
     </select>
 
 </mapper>

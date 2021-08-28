@@ -1228,17 +1228,23 @@ order by a.is_sign desc,a.project_id asc
     <select id="getPolicePhysicalDeductionScore" resultType="Double">
         select ifnull((physical_train.b_count / physical_train.a_count) * 5, 0) as physical_score from (
            select (select count(1) from train_physical_achievement_details
-                   where achievement_grade is not null and police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m')) as a_count,
+                   where achievement_grade is not null and police_id = #{policeId}
+                     and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m')) as a_count,
                   (select count(1) from train_physical_achievement_details
-                   where achievement_grade = 1 and  police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m'))  as b_count) physical_train
+                   where achievement_grade = 1 and  police_id = #{policeId}
+                     and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m'))  as b_count) physical_train
     </select>
 
     <select id="getParticipantsTotal" resultType="com.bayee.political.json.TrainIsEntryResult">
-        select DISTINCT police_id as policeId,is_entry as isEntry from train_physical_achievement_details
+        SELECT DISTINCT a.policeId, a.isEntry FROM (
+           SELECT DISTINCT police_id AS policeId,is_entry AS isEntry FROM train_physical_achievement_details
+           UNION ALL
+           SELECT DISTINCT police_id AS policeId, 0 AS isEntry FROM train_firearm_achievement) a
     </select>
 
     <select id="trainPhysicalQualifiedRate" resultType="com.bayee.political.json.TrainRankingResult">
-        select a.police_id as policeId,ifnull(sum(a.achievement_grade=2),0)/count(a.id)*100 as qualifiedRate,b.name as policeName,
+        select
+            a.police_id as policeId,TRUNCATE(ifnull(sum(a.achievement_grade=2),0)/count(a.id)*100, 2) as qualifiedRate,b.name as policeName,
         c.name as departmentName
         from train_physical_achievement_details a
         LEFT JOIN `user` b on a.police_id=b.police_id
@@ -1247,7 +1253,7 @@ order by a.is_sign desc,a.project_id asc
     </select>
 
     <select id="totalQualifiedRate" resultType="com.bayee.political.json.TrainRankingResult">
-        select police_id as policeId,policeName,departmentName,SUM(num)/SUM(total)*100 as qualifiedRate
+        select police_id as policeId,policeName,departmentName,TRUNCATE(SUM(num)/SUM(total)*100, 2) as qualifiedRate
         from (
             (
                 select a.police_id,count(a.id) as total,b.name as policeName,c.name as departmentName
@@ -1267,6 +1273,30 @@ order by a.is_sign desc,a.project_id asc
                 GROUP BY a.police_id
             )
         ) c GROUP BY police_id
+    </select>
+
+    <select id="findPoliceAchievementById" resultType="com.bayee.political.pojo.dto.TrainPhysicalPoliceDetailsResultDO">
+        select
+            tpd.achievement_str as achievementStr,
+            tp.name as trainProjectName,
+            (case tpd.achievement_grade when 1 then '不合格'
+                when 2 then '合格' when 3 then '未参加' else '--' end) as trainAchievement
+        from (select * from train_project where type = 1) tp
+             left join train_physical_achievement_details tpd
+                   on tp.id = tpd.project_id and train_physical_achievement_id = #{physicalAchievementId}
+    </select>
+
+    <delete id="deleteTrainPhysicalAchievementDetailsByPhysicalId" >
+        delete from train_physical_achievement_details where train_physical_id = #{physicalId}
+    </delete>
+
+    <select id="physicalTrainingRecordCareerQuery" resultType="com.bayee.political.pojo.dto.RiskPhysicalTrainingRecordDO">
+        select
+            tp.name as trainProjectName,
+            tpd.achievement_grade as trainAchievement
+        from (select * from train_project where type = 1) tp
+            left join train_physical_achievement_details tpd
+                on tp.id = tpd.project_id and train_physical_achievement_id = #{physicalAchievementId}
     </select>
 
 </mapper>

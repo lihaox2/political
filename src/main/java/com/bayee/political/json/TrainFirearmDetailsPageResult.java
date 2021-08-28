@@ -33,6 +33,19 @@ public class TrainFirearmDetailsPageResult {
      */
     private String date;
 
+    /**
+     * 成绩
+     */
+    private Integer achievement;
+
+    public Integer getAchievement() {
+        return achievement;
+    }
+
+    public void setAchievement(Integer achievement) {
+        this.achievement = achievement;
+    }
+
     public Integer getId() {
         return id;
     }

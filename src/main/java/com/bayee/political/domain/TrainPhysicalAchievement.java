@@ -49,9 +49,31 @@ public class TrainPhysicalAchievement {
      * 是否免测（1.免测，2.正常测试）
      */
     private Integer isTestFree;
+
 	private Date creationDate;
 
 	private Date updateDate;
+
+	/**
+	 * 备注
+	 */
+	private String remark;
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getIsTestFree() {
+		return isTestFree;
+	}
+
+	public void setIsTestFree(Integer isTestFree) {
+		this.isTestFree = isTestFree;
+	}
 
 	public Integer getId() {
 		return id;

@@ -257,5 +257,19 @@
       and id != #{id}
     </if>
   </select>
-  
+
+  <select id="findCaseAbilityRecordYearAndMonth" resultMap="BaseResultMap">
+    select * from risk_case_ability_record a where 1 = 1
+    <if test="caseAbilityRecordYear != null and caseAbilityRecordYear != ''">
+      and DATE_FORMAT(creation_date,'%Y') = #{caseAbilityRecordYear}
+    </if>
+    <if test="caseAbilityRecordMonth != null and caseAbilityRecordMonth != ''">
+      and DATE_FORMAT(creation_date,'%m') = #{caseAbilityRecordMonth}
+    </if>
+    <if test="policeId != null and policeId != ''">
+      and a.police_id = #{policeId}
+    </if>
+    order by creation_date desc
+  </select>
+
 </mapper>

@@ -64,4 +64,10 @@ public class RiskCaseAbilityServiceImpl implements RiskCaseAbilityService{
 		return riskCaseAbilityMapper.riskCaseAbilityChart(policeId);
 	}
 
+	@Override
+	public boolean checkPoliceDeductionStatus(String policeId, String beginDate, String endDate) {
+		Integer flag = riskCaseAbilityMapper.checkPoliceDeductionStatus(policeId, beginDate, endDate);
+		return !(flag != null && flag > 0);
+	}
+
 }

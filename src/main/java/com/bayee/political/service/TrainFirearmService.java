@@ -25,7 +25,8 @@ public interface TrainFirearmService {
      * @param position
      * @return
      */
-    List<TrainFirearm> findTrainFirearmPage(Integer pageIndex, Integer pageSize, String date, String trainName, Integer position);
+    List<TrainFirearm> findTrainFirearmPage(Integer pageIndex, Integer pageSize, String trainBeginDate,
+                                            String trainEndDate, String trainName, Integer position);
 
     /**
      * 统计分页数据条数
@@ -34,6 +35,6 @@ public interface TrainFirearmService {
      * @param position
      * @return
      */
-    Integer countTrainFirearmPage(String date, String trainName, Integer position);
+    Integer countTrainFirearmPage(String trainBeginDate, String trainEndDate, String trainName, Integer position);
 
 }

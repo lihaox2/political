@@ -26,7 +26,7 @@ public class ConductBureauRuleSaveParam {
     /**
      * 采取措施
      */
-    private Integer measures;
+    private String measures;
 
     /**
      * 时间
@@ -67,11 +67,11 @@ public class ConductBureauRuleSaveParam {
         this.scoringDept = scoringDept;
     }
 
-    public Integer getMeasures() {
+    public String getMeasures() {
         return measures;
     }
 
-    public void setMeasures(Integer measures) {
+    public void setMeasures(String measures) {
         this.measures = measures;
     }
 

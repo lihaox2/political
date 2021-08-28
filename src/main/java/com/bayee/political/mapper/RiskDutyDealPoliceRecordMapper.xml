@@ -331,4 +331,36 @@
     group by police_id, error_id having count(1) >= 2
   </select>
 
+  <select id="findDutyRecordYearAndMont" resultType="com.bayee.political.pojo.dto.RiskPoliceDutyResultDO">
+    select
+        u.name as policeName,itype.name as typeName, etype.name as errorTypeName,
+        record.deduction_score as deductionScore, record.creation_date as `date`
+    from risk_duty_deal_police_record record
+        left join user u on record.police_id = u.police_id
+        left join risk_duty_information_type itype on record.information_id = itype.id
+        left join risk_duty_error_type etype on record.error_id = etype.id
+    where record.police_id = #{policeId}
+    <if test="year != null and year != ''">
+      and year(record.creation_date) = #{year}
+    </if>
+    <if test="month != null and month != ''">
+      and month(record.creation_date) = #{month}
+    </if>
+  </select>
+
+  <select id="dutyReportTypeDOQuery" resultType="com.bayee.political.pojo.RiskReportTypeStatisticsDO">
+    SELECT
+      it.name as typeName, COUNT(1) as typeCount
+    FROM risk_duty_deal_police_record pr
+           LEFT JOIN risk_duty_information_type it ON pr.information_id = it.id
+    WHERE is_effective = 1 and police_id = #{policeId}
+    <if test="timeType == 1">
+      and DATE_FORMAT(pr.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(pr.creation_date, '%Y-%m')&lt;=#{dateTime}
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(pr.creation_date, '%Y-%m')=#{dateTime}
+    </if>
+    GROUP BY it.id
+  </select>
+
 </mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.PoliceKindMapper">
+    <resultMap id="BaseResultMap" type="com.bayee.political.domain.PoliceKind">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="police_id" property="policeId" jdbcType="VARCHAR"/>
+        <result column="police_king_name" property="policeKingName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 查询所有警种信息 -->
+    <select id="findAll" resultMap="BaseResultMap">
+        select * from police_kind where 1 = 1
+    </select>
+
+    <!-- 宣传报道警种排名TOP5 -->
+    <select id="findPoliceRanKind" resultType="com.bayee.political.pojo.dto.PoliceKindDO">
+        select
+            pk.police_king_name as kindName, urk.count as countNum
+        from police_kind pk
+                 left join (
+            select uk.kind_id, count(uk.kind_id) as count from(
+                select u.kind_id from publicity_user_info pui
+                left join user u on pui.police_id = u.police_id
+                group by pui.info_id, u.kind_id) uk
+            group by uk.kind_id) urk on urk.kind_id = pk.id
+        order by urk.count desc
+            limit 5
+    </select>
+
+</mapper>

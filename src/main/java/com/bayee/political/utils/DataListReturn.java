@@ -40,7 +40,19 @@ public class DataListReturn {
 	}
 
 	/**
-	 * 成功返回
+	 * 异常返回
+	 * @return
+	 */
+	public static DataListReturn error() {
+		DataListReturn data = new DataListReturn();
+		data.setCode(500);
+		data.setMessage("error");
+		data.setStatus(false);
+		return data;
+	}
+
+	/**
+	 * 异常返回
 	 * @return
 	 */
 	public static DataListReturn error(String desc) {

@@ -3,6 +3,7 @@ package com.bayee.political.service;
 import java.util.List;
 
 import com.bayee.political.domain.RiskConductVisitRecord;
+import org.apache.ibatis.annotations.Param;
 
 public interface RiskConductVisitRecordService {
 	
@@ -52,4 +53,16 @@ public interface RiskConductVisitRecordService {
      */
     Integer countAll();
 
+    /**
+     * 根据年份和月份进行查询
+     * @param conductVisitRecordYear
+     * @param conductVisitRecordMonth
+     * @param policeId
+     * @return
+     */
+    List<RiskConductVisitRecord> findConductVisitRecordYearAndMont(
+            @Param("conductVisitRecordYear") String conductVisitRecordYear,
+            @Param("conductVisitRecordMonth") String conductVisitRecordMonth,
+            @Param("policeId") String policeId
+    );
 }

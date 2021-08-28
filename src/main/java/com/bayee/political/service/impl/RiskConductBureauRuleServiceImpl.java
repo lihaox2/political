@@ -186,7 +186,8 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
             int deductionCount = 0;
             double deductionScore = 0;
             for (RiskConductVisitRecord record : visitRecordList) {
-                deductionCount += record.getDeductionScore();
+                deductionCount++;
+                deductionScore += record.getDeductionScore();
                 /*deductionCount++;
                 if (VisitRecordType.ORDER_INSPECTION.getTypeId().equals(record.getType())) {
                     //责令检查

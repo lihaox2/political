@@ -337,9 +337,10 @@ public class RiskController extends BaseController {
 	// 警员预警分页查询
 	@RequestMapping(value = "/risk/alarm/page/list", method = RequestMethod.GET)
 	public ResponseEntity<?> riskAlarmPageList(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "type", required = false) Integer type,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize,
-			@RequestParam(value = "pageNum", required = false) Integer pageNum,@RequestParam(value = "month", required = false) Integer month) throws ApiException, ParseException {
+												@RequestParam(value = "type", required = false) Integer type,
+												@RequestParam(value = "pageSize", required = false) Integer pageSize,
+												@RequestParam(value = "pageNum", required = false) Integer pageNum,
+											   	@RequestParam(value = "month", required = false) Integer month) throws ApiException, ParseException {
 		DataListPage dlr = new DataListPage();
 		
 		Calendar cal = Calendar.getInstance();
@@ -698,6 +699,11 @@ public class RiskController extends BaseController {
 		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
 	}
 
+	@GetMapping("/risk/history/year/list")
+	public ResponseEntity<?> riskHistoryYearList(@RequestParam(value = "policeId") String policeId) {
+		return new ResponseEntity<>(DataListReturn.ok(riskService.riskHistoryYearList(policeId)), HttpStatus.OK);
+	}
+
 	// 警员历史风险报告查询
 	@RequestMapping(value = "/risk/history/report/list", method = RequestMethod.GET)
 	public ResponseEntity<?> riskHistoryReportList(@RequestParam(value = "policeId", required = false) String policeId,
@@ -708,16 +714,15 @@ public class RiskController extends BaseController {
 		}
 		dateTime = dateTime.substring(0, 4);
 		// 警员历史风险报告年份查询
-		List<RiskHistoryReportTime> list = riskService.riskHistoryReportTimeList(policeId);
+		/*List<RiskHistoryReportTime> list = riskService.riskHistoryReportTimeList(policeId);
 		for (int i = 0; i < list.size(); i++) {
 			// 警员历史风险报告月份查询
-			List<RiskHistoryReport> list2 = riskService.riskHistoryReportList(policeId,
-					String.valueOf(list.get(i).getId()));
+			List<RiskHistoryReport> list2 = riskService.riskHistoryReportList(policeId, String.valueOf(list.get(i).getId()));
 			list.get(i).setMonthList(list2);
-		}
+		}*/
 		dlr.setStatus(true);
 		dlr.setMessage("success");
-		dlr.setResult(list);
+		dlr.setResult(riskService.riskHistoryReportList(policeId, ""));
 		dlr.setCode(StatusCode.getSuccesscode());
 		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
 	}

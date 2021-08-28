@@ -68,4 +68,26 @@ public interface RiskCaseTestRecordMapper {
 	Integer riskCaseTestRecordPageCount(@Param("date") String date, @Param("passFlag") Integer passFlag,
 										@Param("key") String key, @Param("deptId") Integer deptId);
 
+	/**
+	 * 根据年份和月份进行查询
+	 * @param caseTestRecordYear
+	 * @param caseTestRecordMonth
+	 * @param policeId
+	 * @return
+	 */
+	List<RiskCaseTestRecord> findCaseTestRecordYearAndMonth(
+			@Param("caseTestRecordYear") String caseTestRecordYear,
+			@Param("caseTestRecordMonth") String caseTestRecordMonth,
+			@Param("policeId") String policeId
+	);
+
+	/**
+	 * 统计警员平均考试成绩
+	 * @param policeId
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	Integer riskCaseTestScoreAvg(@Param("policeId") String policeId, @Param("beginDate") String beginDate,
+								 @Param("endDate") String endDate);
 }

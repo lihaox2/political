@@ -2,11 +2,7 @@ package com.bayee.political.controller.admin;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -228,7 +224,17 @@ public class AdminIndexController {
      */
     @GetMapping("/conduct/chart")
     public ResponseEntity<?> conductChart() {
-        List<ScreenChart> result = riskConductBureauRuleRecordService.getConductBureauChart();
+        List<ScreenChart> chart = riskConductBureauRuleRecordService.getConductBureauChart();
+        Integer totalSize = 0;
+        if (chart != null && chart.size() > 0) {
+            for (ScreenChart c : chart) {
+                totalSize += c.getValue();
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalSize", totalSize);
+        result.put("chart", chart);
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }

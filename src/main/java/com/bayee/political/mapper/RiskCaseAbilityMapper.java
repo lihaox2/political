@@ -53,4 +53,13 @@ public interface RiskCaseAbilityMapper {
      */
     void updateRiskCaseAbility(RiskCaseAbility riskCaseAbility);
 
+    /**
+     * 判断警员扣分情况
+     * @param policeId
+     * @param beginDate
+     * @param endDate
+     * @return
+     */
+    Integer checkPoliceDeductionStatus(@Param("policeId") String policeId,@Param("beginDate") String beginDate,
+                                       @Param("endDate") String endDate);
 }

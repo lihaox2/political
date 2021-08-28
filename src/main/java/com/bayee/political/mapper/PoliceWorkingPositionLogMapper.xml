@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.PoliceWorkingPositionLogMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.PoliceWorkingPositionLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="working_dept_log_id" property="workingDeptLogId" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="position_label" property="positionLabel" jdbcType="VARCHAR" />
+    <result column="working_desc" property="workingDesc" jdbcType="VARCHAR" />
+    <result column="working_place" property="workingPlace" jdbcType="VARCHAR" />
+    <result column="working_begin_date" property="workingBeginDate" jdbcType="TIMESTAMP" />
+    <result column="working_end_date" property="workingEndDate" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, working_dept_log_id, police_id, position, position_label, working_desc, working_place, 
+    working_begin_date, working_end_date, creation_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from police_working_position_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from police_working_position_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.PoliceWorkingPositionLog" >
+    insert into police_working_position_log (id, working_dept_log_id, police_id, 
+      position, position_label, working_desc, 
+      working_place, working_begin_date, working_end_date, 
+      creation_date)
+    values (#{id,jdbcType=INTEGER}, #{workingDeptLogId,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, 
+      #{position,jdbcType=VARCHAR}, #{positionLabel,jdbcType=VARCHAR}, #{workingDesc,jdbcType=VARCHAR}, 
+      #{workingPlace,jdbcType=VARCHAR}, #{workingBeginDate,jdbcType=TIMESTAMP}, #{workingEndDate,jdbcType=TIMESTAMP}, 
+      #{creationDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.PoliceWorkingPositionLog" >
+    update police_working_position_log
+    set working_dept_log_id = #{workingDeptLogId,jdbcType=INTEGER},
+      police_id = #{policeId,jdbcType=VARCHAR},
+      position = #{position,jdbcType=VARCHAR},
+      position_label = #{positionLabel,jdbcType=VARCHAR},
+      working_desc = #{workingDesc,jdbcType=VARCHAR},
+      working_place = #{workingPlace,jdbcType=VARCHAR},
+      working_begin_date = #{workingBeginDate,jdbcType=TIMESTAMP},
+      working_end_date = #{workingEndDate,jdbcType=TIMESTAMP},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="findByDeptLogIdAndPoliceId" resultMap="BaseResultMap">
+    select * from police_working_position_log
+    where police_id = #{policeId} and working_dept_log_id = #{deptLogId}
+    order by working_begin_date desc
+  </select>
+
+</mapper>

@@ -1985,8 +1985,11 @@ order by ifnull(b.bnum/a.anum,0) desc limit 5
 		<if test="trainName != null and trainName != ''">
 			and ph.name like concat('%', #{trainName}, '%')
 		</if>
-		<if test="date != null and date != ''">
-			and DATE_FORMAT(ph.train_start_date,'%Y-%m-%d') = #{date}
+		<if test="trainBeginDate != null and trainBeginDate != ''">
+			and DATE_FORMAT(ph.train_start_date,'%Y-%m-%d') >= #{trainBeginDate}
+		</if>
+		<if test="trainEndDate != null and trainEndDate != ''">
+			and DATE_FORMAT(ph.train_start_date,'%Y-%m-%d') &lt;= #{trainEndDate}
 		</if>
 		order by id desc
 		limit #{pageIndex}, #{pageSize}
@@ -2000,15 +2003,18 @@ order by ifnull(b.bnum/a.anum,0) desc limit 5
 		<if test="trainName != null and trainName != ''">
 			and ph.name like concat('%', #{trainName}, '%')
 		</if>
-		<if test="date != null and date != ''">
-			and DATE_FORMAT(ph.train_start_date,'%Y-%m-%d') = #{date}
+		<if test="trainBeginDate != null and trainBeginDate != ''">
+			and DATE_FORMAT(ph.train_start_date,'%Y-%m-%d') >= #{trainBeginDate}
+		</if>
+		<if test="trainEndDate != null and trainEndDate != ''">
+			and DATE_FORMAT(ph.train_start_date,'%Y-%m-%d') &lt;= #{trainEndDate}
 		</if>
 	</select>
 
 	<select id="getTotalAndThisMonthCount" resultType="com.bayee.political.json.TrainCensusResult">
-		select count(id) as total,
-		(SELECT count(id) FROM train_physical WHERE DATE_FORMAT( train_start_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )) as thisMonthCount
-		from train_physical
+		SELECT (SELECT COUNT(id) FROM train_physical) + (SELECT COUNT(1) FROM train_firearm) AS total,
+			   (SELECT COUNT(id) FROM train_physical WHERE DATE_FORMAT(train_start_date, '%Y%m') = DATE_FORMAT(CURDATE( ) , '%Y%m')) +
+			   (SELECT COUNT(id) FROM train_firearm WHERE DATE_FORMAT(train_start_date, '%Y%m') = DATE_FORMAT(CURDATE( ) , '%Y%m')) AS thisMonthCount
 	</select>
 
 	<select id="getCountByTrainType" resultType="java.lang.Integer">

@@ -2,6 +2,8 @@ package com.bayee.political.service;
 
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.User;
+import com.bayee.political.json.ChartResult;
+import com.bayee.political.pojo.dto.RiskReportRecordDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
@@ -59,5 +61,22 @@ public interface RiskReportRecordService {
      * @param riskReportRecord
      */
     void updateRiskReportRecord(RiskReportRecord riskReportRecord);
+
+    /**
+     * 查询警员所有月份
+     * @param police
+     * @param year
+     * @return
+     */
+    List<ChartResult> findPoliceAllRiskMonth(String police, String year);
+
+    /**
+     * 查询警员近12个月详情信息
+     * @param policeId
+     * @param date
+     * @param lastDate
+     * @return
+     */
+    RiskReportRecordDO findRiskReportByPoliceIdToYear(String policeId, String date, String lastDate);
 
 }

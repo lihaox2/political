@@ -120,4 +120,21 @@
     </if>
   </select>
 
+  <select id="lawEnforcementReportTypeDOQuery" resultType="com.bayee.political.pojo.RiskReportTypeStatisticsDO">
+    SELECT
+      et2.name as typeName, COUNT(1) as typeCount
+    FROM risk_case_law_enforcement_record a
+           LEFT JOIN risk_case_law_enforcement_type et1 ON a.type = et1.id
+           LEFT JOIN risk_case_law_enforcement_type et2 ON et1.parent_id = et2.id
+    WHERE is_effective = 1 AND `type` IS NOT NULL AND police_id = #{policeId}
+      <if test="timeType == 1">
+        and DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}
+      </if>
+      <if test="timeType == 2">
+        and DATE_FORMAT(a.creation_date, '%Y-%m')=#{dateTime}
+      </if>
+    GROUP BY et1.parent_id
+    order by typeCount desc
+  </select>
+
 </mapper>

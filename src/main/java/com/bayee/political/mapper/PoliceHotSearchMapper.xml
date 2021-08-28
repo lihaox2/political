@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.PoliceHotSearchMapper">
+    <resultMap id="BaseResultMap" type="com.bayee.political.domain.PoliceHotSearch">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="police_head_photo" property="policeHeadPhoto" jdbcType="VARCHAR"/>
+        <result column="police_name" property="policeName" jdbcType="VARCHAR"/>
+        <result column="police_id" property="policeId" jdbcType="VARCHAR"/>
+        <result column="police_dept_name" property="policeDeptName" jdbcType="VARCHAR"/>
+        <result column="sort_num" property="sortNum" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 新增警员全息热搜排名 -->
+    <insert id="insert" parameterType="com.bayee.political.domain.PoliceHotSearch">
+        insert into police_hot_search (id, police_head_photo, police_name,
+          police_id, police_dept_name, sort_num,
+          create_time, update_time)
+        values (#{id,jdbcType=INTEGER}, #{policeHeadPhoto,jdbcType=VARCHAR}, #{policeName,jdbcType=VARCHAR},
+          #{policeId,jdbcType=VARCHAR}, #{policeDeptName,jdbcType=VARCHAR}, #{sortNum,jdbcType=INTEGER},
+          #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <!-- 查询警员全息热搜排名 -->
+    <select id="findHolographicHostSearch" resultMap="BaseResultMap">
+        select * from police_hot_search order by sort_num desc limit 5
+    </select>
+
+    <!-- 根据警号查询热搜信息 -->
+    <select id="findHolographicSortNum" resultMap="BaseResultMap">
+        select * from police_hot_search where police_id = #{policeId}
+    </select>
+
+    <!-- 修改警员全息热搜排名 -->
+    <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.PoliceHotSearch" >
+        update police_hot_search
+        set police_head_photo = #{policeHeadPhoto,jdbcType=VARCHAR},
+          police_name = #{policeName,jdbcType=VARCHAR},
+          police_id = #{policeId,jdbcType=VARCHAR},
+          police_dept_name = #{policeDeptName,jdbcType=VARCHAR},
+          sort_num = #{sortNum,jdbcType=INTEGER},
+          create_time = #{createTime,jdbcType=TIMESTAMP},
+          update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

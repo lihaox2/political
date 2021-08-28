@@ -37,6 +37,16 @@ public class TrainPhysicalDetailsLabelResult {
     private Double notEligibleRatio;
 
     /**
+     * 免测数
+     */
+    private Integer unTestCount;
+
+    /**
+     * 免测率
+     */
+    private Double unTestRatio;
+
+    /**
      * 1到2项不合格
      */
     private Integer ontToTwoNotOverCount;
@@ -50,6 +60,22 @@ public class TrainPhysicalDetailsLabelResult {
      * 大于5项不合格
      */
     private Integer moreThanFiveNotOverCount;
+
+    public Integer getUnTestCount() {
+        return unTestCount;
+    }
+
+    public void setUnTestCount(Integer unTestCount) {
+        this.unTestCount = unTestCount;
+    }
+
+    public Double getUnTestRatio() {
+        return unTestRatio;
+    }
+
+    public void setUnTestRatio(Double unTestRatio) {
+        this.unTestRatio = unTestRatio;
+    }
 
     public Integer getAttendCount() {
         return attendCount;

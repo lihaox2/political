@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.ExcellentPoliceInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.ExcellentPoliceInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="label" property="label" jdbcType="INTEGER" />
+    <result column="score" property="score" jdbcType="INTEGER" />
+    <result column="desc" property="desc" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, label, score, `desc`, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from excellent_police_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from excellent_police_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.ExcellentPoliceInfo" >
+    insert into excellent_police_info (id, police_id, label, 
+      score, `desc`, creation_date, update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{label,jdbcType=INTEGER}, 
+      #{score,jdbcType=INTEGER}, #{desc}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.ExcellentPoliceInfo" >
+    insert into excellent_police_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="label != null" >
+        label,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="desc != null">
+        `desc`,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="label != null" >
+        #{label,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="desc != null">
+        #{desc},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.ExcellentPoliceInfo" >
+    update excellent_police_info
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="label != null" >
+        label = #{label,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="desc != null">
+        `desc` = #{desc},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.ExcellentPoliceInfo" >
+    update excellent_police_info
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      label = #{label,jdbcType=INTEGER},
+      score = #{score,jdbcType=INTEGER},
+      `desc` = #{desc},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="checkExists" resultType="Integer">
+    select count(1) from excellent_police_info where police_id = #{policeId} and label = #{label}
+  </select>
+
+  <insert id="insertExcellentPoliceInfoList" parameterType="com.bayee.political.domain.ExcellentPoliceInfo">
+    insert into excellent_police_info (id, police_id, label, score, `desc`, creation_date, update_date)
+    values
+    <foreach collection="list" separator="," item="item">
+      (null, #{item.policeId,jdbcType=VARCHAR}, #{item.label,jdbcType=INTEGER},
+      #{item.score,jdbcType=INTEGER}, #{desc}, #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+
+  <select id="countByPoliceIdAndCount" resultType="Integer">
+    select count(1) from excellent_police_info where police_id = #{policeId} and label = #{labelId}
+  </select>
+
+</mapper>

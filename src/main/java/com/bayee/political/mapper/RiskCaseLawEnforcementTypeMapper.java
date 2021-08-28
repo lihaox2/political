@@ -1,6 +1,8 @@
 package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskCaseLawEnforcementType;
+import com.bayee.political.json.ChartResult;
+import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -37,5 +39,17 @@ public interface RiskCaseLawEnforcementTypeMapper {
      * @return
      */
     Integer findByNameAndParentId(@Param("name") String name,@Param("parentId") Integer parentId);
+
+    /**
+     * 执法能力-扣分类型统计
+     * @param policeId
+     * @param dateTime
+     * @param lastMonthTime
+     * @param timeType
+     */
+    List<RiskReportTypeStatisticsDO> lawEnforcementReportTypeDOQuery(@Param("policeId") String policeId,
+                                                                     @Param("dateTime") String dateTime,
+                                                                     @Param("lastMonthTime") String lastMonthTime,
+                                                                     @Param("timeType") Integer timeType);
 
 }

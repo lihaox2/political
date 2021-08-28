@@ -263,4 +263,18 @@
     select count(1) from risk_conduct_visit_record
   </select>
 
+  <select id="findConductVisitRecordYearAndMonth" resultMap="BaseResultMap">
+    select * from risk_conduct_visit_record a where 1 = 1
+    <if test="conductVisitRecordYear != null and conductVisitRecordYear != ''">
+      and DATE_FORMAT(creation_date,'%Y') = #{conductVisitRecordYear}
+    </if>
+    <if test="conductVisitRecordMonth != null and conductVisitRecordMonth != ''">
+      and DATE_FORMAT(creation_date,'%m') = #{conductVisitRecordMonth}
+    </if>
+    <if test="policeId != null and policeId != ''">
+      and a.police_id = #{policeId}
+    </if>
+    order by creation_date desc
+  </select>
+
 </mapper>

@@ -4,8 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import com.bayee.political.filter.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -42,8 +45,9 @@ public class AccountController extends BaseController {
 	// 用户登录
 	@RequestMapping(value = { "/user/login" }, method = RequestMethod.POST)
 	public ResponseEntity<?> login(@RequestParam(value = "policeId", required = false) String policeId,
-			@RequestParam(value = "phone", required = false) String phone,
-			@RequestParam(value = "password", required = true) String password) {
+								   @RequestParam(value = "phone", required = false) String phone,
+								   @RequestParam(value = "password", required = true) String password,
+								   HttpServletRequest httpServletRequest) {
 		DataListReturn dlr = new DataListReturn();
 		policeId = phone;
 		User account = accountService.login(policeId, phone, password);
@@ -66,6 +70,8 @@ public class AccountController extends BaseController {
 				dlr.setMessage("登录成功");
 				dlr.setResult(account1);
 				dlr.setCode(StatusCode.getSuccesscode());
+
+				UserSession.login(httpServletRequest, account1);
 			}
 			return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
 		} else {
@@ -186,6 +192,8 @@ public class AccountController extends BaseController {
 			dlr.setCode(200);
 			dlr.setMessage("message");
 			dlr.setResult(account);
+
+			UserSession.login(request, account);
 			return gson.toJson(dlr).getBytes("utf-8");
 		} else {
 			dlr.setCode(100);

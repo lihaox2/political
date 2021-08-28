@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskConductBureauRuleRecord;
 import com.bayee.political.domain.ScreenChart;
+import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
 import com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO;
 import org.apache.ibatis.annotations.Param;
 
@@ -81,4 +82,29 @@ public interface RiskConductBureauRuleRecordMapper {
      */
     List<ScreenChart> getConductBureauChart();
 
+    /**
+     * 根据年份和月份进行查询
+     * @param conductBureauRuleRecordYear
+     * @param conductBureauRuleRecordMonth
+     * @param policeId
+     * @return
+     */
+    List<RiskConductBureauRuleRecord> findConductBureauRuleRecordYearAndMonth(
+            @Param("conductBureauRuleRecordYear") String conductBureauRuleRecordYear,
+            @Param("conductBureauRuleRecordMonth") String conductBureauRuleRecordMonth,
+            @Param("policeId") String policeId
+    );
+
+    /**
+     * 局规记分-扣分类型统计
+     * @param policeId
+     * @param dateTime
+     * @param lastMonthTime
+     * @param timeType
+     * @return
+     */
+    List<RiskReportTypeStatisticsDO> conductBureauRuleReportTypeDOQuery(@Param("policeId") String policeId,
+                                                                        @Param("dateTime") String dateTime,
+                                                                        @Param("lastMonthTime") String lastMonthTime,
+                                                                        @Param("timeType") Integer timeType);
 }

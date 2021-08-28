@@ -90,4 +90,44 @@ left join department b on find_in_set(b.id,a.department_object_ids) > 0
 where a.checker_id=#{policeId} and b.id is not null
 order by b.id desc
 	</select>
+
+	<select id="findHolographicDeptList" resultType="com.bayee.political.pojo.dto.HolographicDeptListDO">
+		select
+			d.id as deptId, d.`name` as deptName, count(u.police_id) as policeCount
+		from department d
+				 left join user u on d.id = u.department_id
+		GROUP BY d.id, d.name
+	</select>
+
+	<!-- 宣传报道单位排名TOP5 -->
+	<select id="findPublicityCountNum" resultType="com.bayee.political.pojo.dto.DepartmentDO">
+		SELECT
+			d.NAME deptName,
+			ifnull( r2.count, 0 ) countNum
+		FROM
+			department d
+				LEFT JOIN (
+				SELECT
+					r1.department_id,
+					count( r1.department_id ) count
+				FROM
+					(
+					SELECT
+					u.department_id
+					FROM
+					publicity_info pi
+					LEFT JOIN publicity_user_info pui ON pi.id = pui.info_id
+					LEFT JOIN user u ON pui.police_id = u.police_id
+					GROUP BY
+					pui.info_id,
+					u.department_id
+					) r1
+				GROUP BY
+					r1.department_id
+			) r2 ON d.id = r2.department_id
+		ORDER BY
+			r2.count DESC
+			LIMIT 5
+	</select>
+
 </mapper>

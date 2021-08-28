@@ -9,6 +9,8 @@ import java.util.List;
 
 import com.bayee.political.domain.*;
 import com.bayee.political.enums.AlarmTypeEnum;
+import com.bayee.political.json.ChartResult;
+import com.bayee.political.pojo.dto.RiskReportRecordDO;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -583,5 +585,43 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				riskAlarmService.insert(riskAlarm);
 			}
 		}
+	}
+
+	@Override
+	public List<ChartResult> findPoliceAllRiskMonth(String police, String year) {
+		return riskReportRecordMapper.findPoliceAllRiskMonth(police, year);
+	}
+
+	@Override
+	public RiskReportRecordDO findRiskReportByPoliceIdToYear(String policeId, String date, String lastDate) {
+		//查询近12月数据
+		RiskReportRecordDO reportRecordDO1 = riskReportRecordMapper.findRiskReportByPoliceIdToYear(policeId, date, lastDate);
+		//查询当前月部分数据
+		RiskReportRecordDO reportRecordDO2 = riskReportRecordMapper.findRiskReportByPoliceIdToMonth(policeId, date);
+
+		if (reportRecordDO1 == null || reportRecordDO2 == null) {
+			reportRecordDO1 = new RiskReportRecordDO();
+			reportRecordDO1.setTotalNum(0d);
+			reportRecordDO1.setConductNum(0d);
+			reportRecordDO1.setHandlingCaseNum(0d);
+			reportRecordDO1.setTrainNum(0d);
+			reportRecordDO1.setSocialContactNum(0d);
+			reportRecordDO1.setAmilyEvaluationNum(0d);
+			reportRecordDO1.setDutyNum(0d);
+			reportRecordDO1.setHealthNum(0d);
+			return reportRecordDO1;
+		}
+
+		reportRecordDO1.setTotalNum(reportRecordDO1.getConductNum() + reportRecordDO1.getHealthNum() +
+				reportRecordDO1.getAmilyEvaluationNum() + reportRecordDO1.getHandlingCaseNum() +
+				reportRecordDO1.getDutyNum() + reportRecordDO1.getSocialContactNum() + reportRecordDO1.getTrainNum());
+		//数据融合
+		reportRecordDO1.setCreationDate(reportRecordDO2.getCreationDate());
+		reportRecordDO1.setLastMonthScore(reportRecordDO2.getLastMonthScore());
+		reportRecordDO1.setThisMonthScore(reportRecordDO2.getThisMonthScore());
+		reportRecordDO1.setQoq(reportRecordDO2.getQoq());
+		reportRecordDO1.setHealthDesc(reportRecordDO2.getHealthDesc());
+
+		return reportRecordDO1;
 	}
 }

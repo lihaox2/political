@@ -397,4 +397,14 @@ public class DateUtils {
 		String lastMonthTime = sd.format(calendar.getTime());
 		return lastMonthTime;
 	}
+
+	/**
+	 * 获取当前年份的第一个月
+	 * @return
+	 */
+	public static String getCurrentYearFirstMonthTime() {
+		SimpleDateFormat sd = new SimpleDateFormat("yyyy");
+		String year = sd.format(new Date());
+		return year+"-01";
+	}
 }

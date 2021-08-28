@@ -1,6 +1,7 @@
 package com.bayee.political.controller.admin;
 
 import com.bayee.political.domain.*;
+import com.bayee.political.filter.UserSession;
 import com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO;
 import com.bayee.political.pojo.dto.ConductBureauRuleTypeDetailsDO;
 import com.bayee.political.json.*;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -61,8 +63,14 @@ public class ConductController {
                                                    @RequestParam("pageSize") Integer pageSize,
                                                    @RequestParam("type") String type,
                                                    @RequestParam("key") String key,
-                                                   @RequestParam("deptId") Integer deptId) {
-        if (deptId != null && deptId == 1) {
+                                                   @RequestParam("deptId") Integer deptId,
+                                                   HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
+//        if (loginUser == null) {
+//            return new ResponseEntity(DataListReturn.error("请重新登录"), HttpStatus.OK);
+//        }
+        if (deptId != null && deptId == 1 || (loginUser != null && loginUser.getIsActive() != null
+                && loginUser.getIsActive() == 999)) {
             deptId = null;
         }
 
@@ -196,8 +204,14 @@ public class ConductController {
                                               @RequestParam("pageSize") Integer pageSize,
                                               @RequestParam("type") String type,
                                               @RequestParam("key") String key,
-                                              @RequestParam("deptId") Integer deptId) {
-        if (deptId != null && deptId == 1) {
+                                              @RequestParam("deptId") Integer deptId,
+                                              HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
+//        if (loginUser == null) {
+//            return new ResponseEntity(DataListReturn.error("请重新登录"), HttpStatus.OK);
+//        }
+        if (deptId != null && deptId == 1 || (loginUser != null && loginUser.getIsActive() != null
+                && loginUser.getIsActive() == 999)) {
             deptId = null;
         }
 

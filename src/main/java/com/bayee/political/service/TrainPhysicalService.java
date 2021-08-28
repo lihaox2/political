@@ -25,7 +25,8 @@ public interface TrainPhysicalService {
      * @param position
      * @return
      */
-    List<TrainPhysical> findTrainPhysicalPage(Integer pageIndex, Integer pageSize, String date, String trainName, Integer position);
+    List<TrainPhysical> findTrainPhysicalPage(Integer pageIndex, Integer pageSize, String trainBeginDate,
+                                              String trainEndDate, String trainName, Integer position);
 
     /**
      * 统计分页数据条数
@@ -34,6 +35,6 @@ public interface TrainPhysicalService {
      * @param position
      * @return
      */
-    Integer countTrainPhysicalPage(String date, String trainName, Integer position);
+    Integer countTrainPhysicalPage(String trainBeginDate, String trainEndDate, String trainName, Integer position);
 
 }

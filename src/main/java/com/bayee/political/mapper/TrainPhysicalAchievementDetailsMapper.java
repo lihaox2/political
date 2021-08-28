@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.bayee.political.json.TrainIsEntryResult;
 import com.bayee.political.json.TrainRankingResult;
+import com.bayee.political.pojo.dto.RiskPhysicalTrainingRecordDO;
+import com.bayee.political.pojo.dto.TrainPhysicalPoliceDetailsResultDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskTrainPhysicalAchievementDetails;
@@ -343,4 +345,23 @@ public interface TrainPhysicalAchievementDetailsMapper {
 	 * @return
 	 */
 	List<TrainRankingResult> totalQualifiedRate();
+
+	/**
+	 * 查询警员训练
+	 * @param physicalAchievementId
+	 * @return
+	 */
+	List<TrainPhysicalPoliceDetailsResultDO> findPoliceAchievementById(@Param("physicalAchievementId") Integer physicalAchievementId);
+
+	/**
+	 * 删除综合训练成绩
+	 * @param physicalId
+	 */
+	void deleteTrainPhysicalAchievementDetailsByPhysicalId(@Param("physicalId") Integer physicalId);
+
+	/**
+	 * 根据年份和月份进行查询
+	 * @return
+	 */
+	List<RiskPhysicalTrainingRecordDO> physicalTrainingRecordCareerQuery(Integer physicalAchievementId);
 }

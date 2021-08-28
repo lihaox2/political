@@ -2,6 +2,7 @@ package com.bayee.political.service;
 
 import com.bayee.political.domain.TrainPhysicalAchievement;
 import com.bayee.political.pojo.dto.TrainProjectDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface TrainPhysicalAchievementService {
      */
     List<TrainPhysicalAchievement> findTrainPhysicalAchievementPage(Integer pageIndex, Integer pageSize, Integer physicalId,
                                                                     Integer position, String key, String trainStr,
-                                                                    Integer trainFlag, Integer searchFlag);
+                                                                    Integer trainFlag, Integer searchFlag, Integer deptId);
 
     /**
      * 统计分页数据条数
@@ -38,7 +39,7 @@ public interface TrainPhysicalAchievementService {
      * @return
      */
     Integer countTrainPhysicalAchievementPage(Integer physicalId, Integer position, String key, String trainStr,
-                                              Integer trainFlag, Integer searchFlag);
+                                              Integer trainFlag, Integer searchFlag, Integer deptId);
 
     /**
      * 根据合格状态统计警员数据条数
@@ -54,5 +55,26 @@ public interface TrainPhysicalAchievementService {
      * @return
      */
     List<TrainProjectDO> findAllPhysicalTrainProject();
+
+    /**
+     * 警员职业生涯查询
+     * @param physicalTrainingRecordYear
+     * @param physicalTrainingRecordMonth
+     * @param policeId
+     * @return
+     */
+    List<TrainPhysicalAchievement> findPhysicalTrainingRecordYearAndMonth(String physicalTrainingRecordYear,
+                                                                          String physicalTrainingRecordMonth,
+                                                                          String policeId);
+
+    /**
+     * 综合训练
+     * @param policeId
+     * @param count
+     * @param beginDate
+     * @param endDate
+     * @return
+     */
+    boolean physicalTrainingRecordStatistics(String policeId, Integer count, String beginDate, String endDate);
 
 }

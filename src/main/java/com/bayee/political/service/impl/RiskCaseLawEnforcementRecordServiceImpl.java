@@ -91,4 +91,18 @@ public class RiskCaseLawEnforcementRecordServiceImpl implements RiskCaseLawEnfor
 		return riskCaseLawEnforcementRecordMapper.getPoliceReplaceErrorCount(policeId, type);
 	}
 
+	@Override
+	public List<RiskCaseLawEnforcementRecord> findCaseLawEnforcementRecordYearAndMonth(String caseLawEnforcementRecordYear,
+																					   String caseLawEnforcementRecordMonth,
+																					   String policeId) {
+		return riskCaseLawEnforcementRecordMapper.findCaseLawEnforcementRecordYearAndMonth(caseLawEnforcementRecordYear,
+				caseLawEnforcementRecordMonth,policeId);
+	}
+
+	@Override
+	public boolean checkPoliceDeductionScoreStatus(String policeId, String beginDate, String endDate) {
+		Integer flag = riskCaseLawEnforcementRecordMapper.checkPoliceDeductionScoreStatus(policeId, beginDate, endDate);
+		return !(flag != null && flag > 0);
+	}
+
 }

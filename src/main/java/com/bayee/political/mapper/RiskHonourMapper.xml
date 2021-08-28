@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskHonourMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskHonour" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="honour_name" property="honourName" jdbcType="VARCHAR" />
+    <result column="honour_reason" property="honourReason" jdbcType="VARCHAR" />
+    <result column="honour_type_code" property="honourTypeCode" jdbcType="VARCHAR" />
+    <result column="honour_unit" property="honourUnit" jdbcType="VARCHAR" />
+    <result column="honour_unit_level" property="honourUnitLevel" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="business_time" property="businessTime" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, honour_name, honour_reason, honour_type_code, honour_unit, honour_unit_level, 
+    remark, business_time, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from risk_honour
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_honour
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskHonour" >
+    insert into risk_honour (id, police_id, honour_name, 
+      honour_reason, honour_type_code, honour_unit, 
+      honour_unit_level, remark, business_time, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{honourName,jdbcType=VARCHAR}, 
+      #{honourReason,jdbcType=VARCHAR}, #{honourTypeCode,jdbcType=VARCHAR}, #{honourUnit,jdbcType=VARCHAR}, 
+      #{honourUnitLevel,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{businessTime,jdbcType=TIMESTAMP}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskHonour" >
+    insert into risk_honour
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="honourName != null" >
+        honour_name,
+      </if>
+      <if test="honourReason != null" >
+        honour_reason,
+      </if>
+      <if test="honourTypeCode != null" >
+        honour_type_code,
+      </if>
+      <if test="honourUnit != null" >
+        honour_unit,
+      </if>
+      <if test="honourUnitLevel != null" >
+        honour_unit_level,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="businessTime != null" >
+        business_time,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="honourName != null" >
+        #{honourName,jdbcType=VARCHAR},
+      </if>
+      <if test="honourReason != null" >
+        #{honourReason,jdbcType=VARCHAR},
+      </if>
+      <if test="honourTypeCode != null" >
+        #{honourTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="honourUnit != null" >
+        #{honourUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="honourUnitLevel != null" >
+        #{honourUnitLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="businessTime != null" >
+        #{businessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskHonour" >
+    update risk_honour
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="honourName != null" >
+        honour_name = #{honourName,jdbcType=VARCHAR},
+      </if>
+      <if test="honourReason != null" >
+        honour_reason = #{honourReason,jdbcType=VARCHAR},
+      </if>
+      <if test="honourTypeCode != null" >
+        honour_type_code = #{honourTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="honourUnit != null" >
+        honour_unit = #{honourUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="honourUnitLevel != null" >
+        honour_unit_level = #{honourUnitLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="businessTime != null" >
+        business_time = #{businessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskHonour" >
+    update risk_honour
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      honour_name = #{honourName,jdbcType=VARCHAR},
+      honour_reason = #{honourReason,jdbcType=VARCHAR},
+      honour_type_code = #{honourTypeCode,jdbcType=VARCHAR},
+      honour_unit = #{honourUnit,jdbcType=VARCHAR},
+      honour_unit_level = #{honourUnitLevel,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      business_time = #{businessTime,jdbcType=TIMESTAMP},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="riskHonourPage" resultType="com.bayee.political.pojo.RiskHonourPageResultDO"
+          parameterType="com.bayee.political.json.RiskHonourPageQueryParam">
+    SELECT
+        rh,id,
+        u.police_id AS policeId, u.name AS policeName, rh.honour_name AS honourName, rh.honour_reason AS honourReason,
+        rht.name AS honourTypeName, rh.honour_unit AS honourUnit, rh.honour_unit_level AS honourUnitLevel,
+        DATE_FORMAT(rh.business_time, '%Y-%m') AS businessTime
+    FROM risk_honour rh
+           LEFT JOIN `user` u ON rh.police_id = u.police_id
+           LEFT JOIN risk_honour_type rht ON rh.honour_type_code = rht.code
+    where 1 = 1
+    <if test="honourTypeCode != null and honourTypeCode != ''">
+      and rh.honour_type_code = #{honourTypeCode}
+    </if>
+    <if test="honorUnitLevel != null and honorUnitLevel != ''">
+      and rh.honour_unit_level = #{honorUnitLevel}
+    </if>
+    <if test="key != null and key != ''">
+      and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%') or rh.honour_unit like concat('%', #{key}, '%'))
+    </if>
+    order by rh.creation_date desc
+    limit #{pageIndex}, #{pageSize}
+  </select>
+
+</mapper>

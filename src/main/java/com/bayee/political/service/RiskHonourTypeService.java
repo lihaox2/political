@@ -23,4 +23,11 @@ public interface RiskHonourTypeService {
      */
     RiskHonourType findByTypeCode(String typeCode);
 
+    /**
+     * 根据类型名称查询
+     * @param typeName
+     * @return
+     */
+    RiskHonourType findByTypeName(String typeName);
+
 }

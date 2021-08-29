@@ -27,4 +27,9 @@ public class RiskHonourTypeServiceImpl implements RiskHonourTypeService {
     public RiskHonourType findByTypeCode(String typeCode) {
         return riskHonourTypeMapper.findByTypeCode(typeCode);
     }
+
+    @Override
+    public RiskHonourType findByTypeName(String typeName) {
+        return riskHonourTypeMapper.findByTypeName(typeName);
+    }
 }

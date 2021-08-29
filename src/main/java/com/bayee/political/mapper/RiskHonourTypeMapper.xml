@@ -101,4 +101,8 @@
     select * from risk_honour_type where code = #{typeCode} limit 1
   </select>
 
+  <select id="findByTypeName" resultMap="BaseResultMap">
+    select * from risk_honour_type where name = #{name} limit 1
+  </select>
+
 </mapper>

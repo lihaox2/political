@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.bayee.political.domain.*;
 import com.bayee.political.service.*;
@@ -94,6 +95,137 @@ public class RiskExportExcelDataController {
 
 	@Autowired
 	RiskConductVisitTypeService riskConductVisitTypeService;
+
+	@Autowired
+	RiskHonourService riskHonourService;
+
+	@Autowired
+	RiskHonourTypeService riskHonourTypeService;
+
+	@Autowired
+	RiskCaseIntegralService riskCaseIntegralService;
+
+	@Autowired
+	DepartmentService departmentService;
+
+	/**
+	 * 表彰奖励导入
+	 * @param file
+	 * @return
+	 */
+	@PostMapping("/risk/caseIntegral/import/data")
+	public ResponseEntity<?> importCaseIntegralDate(@RequestParam("file") MultipartFile file) throws Exception {
+		List<JSONObject> jsonObjectList = new ArrayList<>();
+
+		List<List<String>> readExcel = GetExcel.ReadExcel(file);
+		// 记录错误行
+		int i = 0;
+		int passCount = 0;
+		for (List<String> excel : readExcel) {
+			i++;
+			String policeId = excel.get(1);
+			if (policeId != null && !"".equals(policeId)) {
+				User user = userService.findByPoliceId(policeId);
+
+				if (user == null || user.getName() == null) {
+					jsonObjectList.add(errorJsonObjCreate(i, policeId, "该警员不存在"));
+					continue;
+				}
+			} else {
+				jsonObjectList.add(errorJsonObjCreate(i, policeId, "警号未填写"));
+				continue;
+			}
+			String year = excel.get(3);
+			String month = excel.get(4);
+			if (StrUtil.isBlank(year)) {
+				jsonObjectList.add(errorJsonObjCreate(i, policeId, "所属年份未填写！"));
+				continue;
+			}
+			if (StrUtil.isBlank(month)) {
+				jsonObjectList.add(errorJsonObjCreate(i, policeId, "所属月份未填写！"));
+				continue;
+			}
+
+			Department department = departmentService.getDepartmentByName(excel.get(2));
+			if (department == null || department.getName() == null) {
+				jsonObjectList.add(errorJsonObjCreate(i, policeId, "所属部门不存在！"));
+				continue;
+			}
+			if (month.length() == 1) {
+				month = "0"+month;
+			}
+
+			RiskCaseIntegral caseIntegral = new RiskCaseIntegral();
+			caseIntegral.setPoliceId(policeId);
+			caseIntegral.setDeptId(department.getId());
+			caseIntegral.setBusinessTime(DateUtils.parseDate(year +"-"+ month+"-01", "yyyy-MM-dd"));
+			caseIntegral.setScore(Double.valueOf(excel.get(5)));
+			caseIntegral.setCreationDate(new Date());
+
+			passCount++;
+			riskCaseIntegralService.addRiskCaseIntegral(caseIntegral);
+		}
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("data", jsonObjectList);
+		result.put("passCount", passCount);
+		return new ResponseEntity<DataListReturn>(DataListReturn.ok(result), HttpStatus.OK);
+	}
+
+	/**
+	 * 表彰奖励导入
+	 * @param file
+	 * @return
+	 */
+	@PostMapping("/risk/honour/import/data")
+	public ResponseEntity<?> importHonourDate(@RequestParam("file") MultipartFile file) throws Exception {
+		List<JSONObject> jsonObjectList = new ArrayList<>();
+
+		List<List<String>> readExcel = GetExcel.ReadExcel(file);
+		// 记录错误行
+		int i = 0;
+		int passCount = 0;
+		for (List<String> excel : readExcel) {
+			i++;
+			String policeId = excel.get(1);
+			if (policeId != null && !"".equals(policeId)) {
+				User user = userService.findByPoliceId(policeId);
+
+				if (user == null || user.getName() == null) {
+					jsonObjectList.add(errorJsonObjCreate(i, policeId, "该警员不存在"));
+					continue;
+				}
+			} else {
+				jsonObjectList.add(errorJsonObjCreate(i, policeId, "警号未填写"));
+				continue;
+			}
+
+			RiskHonourType honourType = riskHonourTypeService.findByTypeName(excel.get(4));
+			if (honourType == null || honourType.getId() == null) {
+				jsonObjectList.add(errorJsonObjCreate(i, policeId, "奖励类型不存在！"));
+				continue;
+			}
+
+			RiskHonour honour = new RiskHonour();
+			honour.setPoliceId(policeId);
+			honour.setHonourName(excel.get(2));
+			honour.setHonourReason(excel.get(3));
+			honour.setHonourTypeCode(honourType.getCode());
+			honour.setHonourUnit(excel.get(5));
+			honour.setHonourUnitLevel(excel.get(6));
+			honour.setRemark(excel.get(8));
+			honour.setBusinessTime(DateUtils.parseDate(excel.get(7), "yyyy-MM-dd"));
+			honour.setCreationDate(new Date());
+
+			passCount++;
+			riskHonourService.addRiskHonour(honour);
+		}
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("data", jsonObjectList);
+		result.put("passCount", passCount);
+		return new ResponseEntity<DataListReturn>(DataListReturn.ok(result), HttpStatus.OK);
+	}
 
 //	@PostMapping("/risk/healthy/import/excel/data")
 	public ResponseEntity<?> importHealthData(@RequestParam("file") MultipartFile file) {

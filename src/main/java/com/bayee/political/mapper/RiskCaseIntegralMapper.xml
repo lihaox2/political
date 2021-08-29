@@ -137,4 +137,14 @@
     limit #{pageIndex}, #{pageSize}
   </select>
 
+  <select id="findCaseIntegralByPoliceIdAndYear" resultMap="BaseResultMap">
+    select * from risk_case_integral where police_id = #{policeId}
+    <if test="year != null and year != ''">
+      and year(business_time) = #{year}
+    </if>
+    <if test="month != null and month != ''">
+      and month(business_time) = #{month}
+    </if>
+  </select>
+
 </mapper>

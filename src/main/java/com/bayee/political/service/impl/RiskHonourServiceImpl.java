@@ -52,4 +52,9 @@ public class RiskHonourServiceImpl implements RiskHonourService {
     public void deleteRiskHonour(Integer id) {
         riskHonourMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public List<RiskHonour> findHonorByPoliceIdAndYear(String policeId, String year, String month) {
+        return riskHonourMapper.findHonorByPoliceIdAndYear(policeId, year, month);
+    }
 }

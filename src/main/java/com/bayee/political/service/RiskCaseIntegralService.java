@@ -44,4 +44,13 @@ public interface RiskCaseIntegralService {
      */
     void deleteRiskCaseIntegral(Integer id);
 
+    /**
+     * 职业生涯-办案积分
+     * @param policeId
+     * @param year
+     * @param month
+     * @return
+     */
+    List<RiskCaseIntegral> findCaseIntegralByPoliceIdAndYear(String policeId, String year, String month);
+
 }

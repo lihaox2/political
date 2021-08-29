@@ -52,4 +52,9 @@ public class RiskCaseIntegralServiceImpl implements RiskCaseIntegralService {
     public void deleteRiskCaseIntegral(Integer id) {
         riskCaseIntegralMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public List<RiskCaseIntegral> findCaseIntegralByPoliceIdAndYear(String policeId, String year, String month) {
+        return riskCaseIntegralMapper.findCaseIntegralByPoliceIdAndYear(policeId, year, month);
+    }
 }

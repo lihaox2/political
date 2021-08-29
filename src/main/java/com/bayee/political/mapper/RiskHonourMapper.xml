@@ -186,4 +186,14 @@
     limit #{pageIndex}, #{pageSize}
   </select>
 
+  <select id="findHonorByPoliceIdAndYear" resultMap="BaseResultMap">
+    select * from risk_honour where police_id = #{policeId}
+    <if test="year != null and year != ''">
+      and year(business_time) = #{year}
+    </if>
+    <if test="month != null and month != ''">
+      and month(business_time) = #{month}
+    </if>
+  </select>
+
 </mapper>

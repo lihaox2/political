@@ -43,4 +43,13 @@ public interface RiskHonourService {
      */
     void deleteRiskHonour(Integer id);
 
+    /**
+     * 表彰奖励-职业生涯查询
+     * @param policeId
+     * @param year
+     * @param month
+     * @return
+     */
+    List<RiskHonour> findHonorByPoliceIdAndYear(String policeId, String year, String month);
+
 }

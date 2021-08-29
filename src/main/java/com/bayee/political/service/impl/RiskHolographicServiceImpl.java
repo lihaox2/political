@@ -103,6 +103,12 @@ public class RiskHolographicServiceImpl implements RiskHolographicService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    RiskHonourService riskHonourService;
+
+    @Autowired
+    RiskCaseIntegralService riskCaseIntegralService;
+
     @Override
     public List<Map<String, Serializable>> getPoliceCareerType() {
         List<Map<String, Serializable>> result = new ArrayList<>();
@@ -118,6 +124,8 @@ public class RiskHolographicServiceImpl implements RiskHolographicService {
         result.add(createTypeMap("健康风险", 10));
         result.add(createTypeMap("综合训练", 11));
         result.add(createTypeMap("警员评价", 13));
+        result.add(createTypeMap("表彰奖励", 14));
+        result.add(createTypeMap("办案积分", 15));
         return result;
     }
 
@@ -147,6 +155,8 @@ public class RiskHolographicServiceImpl implements RiskHolographicService {
                 case 10 : allResult.add(getHealthList(policeId, year, month)); break;
                 case 11 : allResult.addAll(getPhysicalTrainingList(policeId, year, month, user.getName())); break;
                 case 13 : allResult.addAll(getCommentList(policeId, year, month, user.getName())); break;
+                case 14 : allResult.addAll(getHonourList(policeId, year, month, user.getName())); break;
+                case 15 : allResult.addAll(getCaseIntegralList(policeId, year, month, user.getName())); break;
             }
         } else {
             allResult.addAll(getDutyList(policeId, year, month, user.getName()));
@@ -162,12 +172,81 @@ public class RiskHolographicServiceImpl implements RiskHolographicService {
             allResult.addAll(getPhysicalTrainingList(policeId, year, month, user.getName()));
 //        allResult.addAll(getStudyTrainList(policeId, year, month, user.getName()));
             allResult.addAll(getCommentList(policeId, year, month, user.getName()));
+            allResult.addAll(getHonourList(policeId, year, month, user.getName()));
+            allResult.addAll(getCaseIntegralList(policeId, year, month, user.getName()));
         }
 
         SorterUtil sorter = new SorterUtil();
         allResult = sorter.sortList(allResult);
 
         return allResult;
+    }
+
+    /**
+     * 类型15-办案积分
+     * @param policeId
+     * @param year
+     * @param month
+     * @param policeName
+     * @return
+     */
+    public List<RiskHolographicResult> getCaseIntegralList(String policeId, String year, String month, String policeName) {
+        Map<Date, List<CaseIntegralLogResult>> groupData = riskCaseIntegralService.findCaseIntegralByPoliceIdAndYear(policeId,
+                year, month).parallelStream().map(e -> {
+            CaseIntegralLogResult result = new CaseIntegralLogResult();
+            result.setId(e.getId());
+            result.setScore(e.getScore());
+            result.setMonth(DateUtils.formatDate(e.getBusinessTime(), "MM月"));
+            result.setDateStr(DateUtils.formatDate(e.getBusinessTime(), "yyyy-MM-dd"));
+            result.setDate(e.getBusinessTime());
+            return result;
+        }).collect(Collectors.groupingBy(e -> DateUtils.parseDate(DateUtils.formatDate(e.getDate(),
+                "yyyy-MM-dd"), "yyyy-MM-dd")));
+
+        List<RiskHolographicResult> results = new ArrayList<>();
+        for (Date date : groupData.keySet()) {
+            RiskHolographicResult result = new RiskHolographicResult();
+            result.setType(15);
+            result.setDate(date);
+            result.setResult(Arrays.asList(groupData.get(date).toArray()));
+            result.setPoliceName(policeName);
+            results.add(result);
+        }
+        return results;
+    }
+
+    /**
+     * 类型14-表彰奖励
+     * @param policeId
+     * @param year
+     * @param month
+     * @param policeName
+     * @return
+     */
+    public List<RiskHolographicResult> getHonourList(String policeId, String year, String month, String policeName) {
+        Map<Date, List<HonourLogListResult>> groupData = riskHonourService.findHonorByPoliceIdAndYear(policeId,
+                year, month).parallelStream().map(e -> {
+            HonourLogListResult result = new HonourLogListResult();
+            result.setId(e.getId());
+            result.setHonourReason(e.getHonourReason());
+            result.setHonourName(e.getHonourName());
+            result.setHonourUnit(e.getHonourUnit());
+            result.setHonourUnitLevel(e.getHonourUnitLevel());
+            result.setDate(e.getBusinessTime());
+            return result;
+        }).collect(Collectors.groupingBy(e -> DateUtils.parseDate(DateUtils.formatDate(e.getDate(),
+                "yyyy-MM-dd"), "yyyy-MM-dd")));
+
+        List<RiskHolographicResult> results = new ArrayList<>();
+        for (Date date : groupData.keySet()) {
+            RiskHolographicResult result = new RiskHolographicResult();
+            result.setType(14);
+            result.setDate(date);
+            result.setResult(Arrays.asList(groupData.get(date).toArray()));
+            result.setPoliceName(policeName);
+            results.add(result);
+        }
+        return results;
     }
 
     /**

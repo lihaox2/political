@@ -3,6 +3,7 @@ package com.bayee.political.mapper;
 import com.bayee.political.domain.RiskHonour;
 import com.bayee.political.json.RiskHonourPageQueryParam;
 import com.bayee.political.pojo.RiskHonourPageResultDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,4 +25,14 @@ public interface RiskHonourMapper {
      * @return
      */
     List<RiskHonourPageResultDO> riskHonourPage(RiskHonourPageQueryParam queryParam);
+
+    /**
+     * 表彰奖励-职业生涯查询
+     * @param policeId
+     * @param year
+     * @param month
+     * @return
+     */
+    List<RiskHonour> findHonorByPoliceIdAndYear(@Param("policeId") String policeId,@Param("year") String year,
+                                                @Param("month") String month);
 }

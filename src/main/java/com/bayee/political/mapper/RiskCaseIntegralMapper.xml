@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskCaseIntegralMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskCaseIntegral" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="dept_id" property="deptId" jdbcType="INTEGER" />
+    <result column="business_time" property="businessTime" jdbcType="TIMESTAMP" />
+    <result column="score" property="score" jdbcType="DOUBLE" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, dept_id, business_time, score, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from risk_case_integral
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_case_integral
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseIntegral" >
+    insert into risk_case_integral (id, police_id, dept_id, 
+      business_time, score, creation_date, 
+      update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{deptId,jdbcType=INTEGER}, 
+      #{businessTime,jdbcType=TIMESTAMP}, #{score,jdbcType=DOUBLE}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskCaseIntegral" >
+    insert into risk_case_integral
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="deptId != null" >
+        dept_id,
+      </if>
+      <if test="businessTime != null" >
+        business_time,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null" >
+        #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="businessTime != null" >
+        #{businessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskCaseIntegral" >
+    update risk_case_integral
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null" >
+        dept_id = #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="businessTime != null" >
+        business_time = #{businessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskCaseIntegral" >
+    update risk_case_integral
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      dept_id = #{deptId,jdbcType=INTEGER},
+      business_time = #{businessTime,jdbcType=TIMESTAMP},
+      score = #{score,jdbcType=DOUBLE},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="caseIntegralPage" resultType="com.bayee.political.pojo.CaseIntegralPageResultDO"
+          parameterType="com.bayee.political.json.CaseIntegralPageQueryParam">
+    SELECT
+        ci.id, u.police_id as policeId, u.name as policeName, d.name as deptName, ci.score as score,
+        DATE_FORMAT(ci.business_time, '%Y年%m月') as businessTime, DATE_FORMAT(ci.creation_date, '%Y-%m-%d %H:%i') as creationDate
+    FROM risk_case_integral ci
+           LEFT JOIN `user` u ON ci.police_id = u.police_id
+           LEFT JOIN department d ON ci.dept_id = d.id
+    where 1 = 1
+    <if test="businessTime != null and businessTime != ''">
+        and DATE_FORMAT(ci.business_time, '%Y-%m') = #{businessTime}
+    </if>
+    <if test="deptId != null and deptId != ''">
+        and ci.dept_id = #{deptId}
+    </if>
+    <if test="key != null and key != ''">
+        and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%'))
+    </if>
+    order by ci.creation_date desc
+    limit #{pageIndex}, #{pageSize}
+  </select>
+
+</mapper>

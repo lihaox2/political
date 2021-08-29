@@ -1,9 +1,6 @@
 package com.bayee.political.controller.admin;
 
-import com.bayee.political.domain.RiskCaseAbilityRecord;
-import com.bayee.political.domain.RiskCaseLawEnforcementRecord;
-import com.bayee.political.domain.RiskCaseTestRecord;
-import com.bayee.political.domain.User;
+import com.bayee.political.domain.*;
 import com.bayee.political.filter.UserSession;
 import com.bayee.political.pojo.dto.CaseLawEnforcementDetailsDO;
 import com.bayee.political.pojo.dto.CaseLawEnforcementPageDO;
@@ -17,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -49,6 +45,75 @@ public class CaseController {
 
     @Autowired
     TotalRiskDetailsService totalRiskDetailsService;
+
+    @Autowired
+    RiskCaseIntegralService riskCaseIntegralService;
+
+    @Autowired
+    DepartmentService departmentService;
+
+    @GetMapping("/integral/page")
+    public ResponseEntity<?> caseIntegralPage(CaseIntegralPageQueryParam queryParam) {
+
+        return new ResponseEntity<>(DataListReturn.ok(riskCaseIntegralService.caseIntegralPage(queryParam)), HttpStatus.OK);
+    }
+
+    @GetMapping("/integral/details")
+    public ResponseEntity<?> caseIntegralDetails(@RequestParam("id") Integer id) {
+        RiskCaseIntegral integral = riskCaseIntegralService.findById(id);
+        User user = userService.findByPoliceId(integral.getPoliceId());
+        Department department = departmentService.findById(integral.getDeptId());
+
+        CaseIntegralDetailsResult result = new CaseIntegralDetailsResult();
+        result.setPoliceId(user.getPoliceId());
+        result.setPoliceName(user.getName());
+        result.setDeptId(integral.getDeptId());
+        result.setDeptName(department.getName());
+        result.setScore(integral.getScore());
+        result.setBusinessTime(DateUtils.formatDate(integral.getBusinessTime(), "yyyy-MM"));
+        result.setCreationDate(DateUtils.formatDate(integral.getCreationDate(), "yyyy-MM-dd"));
+        return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
+    }
+
+    @PostMapping("/add/integral")
+    public ResponseEntity<?> addCaseIntegral(@RequestBody CaseIntegralSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
+        RiskCaseIntegral integral = new RiskCaseIntegral();
+        integral.setPoliceId(saveParam.getPoliceId());
+        integral.setDeptId(saveParam.getDeptId());
+        integral.setBusinessTime(DateUtils.parseDate(saveParam.getBusinessTime()+"-01", "yyyy-MM-dd"));
+        integral.setScore(saveParam.getScore());
+        integral.setCreationDate(new Date());
+
+        riskCaseIntegralService.addRiskCaseIntegral(integral);
+        return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
+    }
+
+    @PostMapping("/update/integral")
+    public ResponseEntity<?> updateCaseIntegral(@RequestBody CaseIntegralSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
+        RiskCaseIntegral integral = riskCaseIntegralService.findById(saveParam.getId());
+        integral.setPoliceId(saveParam.getPoliceId());
+        integral.setDeptId(saveParam.getDeptId());
+        integral.setBusinessTime(DateUtils.parseDate(saveParam.getBusinessTime()+"-01", "yyyy-MM-dd"));
+        integral.setScore(saveParam.getScore());
+        integral.setUpdateDate(new Date());
+
+        riskCaseIntegralService.updateRiskCaseIntegral(integral);
+        return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/integral")
+    public ResponseEntity<?> deleteCaseIntegral(@RequestParam("id") Integer id) {
+        riskCaseIntegralService.deleteRiskCaseIntegral(id);
+        return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
+    }
 
     /**
      * 执法能力

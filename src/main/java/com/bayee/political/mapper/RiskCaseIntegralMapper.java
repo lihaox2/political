@@ -36,4 +36,12 @@ public interface RiskCaseIntegralMapper {
      */
     List<RiskCaseIntegral> findCaseIntegralByPoliceIdAndYear(@Param("policeId") String policeId, @Param("year") String year,
                                                              @Param("month") String month);
+
+    /**
+     * 分页统计
+     * @param queryParam
+     * @return
+     */
+    Integer caseIntegralPageCount(CaseIntegralPageQueryParam queryParam);
+
 }

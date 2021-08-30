@@ -9,11 +9,6 @@ import java.util.Date;
 public class RiskHonourSaveParam {
 
     /**
-     * id
-     */
-    private Integer id;
-
-    /**
      * 警号
      */
     private String policeId;
@@ -52,14 +47,6 @@ public class RiskHonourSaveParam {
      * 批准时间 (yyyy-MM-dd)
      */
     private String businessTime;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getPoliceId() {
         return policeId;

@@ -34,6 +34,11 @@ public class RiskHonourServiceImpl implements RiskHonourService {
     }
 
     @Override
+    public Integer riskHonourPageCount(RiskHonourPageQueryParam queryParam) {
+        return riskHonourMapper.riskHonourPageCount(queryParam);
+    }
+
+    @Override
     public RiskHonour riskHonourDetails(Integer id) {
         return riskHonourMapper.selectByPrimaryKey(id);
     }

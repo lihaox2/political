@@ -147,4 +147,22 @@
     </if>
   </select>
 
+  <select id="caseIntegralPageCount" resultType="Integer">
+    SELECT
+        count(1)
+    FROM risk_case_integral ci
+      LEFT JOIN `user` u ON ci.police_id = u.police_id
+      LEFT JOIN department d ON ci.dept_id = d.id
+    where 1 = 1
+    <if test="businessTime != null and businessTime != ''">
+      and DATE_FORMAT(ci.business_time, '%Y-%m') = #{businessTime}
+    </if>
+    <if test="deptId != null and deptId != ''">
+      and ci.dept_id = #{deptId}
+    </if>
+    <if test="key != null and key != ''">
+      and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%'))
+    </if>
+  </select>
+
 </mapper>

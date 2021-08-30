@@ -34,6 +34,11 @@ public class RiskCaseIntegralServiceImpl implements RiskCaseIntegralService {
     }
 
     @Override
+    public Integer caseIntegralPageCount(CaseIntegralPageQueryParam queryParam) {
+        return riskCaseIntegralMapper.caseIntegralPageCount(queryParam);
+    }
+
+    @Override
     public void addRiskCaseIntegral(RiskCaseIntegral caseIntegral) {
         riskCaseIntegralMapper.insert(caseIntegral);
     }
@@ -57,4 +62,5 @@ public class RiskCaseIntegralServiceImpl implements RiskCaseIntegralService {
     public List<RiskCaseIntegral> findCaseIntegralByPoliceIdAndYear(String policeId, String year, String month) {
         return riskCaseIntegralMapper.findCaseIntegralByPoliceIdAndYear(policeId, year, month);
     }
+
 }

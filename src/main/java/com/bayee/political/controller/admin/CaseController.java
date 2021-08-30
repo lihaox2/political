@@ -52,10 +52,24 @@ public class CaseController {
     @Autowired
     DepartmentService departmentService;
 
+    public static void main(String[] args) {
+        double v1 = Math.log10(10) * 8 / Math.log10(10) * 70;
+        double v2 = Math.log10(20);
+        System.out.println(v1);
+        System.out.println(v2);
+
+        //2.68 + 1.3
+    }
+
     @GetMapping("/integral/page")
     public ResponseEntity<?> caseIntegralPage(CaseIntegralPageQueryParam queryParam) {
 
-        return new ResponseEntity<>(DataListReturn.ok(riskCaseIntegralService.caseIntegralPage(queryParam)), HttpStatus.OK);
+        Map<String, Object> result = new HashMap<>();
+        result.put("pageIndex", queryParam.getPageIndex());
+        result.put("pageSize", queryParam.getPageSize());
+        result.put("data", riskCaseIntegralService.caseIntegralPage(queryParam));
+        result.put("totalCount", riskCaseIntegralService.caseIntegralPageCount(queryParam));
+        return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
 
     @GetMapping("/integral/details")
@@ -92,13 +106,14 @@ public class CaseController {
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
-    @PostMapping("/update/integral")
-    public ResponseEntity<?> updateCaseIntegral(@RequestBody CaseIntegralSaveParam saveParam) {
+    @PostMapping("/update/integral/{id}")
+    public ResponseEntity<?> updateCaseIntegral(@PathVariable Integer id,
+                                                @RequestBody CaseIntegralSaveParam saveParam) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
 
-        RiskCaseIntegral integral = riskCaseIntegralService.findById(saveParam.getId());
+        RiskCaseIntegral integral = riskCaseIntegralService.findById(id);
         integral.setPoliceId(saveParam.getPoliceId());
         integral.setDeptId(saveParam.getDeptId());
         integral.setBusinessTime(DateUtils.parseDate(saveParam.getBusinessTime()+"-01", "yyyy-MM-dd"));

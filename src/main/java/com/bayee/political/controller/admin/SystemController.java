@@ -227,12 +227,21 @@ public class SystemController {
 
     @GetMapping("/dept/list")
     public ResponseEntity<?> getDeptList() {
+        //
+        List<Department> unit1 = departmentService.getDepartmentByType(1);
         // 机关单位
         List<Department> unit = departmentService.getDepartmentByType(2);
         // 派出所
         List<Department> policeStation = departmentService.getDepartmentByType(3);
 
         List<DeptListResult> resultList = new ArrayList<>();
+        resultList.addAll(unit1.stream().map(e -> {
+            DeptListResult result = new DeptListResult();
+            result.setId(e.getId());
+            result.setDeptName(e.getName());
+            return result;
+        }).collect(Collectors.toList()));
+
         resultList.addAll(unit.stream().map(e -> {
             DeptListResult result = new DeptListResult();
             result.setId(e.getId());

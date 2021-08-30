@@ -62,24 +62,31 @@ public class TalentsController {
      */
     @PostMapping("/excellent/add")
     public ResponseEntity<?> addExcellentPoliceInfo(@RequestBody ExcellentPoliceInfoAddParam addParam) {
-        PoliceLabel policeLabel = policeLabelService.findById(addParam.getLabel());
-        if (policeLabel == null) {
-            return new ResponseEntity<>(DataListReturn.error("标签错误！"), HttpStatus.OK);
+        if (StrUtil.isBlank(addParam.getLabelStr())) {
+            return new ResponseEntity<>(DataListReturn.error("请选择标签！"), HttpStatus.OK);
         }
+        String[] ids = addParam.getLabelStr().split(",");
+        for (int i=0; i<ids.length; i++) {
+            PoliceLabel policeLabel = policeLabelService.findById(Integer.valueOf(ids[i]));
+            if (policeLabel == null) {
+                return new ResponseEntity<>(DataListReturn.error("标签错误！"), HttpStatus.OK);
+            }
 
-        Integer count = excellentPoliceInfoService.countByPoliceIdAndCount(addParam.getPoliceId(), addParam.getLabel());
-        if (count != null && count >= 1) {
-            return new ResponseEntity<>(DataListReturn.error("警员已拥有该标签！"), HttpStatus.OK);
+
+            Integer count = excellentPoliceInfoService.countByPoliceIdAndCount(addParam.getPoliceId(), Integer.valueOf(ids[i]));
+            if (count != null && count >= 1) {
+                return new ResponseEntity<>(DataListReturn.error("警员已拥有该标签！"), HttpStatus.OK);
+            }
+
+            ExcellentPoliceInfo excellentPoliceInfo = new ExcellentPoliceInfo();
+            excellentPoliceInfo.setDesc(addParam.getDesc());
+            excellentPoliceInfo.setPoliceId(addParam.getPoliceId());
+            excellentPoliceInfo.setLabel(Integer.valueOf(ids[i]));
+            excellentPoliceInfo.setScore(policeLabel.getAwardNum());
+            excellentPoliceInfo.setCreationDate(new Date());
+
+            excellentPoliceInfoService.insertExcellentPoliceInfo(excellentPoliceInfo);
         }
-
-        ExcellentPoliceInfo excellentPoliceInfo = new ExcellentPoliceInfo();
-        excellentPoliceInfo.setDesc(addParam.getDesc());
-        excellentPoliceInfo.setPoliceId(addParam.getPoliceId());
-        excellentPoliceInfo.setLabel(addParam.getLabel());
-        excellentPoliceInfo.setScore(policeLabel.getAwardNum());
-        excellentPoliceInfo.setCreationDate(new Date());
-
-        excellentPoliceInfoService.insertExcellentPoliceInfo(excellentPoliceInfo);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 

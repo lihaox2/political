@@ -6,8 +6,6 @@ package com.bayee.political.json;
  */
 public class CaseIntegralSaveParam {
 
-    private Integer id;
-
     /**
      * 警号
      */
@@ -27,14 +25,6 @@ public class CaseIntegralSaveParam {
      * 办案积分
      */
     private Double score;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getPoliceId() {
         return policeId;

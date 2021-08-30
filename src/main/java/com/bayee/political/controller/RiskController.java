@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.bayee.political.json.RiskHealthIndexItemResult;
+import com.bayee.political.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +30,6 @@ import com.bayee.political.domain.RiskConductBureauRuleRecord;
 import com.bayee.political.domain.RiskDuty;
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
 import com.bayee.political.domain.RiskHealth;
-import com.bayee.political.domain.RiskHistoryReport;
-import com.bayee.political.domain.RiskHistoryReportTime;
 import com.bayee.political.domain.RiskIndexMonitorChild;
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.RiskSocialContact;
@@ -41,10 +41,6 @@ import com.bayee.political.domain.RiskTrainPhysicalAchievementDetails;
 import com.bayee.political.domain.RiskTrainPhysicalRecord;
 import com.bayee.political.domain.ScreenChart;
 import com.bayee.political.domain.ScreenDoubeChart;
-import com.bayee.political.service.AlarmService;
-import com.bayee.political.service.RiskService;
-import com.bayee.political.service.TrainService;
-import com.bayee.political.service.UserService;
 import com.bayee.political.utils.DataListPage;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
@@ -638,7 +634,6 @@ public class RiskController extends BaseController {
 	@RequestMapping(value = "/risk/health/index/item", method = RequestMethod.GET)
 	public ResponseEntity<?> riskHealthIndexItem(@RequestParam(value = "policeId", required = false) String policeId,
 			@RequestParam(value = "dateTime", required = false) String dateTime) throws ApiException {
-		DataListReturn dlr = new DataListReturn();
 		if (dateTime == null) {
 			dateTime = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
 		} else {
@@ -649,11 +644,26 @@ public class RiskController extends BaseController {
 		if (item == null) {
 			item = new RiskHealth();
 		}
-		dlr.setStatus(true);
-		dlr.setMessage("success");
-		dlr.setResult(item);
-		dlr.setCode(StatusCode.getSuccesscode());
-		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+		RiskHealthIndexItemResult result = new RiskHealthIndexItemResult();
+		result.setYear(item.getYear());
+		result.setHeight(item.getHeight());
+		result.setWeight(item.getWeight());
+		result.setIndexNum(item.getIndexNum());
+		result.setBmi(item.getBmi());
+		result.setBmiId(item.getBmiId());
+		result.setBmiName(item.getBmiName());
+		result.setBlood(item.getBlood());
+		result.setOverweightNum(item.getOverweightNum() == null ? "否" : item.getOverweightNum() > 0 ? "是" : "否");
+		result.setHyperlipidemiaNum(item.getHyperlipidemiaNum() == null ? "否" : item.getHyperlipidemiaNum() > 0 ? "是" : "否");
+		result.setHypertensionNum(item.getHypertensionNum() == null ? "否" : item.getHypertensionNum() > 0 ? "是" : "否");
+		result.setHyperglycemiaNum(item.getHyperglycemiaNum() == null ? "否" : item.getHyperglycemiaNum() > 0 ? "是" : "否");
+		result.setHyperuricemiaNum(item.getHyperuricemiaNum() == null ? "否" : item.getHyperuricemiaNum() > 0 ? "是" : "否");
+		result.setProstateNum(item.getProstateNum() == null ? "否" : item.getProstateNum() > 0 ? "是" : "否");
+		result.setMajorDiseasesNum(item.getMajorDiseasesNum() == null ? "无" : item.getMajorDiseasesNum() > 0 ? "有" : "无");
+		result.setHeartNum(item.getHeartNum() == null ? "无" : item.getHeartNum() > 0 ? "有" : "无");
+		result.setTumorAntigenNum(item.getTumorAntigenNum() == null ? "无" : item.getTumorAntigenNum() > 0 ? "有" : "无");
+		result.setOrthopaedicsNum(item.getOrthopaedicsNum() == null ? "无" : item.getOrthopaedicsNum() > 0 ? "有" : "无");
+		return new ResponseEntity<DataListReturn>(DataListReturn.ok(item), HttpStatus.OK);
 	}
 
 	// 警员健康风险去年今年折线图

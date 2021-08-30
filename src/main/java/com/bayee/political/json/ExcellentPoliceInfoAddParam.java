@@ -12,14 +12,22 @@ public class ExcellentPoliceInfoAddParam {
     private String policeId;
 
     /**
-     * 标签id
+     * 标签id，多个使用,分割
      */
-    private Integer label;
+    private String labelStr;
 
     /**
      * 描述
      */
     private String desc;
+
+    public String getLabelStr() {
+        return labelStr;
+    }
+
+    public void setLabelStr(String labelStr) {
+        this.labelStr = labelStr;
+    }
 
     public String getPoliceId() {
         return policeId;
@@ -27,14 +35,6 @@ public class ExcellentPoliceInfoAddParam {
 
     public void setPoliceId(String policeId) {
         this.policeId = policeId;
-    }
-
-    public Integer getLabel() {
-        return label;
-    }
-
-    public void setLabel(Integer label) {
-        this.label = label;
     }
 
     public String getDesc() {

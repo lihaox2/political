@@ -118,13 +118,16 @@ public class RiskReportController {
 
         String lastDateTime = "";
         if (timeType != null && timeType == 1) {
+            timeType = 1;
             lastDateTime = year+"-01";
             dateTime = year+"-12";
         } else if(timeType == 2) {
+            timeType = 2;
 
         } else if(timeType == 3) {
             timeType = 1;
-
+            lastDateTime = beginDate;
+            dateTime = endDate;
         }
 
         //数据查询

@@ -20,6 +20,13 @@ public interface RiskCaseIntegralService {
     List<CaseIntegralPageResultDO> caseIntegralPage(CaseIntegralPageQueryParam queryParam);
 
     /**
+     * 分页统计
+     * @param queryParam
+     * @return
+     */
+    Integer caseIntegralPageCount(CaseIntegralPageQueryParam queryParam);
+
+    /**
      * 添加办案积分
      * @param caseIntegral
      */

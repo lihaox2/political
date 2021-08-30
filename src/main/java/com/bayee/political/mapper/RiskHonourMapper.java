@@ -35,4 +35,11 @@ public interface RiskHonourMapper {
      */
     List<RiskHonour> findHonorByPoliceIdAndYear(@Param("policeId") String policeId,@Param("year") String year,
                                                 @Param("month") String month);
+
+    /**
+     * 分页统计
+     * @param queryParam
+     * @return
+     */
+    Integer riskHonourPageCount(RiskHonourPageQueryParam queryParam);
 }

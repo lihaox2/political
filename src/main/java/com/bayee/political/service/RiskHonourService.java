@@ -19,6 +19,13 @@ public interface RiskHonourService {
     List<RiskHonourPageResultDO> riskHonourPage(RiskHonourPageQueryParam queryParam);
 
     /**
+     * 分页统计
+     * @param queryParam
+     * @return
+     */
+    Integer riskHonourPageCount(RiskHonourPageQueryParam queryParam);
+
+    /**
      * 表彰奖励详情
      * @param id
      * @return

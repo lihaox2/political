@@ -42,7 +42,12 @@ public class RiskHonourController {
     @GetMapping("/page")
     public ResponseEntity<?> riskHonourPage(RiskHonourPageQueryParam queryParam) {
 
-        return new ResponseEntity<>(DataListReturn.ok(riskHonourService.riskHonourPage(queryParam)), HttpStatus.OK);
+        Map<String, Object> result = new HashMap<>();
+        result.put("pageIndex", queryParam.getPageIndex());
+        result.put("pageSize", queryParam.getPageSize());
+        result.put("data", riskHonourService.riskHonourPage(queryParam));
+        result.put("totalCount", riskHonourService.riskHonourPageCount(queryParam));
+        return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
 
     @PostMapping("/add")
@@ -89,9 +94,9 @@ public class RiskHonourController {
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<?> updateRiskHonour(@RequestBody RiskHonourSaveParam saveParam) {
-        RiskHonour honour = riskHonourService.riskHonourDetails(saveParam.getId());
+    @PostMapping("/update/{id}")
+    public ResponseEntity<?> updateRiskHonour(@PathVariable Integer id, @RequestBody RiskHonourSaveParam saveParam) {
+        RiskHonour honour = riskHonourService.riskHonourDetails(id);
         honour.setHonourName(saveParam.getHonourName());
         honour.setHonourReason(saveParam.getHonourReason());
         honour.setHonourTypeCode(saveParam.getHonourTypeCode());

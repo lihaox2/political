@@ -215,6 +215,9 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 							riskCaseAbility.getJudicialSupervisionScore() + judicialSupervisionScore);
 				}
 			}
+			/*double maxScore = Math.max(riskCaseAbility.getReconsiderationLitigationScore()
+					, riskCaseAbility.getLetterVisitScore(), riskCaseAbility.getLawEnforcementFaultScore()
+					, riskCaseAbility.getJudicialSupervisionScore());*/
 			riskCaseAbility.setIndexNum(riskCaseAbility.getReconsiderationLitigationScore()
 					+ riskCaseAbility.getLetterVisitScore() + riskCaseAbility.getLawEnforcementFaultScore()
 					+ riskCaseAbility.getJudicialSupervisionScore());

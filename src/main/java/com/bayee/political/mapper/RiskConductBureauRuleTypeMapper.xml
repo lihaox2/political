@@ -182,4 +182,8 @@
       r1.level = 3 and r1.name like concat('%', #{name},'%')
   </select>
 
+  <select id="findTypeByCode" resultMap="BaseResultMap">
+    select * from risk_conduct_bureau_rule_type where code = #{typeCode}
+  </select>
+
 </mapper>

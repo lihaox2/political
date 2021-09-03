@@ -74,4 +74,11 @@ public interface RiskConductBureauRuleRecordService {
             @Param("conductBureauRuleRecordMonth") String conductBureauRuleRecordMonth,
             @Param("policeId") String policeId
     );
+
+    /**
+     * 判定数据是否存在
+     * @param inspectorKey
+     * @return
+     */
+    Integer findIdByInspectorKey(String inspectorKey);
 }

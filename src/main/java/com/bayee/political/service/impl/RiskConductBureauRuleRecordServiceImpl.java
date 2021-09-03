@@ -109,4 +109,9 @@ public class RiskConductBureauRuleRecordServiceImpl implements RiskConductBureau
 				conductBureauRuleRecordMonth, policeId);
 	}
 
+	@Override
+	public Integer findIdByInspectorKey(String inspectorKey) {
+		return riskConductBureauRuleRecordMapper.findIdByInspectorKey(inspectorKey);
+	}
+
 }

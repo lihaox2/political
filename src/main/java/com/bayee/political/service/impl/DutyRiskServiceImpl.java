@@ -1,5 +1,6 @@
 package com.bayee.political.service.impl;
 
+import com.bayee.political.algorithm.RiskCompute;
 import com.bayee.political.domain.RiskAlarm;
 import com.bayee.political.domain.RiskDuty;
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
@@ -38,7 +39,7 @@ public class DutyRiskServiceImpl implements DutyRiskService {
 	/**
 	 * 预警分数值
 	 */
-	private double alarmScore = 10d;
+	private double alarmScore = 6d;
 	/**
 	 * 最大扣分值
 	 */
@@ -130,5 +131,65 @@ public class DutyRiskServiceImpl implements DutyRiskService {
 	@Override
 	public Double findPoliceAvgDeductionScoreByDate(String date) {
 		return riskDutyDealPoliceRecordMapper.findPoliceAvgDeductionScoreByDate(date);
+	}
+
+	@Override
+	public RiskDuty dutyRiskDetailsV2(User user, String date) {
+		RiskDuty riskDuty = new RiskDuty();
+		riskDuty.setIndexNum(0d);
+		riskDuty.setDeductionScoreCount(0);
+		riskDuty.setTotalDeductionScore(0d);
+		riskDuty.setPoliceId(user.getPoliceId());
+		riskDuty.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+		List<RiskDutyDealPoliceRecord> riskDutyDealPoliceRecordList = riskDutyDealPoliceRecordMapper.
+				findRiskDutyDealPoliceRecordList(user.getPoliceId(), date);
+		if (riskDutyDealPoliceRecordList.size() > 0) {
+			int count = 0;
+			double totalScore = 0d;
+
+			Double maxV = 0d;
+			Double minV = riskDutyDealPoliceRecordList.get(0).getDeductionScore();
+			for (RiskDutyDealPoliceRecord record : riskDutyDealPoliceRecordList) {
+				if (record != null && record.getDeductionScore() > 0) {
+					count++;
+					totalScore += record.getDeductionScore();
+
+					if (record.getDeductionScore() > maxV) {
+						maxV = record.getDeductionScore();
+					}
+					if (record.getDeductionScore() < maxV) {
+						maxV = record.getDeductionScore();
+					}
+				}
+			}
+			riskDuty.setIndexNum(RiskCompute.log10(minV, maxV));
+			riskDuty.setDeductionScoreCount(count);
+			riskDuty.setTotalDeductionScore(totalScore);
+		}
+
+		RiskDuty oldRiskDuty = riskDutyMapper.findPoliceRiskDuty(user.getPoliceId(), date);
+		if (oldRiskDuty != null && oldRiskDuty.getId() != null) {
+			// 表示该riskDuty不用新增
+			riskDuty.setId(oldRiskDuty.getId());
+
+			oldRiskDuty.setIndexNum(riskDuty.getIndexNum());
+			oldRiskDuty.setDeductionScoreCount(riskDuty.getDeductionScoreCount());
+			oldRiskDuty.setTotalDeductionScore(riskDuty.getTotalDeductionScore());
+			oldRiskDuty.setUpdateDate(new Date());
+
+			riskDutyMapper.updateByPrimaryKeySelective(oldRiskDuty);
+		}
+
+		// 产生预警数据
+		if (riskDuty.getIndexNum() >= alarmScore) {
+			RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(user.getPoliceId(), AlarmTypeEnum.DUTY_RISK, date,
+					riskDuty.getIndexNum());
+
+			if (riskAlarm != null) {
+				riskAlarmService.insert(riskAlarm);
+			}
+		}
+		return riskDuty;
 	}
 }

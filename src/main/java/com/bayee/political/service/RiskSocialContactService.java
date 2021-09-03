@@ -25,4 +25,11 @@ public interface RiskSocialContactService {
      */
     void addRiskSocialContactList(List<RiskSocialContact> riskSocialContactList);
 
+    /**
+     * 社交风险处理
+     * @param user
+     * @param date
+     * @return
+     */
+    RiskSocialContact riskSocialContactDetailsV2(User user, String date);
 }

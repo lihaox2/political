@@ -45,7 +45,7 @@
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{deductionScore,jdbcType=DOUBLE}, 
       #{scoringLevel,jdbcType=INTEGER}, #{scoringDept,jdbcType=INTEGER}, #{measures},
-      #{remarks,jdbcType=VARCHAR}, #{imgArr,jdbcType=VARCHAR}, #{isEffective,jdbcType=INTEGER}, 
+      #{remarks,jdbcType=VARCHAR}, #{imgArr,jdbcType=VARCHAR}, #{isEffective,jdbcType=INTEGER},
       #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
@@ -348,6 +348,10 @@
       and DATE_FORMAT(brr.creation_date, '%Y-%m')=#{dateTime}
     </if>
     GROUP BY brt2.id
+  </select>
+
+  <select id="findIdByInspectorKey" resultType="Integer">
+    select id from risk_conduct_bureau_rule_record where inspector_key = #{inspectorKey}
   </select>
 
 </mapper>

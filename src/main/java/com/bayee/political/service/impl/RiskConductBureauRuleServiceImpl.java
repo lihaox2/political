@@ -1,19 +1,16 @@
 package com.bayee.political.service.impl;
 
+import com.bayee.political.algorithm.RiskCompute;
 import com.bayee.political.domain.*;
 import com.bayee.political.enums.AlarmTypeEnum;
-import com.bayee.political.enums.VisitRecordType;
 import com.bayee.political.mapper.*;
 import com.bayee.political.service.RiskAlarmService;
 import com.bayee.political.service.RiskConductBureauRuleService;
-import com.bayee.political.service.RiskConductVisitRecordService;
 import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -116,6 +113,70 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
     @Override
     public void addRiskConductBureauRuleList(List<RiskConductBureauRule> riskConductBureauRuleList) {
         riskConductBureauRuleMapper.insertRiskConductBureauRuleList(riskConductBureauRuleList);
+    }
+
+    @Override
+    public RiskConduct riskConductBureauRuleDetailsV2(User user, String date) {
+        RiskConduct riskConduct = new RiskConduct();
+
+        double alarmScore = 6d;
+        double riskConductMaxScore = 10d;
+
+        //局规计分
+        RiskConductBureauRule riskConductBureauRule = riskConductBureauRuleDetailsV2(user.getPoliceId(), date);
+
+        //信访投诉
+        RiskConductVisit riskConductVisit = riskConductVisitDetailsV2(user.getPoliceId(), date);
+
+        //交通违章
+        RiskConductTrafficViolation riskConductTrafficViolation = riskConductTrafficViolationDetailsV2(user.getPoliceId(), date);
+
+        //处理总行为规范数据
+        riskConduct.setPoliceId(user.getPoliceId());
+        riskConduct.setBureauRuleScore(riskConductBureauRule.getIndexNum());
+        riskConduct.setVisitScore(riskConductVisit.getIndexNum());
+        riskConduct.setTrafficViolationScore(riskConductTrafficViolation.getIndexNum());
+        riskConduct.setIndexNum(Math.min(riskConduct.getVisitScore() + riskConduct.getTrafficViolationScore() +
+                riskConduct.getBureauRuleScore(), riskConductMaxScore));
+        riskConduct.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+        //处理旧的总行为规范数据
+        RiskConduct oldRiskConduct = riskConductMapper.findRiskConductByPoliceIdAndDate(user.getPoliceId(), date);
+        if (oldRiskConduct != null && oldRiskConduct.getId() != null) {
+            //表示该riskConduct不用添加
+            riskConduct.setId(oldRiskConduct.getId());
+
+            oldRiskConduct.setBureauRuleScore(riskConduct.getBureauRuleScore());
+            oldRiskConduct.setVisitScore(riskConduct.getVisitScore());
+            oldRiskConduct.setTrafficViolationScore(riskConduct.getTrafficViolationScore());
+            oldRiskConduct.setIndexNum(Math.min(riskConduct.getVisitScore() + riskConduct.getTrafficViolationScore() +
+                    riskConduct.getBureauRuleScore(), riskConductMaxScore));
+            oldRiskConduct.setUpdateDate(new Date());
+
+            riskConductMapper.updateByPrimaryKey(oldRiskConduct);
+        }
+
+        //产生预警数据
+        if (riskConduct.getIndexNum() >= alarmScore) {
+            RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(user.getPoliceId(), AlarmTypeEnum.BEHAVIOR_RISK, date,
+                    riskConduct.getIndexNum());
+
+            if (riskAlarm != null) {
+                riskAlarmService.insert(riskAlarm);
+            }
+        }
+
+        if (riskConductBureauRule.getId() == null) {
+            riskConductBureauRuleMapper.insert(riskConductBureauRule);
+        }
+        if (riskConductVisit.getId() == null) {
+            riskConductVisitMapper.insert(riskConductVisit);
+        }
+        if (riskConductTrafficViolation.getId() == null) {
+            riskConductTrafficViolationMapper.insert(riskConductTrafficViolation);
+        }
+
+        return riskConduct;
     }
 
     /**
@@ -290,6 +351,168 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
         if (trafficViolationRecordList.size() > 0) {
             int deductionCount = 0;
             double deductionScore = 0;
+            for (RiskConductTrafficViolationRecord record : trafficViolationRecordList) {
+                if (record != null && record.getId() != null) {
+                    deductionCount++;
+                    deductionScore += dscore;
+                }
+            }
+            trafficViolation.setIndexNum(deductionScore);
+            trafficViolation.setDeductionScoreCount(deductionCount);
+            trafficViolation.setTotalDeductionScore(deductionScore);
+        }
+
+        RiskConductTrafficViolation oldRiskConductTrafficViolation =
+                riskConductTrafficViolationMapper.findPoliceRiskConductTrafficViolation(policeId, date);
+        if (oldRiskConductTrafficViolation != null && oldRiskConductTrafficViolation.getId() != null) {
+            trafficViolation.setId(oldRiskConductTrafficViolation.getId());
+
+            oldRiskConductTrafficViolation.setIndexNum(trafficViolation.getIndexNum());
+            oldRiskConductTrafficViolation.setDeductionScoreCount(trafficViolation.getDeductionScoreCount());
+            oldRiskConductTrafficViolation.setTotalDeductionScore(trafficViolation.getTotalDeductionScore());
+            oldRiskConductTrafficViolation.setUpdateDate(new Date());
+
+            riskConductTrafficViolationMapper.updateByPrimaryKey(oldRiskConductTrafficViolation);
+        }
+        return trafficViolation;
+    }
+
+
+    /**
+     * 局规计分处理
+     *
+     * @param policeId
+     * @param date
+     * @return
+     */
+    private RiskConductBureauRule riskConductBureauRuleDetailsV2(String policeId, String date) {
+        List<RiskConductBureauRuleRecord> recordList = riskConductBureauRuleRecordMapper.findRiskConductBureauRuleRecord(policeId, date);
+        RiskConductBureauRule riskConductBureauRule = new RiskConductBureauRule();
+        riskConductBureauRule.setPoliceId(policeId);
+        riskConductBureauRule.setIndexNum(0d);
+        riskConductBureauRule.setDeductionScoreCount(0);
+        riskConductBureauRule.setTotalDeductionScore(0d);
+        riskConductBureauRule.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+        if (recordList.size() > 0) {
+            int totalCount = 0;
+            double totalScore = 0;
+
+            Double maxV = 0d;
+            Double minV = recordList.get(0).getDeductionScore();
+            for (RiskConductBureauRuleRecord record : recordList) {
+                totalCount++;
+                if (record.getDeductionScore() != null) {
+                    totalScore += record.getDeductionScore();
+
+                    if (record.getDeductionScore() > maxV) {
+                        maxV = record.getDeductionScore();
+                    }
+                    if (record.getDeductionScore() < minV) {
+                        minV = record.getDeductionScore();
+                    }
+                }
+            }
+            riskConductBureauRule.setIndexNum(RiskCompute.log10(minV, maxV));
+            riskConductBureauRule.setDeductionScoreCount(totalCount);
+            riskConductBureauRule.setTotalDeductionScore(totalScore);
+        }
+
+        //处理老数据
+        RiskConductBureauRule oldRiskConductBureauRule = riskConductBureauRuleMapper.findRiskConductBureauRole(policeId, date);
+        if (oldRiskConductBureauRule != null && oldRiskConductBureauRule.getId() != null) {
+            //表示该riskConductBureauRule不用新增
+            riskConductBureauRule.setId(oldRiskConductBureauRule.getId());
+
+            oldRiskConductBureauRule.setIndexNum(riskConductBureauRule.getIndexNum());
+            oldRiskConductBureauRule.setDeductionScoreCount(riskConductBureauRule.getDeductionScoreCount());
+            oldRiskConductBureauRule.setTotalDeductionScore(riskConductBureauRule.getTotalDeductionScore());
+            oldRiskConductBureauRule.setUpdateDate(new Date());
+
+            riskConductBureauRuleMapper.updateByPrimaryKey(oldRiskConductBureauRule);
+        }
+
+        return riskConductBureauRule;
+    }
+
+    /**
+     * 信访投诉处理
+     *
+     * @param policeId
+     * @param date
+     * @return
+     */
+    private RiskConductVisit riskConductVisitDetailsV2(String policeId, String date) {
+        List<RiskConductVisitRecord> visitRecordList = riskConductVisitRecordMapper.findRiskConductVisitRecordList(policeId, date);
+        RiskConductVisit riskConductVisit = new RiskConductVisit();
+        riskConductVisit.setPoliceId(policeId);
+        riskConductVisit.setIndexNum(0d);
+        riskConductVisit.setDeductionScoreCount(0);
+        riskConductVisit.setTotalDeductionScore(0d);
+        riskConductVisit.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+        if (visitRecordList.size() > 0) {
+            int deductionCount = 0;
+            double deductionScore = 0;
+
+            Double maxV = 0d;
+            Double minV = visitRecordList.get(0).getDeductionScore();
+            for (RiskConductVisitRecord record : visitRecordList) {
+                deductionCount++;
+                deductionScore += record.getDeductionScore();
+
+                if (record.getDeductionScore() > maxV) {
+                    maxV = record.getDeductionScore();
+                }
+                if (record.getDeductionScore() < minV) {
+                    minV = record.getDeductionScore();
+                }
+            }
+            riskConductVisit.setIndexNum(RiskCompute.log10(minV, maxV));
+            riskConductVisit.setDeductionScoreCount(deductionCount);
+            riskConductVisit.setTotalDeductionScore(deductionScore);
+        }
+
+        //处理老数据
+        RiskConductVisit oldRiskConductVisit = riskConductVisitMapper.findRiskConductVisit(policeId, date);
+
+        if (oldRiskConductVisit != null && oldRiskConductVisit.getId() != null) {
+            //表示该riskConductVisit 不用新增
+            riskConductVisit.setId(oldRiskConductVisit.getId());
+
+            oldRiskConductVisit.setIndexNum(riskConductVisit.getIndexNum());
+            oldRiskConductVisit.setDeductionScoreCount(riskConductVisit.getDeductionScoreCount());
+            oldRiskConductVisit.setTotalDeductionScore(riskConductVisit.getTotalDeductionScore());
+            oldRiskConductVisit.setUpdateDate(new Date());
+
+            riskConductVisitMapper.updateByPrimaryKey(oldRiskConductVisit);
+        }
+
+        return riskConductVisit;
+    }
+
+    /**
+     * 交通违章
+     *
+     * @param policeId
+     * @param date
+     * @return
+     */
+    private RiskConductTrafficViolation riskConductTrafficViolationDetailsV2(String policeId, String date) {
+        List<RiskConductTrafficViolationRecord> trafficViolationRecordList =
+                riskConductTrafficViolationRecordMapper.findPoliceRiskConductTrafficViolationRecordList(policeId, date);
+        RiskConductTrafficViolation trafficViolation = new RiskConductTrafficViolation();
+        trafficViolation.setPoliceId(policeId);
+        trafficViolation.setIndexNum(0d);
+        trafficViolation.setDeductionScoreCount(0);
+        trafficViolation.setTotalDeductionScore(0d);
+        trafficViolation.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+        double dscore = 2;
+        if (trafficViolationRecordList.size() > 0) {
+            int deductionCount = 0;
+            double deductionScore = 0;
+
             for (RiskConductTrafficViolationRecord record : trafficViolationRecordList) {
                 if (record != null && record.getId() != null) {
                     deductionCount++;

@@ -20,6 +20,8 @@ import com.bayee.political.domain.PoliceStationPost;
 @Service
 public interface DepartmentService {
 
+	Department findByDeptCode(String deptCode);
+
 	void save(Department department);
 
 	Department findById(Integer id);

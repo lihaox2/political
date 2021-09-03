@@ -91,4 +91,38 @@ public class RiskSkillServiceImpl implements RiskSkillService {
         return trainFirearmAchievementMapper.getPoliceFirearmDeductionScore(policeId, date);
     }
 
+    @Override
+    public RiskTrain riskSkillDetailsV2(User user, String date) {
+        RiskTrain riskTrain = riskTrainMapper.findRiskTrainByPoliceIdAndDate(user.getPoliceId(), date);
+
+        double maxScore = 10d;
+        double alarmScore = 6d;
+
+        if (riskTrain != null) {
+            Double physicalScore = trainPhysicalAchievementDetailsMapper.getPolicePhysicalDeductionScore(user.getPoliceId(), date);
+            Double firearmScore = trainFirearmAchievementMapper.getPoliceFirearmDeductionScore(user.getPoliceId(), date);
+            double totalScore = firearmScore + physicalScore;
+
+            riskTrain.setFirearmScore(firearmScore);
+            riskTrain.setPhysicalScore(physicalScore);
+            riskTrain.setIndexNum(Math.min(totalScore, maxScore));
+
+            // 产生预警数据
+            if (totalScore >= alarmScore) {
+                RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(user.getPoliceId(), AlarmTypeEnum.SKILL_RISK, date,
+                        totalScore);
+
+                if (riskAlarm != null) {
+                    riskAlarmService.insert(riskAlarm);
+                }
+            }
+            riskTrainMapper.updateByPrimaryKey(riskTrain);
+
+            return riskTrain;
+        } else {
+            return null;
+        }
+    }
+
+
 }

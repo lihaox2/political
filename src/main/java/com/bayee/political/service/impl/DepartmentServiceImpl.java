@@ -34,6 +34,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 	PoliceStationPostMapper policeStationPostMapper;// 派出所岗位
 
 	@Override
+	public Department findByDeptCode(String deptCode) {
+		return mapper.findByDeptCode(deptCode);
+	}
+
+	@Override
 	public void save(Department department) {
 		mapper.save(department);
 	}

@@ -278,7 +278,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			
 			double indexNum=0;
 
-			if(r.getBmiId()==3 ||  r.getBmiId()==4) {
+			if(r.getBmiId() != null && (r.getBmiId()==3 ||  r.getBmiId()==4)) {
 				riskHealth.setOverweightNum(0.5);
 				indexNum+=0.5;
 			}
@@ -623,5 +623,135 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 		reportRecordDO1.setHealthDesc(reportRecordDO2.getHealthDesc());
 
 		return reportRecordDO1;
+	}
+
+	@Override
+	public void policeRiskDetailsV2(List<User> userList, LocalDate localDate) {
+		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
+		String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
+
+		List<RiskReportRecord> riskReportRecordList = new ArrayList<>();
+		List<RiskCase> riskCaseList = new ArrayList<>();
+		List<RiskDuty> riskDutyList = new ArrayList<>();
+		List<RiskConduct> riskConductList = new ArrayList<>();
+		List<RiskSocialContact> riskSocialContactList = new ArrayList<>();
+
+		for (User user : userList) {
+			RiskReportRecord record = new RiskReportRecord();
+			record.setPoliceId(user.getPoliceId());
+			record.setYear(year);
+			record.setMonth(month);
+			record.setHandlingCaseNum(0d);
+			record.setDutyNum(0d);
+			record.setSocialContactNum(0d);
+			record.setAmilyEvaluationNum(0d);
+			record.setHealthNum(0d);
+			record.setDrinkNum(0d);
+			record.setStudyNum(0d);
+			record.setConductNum(0d);
+			record.setTrainNum(0d);
+
+			//执法办案
+			RiskCase riskCase = handlingCasesRiskService.handlingCasesRiskDetailsV2(user, date);
+			if (riskCase != null) {
+				if (riskCase.getId() == null) {
+					riskCaseList.add(riskCase);
+				}
+				record.setHandlingCaseNum(riskCase.getIndexNum());
+			}
+
+			//接警执勤
+			RiskDuty riskDuty = dutyRiskService.dutyRiskDetailsV2(user, date);
+			if (riskDuty != null) {
+				if (riskDuty.getId() == null) {
+					riskDutyList.add(riskDuty);
+				}
+				record.setDutyNum(riskDuty.getIndexNum());
+			}
+
+			//警务技能
+			RiskTrain riskTrain = riskSkillService.riskSkillDetailsV2(user, date);
+			if (riskTrain != null && riskTrain.getIndexNum() != null) {
+				record.setTrainNum(riskTrain.getIndexNum());
+			}
+
+			//行为规范
+			RiskConduct riskConduct = riskConductBureauRuleService.riskConductBureauRuleDetailsV2(user, date);
+			if (riskConduct != null) {
+				if (riskConduct.getId() == null) {
+					riskConductList.add(riskConduct);
+				}
+				record.setConductNum(riskConduct.getIndexNum());
+			}
+
+			//社交风险
+			RiskSocialContact riskSocialContact = riskSocialContactService.riskSocialContactDetailsV2(user, date);
+			if (riskSocialContact != null) {
+				if (riskSocialContact.getId() == null) {
+					riskSocialContactList.add(riskSocialContact);
+				}
+				record.setSocialContactNum(riskSocialContact.getIndexNum());
+			}
+
+			Double healthScore = riskReportRecordMapper.findPoliceHealthScoreByYear(user.getPoliceId(), year);
+			record.setHealthNum(healthScore != null ? healthScore : 0d);
+
+			record.setTotalNum(Math.min(record.getConductNum() + record.getHandlingCaseNum() + record.getDutyNum()
+					+ record.getTrainNum() + record.getSocialContactNum(), 100));
+			record.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+			//处理产生过的风险报备数据
+			RiskReportRecord oldRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
+			if (oldRecord != null && oldRecord.getId() != null) {
+				oldRecord.setTrainNum(record.getTrainNum());
+				oldRecord.setConductNum(record.getConductNum());
+				oldRecord.setHandlingCaseNum(record.getHandlingCaseNum());
+				oldRecord.setDutyNum(record.getDutyNum());
+				oldRecord.setSocialContactNum(record.getSocialContactNum());
+				oldRecord.setHealthNum(oldRecord.getHealthNum() == 0 ? record.getHealthNum() : oldRecord.getHealthNum());
+
+				oldRecord.setTotalNum(Math.min(record.getTotalNum() + oldRecord.getHealthNum() +
+						oldRecord.getAmilyEvaluationNum(), 100));
+				oldRecord.setUpdateDate(new Date());
+
+				riskReportRecordService.updateByPrimaryKey(oldRecord);
+			} else {
+				record.setTotalNum(Math.min(record.getTotalNum() + record.getHealthNum(), 100));
+
+				riskReportRecordList.add(record);
+			}
+
+			// 产生预警数据
+			if (record.getTotalNum() >= 60) {
+				RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(user.getPoliceId(), AlarmTypeEnum.COMPREHENSIVE_RISK, date,
+						record.getTotalNum());
+
+				if (riskAlarm != null) {
+					riskAlarmService.insert(riskAlarm);
+				}
+			}
+		}
+
+		//批量添加数据
+		if (riskCaseList.size() > 0) {
+			handlingCasesRiskService.addRiskCaseList(riskCaseList);
+		}
+		if (riskDutyList.size() > 0) {
+			dutyRiskService.addRiskDutyList(riskDutyList);
+		}
+		if (riskConductList.size() > 0) {
+			riskConductService.insertRiskConductList(riskConductList);
+		}
+		if (riskSocialContactList.size() > 0) {
+			riskSocialContactService.addRiskSocialContactList(riskSocialContactList);
+		}
+		if (riskReportRecordList.size() > 0) {
+			riskReportRecordService.insertRiskReportRecordList(riskReportRecordList);
+		}
+
+		health(localDate);
+
+		family(localDate);
 	}
 }

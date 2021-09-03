@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public interface RiskConductBureauRuleTypeService {
 
+    RiskConductBureauRuleType findTypeByCode(String typeCode);
+
     RiskConductBureauRuleType selectByPrimaryKey(Integer id);
 
     void deleteByPrimaryKey(Integer id);

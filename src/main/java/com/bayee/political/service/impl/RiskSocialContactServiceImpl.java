@@ -82,4 +82,50 @@ public class RiskSocialContactServiceImpl implements RiskSocialContactService {
     public void addRiskSocialContactList(List<RiskSocialContact> riskSocialContactList) {
         riskSocialContactMapper.insertRiskSocialContactList(riskSocialContactList);
     }
+
+    @Override
+    public RiskSocialContact riskSocialContactDetailsV2(User user, String date) {
+        List<RiskSocialContactRecord> socialContactRecordList =
+                riskSocialContactRecordMapper.findPoliceRiskSocialContactRecordList(user.getPoliceId(), date);
+        RiskSocialContact riskSocialContact = new RiskSocialContact();
+        riskSocialContact.setPoliceId(user.getPoliceId());
+        riskSocialContact.setIndexNum(0d);
+        riskSocialContact.setNum(0);
+        riskSocialContact.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+        double maxScore = 15;
+        double alarmScore = 6;
+        double score = 3;
+
+        if (socialContactRecordList.size() > 0) {
+            int count = 0;
+            double deductionScore = 0;
+            for (RiskSocialContactRecord record : socialContactRecordList) {
+                count++;
+                deductionScore += score;
+            }
+            riskSocialContact.setIndexNum(Math.min(deductionScore, maxScore));
+            riskSocialContact.setNum(count);
+        }
+
+        RiskSocialContact oldRiskSocialContact = riskSocialContactMapper.findPoliceRiskSocialContact(user.getPoliceId(), date);
+        if (oldRiskSocialContact != null && oldRiskSocialContact.getId() != null) {
+            riskSocialContact.setId(oldRiskSocialContact.getId());
+
+            oldRiskSocialContact.setIndexNum(riskSocialContact.getIndexNum());
+            oldRiskSocialContact.setNum(riskSocialContact.getNum());
+            oldRiskSocialContact.setUpdateDate(new Date());
+        }
+
+        //产生预警数据
+        if (riskSocialContact.getIndexNum() >= alarmScore) {
+            RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(user.getPoliceId(), AlarmTypeEnum.SOCIAL_CONTACT, date,
+                    riskSocialContact.getIndexNum());
+
+            if (riskAlarm != null) {
+                riskAlarmService.insert(riskAlarm);
+            }
+        }
+        return riskSocialContact;
+    }
 }

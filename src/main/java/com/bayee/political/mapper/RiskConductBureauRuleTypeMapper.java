@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public interface RiskConductBureauRuleTypeMapper {
 
+    RiskConductBureauRuleType findTypeByCode(String typeCode);
+
     RiskConductBureauRuleType selectByPrimaryKey(Integer id);
 
     void deleteByPrimaryKey(Integer id);

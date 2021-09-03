@@ -36,4 +36,11 @@ public interface RiskSkillService {
      */
     Double getPoliceFirearmDeductionScore(String policeId, String date);
 
+    /**
+     * 警务技能计算
+     * @param user
+     * @param date
+     * @return
+     */
+    RiskTrain riskSkillDetailsV2(User user, String date);
 }

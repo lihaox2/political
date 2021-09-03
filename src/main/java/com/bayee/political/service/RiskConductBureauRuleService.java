@@ -27,4 +27,11 @@ public interface RiskConductBureauRuleService {
      */
     void addRiskConductBureauRuleList(List<RiskConductBureauRule> riskConductBureauRuleList);
 
+    /**
+     * 行为规范计算
+     * @param user
+     * @param date
+     * @return
+     */
+    RiskConduct riskConductBureauRuleDetailsV2(User user, String date);
 }

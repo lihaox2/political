@@ -79,4 +79,11 @@ public interface RiskReportRecordService {
      */
     RiskReportRecordDO findRiskReportByPoliceIdToYear(String policeId, String date, String lastDate);
 
+    /**
+     * 警员风险指数处理
+     * @param userList
+     * @param localDate
+     */
+    void policeRiskDetailsV2(List<User> userList, LocalDate localDate);
+
 }

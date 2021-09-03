@@ -130,4 +130,8 @@ order by b.id desc
 			LIMIT 5
 	</select>
 
+	<select id="findByDeptCode" resultMap="departmentResult">
+		select * from department where code = #{deptCode}
+	</select>
+
 </mapper>

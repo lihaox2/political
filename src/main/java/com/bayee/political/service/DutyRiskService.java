@@ -45,4 +45,11 @@ public interface DutyRiskService {
      */
     Double findPoliceAvgDeductionScoreByDate(String date);
 
+    /**
+     * 接警执勤报备处理
+     * @param user
+     * @param date
+     * @return
+     */
+    RiskDuty dutyRiskDetailsV2(User user, String date);
 }

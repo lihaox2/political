@@ -27,6 +27,11 @@ public class RiskConductBureauRuleTypeServiceImpl implements RiskConductBureauRu
     RiskConductBureauRuleTypeMapper riskConductBureauRuleTypeMapper;
 
     @Override
+    public RiskConductBureauRuleType findTypeByCode(String typeCode) {
+        return riskConductBureauRuleTypeMapper.findTypeByCode(typeCode);
+    }
+
+    @Override
     public RiskConductBureauRuleType selectByPrimaryKey(Integer id) {
         return riskConductBureauRuleTypeMapper.selectByPrimaryKey(id);
     }

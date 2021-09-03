@@ -37,7 +37,7 @@ public interface RiskCaseTestRecordMapper {
 	 * @param semester 学期
 	 * @return
 	 */
-	RiskCaseTestRecord findPoliceCaseData(@Param("policeId") String policeId, @Param("date") String date);
+	List<RiskCaseTestRecord> findPoliceCaseData(@Param("policeId") String policeId, @Param("date") String date);
 
 	// 警员执法考试数据列表查询
 	List<RiskCaseTestRecord> riskCaseTestRecordList(@Param("policeId") String policeId,

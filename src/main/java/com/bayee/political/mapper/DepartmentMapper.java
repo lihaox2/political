@@ -75,4 +75,6 @@ public interface DepartmentMapper {
 	 */
 	List<DepartmentDO> findPublicityCountNum();
 
+	Department findByDeptCode(String deptCode);
+
 }

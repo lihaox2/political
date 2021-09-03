@@ -663,7 +663,8 @@ public class RiskController extends BaseController {
 		result.setHeartNum(item.getHeartNum() == null ? "无" : item.getHeartNum() > 0 ? "有" : "无");
 		result.setTumorAntigenNum(item.getTumorAntigenNum() == null ? "无" : item.getTumorAntigenNum() > 0 ? "有" : "无");
 		result.setOrthopaedicsNum(item.getOrthopaedicsNum() == null ? "无" : item.getOrthopaedicsNum() > 0 ? "有" : "无");
-		return new ResponseEntity<DataListReturn>(DataListReturn.ok(item), HttpStatus.OK);
+
+		return new ResponseEntity<DataListReturn>(DataListReturn.ok(result), HttpStatus.OK);
 	}
 
 	// 警员健康风险去年今年折线图

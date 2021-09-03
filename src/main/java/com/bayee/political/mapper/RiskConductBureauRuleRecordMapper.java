@@ -107,4 +107,13 @@ public interface RiskConductBureauRuleRecordMapper {
                                                                         @Param("dateTime") String dateTime,
                                                                         @Param("lastMonthTime") String lastMonthTime,
                                                                         @Param("timeType") Integer timeType);
+
+
+    /**
+     * 判定数据是否存在
+     * @param inspectorKey
+     * @return
+     */
+    Integer findIdByInspectorKey(String inspectorKey);
+
 }

@@ -45,4 +45,12 @@ public interface HandlingCasesRiskService {
      */
     Double findPoliceAvgDeductionScoreByDate(String date);
 
+    /**
+     * 执法办案报备处理
+     * @param user
+     * @param date
+     * @return
+     */
+    RiskCase handlingCasesRiskDetailsV2(User user, String date);
+
 }

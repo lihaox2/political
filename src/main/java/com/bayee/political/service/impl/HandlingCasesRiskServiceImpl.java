@@ -1,5 +1,6 @@
 package com.bayee.political.service.impl;
 
+import com.bayee.political.algorithm.RiskCompute;
 import com.bayee.political.domain.*;
 import com.bayee.political.enums.AlarmTypeEnum;
 import com.bayee.political.mapper.*;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author xxl
@@ -162,6 +164,70 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 	@Override
 	public Double findPoliceAvgDeductionScoreByDate(String date) {
 		return riskCaseLawEnforcementRecordMapper.findPoliceAvgDeductionScoreByDate(date);
+	}
+
+	@Override
+	public RiskCase handlingCasesRiskDetailsV2(User user, String date) {
+		double maxScore = 10d;
+		double alarmScore = 6d;
+
+		RiskCase riskCase = new RiskCase();
+		riskCase.setIndexNum(0d);
+		riskCase.setAbilityNum(0d);
+		riskCase.setLawEnforcementNum(0d);
+		riskCase.setTestNum(0d);
+		riskCase.setPoliceId(user.getPoliceId());
+
+		// 执法能力处理
+		RiskCaseAbility riskCaseAbility = handlingCasesAbilityRiskDetailsV2(user, date);
+		if (riskCaseAbility.getId() == null) {
+			riskCaseAbilityMapper.insertRiskCaseAbility(riskCaseAbility);
+		}
+		riskCase.setAbilityNum(riskCaseAbility.getIndexNum());
+
+		// 执法管理处理
+		RiskCaseLawEnforcement riskCaseLawEnforcement = handlingCasesManageRiskDetailsV2(user, date);
+		if (riskCaseLawEnforcement.getId() == null) {
+			riskCaseLawEnforcementMapper.insert(riskCaseLawEnforcement);
+		}
+		riskCase.setLawEnforcementNum(riskCaseLawEnforcement.getIndexNum());
+
+		// 执法考试处理
+		RiskCaseTest riskCaseTest = handlingCasesExamRiskDetailsV2(user, date);
+		if (riskCaseTest.getId() == null) {
+			riskCaseTestMapper.insert(riskCaseTest);
+		}
+		riskCase.setTestNum(riskCaseTest.getIndexNum());
+
+		riskCase.setIndexNum(Math.min((riskCase.getAbilityNum() + riskCase.getLawEnforcementNum()
+				+ riskCase.getTestNum()), maxScore));
+
+		RiskCase olsRiskCase = riskCaseMapper.findPoliceRiskCase(user.getPoliceId(), date);
+		if (olsRiskCase != null && olsRiskCase.getId() != null) {
+			riskCase.setId(olsRiskCase.getId());
+
+			olsRiskCase.setIndexNum(riskCase.getIndexNum());
+			olsRiskCase.setAbilityNum(riskCase.getAbilityNum());
+			olsRiskCase.setLawEnforcementNum(riskCase.getLawEnforcementNum());
+			olsRiskCase.setTestNum(riskCase.getTestNum());
+			olsRiskCase.setUpdateDate(new Date());
+
+			riskCaseMapper.updateByPrimaryKeySelective(olsRiskCase);
+		}
+		riskCase.setPoliceId(user.getPoliceId());
+		riskCase.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+		// 预警处理
+		if (riskCase.getIndexNum() >= alarmScore) {
+			RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(user.getPoliceId(), AlarmTypeEnum.HANDLING_CASES_RISK,
+					date, riskCase.getIndexNum());
+
+			if (riskAlarm != null) {
+				riskAlarmService.insert(riskAlarm);
+			}
+		}
+
+		return riskCase;
 	}
 
 	/**
@@ -316,13 +382,214 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 		riskCaseTest.setDeductionScore(0d);
 		riskCaseTest.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 
-		RiskCaseTestRecord record = riskCaseTestRecordMapper.findPoliceCaseData(user.getPoliceId(), date);
-		if(record != null && record.getId() != null) {
-			if (record.getScore() < passScore) {
-				riskCaseTest.setIndexNum(score);
-				riskCaseTest.setDeductionScore(score);
+		Double deductionScore = 0d;
+		List<RiskCaseTestRecord> recordList = riskCaseTestRecordMapper.findPoliceCaseData(user.getPoliceId(), date);
+		for (int i=0; i<recordList.size(); i++) {
+			RiskCaseTestRecord record = recordList.get(i);
+
+			if(record != null && record.getId() != null) {
+				if (record.getScore() < passScore) {
+					deductionScore += score;
+				}
 			}
 		}
+		riskCaseTest.setIndexNum(deductionScore);
+		riskCaseTest.setDeductionScore(deductionScore);
+
+		//处理已产生过的数据
+		RiskCaseTest oldRiskCaseTest = riskCaseTestMapper.findPoliceRiskCaseTest(user.getPoliceId(), date);
+		if (oldRiskCaseTest != null && oldRiskCaseTest.getId() != null) {
+			riskCaseTest.setId(oldRiskCaseTest.getId());
+
+			oldRiskCaseTest.setIndexNum(riskCaseTest.getIndexNum());
+			oldRiskCaseTest.setDeductionScore(riskCaseTest.getDeductionScore());
+			oldRiskCaseTest.setUpdateDate(new Date());
+
+			riskCaseTestMapper.updateByPrimaryKeySelective(oldRiskCaseTest);
+		}
+		return riskCaseTest;
+	}
+
+
+	/**
+	 * 执法能力处理
+	 *
+	 * @param user
+	 * @param date
+	 * @return
+	 */
+	private RiskCaseAbility handlingCasesAbilityRiskDetailsV2(User user, String date) {
+		// 校验规则
+
+		// 扣分规则
+		double reconsiderationLitigationScore = 5;
+		double letterVisitScore = 5;
+		double lawEnforcementFaultScore = 10;
+		double judicialSupervisionScore = 10;
+
+		RiskCaseAbility riskCaseAbility = new RiskCaseAbility();
+		riskCaseAbility.setIndexNum(0d);
+		riskCaseAbility.setReconsiderationLitigationScore(0d);
+		riskCaseAbility.setLetterVisitScore(0d);
+		riskCaseAbility.setLawEnforcementFaultScore(0d);
+		riskCaseAbility.setJudicialSupervisionScore(0d);
+		riskCaseAbility.setPoliceId(user.getPoliceId());
+		riskCaseAbility.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+		List<RiskCaseAbilityRecord> riskCaseAbilityRecordList = riskCaseAbilityRecordMapper.findPoliceCaseData(user.getPoliceId(), date);
+		if(riskCaseAbilityRecordList.size() > 0) {
+			for (RiskCaseAbilityRecord record : riskCaseAbilityRecordList) {
+				// 校验复议诉讼撤变
+				if (record.getReconsiderationLitigationStatus() != null && record.getReconsiderationLitigationStatus() == 1) {
+					riskCaseAbility.setReconsiderationLitigationScore(
+							riskCaseAbility.getReconsiderationLitigationScore() + reconsiderationLitigationScore);
+				}
+
+				// 校验有责涉案（警）投诉、信访
+				if (record.getLetterVisitStatus() != null && record.getLetterVisitStatus() == 1) {
+					riskCaseAbility.setLetterVisitScore(riskCaseAbility.getLetterVisitScore() + letterVisitScore);
+				}
+
+				// 校验重大执法过错
+				if (record.getLawEnforcementFaultStatus() != null && record.getLawEnforcementFaultStatus() == 1) {
+					riskCaseAbility.setLawEnforcementFaultScore(
+							riskCaseAbility.getLawEnforcementFaultScore() + lawEnforcementFaultScore);
+				}
+
+				// 校验司法监督（检察院纠违）
+				if (record.getJudicialSupervisionStatus() != null && record.getJudicialSupervisionStatus() == 1) {
+					riskCaseAbility.setJudicialSupervisionScore(
+							riskCaseAbility.getJudicialSupervisionScore() + judicialSupervisionScore);
+				}
+			}
+			double maxScore = RiskCompute.max(riskCaseAbility.getReconsiderationLitigationScore()
+					, riskCaseAbility.getLetterVisitScore(), riskCaseAbility.getLawEnforcementFaultScore()
+					, riskCaseAbility.getJudicialSupervisionScore());
+
+			double minScore = RiskCompute.min(riskCaseAbility.getReconsiderationLitigationScore()
+					, riskCaseAbility.getLetterVisitScore(), riskCaseAbility.getLawEnforcementFaultScore()
+					, riskCaseAbility.getJudicialSupervisionScore());
+
+			riskCaseAbility.setIndexNum(RiskCompute.log10(minScore, maxScore));
+		}
+
+		// 处理已产生过的报备数据
+		RiskCaseAbility oldRiskCaseAbility = riskCaseAbilityMapper.findRiskCaseAbilityByPoliceIdAndDate(user.getPoliceId(), date);
+		if (oldRiskCaseAbility != null && oldRiskCaseAbility.getId() != null) {
+			// 表示该riskCaseAbility不用新增
+			riskCaseAbility.setId(oldRiskCaseAbility.getId());
+
+			oldRiskCaseAbility.setIndexNum(riskCaseAbility.getIndexNum());
+			oldRiskCaseAbility.setReconsiderationLitigationScore(riskCaseAbility.getReconsiderationLitigationScore());
+			oldRiskCaseAbility.setLetterVisitScore(riskCaseAbility.getLetterVisitScore());
+			oldRiskCaseAbility.setLawEnforcementFaultScore(riskCaseAbility.getLawEnforcementFaultScore());
+			oldRiskCaseAbility.setJudicialSupervisionScore(riskCaseAbility.getJudicialSupervisionScore());
+			oldRiskCaseAbility.setUpdateDate(new Date());
+
+			riskCaseAbilityMapper.updateRiskCaseAbility(oldRiskCaseAbility);
+		}
+
+		return riskCaseAbility;
+	}
+
+	/**
+	 * 执法管理处理
+	 *
+	 * @param user
+	 * @param date
+	 * @return
+	 */
+	private RiskCaseLawEnforcement handlingCasesManageRiskDetailsV2(User user, String date) {
+		// 校验规则
+		// 扣分规则
+		RiskCaseLawEnforcement enforcement = new RiskCaseLawEnforcement();
+		enforcement.setIndexNum(0d);
+		enforcement.setTotalDeductionScore(0d);
+		enforcement.setTotalDeductionCount(0);
+		enforcement.setPoliceId(user.getPoliceId());
+		enforcement.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+		List<RiskCaseLawEnforcementRecord> recordList = riskCaseLawEnforcementRecordMapper
+				.findPoliceCaseData(user.getPoliceId(), date);
+		if (recordList.size() > 0) {
+			int count = 0;
+			double score = 0d;
+
+			double maxV = 0;
+			double minV = recordList.get(0).getDeductionScore();
+			for (RiskCaseLawEnforcementRecord record : recordList) {
+				if (record.getDeductionScore() != null && record.getDeductionScore() > 0) {
+					score += record.getDeductionScore();
+
+					if (record.getDeductionScore() > maxV) {
+						maxV = record.getDeductionScore();
+					}
+					if (record.getDeductionScore() < minV) {
+						minV = record.getDeductionScore();
+					}
+				}
+				count++;
+			}
+
+			enforcement.setIndexNum(RiskCompute.log10(minV, maxV));
+			enforcement.setTotalDeductionScore(score);
+			enforcement.setTotalDeductionCount(count);
+		}
+
+		//处理已产生过的预警
+		RiskCaseLawEnforcement oldRiskCaseLawEnforcement = riskCaseLawEnforcementMapper
+				.findRiskCaseLawEnforcementByPoliceIdAndDate(user.getPoliceId(), date);
+		if (oldRiskCaseLawEnforcement != null && oldRiskCaseLawEnforcement.getId() != null) {
+			// 表示该enforcement不用新增
+			enforcement.setId(oldRiskCaseLawEnforcement.getId());
+
+			oldRiskCaseLawEnforcement.setIndexNum(enforcement.getIndexNum());
+			oldRiskCaseLawEnforcement.setTotalDeductionScore(enforcement.getTotalDeductionScore());
+			oldRiskCaseLawEnforcement.setTotalDeductionCount(enforcement.getTotalDeductionCount());
+			oldRiskCaseLawEnforcement.setUpdateDate(new Date());
+
+			riskCaseLawEnforcementMapper.updateByPrimaryKeySelective(oldRiskCaseLawEnforcement);
+		}
+		return enforcement;
+	}
+
+	/**
+	 * 执法考试处理
+	 *
+	 * @param user
+	 * @param date
+	 * @return
+	 */
+	private RiskCaseTest handlingCasesExamRiskDetailsV2(User user, String date) {
+		String year = date.substring(0, 4);
+		String month = date.substring(5, 7);
+//		int semester = Integer.valueOf(month) >= 1 && Integer.valueOf(month) <= 6 ? 1 : 2;
+		// 校验规则
+		double passScore = 60d;
+		// 扣分规则
+		double score = 2d;
+
+		RiskCaseTest riskCaseTest = new RiskCaseTest();
+		riskCaseTest.setPoliceId(user.getPoliceId());
+		riskCaseTest.setIndexNum(0d);
+		riskCaseTest.setYear(year);
+		riskCaseTest.setSemester(Integer.valueOf(month));
+		riskCaseTest.setDeductionScore(0d);
+		riskCaseTest.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+		Double deductionScore = 0d;
+		List<RiskCaseTestRecord> recordList = riskCaseTestRecordMapper.findPoliceCaseData(user.getPoliceId(), date);
+		for (int i=0; i<recordList.size(); i++) {
+			RiskCaseTestRecord record = recordList.get(i);
+
+			if(record != null && record.getId() != null) {
+				if (record.getScore() < passScore) {
+					deductionScore += score;
+				}
+			}
+		}
+		riskCaseTest.setIndexNum(deductionScore);
+		riskCaseTest.setDeductionScore(deductionScore);
 
 		//处理已产生过的数据
 		RiskCaseTest oldRiskCaseTest = riskCaseTestMapper.findPoliceRiskCaseTest(user.getPoliceId(), date);

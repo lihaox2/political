@@ -52,15 +52,6 @@ public class CaseController {
     @Autowired
     DepartmentService departmentService;
 
-    public static void main(String[] args) {
-        double v1 = Math.log10(10) * 8 / Math.log10(10) * 70;
-        double v2 = Math.log10(20);
-        System.out.println(v1);
-        System.out.println(v2);
-
-        //2.68 + 1.3
-    }
-
     @GetMapping("/integral/page")
     public ResponseEntity<?> caseIntegralPage(CaseIntegralPageQueryParam queryParam) {
 

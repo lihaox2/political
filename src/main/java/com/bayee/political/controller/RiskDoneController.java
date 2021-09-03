@@ -31,12 +31,14 @@ public class RiskDoneController {
 
     @GetMapping("/risk/done/test")
     public ResponseEntity<?> test() {
-        String[] dateArr = new String[]{"2021-04-01", "2021-03-01", "2021-02-01", "2021-01-01", "2020-12-01", "2020-11-01"};
+        String[] dateArr = new String[]{"2021-08-01", "2021-07-01", "2021-06-01", "2021-05-01", "2021-04-01",
+                "2021-03-01", "2021-02-01", "2021-01-01", "2020-12-01", "2020-11-01"};
 
         List<User> userList = userService.userAllList();
 
         for (String date : dateArr) {
-            riskReportRecordService.policeRiskDetails(userList, LocalDate.parse(date));
+//            riskReportRecordService.policeRiskDetails(userList, LocalDate.parse(date));
+            riskReportRecordService.policeRiskDetailsV2(userList, LocalDate.parse(date));
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -76,4 +76,11 @@ public interface RiskConductBureauRuleTypeService {
      */
     List<Map<String, Object>> getTotalTypeByScoringOptionName(String name);
 
+    /**
+     * 根据code查询
+     * @param code
+     * @return
+     */
+    RiskConductBureauRuleType findConductBureauRuleTypeByCode(String code);
+
 }

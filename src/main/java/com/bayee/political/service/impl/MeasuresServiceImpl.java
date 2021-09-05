@@ -22,4 +22,14 @@ public class MeasuresServiceImpl implements MeasuresService {
     public List<Measures> findAllMeasures() {
         return measuresMapper.findAllMeasures();
     }
+
+    @Override
+    public Measures findByName(String name) {
+        return measuresMapper.findByName(name);
+    }
+
+    @Override
+    public void insertMeasures(Measures measures) {
+        measuresMapper.insertMeasures(measures);
+    }
 }

@@ -109,4 +109,9 @@ public class RiskConductBureauRuleTypeServiceImpl implements RiskConductBureauRu
     public List<Map<String, Object>> getTotalTypeByScoringOptionName(String name) {
         return riskConductBureauRuleTypeMapper.getTotalTypeByScoringOptionName(name);
     }
+
+    @Override
+    public RiskConductBureauRuleType findConductBureauRuleTypeByCode(String code) {
+        return riskConductBureauRuleTypeMapper.findConductBureauRuleTypeByCode(code);
+    }
 }

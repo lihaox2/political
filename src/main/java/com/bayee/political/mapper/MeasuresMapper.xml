@@ -11,4 +11,12 @@
     select * from `measures`
   </select>
 
+  <select id="findByName" resultMap="BaseResultMap">
+    select * from `measures` where name = #{name}
+  </select>
+
+  <insert id="insertMeasures" parameterType="com.bayee.political.domain.Measures">
+    insert into `measures` values (null, #{name}, #{creationDate})
+  </insert>
+
 </mapper>

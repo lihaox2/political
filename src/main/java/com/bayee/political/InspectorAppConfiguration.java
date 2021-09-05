@@ -1,9 +1,6 @@
 package com.bayee.political;
 
-import com.bayee.political.mapper.ConductBureauRecordTypeViewsMapper;
-import com.bayee.political.mapper.ConductBureauRecordViewsMapper;
-import com.bayee.political.mapper.DepartmentMapper;
-import com.bayee.political.mapper.PublicityTypeMapper;
+import com.bayee.political.mapper.*;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -32,6 +29,7 @@ public class InspectorAppConfiguration {
         sqlSessionFactory.setDataSource(dataSource());
         sqlSessionFactory.getObject().getConfiguration().addMapper(ConductBureauRecordTypeViewsMapper.class);
         sqlSessionFactory.getObject().getConfiguration().addMapper(ConductBureauRecordViewsMapper.class);
+        sqlSessionFactory.getObject().getConfiguration().addMapper(MeasuresViewsMapper.class);
         return sqlSessionFactory.getObject();
     }
 
@@ -40,6 +38,12 @@ public class InspectorAppConfiguration {
         DataSourceTransactionManager txManager = new DataSourceTransactionManager();
         txManager.setDataSource(dataSource());
         return txManager;
+    }
+
+    @Bean
+    public MeasuresViewsMapper measuresViewsMapper() throws Exception {
+        SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+        return sessionTemplate.getMapper(MeasuresViewsMapper.class);
     }
 
     @Bean

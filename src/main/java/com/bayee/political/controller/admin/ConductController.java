@@ -17,10 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +48,113 @@ public class ConductController {
 
     @Autowired
     RiskConductVisitOriginService riskConductVisitOriginService;
+
+    @Autowired
+    PoliceRelevantTypeService policeRelevantTypeService;
+
+    @Autowired
+    PoliceRelevantService policeRelevantService;
+
+    @GetMapping("/police/relevant/page")
+    public ResponseEntity<?> policeRelevantPage(PoliceRelevantPageQueryParam queryParam) {
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("pageIndex", queryParam.getPageIndex());
+        result.put("pageSize", queryParam.getPageSize());
+        result.put("data", policeRelevantService.policeRelevantPage(queryParam));
+        result.put("totalCount", policeRelevantService.policeRelevantPageCount(queryParam));
+        return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
+    }
+
+    @GetMapping("/police/relevant/details")
+    public ResponseEntity<?> policeRelevantDetails(@RequestParam("id") Integer id) {
+
+        PoliceRelevant relevant = policeRelevantService.findById(id);
+        User user = userService.findByPoliceId(relevant.getPoliceId());
+        PoliceRelevantType relevantType = policeRelevantTypeService.findByCode(relevant.getTypeCode());
+        PoliceRelevantType parentRelevantType = policeRelevantTypeService.findByCode(relevantType.getpCode());
+
+        PoliceRelevantDetailsResult result = new PoliceRelevantDetailsResult();
+        result.setPoliceId(relevant.getPoliceId());
+        result.setPoliceName(user.getName());
+        result.setDeptName(user.getDepartmentName());
+        result.setTypeCode(parentRelevantType.getCode());
+        result.setTypeCodeName(parentRelevantType.getName());
+        result.setChildTypeCode(relevantType.getCode());
+        result.setChildTypeCodeName(relevantType.getName());
+        result.setDeductionScore(relevant.getDeductionScore());
+        result.setRemark(relevant.getRemark());
+        result.setBusinessDate(DateUtils.formatDate(relevant.getBusinessDate(), "yyyy-MM-dd"));
+
+        return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
+    }
+
+    @PostMapping("/update/police/relevant/{id}")
+    public ResponseEntity<?> updatePoliceRelevant(@PathVariable Integer id,
+                                                  @RequestBody PoliceRelevantSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+        PoliceRelevant relevant = policeRelevantService.findById(id);
+        relevant.setPoliceId(saveParam.getPoliceId());
+        relevant.setTypeCode(saveParam.getTypeCode());
+        relevant.setDeductionScore(saveParam.getDeductionScore());
+        relevant.setBusinessDate(DateUtils.parseDate(saveParam.getBusinessDate(), "yyyy-MM-dd"));
+        relevant.setRemark(saveParam.getRemark());
+        relevant.setUdpateDate(new Date());
+        policeRelevantService.updatePoliceRelevant(relevant);
+
+        return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
+    }
+
+    @PostMapping("/add/police/relevant")
+    public ResponseEntity<?> addPoliceRelevant(@RequestBody PoliceRelevantSaveParam saveParam) {
+        if (!userService.checkPoliceExists(saveParam.getPoliceId())){
+            return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
+        }
+
+        PoliceRelevant relevant = new PoliceRelevant();
+        relevant.setPoliceId(saveParam.getPoliceId());
+        relevant.setTypeCode(saveParam.getTypeCode());
+        relevant.setDeductionScore(saveParam.getDeductionScore());
+        relevant.setBusinessDate(DateUtils.parseDate(saveParam.getBusinessDate(), "yyyy-MM-dd"));
+        relevant.setRemark(saveParam.getRemark());
+        relevant.setCreationDate(new Date());
+        policeRelevantService.insertPoliceRelevant(relevant);
+
+        return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/police/relevant")
+    public ResponseEntity<?> deletePoliceRelevant(@RequestParam("id") Integer id) {
+
+        policeRelevantService.deleteById(id);
+        return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
+    }
+
+    /**
+     * 动态排摸类型
+     * @return
+     */
+    @GetMapping("/relevant/type/list")
+    public ResponseEntity<?> policeRelevantTypeList() {
+        List<PoliceRelevantTypeListResult> queryResult = policeRelevantTypeService.queryAll().parallelStream().map(e -> {
+            PoliceRelevantTypeListResult result = new PoliceRelevantTypeListResult();
+            result.setCode(e.getCode());
+            result.setName(e.getName());
+            result.setLevel(e.getLevel());
+            result.setpCode(e.getpCode());
+            return result;
+        }).collect(Collectors.toList());
+
+        List<PoliceRelevantTypeListResult> results = new ArrayList<>();
+        for (PoliceRelevantTypeListResult node : queryResult) {
+            if ("0".equals(node.getpCode())) {
+                results.add(relevantTypeChildDetails(node, queryResult));
+            }
+        }
+        return new ResponseEntity<>(DataListReturn.ok(results), HttpStatus.OK);
+    }
 
     /**
      * 局规计分
@@ -446,6 +550,11 @@ public class ConductController {
         return new ResponseEntity(DataListReturn.ok(result), HttpStatus.OK);
     }
 
+    /**
+     * 添加信访类型
+     * @param saveParam
+     * @return
+     */
     @PostMapping("/add/visit/type")
     public ResponseEntity<?> addConductVisitType(@RequestBody ConductVisitTypeSaveParam saveParam) {
         if (riskConductVisitTypeService.countByNameAndParentId(saveParam.getName(), saveParam.getParentId(), null) >= 1) {
@@ -461,6 +570,12 @@ public class ConductController {
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
+    /**
+     * 修改信访类型
+     * @param id
+     * @param saveParam
+     * @return
+     */
     @PostMapping("/update/visit/type/{id}")
     public ResponseEntity<?> updateConductVisitType(@PathVariable("id") Integer id,
                                                     @RequestBody ConductVisitTypeSaveParam saveParam) {
@@ -477,6 +592,11 @@ public class ConductController {
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
+    /**
+     * 信访类型详情
+     * @param id
+     * @return
+     */
     @GetMapping("/visit/type/details")
     public ResponseEntity<?> conductVisitTypeDetails(@RequestParam("id") Integer id) {
         RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(id);
@@ -489,6 +609,11 @@ public class ConductController {
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
     }
 
+    /**
+     * 删除信访类型
+     * @param id
+     * @return
+     */
     @DeleteMapping("/delete/visit/type")
     public ResponseEntity<?> deleteConductVisitType(@RequestParam("id") Integer id) {
         if (riskConductVisitRecordService.countByTypeId(id) >= 1) {
@@ -499,10 +624,33 @@ public class ConductController {
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
+    /**
+     * 信访来源
+     * @return
+     */
     @GetMapping("/visit/origin")
     public ResponseEntity<?> conductVisitOrigin() {
 
         return new ResponseEntity<>(DataListReturn.ok(riskConductVisitOriginService.findAllVisitOrigin()), HttpStatus.OK);
+    }
+
+    /**
+     * 动态排摸类型 层级处理
+     * @param relevantType
+     * @param relevantTypeList
+     * @return
+     */
+    private PoliceRelevantTypeListResult relevantTypeChildDetails(PoliceRelevantTypeListResult relevantType,
+                                                                  List<PoliceRelevantTypeListResult> relevantTypeList) {
+        for (PoliceRelevantTypeListResult node : relevantTypeList) {
+            if (relevantType.getCode().equals(node.getpCode())) {
+                if (relevantType.getChildList() == null) {
+                    relevantType.setChildList(new ArrayList<>());
+                }
+                relevantType.getChildList().add(relevantTypeChildDetails(node, relevantTypeList));
+            }
+        }
+        return relevantType;
     }
 
 }

@@ -1,13 +1,18 @@
 package com.bayee.political.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class RiskHealthRecordInfo implements Serializable {
+/**
+ * 警员体检记录
+ */
+public class RiskHealthRecordInfo {
+    /**
+     * 警员体检id
+     */
     private Integer id;
 
     /**
-     * risk_health_record 表 id
+     * risk_health_record表id
      */
     private Integer recordId;
 
@@ -107,7 +112,7 @@ public class RiskHealthRecordInfo implements Serializable {
     private String tumorAntigenDesc;
 
     /**
-     * 骨科指标异常（0否1是
+     * 骨科指标异常（0否1是）
      */
     private Integer isOrthopaedics;
 
@@ -115,6 +120,11 @@ public class RiskHealthRecordInfo implements Serializable {
      * 骨科指标异常
      */
     private String orthopaedicsDesc;
+
+    /**
+     * 其他健康描述
+     */
+    private String otherHealthDesc;
 
     /**
      * 创建时间
@@ -125,44 +135,6 @@ public class RiskHealthRecordInfo implements Serializable {
      * 修改时间
      */
     private Date updateDate;
-
-    public String getMajorDiseasesDesc() {
-        return majorDiseasesDesc;
-    }
-
-    public void setMajorDiseasesDesc(String majorDiseasesDesc) {
-        this.majorDiseasesDesc = majorDiseasesDesc;
-    }
-
-    public String getHeartDesc() {
-        return heartDesc;
-    }
-
-    public void setHeartDesc(String heartDesc) {
-        this.heartDesc = heartDesc;
-    }
-
-    public String getTumorAntigenDesc() {
-        return tumorAntigenDesc;
-    }
-
-    public void setTumorAntigenDesc(String tumorAntigenDesc) {
-        this.tumorAntigenDesc = tumorAntigenDesc;
-    }
-
-    public String getOrthopaedicsDesc() {
-        return orthopaedicsDesc;
-    }
-
-    public void setOrthopaedicsDesc(String orthopaedicsDesc) {
-        this.orthopaedicsDesc = orthopaedicsDesc;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -292,12 +264,28 @@ public class RiskHealthRecordInfo implements Serializable {
         this.isMajorDiseases = isMajorDiseases;
     }
 
+    public String getMajorDiseasesDesc() {
+        return majorDiseasesDesc;
+    }
+
+    public void setMajorDiseasesDesc(String majorDiseasesDesc) {
+        this.majorDiseasesDesc = majorDiseasesDesc == null ? null : majorDiseasesDesc.trim();
+    }
+
     public Integer getIsHeart() {
         return isHeart;
     }
 
     public void setIsHeart(Integer isHeart) {
         this.isHeart = isHeart;
+    }
+
+    public String getHeartDesc() {
+        return heartDesc;
+    }
+
+    public void setHeartDesc(String heartDesc) {
+        this.heartDesc = heartDesc == null ? null : heartDesc.trim();
     }
 
     public Integer getIsTumorAntigen() {
@@ -308,12 +296,36 @@ public class RiskHealthRecordInfo implements Serializable {
         this.isTumorAntigen = isTumorAntigen;
     }
 
+    public String getTumorAntigenDesc() {
+        return tumorAntigenDesc;
+    }
+
+    public void setTumorAntigenDesc(String tumorAntigenDesc) {
+        this.tumorAntigenDesc = tumorAntigenDesc == null ? null : tumorAntigenDesc.trim();
+    }
+
     public Integer getIsOrthopaedics() {
         return isOrthopaedics;
     }
 
     public void setIsOrthopaedics(Integer isOrthopaedics) {
         this.isOrthopaedics = isOrthopaedics;
+    }
+
+    public String getOrthopaedicsDesc() {
+        return orthopaedicsDesc;
+    }
+
+    public void setOrthopaedicsDesc(String orthopaedicsDesc) {
+        this.orthopaedicsDesc = orthopaedicsDesc == null ? null : orthopaedicsDesc.trim();
+    }
+
+    public String getOtherHealthDesc() {
+        return otherHealthDesc;
+    }
+
+    public void setOtherHealthDesc(String otherHealthDesc) {
+        this.otherHealthDesc = otherHealthDesc == null ? null : otherHealthDesc.trim();
     }
 
     public Date getCreationDate() {
@@ -330,37 +342,5 @@ public class RiskHealthRecordInfo implements Serializable {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", recordId=").append(recordId);
-        sb.append(", policeId=").append(policeId);
-        sb.append(", height=").append(height);
-        sb.append(", weight=").append(weight);
-        sb.append(", highDensityLipoprotein=").append(highDensityLipoprotein);
-        sb.append(", lowDensityLipoprotein=").append(lowDensityLipoprotein);
-        sb.append(", triglyceride=").append(triglyceride);
-        sb.append(", cholesterol=").append(cholesterol);
-        sb.append(", receiveCompression=").append(receiveCompression);
-        sb.append(", diastolicPressure=").append(diastolicPressure);
-        sb.append(", bloodSugar=").append(bloodSugar);
-        sb.append(", serumUricAcid=").append(serumUricAcid);
-        sb.append(", isProstate=").append(isProstate);
-        sb.append(", prostateDesc=").append(prostateDesc);
-        sb.append(", isMajorDiseases=").append(isMajorDiseases);
-        sb.append(", isHeart=").append(isHeart);
-        sb.append(", isTumorAntigen=").append(isTumorAntigen);
-        sb.append(", isOrthopaedics=").append(isOrthopaedics);
-        sb.append(", creationDate=").append(creationDate);
-        sb.append(", updateDate=").append(updateDate);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
     }
 }

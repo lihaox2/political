@@ -1,7 +1,9 @@
 package com.bayee.political.mapper;
 
 import java.util.List;
+import java.util.Map;
 
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskCaseAbility;
@@ -62,4 +64,11 @@ public interface RiskCaseAbilityMapper {
      */
     Integer checkPoliceDeductionStatus(@Param("policeId") String policeId,@Param("beginDate") String beginDate,
                                        @Param("endDate") String endDate);
+
+    /**
+     * 取得执法能力中扣分的
+     * @param date
+     * @return
+     */
+    GlobalIndexNumResultDO findGlobalIndexNum(@Param("date") String date);
 }

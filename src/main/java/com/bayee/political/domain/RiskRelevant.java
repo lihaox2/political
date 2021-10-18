@@ -2,7 +2,7 @@ package com.bayee.political.domain;
 
 import java.util.Date;
 
-public class PoliceRelevant {
+public class RiskRelevant {
     private Integer id;
 
     /**
@@ -11,24 +11,19 @@ public class PoliceRelevant {
     private String policeId;
 
     /**
-     * 问题类型
+     * 风险值
      */
-    private String typeCode;
+    private Double indexNum;
 
     /**
-     * 扣除分数
+     * 总扣除分数
      */
     private Double deductionScore;
 
     /**
-     * 记录时间
+     * 扣除分数次数
      */
-    private Date businessDate;
-
-    /**
-     * 备注
-     */
-    private String remark;
+    private Integer deductionCount;
 
     /**
      * 创建时间
@@ -38,7 +33,7 @@ public class PoliceRelevant {
     /**
      * 修改时间
      */
-    private Date udpateDate;
+    private Date updateDate;
 
     public Integer getId() {
         return id;
@@ -56,12 +51,12 @@ public class PoliceRelevant {
         this.policeId = policeId == null ? null : policeId.trim();
     }
 
-    public String getTypeCode() {
-        return typeCode;
+    public Double getIndexNum() {
+        return indexNum;
     }
 
-    public void setTypeCode(String typeCode) {
-        this.typeCode = typeCode == null ? null : typeCode.trim();
+    public void setIndexNum(Double indexNum) {
+        this.indexNum = indexNum;
     }
 
     public Double getDeductionScore() {
@@ -72,20 +67,12 @@ public class PoliceRelevant {
         this.deductionScore = deductionScore;
     }
 
-    public Date getBusinessDate() {
-        return businessDate;
+    public Integer getDeductionCount() {
+        return deductionCount;
     }
 
-    public void setBusinessDate(Date businessDate) {
-        this.businessDate = businessDate;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
+    public void setDeductionCount(Integer deductionCount) {
+        this.deductionCount = deductionCount;
     }
 
     public Date getCreationDate() {
@@ -96,11 +83,11 @@ public class PoliceRelevant {
         this.creationDate = creationDate;
     }
 
-    public Date getUdpateDate() {
-        return udpateDate;
+    public Date getUpdateDate() {
+        return updateDate;
     }
 
-    public void setUdpateDate(Date udpateDate) {
-        this.udpateDate = udpateDate;
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }

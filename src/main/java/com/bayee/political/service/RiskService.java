@@ -5,8 +5,11 @@ import java.util.Map;
 
 import com.bayee.political.domain.*;
 import com.bayee.political.json.ChartResult;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
+import com.bayee.political.pojo.RiskHistoryYearListResultDO;
 import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
 import com.bayee.political.pojo.dto.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 /**
@@ -259,7 +262,7 @@ public interface RiskService {
 	 * @param policeId
 	 * @return
 	 */
-	List<Map<String, String>> riskHistoryYearList(String policeId);
+	List<RiskHistoryYearListResultDO> riskHistoryYearList(String policeId);
 
 	/**
 	 * 执法管理-扣分类型统计
@@ -303,4 +306,12 @@ public interface RiskService {
 	 */
 	List<RiskReportTypeStatisticsDO> dutyReportTypeDOQuery(String policeId, String dateTime,
 														   String lastMonthTime, Integer timeType);
+
+	/**
+	 * 取得全局扣分 的最高分 - 最低分分值
+	 * @param date
+	 * @return
+	 */
+	GlobalIndexNumResultDO findRiskHealthGlobalIndexNum(String date);
+
 }

@@ -9,7 +9,6 @@ import com.bayee.political.service.RiskReportRecordService;
 import com.bayee.political.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -52,7 +51,7 @@ public class ConductRiskTask {
         for (User user : userList) {
             RiskReportRecord reportRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
             //行为规范
-            RiskConduct riskConduct = riskConductBureauRuleService.riskConductBureauRuleDetails(user, date);
+            RiskConduct riskConduct = riskConductBureauRuleService.riskConductDetails(user, date);
             if (riskConduct == null) {
                 continue;
             }

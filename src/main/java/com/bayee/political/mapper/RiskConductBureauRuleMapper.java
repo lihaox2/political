@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskConductBureauRule;
 import com.bayee.political.domain.ScreenDoubeChart;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import com.bayee.political.pojo.dto.RiskConductBureauRuleReportDO;
 import org.apache.ibatis.annotations.Param;
 
@@ -58,4 +59,11 @@ public interface RiskConductBureauRuleMapper {
                                                           @Param("dateTime") String dateTime,
                                                           @Param("lastMonthTime") String lastMonthTime,
                                                           @Param("timeType") Integer timeType);
+
+    /**
+     * 取得全局扣分 的最高分 - 最低分分值
+     * @param date
+     * @return
+     */
+    GlobalIndexNumResultDO findGlobalIndexNum(@Param("date") String date);
 }

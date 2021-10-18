@@ -47,6 +47,8 @@ public class RiskReportRecord {
     private Double studyNum;
     
     private Double workNum;
+
+    private Double totalSumNum;
     
     private List<ScreenDoubeChart> chartList;
 
@@ -56,7 +58,20 @@ public class RiskReportRecord {
     
     private Integer age;
 
-    public RiskReportRecord() {
+	/**
+	 * 是否允许全局查看，1.允许，2.不允许
+	 */
+	private Integer healthShowFlag;
+
+	public Integer getHealthShowFlag() {
+		return healthShowFlag;
+	}
+
+	public void setHealthShowFlag(Integer healthShowFlag) {
+		this.healthShowFlag = healthShowFlag;
+	}
+
+	public RiskReportRecord() {
 
 	}
 
@@ -73,7 +88,15 @@ public class RiskReportRecord {
     	this.drinkNum = initValue;
 	}
 
-    public Integer getId() {
+	public Double getTotalSumNum() {
+		return totalSumNum;
+	}
+
+	public void setTotalSumNum(Double totalSumNum) {
+		this.totalSumNum = totalSumNum;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -169,10 +192,7 @@ public class RiskReportRecord {
     }
 
     public Double getAmilyEvaluationNum() {
-		if (null == amilyEvaluationNum) {
-			return null;
-		}
-        return Math.min(amilyEvaluationNum, 5);
+        return amilyEvaluationNum;
     }
 
     public void setAmilyEvaluationNum(Double amilyEvaluationNum) {
@@ -180,10 +200,7 @@ public class RiskReportRecord {
     }
 
     public Double getHealthNum() {
-		if (null == healthNum) {
-			return null;
-		}
-        return Math.min(healthNum, 5);
+        return healthNum;
     }
 
     public void setHealthNum(Double healthNum) {

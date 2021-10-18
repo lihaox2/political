@@ -4,7 +4,7 @@ package com.bayee.political.json;
  * @author xxl
  * @date 2021/9/4 19:58
  */
-public class PoliceRelevantPageQueryParam {
+public class RiskRelevantPageQueryParam {
 
     /**
      * 类型code

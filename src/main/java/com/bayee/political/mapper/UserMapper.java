@@ -270,4 +270,11 @@ public interface UserMapper {
 	 * @return
 	 */
 	List<UserDO> findUserRanKing();
+
+	/**
+	 * 修改警员健康风险全局查看标识
+	 * @param policeId 警号
+	 * @param showFlag 查看标识 1.允许，2.不允许
+	 */
+	void updateRiskHealthShowFlagByPoliceId(@Param("policeId") String policeId, @Param("showFlag") Integer showFlag);
 }

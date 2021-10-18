@@ -1,8 +1,8 @@
 package com.bayee.political.service;
 
-import com.bayee.political.domain.PoliceRelevant;
-import com.bayee.political.json.PoliceRelevantPageQueryParam;
-import com.bayee.political.pojo.PoliceRelevantPageResultDO;
+import com.bayee.political.domain.RiskRelevantRecord;
+import com.bayee.political.json.RiskRelevantPageQueryParam;
+import com.bayee.political.pojo.RiskRelevantPageResultDO;
 
 import java.util.List;
 
@@ -10,33 +10,33 @@ import java.util.List;
  * @author xxl
  * @date 2021/9/4 19:09
  */
-public interface PoliceRelevantService {
+public interface RiskRelevantRecordService {
 
     /**
      * 分页查询动态排摸
      * @param queryParam
      * @return
      */
-    List<PoliceRelevantPageResultDO> policeRelevantPage(PoliceRelevantPageQueryParam queryParam);
+    List<RiskRelevantPageResultDO> policeRelevantPage(RiskRelevantPageQueryParam queryParam);
 
     /**
      * 分页统计
      * @param queryParam
      * @return
      */
-    Integer policeRelevantPageCount(PoliceRelevantPageQueryParam queryParam);
+    Integer policeRelevantPageCount(RiskRelevantPageQueryParam queryParam);
 
     /**
      * 新增方法
      * @param policeRelevant
      */
-    void insertPoliceRelevant(PoliceRelevant policeRelevant);
+    void insertPoliceRelevant(RiskRelevantRecord policeRelevant);
 
     /**
      * 修改
      * @param policeRelevant
      */
-    void updatePoliceRelevant(PoliceRelevant policeRelevant);
+    void updatePoliceRelevant(RiskRelevantRecord policeRelevant);
 
     /**
      * 根据id删除
@@ -49,6 +49,6 @@ public interface PoliceRelevantService {
      * @param id
      * @return
      */
-    PoliceRelevant findById(Integer id);
+    RiskRelevantRecord findById(Integer id);
 
 }

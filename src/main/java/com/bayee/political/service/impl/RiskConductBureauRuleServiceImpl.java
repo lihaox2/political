@@ -4,6 +4,7 @@ import com.bayee.political.algorithm.RiskCompute;
 import com.bayee.political.domain.*;
 import com.bayee.political.enums.AlarmTypeEnum;
 import com.bayee.political.mapper.*;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import com.bayee.political.service.RiskAlarmService;
 import com.bayee.political.service.RiskConductBureauRuleService;
 import com.bayee.political.utils.DateUtils;
@@ -47,7 +48,7 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public RiskConduct riskConductBureauRuleDetails(User user, String date) {
+    public RiskConduct riskConductDetails(User user, String date) {
         RiskConduct riskConduct = new RiskConduct();
 
         double alarmScore = 12;
@@ -116,11 +117,11 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
     }
 
     @Override
-    public RiskConduct riskConductBureauRuleDetailsV2(User user, String date) {
+    public RiskConduct riskConductDetailsV2(User user, String date) {
         RiskConduct riskConduct = new RiskConduct();
 
-        double alarmScore = 6d;
-        double riskConductMaxScore = 10d;
+        double alarmScore = 5;
+        double riskConductMaxScore = 25;
 
         //局规计分
         RiskConductBureauRule riskConductBureauRule = riskConductBureauRuleDetailsV2(user.getPoliceId(), date);
@@ -128,17 +129,28 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
         //信访投诉
         RiskConductVisit riskConductVisit = riskConductVisitDetailsV2(user.getPoliceId(), date);
 
-        //交通违章
-        RiskConductTrafficViolation riskConductTrafficViolation = riskConductTrafficViolationDetailsV2(user.getPoliceId(), date);
-
         //处理总行为规范数据
         riskConduct.setPoliceId(user.getPoliceId());
         riskConduct.setBureauRuleScore(riskConductBureauRule.getIndexNum());
         riskConduct.setVisitScore(riskConductVisit.getIndexNum());
-        riskConduct.setTrafficViolationScore(riskConductTrafficViolation.getIndexNum());
-        riskConduct.setIndexNum(Math.min(riskConduct.getVisitScore() + riskConduct.getTrafficViolationScore() +
-                riskConduct.getBureauRuleScore(), riskConductMaxScore));
+        riskConduct.setIndexNum(riskConduct.getVisitScore() + riskConduct.getBureauRuleScore());
+        riskConduct.setTotalNum(riskConduct.getVisitScore() + riskConduct.getBureauRuleScore());
         riskConduct.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+        //数据归一化计算
+        GlobalIndexNumResultDO resultDO = riskConductMapper.findGlobalIndexNum(date);
+        double globalScore = resultDO.getMaxNum() - resultDO.getMinNum();
+        double indexNum = riskConduct.getIndexNum() - resultDO.getMinNum();
+        if (indexNum > globalScore) {
+            globalScore = riskConduct.getIndexNum();
+        }
+        if (globalScore > 0) {
+            double divValue = indexNum / globalScore;
+            if (divValue > 1) {
+                divValue = 1;
+            }
+            riskConduct.setIndexNum(RiskCompute.parserDecimal(divValue * 10));
+        }
 
         //处理旧的总行为规范数据
         RiskConduct oldRiskConduct = riskConductMapper.findRiskConductByPoliceIdAndDate(user.getPoliceId(), date);
@@ -149,8 +161,8 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
             oldRiskConduct.setBureauRuleScore(riskConduct.getBureauRuleScore());
             oldRiskConduct.setVisitScore(riskConduct.getVisitScore());
             oldRiskConduct.setTrafficViolationScore(riskConduct.getTrafficViolationScore());
-            oldRiskConduct.setIndexNum(Math.min(riskConduct.getVisitScore() + riskConduct.getTrafficViolationScore() +
-                    riskConduct.getBureauRuleScore(), riskConductMaxScore));
+            oldRiskConduct.setIndexNum(riskConduct.getIndexNum());
+            oldRiskConduct.setTotalNum(riskConduct.getTotalNum());
             oldRiskConduct.setUpdateDate(new Date());
 
             riskConductMapper.updateByPrimaryKey(oldRiskConduct);
@@ -171,9 +183,6 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
         }
         if (riskConductVisit.getId() == null) {
             riskConductVisitMapper.insert(riskConductVisit);
-        }
-        if (riskConductTrafficViolation.getId() == null) {
-            riskConductTrafficViolationMapper.insert(riskConductTrafficViolation);
         }
 
         return riskConduct;
@@ -397,25 +406,36 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
         if (recordList.size() > 0) {
             int totalCount = 0;
             double totalScore = 0;
+            double minScore = recordList.get(0).getDeductionScore();
 
-            Double maxV = 0d;
-            Double minV = recordList.get(0).getDeductionScore();
             for (RiskConductBureauRuleRecord record : recordList) {
                 totalCount++;
                 if (record.getDeductionScore() != null) {
                     totalScore += record.getDeductionScore();
-
-                    if (record.getDeductionScore() > maxV) {
-                        maxV = record.getDeductionScore();
-                    }
-                    if (record.getDeductionScore() < minV) {
-                        minV = record.getDeductionScore();
+                    if (record.getDeductionScore() < minScore) {
+                        minScore = record.getDeductionScore();
                     }
                 }
             }
-            riskConductBureauRule.setIndexNum(RiskCompute.log10(minV, maxV));
+            riskConductBureauRule.setIndexNum(totalScore);
             riskConductBureauRule.setDeductionScoreCount(totalCount);
             riskConductBureauRule.setTotalDeductionScore(totalScore);
+
+            //数据归一化计算
+            GlobalIndexNumResultDO resultDO = riskConductBureauRuleMapper.findGlobalIndexNum(date);
+            double globalScore = resultDO.getMaxNum() - resultDO.getMinNum();
+            double indexNum = riskConductBureauRule.getIndexNum() - resultDO.getMinNum();
+            if (indexNum > globalScore) {
+                globalScore = riskConductBureauRule.getIndexNum();
+            }
+            if (globalScore > 0) {
+                double divValue = indexNum / globalScore;
+                if (divValue > 1) {
+                    divValue = 1;
+                }
+
+                riskConductBureauRule.setIndexNum(RiskCompute.parserDecimal(divValue * 10));
+            }
         }
 
         //处理老数据
@@ -454,23 +474,33 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
         if (visitRecordList.size() > 0) {
             int deductionCount = 0;
             double deductionScore = 0;
+            double minScore = visitRecordList.get(0).getDeductionScore();
 
-            Double maxV = 0d;
-            Double minV = visitRecordList.get(0).getDeductionScore();
             for (RiskConductVisitRecord record : visitRecordList) {
                 deductionCount++;
                 deductionScore += record.getDeductionScore();
-
-                if (record.getDeductionScore() > maxV) {
-                    maxV = record.getDeductionScore();
-                }
-                if (record.getDeductionScore() < minV) {
-                    minV = record.getDeductionScore();
+                if (record.getDeductionScore() < minScore) {
+                    minScore = record.getDeductionScore();
                 }
             }
-            riskConductVisit.setIndexNum(RiskCompute.log10(minV, maxV));
+            riskConductVisit.setIndexNum(deductionScore);
             riskConductVisit.setDeductionScoreCount(deductionCount);
             riskConductVisit.setTotalDeductionScore(deductionScore);
+
+            //数据归一化计算
+            GlobalIndexNumResultDO resultDO = riskConductVisitMapper.findGlobalIndexNum(date);
+            double indexNum = riskConductVisit.getIndexNum() - resultDO.getMinNum();
+            double globalScore = resultDO.getMaxNum() - resultDO.getMinNum();
+            if (indexNum > globalScore) {
+                globalScore = riskConductVisit.getIndexNum();
+            }
+            if (globalScore > 0) {
+                double divValue = indexNum / globalScore;
+                if (divValue > 1) {
+                    divValue = 1;
+                }
+                riskConductVisit.setIndexNum(RiskCompute.parserDecimal(divValue * 10));
+            }
         }
 
         //处理老数据
@@ -509,10 +539,10 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
         trafficViolation.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 
         double dscore = 2;
+
         if (trafficViolationRecordList.size() > 0) {
             int deductionCount = 0;
             double deductionScore = 0;
-
             for (RiskConductTrafficViolationRecord record : trafficViolationRecordList) {
                 if (record != null && record.getId() != null) {
                     deductionCount++;

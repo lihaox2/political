@@ -121,7 +121,7 @@ public class AlarmTimeTask extends BaseController {
 
 	// 钉钉打卡记录保存(自动定时抓取钉钉请假数据，每天6点10分30秒触发任务)
 //	@Scheduled(cron = "30 10 6 * * ?") // 每天6点10分30秒触发任务
-	@Scheduled(cron = "0 0/20 * * * ?") // 每分钟
+//	@Scheduled(cron = "0 0/20 * * * ?") // 每分钟
 	public void clockRecordSave() throws ApiException {
 		// 查询全部警员数据
 		List<User> userList = userService.userAllList();

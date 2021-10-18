@@ -107,7 +107,7 @@ public class DutyController {
         record.setIsEffective(1);
 
         riskDutyDealPoliceRecordService.insert(record);
-        totalRiskDetailsService.dutyRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));
+        totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -132,7 +132,7 @@ public class DutyController {
         record.setImgArr(saveParam.getFileList());
 
         riskDutyDealPoliceRecordService.updateByPrimaryKeySelective(record);
-        totalRiskDetailsService.dutyRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));
+        totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -166,7 +166,7 @@ public class DutyController {
         RiskDutyDealPoliceRecord record = riskDutyDealPoliceRecordService.selectByPrimaryKey(id);
 
         riskDutyDealPoliceRecordService.deleteByPrimaryKey(id);
-        totalRiskDetailsService.dutyRiskDetails(record.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
+        totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 

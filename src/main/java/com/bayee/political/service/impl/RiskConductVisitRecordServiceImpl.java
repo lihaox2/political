@@ -112,4 +112,9 @@ public class RiskConductVisitRecordServiceImpl implements RiskConductVisitRecord
 				conductVisitRecordMonth,policeId);
 	}
 
+	@Override
+	public Integer findByInspectorKey(String inspectorKey) {
+		return riskConductVisitRecordMapper.findByInspectorKey(inspectorKey);
+	}
+
 }

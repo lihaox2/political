@@ -37,7 +37,7 @@ public class RiskSocialContact {
     }
 
     public Double getIndexNum() {
-        return Math.min(indexNum, 15);
+        return indexNum;
     }
 
     public void setIndexNum(Double indexNum) {

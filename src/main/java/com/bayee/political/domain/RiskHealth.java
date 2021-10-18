@@ -48,6 +48,8 @@ public class RiskHealth {
     private String tumorAntigenDescribe;
 
     private Double orthopaedicsNum;
+
+    private Double totalNum;
     
     private String orthopaedicsDescribe;
 
@@ -56,6 +58,14 @@ public class RiskHealth {
     private Date updateDate;
     
     private Double healthTotal;
+
+    public Double getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(Double totalNum) {
+        this.totalNum = totalNum;
+    }
 
     public Integer getId() {
         return id;

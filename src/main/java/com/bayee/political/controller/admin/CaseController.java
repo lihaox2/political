@@ -158,54 +158,36 @@ public class CaseController {
             Integer errorCount = 0;
             if (e.getLetterVisitStatus() != null && e.getLetterVisitStatus().equals(1)) {
                 errorCount++;
-            }else{
-                passCount++;
             }
             if (e.getLawEnforcementFaultStatus() != null && e.getLawEnforcementFaultStatus().equals(1)) {
                 errorCount++;
-            }else{
-                passCount++;
             }
             if (e.getJudicialSupervisionStatus() != null && e.getJudicialSupervisionStatus().equals(1)) {
                 errorCount++;
-            }else{
-                passCount++;
             }
 
             if (e.getReconsiderationLitigationStatus() != null && e.getReconsiderationLitigationStatus().equals(1)) {
-                passCount++;
-            }else{
                 errorCount++;
             }
 
             if (e.getCaseExpertStatus() != null && e.getCaseExpertStatus().equals(1)) {
                 passCount++;
-            }else{
-                errorCount++;
             }
 
             if (e.getExcellentLegalOfficerStatus() != null && e.getExcellentLegalOfficerStatus().equals(1)) {
                 passCount++;
-            }else{
-                errorCount++;
             }
 
             if (e.getBasicTestStatus() != null && e.getBasicTestStatus().equals(1)) {
                 passCount++;
-            }else{
-                errorCount++;
             }
 
             if (e.getHighTestStatus() != null && e.getHighTestStatus().equals(1)) {
                 passCount++;
-            }else{
-                errorCount++;
             }
 
             if (e.getJudicialTestStatus() != null && e.getJudicialTestStatus().equals(1)) {
                 passCount++;
-            }else{
-                errorCount++;
             }
 
             User user = userService.findByPoliceId(e.getPoliceId());
@@ -253,7 +235,7 @@ public class CaseController {
             return new ResponseEntity(DataListReturn.error("本警员在该日期内已存在！"), HttpStatus.OK);
         }
         riskCaseAbilityRecordService.insertSelective(record);
-        totalRiskDetailsService.caseRiskDetails(caseAbilitySaveParam.getPoliceId(), LocalDate.parse(caseAbilitySaveParam.getDate()));
+        totalRiskDetailsService.caseRiskDetails(LocalDate.parse(caseAbilitySaveParam.getDate()));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -286,7 +268,7 @@ public class CaseController {
             return new ResponseEntity(DataListReturn.error("本警员在该日期内已存在！"), HttpStatus.OK);
         }
         riskCaseAbilityRecordService.updateByPrimaryKeySelective(record);
-        totalRiskDetailsService.caseRiskDetails(caseAbilitySaveParam.getPoliceId(), LocalDate.parse(caseAbilitySaveParam.getDate()));
+        totalRiskDetailsService.caseRiskDetails(LocalDate.parse(caseAbilitySaveParam.getDate()));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -318,7 +300,7 @@ public class CaseController {
         RiskCaseAbilityRecord record = riskCaseAbilityRecordService.selectByPrimaryKey(id);
 
         riskCaseAbilityRecordService.deleteByPrimaryKey(id);
-        totalRiskDetailsService.caseRiskDetails(record.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
+        totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -389,7 +371,7 @@ public class CaseController {
         record.setIsEffective(1);
 
         riskCaseLawEnforcementRecordService.insert(record);
-        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));
+        totalRiskDetailsService.caseRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -412,7 +394,7 @@ public class CaseController {
         record.setImgArr(saveParam.getFileList());
 
         riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(record);
-        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate().substring(0, 10)));
+        totalRiskDetailsService.caseRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -445,7 +427,7 @@ public class CaseController {
         RiskCaseLawEnforcementRecord record = riskCaseLawEnforcementRecordService.selectByPrimaryKey(id);
 
         riskCaseLawEnforcementRecordService.deleteByPrimaryKey(id);
-        totalRiskDetailsService.caseRiskDetails(record.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
+        totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -518,7 +500,7 @@ public class CaseController {
 //            return new ResponseEntity(DataListReturn.error("本警员在该年度同一期内已存在！"), HttpStatus.OK);
 //        }
         riskCaseTestRecordService.insertTest(record);
-        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
+        totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -545,7 +527,7 @@ public class CaseController {
             return new ResponseEntity(DataListReturn.error("本警员在该年度同一期内已存在！"), HttpStatus.OK);
         }*/
         riskCaseTestRecordService.updateByPrimaryKey(oldRecord);
-        totalRiskDetailsService.caseRiskDetails(saveParam.getPoliceId(), LocalDate.parse(DateUtils.formatDate(oldRecord.getCreationDate(), "yyyy-MM-dd")));
+        totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(oldRecord.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -570,7 +552,7 @@ public class CaseController {
         RiskCaseTestRecord record = riskCaseTestRecordService.selectByPrimaryKey(id);
 
         riskCaseTestRecordService.deleteByPrimaryKey(id);
-        totalRiskDetailsService.caseRiskDetails(record.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
+        totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 

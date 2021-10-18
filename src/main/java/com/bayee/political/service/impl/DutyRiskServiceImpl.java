@@ -8,6 +8,7 @@ import com.bayee.political.domain.User;
 import com.bayee.political.enums.AlarmTypeEnum;
 import com.bayee.political.mapper.RiskDutyDealPoliceRecordMapper;
 import com.bayee.political.mapper.RiskDutyMapper;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import com.bayee.political.service.DutyRiskService;
 import com.bayee.political.service.RiskAlarmService;
 import com.bayee.political.utils.DateUtils;
@@ -39,7 +40,7 @@ public class DutyRiskServiceImpl implements DutyRiskService {
 	/**
 	 * 预警分数值
 	 */
-	private double alarmScore = 6d;
+	private double alarmScore = 5d;
 	/**
 	 * 最大扣分值
 	 */
@@ -147,25 +148,35 @@ public class DutyRiskServiceImpl implements DutyRiskService {
 		if (riskDutyDealPoliceRecordList.size() > 0) {
 			int count = 0;
 			double totalScore = 0d;
-
-			Double maxV = 0d;
-			Double minV = riskDutyDealPoliceRecordList.get(0).getDeductionScore();
+			double minScore = riskDutyDealPoliceRecordList.get(0).getDeductionScore();
 			for (RiskDutyDealPoliceRecord record : riskDutyDealPoliceRecordList) {
 				if (record != null && record.getDeductionScore() > 0) {
 					count++;
 					totalScore += record.getDeductionScore();
-
-					if (record.getDeductionScore() > maxV) {
-						maxV = record.getDeductionScore();
-					}
-					if (record.getDeductionScore() < maxV) {
-						maxV = record.getDeductionScore();
+					if (record.getDeductionScore() < minScore) {
+						minScore = record.getDeductionScore();
 					}
 				}
 			}
-			riskDuty.setIndexNum(RiskCompute.log10(minV, maxV));
+			riskDuty.setIndexNum(Math.min(maxScore, totalScore));
 			riskDuty.setDeductionScoreCount(count);
 			riskDuty.setTotalDeductionScore(totalScore);
+
+			//数据归一化计算
+			GlobalIndexNumResultDO resultDO = riskDutyMapper.findGlobalIndexNum(date);
+			double globalScore = resultDO.getMaxNum() - resultDO.getMinNum();
+			double indexNum = totalScore - resultDO.getMinNum();
+			if (indexNum > globalScore) {
+				globalScore = totalScore;
+			}
+			if (globalScore > 0) {
+				double divValue = indexNum / globalScore;
+				if (divValue > 1) {
+					divValue = 1;
+				}
+
+				riskDuty.setIndexNum(RiskCompute.parserDecimal(divValue * 10));
+			}
 		}
 
 		RiskDuty oldRiskDuty = riskDutyMapper.findPoliceRiskDuty(user.getPoliceId(), date);

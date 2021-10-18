@@ -146,8 +146,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
             visitRecord.setUpdateDate(new Date());
 
             riskConductVisitRecordService.updateByPrimaryKey(visitRecord);
-            totalRiskDetailsService.conductRiskDetails(checkDeductionPoliceId,
-                    LocalDate.parse(DateUtils.formatDate(visitRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(visitRecord.getCreationDate(), "yyyy-MM-dd")));
         } else {
             RiskConductVisitRecord newVisitRecord = new RiskConductVisitRecord();
             newVisitRecord.setIsEffective(1);
@@ -162,15 +161,13 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
             newVisitRecord.setDeductionScore(checkDeductionScore);
 
             riskConductVisitRecordService.insert(newVisitRecord);
-            totalRiskDetailsService.conductRiskDetails(checkDeductionPoliceId,
-                    LocalDate.parse(DateUtils.formatDate(newVisitRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(newVisitRecord.getCreationDate(), "yyyy-MM-dd")));
 
             visitRecord.setIsEffective(2);
             visitRecord.setDeductionScore(appealScore);
             visitRecord.setUpdateDate(new Date());
             riskConductVisitRecordService.updateByPrimaryKey(visitRecord);
-            totalRiskDetailsService.conductRiskDetails(visitRecord.getPoliceId(),
-                    LocalDate.parse(DateUtils.formatDate(visitRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(visitRecord.getCreationDate(), "yyyy-MM-dd")));
         }
     }
 
@@ -187,8 +184,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
             bureauRuleRecord.setUpdateDate(new Date());
 
             riskConductBureauRuleRecordService.updateByPrimaryKey(bureauRuleRecord);
-            totalRiskDetailsService.conductRiskDetails(checkDeductionPoliceId,
-                    LocalDate.parse(DateUtils.formatDate(bureauRuleRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(bureauRuleRecord.getCreationDate(), "yyyy-MM-dd")));
         } else {
             RiskConductBureauRuleRecord newBureauRuleRecord = new RiskConductBureauRuleRecord();
             newBureauRuleRecord.setIsEffective(1);
@@ -207,15 +203,13 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
             newBureauRuleRecord.setUpdateDate(new Date());
 
             riskConductBureauRuleRecordService.insert(newBureauRuleRecord);
-            totalRiskDetailsService.conductRiskDetails(checkDeductionPoliceId,
-                    LocalDate.parse(DateUtils.formatDate(newBureauRuleRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(newBureauRuleRecord.getCreationDate(), "yyyy-MM-dd")));
 
             bureauRuleRecord.setIsEffective(2);
             bureauRuleRecord.setDeductionScore(appealScore);
             bureauRuleRecord.setUpdateDate(new Date());
             riskConductBureauRuleRecordService.updateByPrimaryKey(bureauRuleRecord);
-            totalRiskDetailsService.conductRiskDetails(bureauRuleRecord.getPoliceId(),
-                    LocalDate.parse(DateUtils.formatDate(bureauRuleRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(bureauRuleRecord.getCreationDate(), "yyyy-MM-dd")));
         }
     }
 
@@ -232,8 +226,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
             lawEnforcementRecord.setUpdateDate(new Date());
 
             riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(lawEnforcementRecord);
-            totalRiskDetailsService.caseRiskDetails(checkDeductionPoliceId,
-                    LocalDate.parse(DateUtils.formatDate(lawEnforcementRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(lawEnforcementRecord.getCreationDate(), "yyyy-MM-dd")));
         } else {
             RiskCaseLawEnforcementRecord newLawEnforcementRecord = new RiskCaseLawEnforcementRecord();
             newLawEnforcementRecord.setIsEffective(1);
@@ -249,15 +242,13 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
             newLawEnforcementRecord.setUpdateDate(new Date());
 
             riskCaseLawEnforcementRecordService.insert(newLawEnforcementRecord);
-            totalRiskDetailsService.caseRiskDetails(checkDeductionPoliceId,
-                    LocalDate.parse(DateUtils.formatDate(newLawEnforcementRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(newLawEnforcementRecord.getCreationDate(), "yyyy-MM-dd")));
 
             lawEnforcementRecord.setIsEffective(2);
             lawEnforcementRecord.setDeductionScore(appealScore);
             lawEnforcementRecord.setUpdateDate(new Date());
             riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(lawEnforcementRecord);
-            totalRiskDetailsService.caseRiskDetails(lawEnforcementRecord.getPoliceId(),
-                    LocalDate.parse(DateUtils.formatDate(lawEnforcementRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(lawEnforcementRecord.getCreationDate(), "yyyy-MM-dd")));
         }
     }
 
@@ -274,8 +265,7 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
             dutyDealPoliceRecord.setUpdateDate(new Date());
 
             riskDutyDealPoliceRecordService.updateByPrimaryKeySelective(dutyDealPoliceRecord);
-            totalRiskDetailsService.dutyRiskDetails(checkDeductionPoliceId,
-                    LocalDate.parse(DateUtils.formatDate(dutyDealPoliceRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(DateUtils.formatDate(dutyDealPoliceRecord.getCreationDate(), "yyyy-MM-dd")));
         } else {
             RiskDutyDealPoliceRecord newDutyDealPoliceRecord = new RiskDutyDealPoliceRecord();
             newDutyDealPoliceRecord.setIsEffective(1);
@@ -295,14 +285,12 @@ public class RiskRecordVerifyServiceImpl implements RiskRecordVerifyService {
             newDutyDealPoliceRecord.setDeductionScore(checkDeductionScore);
 
             riskDutyDealPoliceRecordService.insert(newDutyDealPoliceRecord);
-            totalRiskDetailsService.dutyRiskDetails(newDutyDealPoliceRecord.getPoliceId(),
-                    LocalDate.parse(DateUtils.formatDate(newDutyDealPoliceRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(DateUtils.formatDate(newDutyDealPoliceRecord.getCreationDate(), "yyyy-MM-dd")));
 
             dutyDealPoliceRecord.setIsEffective(2);
             dutyDealPoliceRecord.setDeductionScore(appealScore);
             dutyDealPoliceRecord.setUpdateDate(new Date());
-            totalRiskDetailsService.dutyRiskDetails(dutyDealPoliceRecord.getPoliceId(),
-                    LocalDate.parse(DateUtils.formatDate(dutyDealPoliceRecord.getCreationDate(), "yyyy-MM-dd")));
+            totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(DateUtils.formatDate(dutyDealPoliceRecord.getCreationDate(), "yyyy-MM-dd")));
         }
     }
 

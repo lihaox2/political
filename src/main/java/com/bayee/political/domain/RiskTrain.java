@@ -39,6 +39,19 @@ public class RiskTrain {
      */
     private Double firearmScore;
 
+    /**
+     * 总扣除分数
+     */
+    private Double totalNum;
+
+    public Double getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(Double totalNum) {
+        this.totalNum = totalNum;
+    }
+
     public Double getPhysicalScore() {
         return physicalScore;
     }

@@ -3,13 +3,14 @@ package com.bayee.political.service.impl;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.bayee.political.algorithm.RiskCompute;
 import com.bayee.political.domain.*;
 import com.bayee.political.enums.AlarmTypeEnum;
 import com.bayee.political.json.ChartResult;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import com.bayee.political.pojo.dto.RiskReportRecordDO;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DateUtils;
@@ -84,6 +85,10 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void policeRiskDetails(List<User> userList, LocalDate localDate) {
+		health(localDate);
+
+		family(localDate);
+
 		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
 		String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
@@ -134,7 +139,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			}
 
 			//行为规范
-			RiskConduct riskConduct = riskConductBureauRuleService.riskConductBureauRuleDetails(user, date);
+			RiskConduct riskConduct = riskConductBureauRuleService.riskConductDetails(user, date);
 			if (riskConduct != null) {
 				if (riskConduct.getId() == null) {
 					riskConductList.add(riskConduct);
@@ -206,10 +211,6 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 		if (riskReportRecordList.size() > 0) {
 			riskReportRecordService.insertRiskReportRecordList(riskReportRecordList);
 		}
-
-		health(localDate);
-
-		family(localDate);
 	}
 
     @Override
@@ -249,7 +250,6 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 		for(RiskHealthRecord r:riskHealthRecordList) {
 			
 			Integer id=riskService.getByIdAndYear(r.getPoliceId(), yearStr);
-			
 
 			RiskReportRecord riskReportRecord= riskHealthRecordService.getByPoliceIdMonth(yearStr, monthStr, r.getPoliceId());
 
@@ -329,7 +329,12 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 
 			}
 			riskHealth.setIndexNum(indexNum);
-			
+			riskHealth.setTotalNum(indexNum);
+
+
+			GlobalIndexNumResultDO resultDO = riskService.findRiskHealthGlobalIndexNum(date);
+			riskHealth.setIndexNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), riskHealth.getIndexNum()));
+
 			if(id!=null) {
 				riskHealth.setId(id);
 				riskHealth.setUpdateDate(new Date());
@@ -340,7 +345,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			}
 
 			Double healthNum=riskService.selectTotalNum(riskHealth.getId());
-			riskReportRecord.setHealthNum(healthNum);
+			riskReportRecord.setHealthNum(riskHealth.getIndexNum());
 			if(riskReportRecord != null  &&  riskReportRecord.getId()!=null) {
 				Double fraction= riskService.fraction(riskReportRecord.getId());
 				riskReportRecord.setTotalNum(healthNum+fraction);
@@ -415,6 +420,10 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			if(riskReportRecord != null  &&  riskReportRecord.getId()!=null) {
 				Double fraction= riskService.fraction(riskReportRecord.getId());
 				riskReportRecord.setTotalNum(healthNum+fraction);
+
+				GlobalIndexNumResultDO resultDO = riskReportRecordMapper.findRiskReportRecordGlobalIndexNum(date);
+				riskReportRecord.setTotalNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), riskReportRecord.getTotalNum()));
+
 				riskReportRecord.setId(riskReportRecord.getId());
 				riskReportRecord.setPoliceId(u.getPoliceId());
 				riskReportRecord.setUpdateDate(new Date());
@@ -481,6 +490,10 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			if(riskReportRecord != null  &&  riskReportRecord.getId()!=null) {
 				Double fraction= riskReportRecordMapper.findNotFamilyTotalNum(riskReportRecord.getId());
 				riskReportRecord.setTotalNum(indexNum+fraction);
+
+				GlobalIndexNumResultDO resultDO = riskReportRecordMapper.findRiskReportRecordGlobalIndexNum(date);
+				riskReportRecord.setTotalNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), riskReportRecord.getTotalNum()));
+
 				riskReportRecord.setId(riskReportRecord.getId());
 				riskReportRecord.setUpdateDate(new Date());
 				riskService.updateRiskReportRecord(riskReportRecord);
@@ -570,16 +583,18 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 	@Transactional(rollbackFor = Exception.class)
 	public void updateRiskReportRecord(RiskReportRecord riskReportRecord) {
 		riskReportRecord.setUpdateDate(new Date());
-		riskReportRecord.setTotalNum(Math.min(riskReportRecord.getConductNum() + riskReportRecord.getHandlingCaseNum() +
+		riskReportRecord.setTotalSumNum(riskReportRecord.getConductNum() + riskReportRecord.getHandlingCaseNum() +
 				riskReportRecord.getDutyNum() + riskReportRecord.getTrainNum() + riskReportRecord.getStudyNum() +
 				riskReportRecord.getSocialContactNum() + riskReportRecord.getAmilyEvaluationNum() +
-				riskReportRecord.getHealthNum() + riskReportRecord.getDrinkNum(), 100));
+				riskReportRecord.getHealthNum() + riskReportRecord.getDrinkNum());
+		GlobalIndexNumResultDO resultDO = riskReportRecordMapper.findRiskReportRecordGlobalIndexNum(DateUtils.formatDate(riskReportRecord.getCreationDate(), "yyyy-MM-dd"));
+		riskReportRecord.setTotalNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), riskReportRecord.getTotalSumNum()));
 		riskReportRecordMapper.updateByPrimaryKey(riskReportRecord);
 
 		// 产生预警数据
-		if (riskReportRecord.getTotalNum() >= 60) {
+		if (riskReportRecord.getTotalNum() >= 5) {
 			RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(riskReportRecord.getPoliceId(), AlarmTypeEnum.COMPREHENSIVE_RISK,
-					DateUtils.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"), riskReportRecord.getTotalNum());
+					DateUtils.formatDate(riskReportRecord.getCreationDate(), "yyyy-MM-dd HH:mm:ss"), riskReportRecord.getTotalNum());
 
 			if (riskAlarm != null) {
 				riskAlarmService.insert(riskAlarm);
@@ -612,9 +627,24 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			return reportRecordDO1;
 		}
 
-		reportRecordDO1.setTotalNum(reportRecordDO1.getConductNum() + reportRecordDO1.getHealthNum() +
-				reportRecordDO1.getAmilyEvaluationNum() + reportRecordDO1.getHandlingCaseNum() +
-				reportRecordDO1.getDutyNum() + reportRecordDO1.getSocialContactNum() + reportRecordDO1.getTrainNum());
+		GlobalIndexNumResultDO indexDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastDate, date, "total_num");
+		GlobalIndexNumResultDO conductDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastDate, date, "conduct_num");
+		GlobalIndexNumResultDO caseDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastDate, date, "handling_case_num");
+		GlobalIndexNumResultDO dutyDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastDate, date, "duty_num");
+		GlobalIndexNumResultDO trainDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastDate, date, "train_num");
+		GlobalIndexNumResultDO socialContactDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastDate, date, "social_contact_num");
+		GlobalIndexNumResultDO amilyEvaluationDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastDate, date, "amily_evaluation_num");
+		GlobalIndexNumResultDO healthDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastDate, date, "health_num");
+
+		reportRecordDO1.setTotalNum(RiskCompute.normalizationCompute(indexDO.getMaxNum(), indexDO.getMinNum(), reportRecordDO1.getTotalNum()));
+		reportRecordDO1.setConductNum(RiskCompute.normalizationCompute(conductDO.getMaxNum(), conductDO.getMinNum(), reportRecordDO1.getConductNum()));
+		reportRecordDO1.setHandlingCaseNum(RiskCompute.normalizationCompute(caseDO.getMaxNum(), caseDO.getMinNum(), reportRecordDO1.getHandlingCaseNum()));
+		reportRecordDO1.setDutyNum(RiskCompute.normalizationCompute(dutyDO.getMaxNum(), dutyDO.getMinNum(), reportRecordDO1.getDutyNum()));
+		reportRecordDO1.setTrainNum(RiskCompute.normalizationCompute(trainDO.getMaxNum(), trainDO.getMinNum(), reportRecordDO1.getTrainNum()));
+		reportRecordDO1.setSocialContactNum(RiskCompute.normalizationCompute(socialContactDO.getMaxNum(), socialContactDO.getMinNum(), reportRecordDO1.getSocialContactNum()));
+		reportRecordDO1.setAmilyEvaluationNum(RiskCompute.normalizationCompute(amilyEvaluationDO.getMaxNum(), amilyEvaluationDO.getMinNum(), reportRecordDO1.getAmilyEvaluationNum()));
+		reportRecordDO1.setHealthNum(RiskCompute.normalizationCompute(healthDO.getMaxNum(), healthDO.getMinNum(), reportRecordDO1.getHealthNum()));
+
 		//数据融合
 		reportRecordDO1.setCreationDate(reportRecordDO2.getCreationDate());
 		reportRecordDO1.setLastMonthScore(reportRecordDO2.getLastMonthScore());
@@ -627,6 +657,10 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 
 	@Override
 	public void policeRiskDetailsV2(List<User> userList, LocalDate localDate) {
+		health(localDate);
+
+		family(localDate);
+
 		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
 		String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
@@ -677,7 +711,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			}
 
 			//行为规范
-			RiskConduct riskConduct = riskConductBureauRuleService.riskConductBureauRuleDetailsV2(user, date);
+			RiskConduct riskConduct = riskConductBureauRuleService.riskConductDetailsV2(user, date);
 			if (riskConduct != null) {
 				if (riskConduct.getId() == null) {
 					riskConductList.add(riskConduct);
@@ -694,12 +728,18 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				record.setSocialContactNum(riskSocialContact.getIndexNum());
 			}
 
+			GlobalIndexNumResultDO healthResultDO = riskService.findRiskHealthGlobalIndexNum(date);
 			Double healthScore = riskReportRecordMapper.findPoliceHealthScoreByYear(user.getPoliceId(), year);
-			record.setHealthNum(healthScore != null ? healthScore : 0d);
 
-			record.setTotalNum(Math.min(record.getConductNum() + record.getHandlingCaseNum() + record.getDutyNum()
-					+ record.getTrainNum() + record.getSocialContactNum(), 100));
+			record.setHealthNum(RiskCompute.normalizationCompute(healthResultDO.getMaxNum(), healthResultDO.getMinNum(), healthScore));
+			record.setTotalSumNum(record.getConductNum() + record.getHandlingCaseNum() + record.getDutyNum()
+					+ record.getTrainNum() + record.getSocialContactNum());
+			record.setTotalNum(Math.min(record.getTotalSumNum(), 100));
 			record.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+
+			//数据归一化计算
+			GlobalIndexNumResultDO resultDO = riskReportRecordMapper.findRiskReportRecordGlobalIndexNum(date);
+			record.setTotalNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), record.getTotalNum()));
 
 			//处理产生过的风险报备数据
 			RiskReportRecord oldRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
@@ -709,21 +749,20 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				oldRecord.setHandlingCaseNum(record.getHandlingCaseNum());
 				oldRecord.setDutyNum(record.getDutyNum());
 				oldRecord.setSocialContactNum(record.getSocialContactNum());
-				oldRecord.setHealthNum(oldRecord.getHealthNum() == 0 ? record.getHealthNum() : oldRecord.getHealthNum());
+				oldRecord.setHealthNum(oldRecord.getHealthNum() == null || oldRecord.getHealthNum() == 0  ?
+						record.getHealthNum() : oldRecord.getHealthNum());
 
-				oldRecord.setTotalNum(Math.min(record.getTotalNum() + oldRecord.getHealthNum() +
-						oldRecord.getAmilyEvaluationNum(), 100));
+				oldRecord.setTotalSumNum(record.getTotalSumNum());
+				oldRecord.setTotalNum(record.getTotalNum());
 				oldRecord.setUpdateDate(new Date());
 
 				riskReportRecordService.updateByPrimaryKey(oldRecord);
 			} else {
-				record.setTotalNum(Math.min(record.getTotalNum() + record.getHealthNum(), 100));
-
 				riskReportRecordList.add(record);
 			}
 
 			// 产生预警数据
-			if (record.getTotalNum() >= 60) {
+			if (record.getTotalNum() >= 5) {
 				RiskAlarm riskAlarm = riskAlarmService.generateRiskAlarm(user.getPoliceId(), AlarmTypeEnum.COMPREHENSIVE_RISK, date,
 						record.getTotalNum());
 
@@ -749,9 +788,10 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 		if (riskReportRecordList.size() > 0) {
 			riskReportRecordService.insertRiskReportRecordList(riskReportRecordList);
 		}
+	}
 
-		health(localDate);
-
-		family(localDate);
+	@Override
+	public GlobalIndexNumResultDO findRiskReportRecordGlobalIndexNum(String date) {
+		return riskReportRecordMapper.findRiskReportRecordGlobalIndexNum(date);
 	}
 }

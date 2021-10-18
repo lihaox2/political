@@ -21,8 +21,8 @@ import java.util.List;
 /**
  * excel数据导入工具类
  *
- * @Author xxl
- * @Date 2021/2/26
+ * @author xxl
+ * @date 2021/2/26
  */
 public class ExcelUtil {
 

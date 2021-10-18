@@ -38,6 +38,11 @@ public class User {
 
 	private Double policeWeight;
 
+	/**
+	 * 健康风险是否允许全局查看（1.允许，2.不允许）
+	 */
+	private Integer riskHealthShowFlag;
+
 	@Transient
 	private String password;// 密码
 	private String ddUserId; // 钉钉用户ID
@@ -74,6 +79,14 @@ public class User {
 	List<UserReward> rewards;
 
 	List<UserEvaluation> evaluations;
+
+	public Integer getRiskHealthShowFlag() {
+		return riskHealthShowFlag;
+	}
+
+	public void setRiskHealthShowFlag(Integer riskHealthShowFlag) {
+		this.riskHealthShowFlag = riskHealthShowFlag;
+	}
 
 	/**
 	 * @return the id

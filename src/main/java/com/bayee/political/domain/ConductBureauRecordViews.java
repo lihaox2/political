@@ -79,9 +79,22 @@ public class ConductBureauRecordViews {
     private Date markTime;
 
     /**
+     * 记分表示 2-记分，4-不计分
+     */
+    private Integer status;
+
+    /**
      * 采取措施
      */
     private String cqcs;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public String getId() {
         return id;

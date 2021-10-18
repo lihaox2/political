@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
 import com.bayee.political.pojo.dto.RiskConductVisitReportDO;
 import org.apache.ibatis.annotations.Param;
@@ -61,4 +62,11 @@ public interface RiskConductVisitMapper {
                                                                    @Param("dateTime") String dateTime,
                                                                    @Param("lastMonthTime") String lastMonthTime,
                                                                    @Param("timeType") Integer timeType);
+
+    /**
+     * 取得全局扣分 的最高分 - 最低分分值
+     * @param date
+     * @return
+     */
+    GlobalIndexNumResultDO findGlobalIndexNum(@Param("date") String date);
 }

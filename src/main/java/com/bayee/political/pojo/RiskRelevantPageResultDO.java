@@ -4,7 +4,7 @@ package com.bayee.political.pojo;
  * @author xxl
  * @date 2021/9/5 11:47
  */
-public class PoliceRelevantPageResultDO {
+public class RiskRelevantPageResultDO {
 
     private Integer id;
 

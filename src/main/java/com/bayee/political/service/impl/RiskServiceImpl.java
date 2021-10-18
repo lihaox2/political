@@ -3,14 +3,19 @@ package com.bayee.political.service.impl;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.bayee.political.algorithm.RiskCompute;
 import com.bayee.political.domain.*;
 import com.bayee.political.json.ChartResult;
 import com.bayee.political.mapper.*;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
+import com.bayee.political.pojo.RiskHistoryYearListResultDO;
 import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
 import com.bayee.political.pojo.dto.*;
 
 import com.bayee.political.service.RiskConductVisitService;
+import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -130,6 +135,7 @@ public class RiskServiceImpl implements RiskService {
 	// 警员健康风险指数查询
 	@Override
 	public RiskHealth riskHealthIndexItem(String policeId, String dateTime) {
+//		GlobalIndexNumResultDO healthDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "health_num");
 		return riskHealthMapper.riskHealthIndexItem(policeId, dateTime);
 	}
 
@@ -161,8 +167,32 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public List<RiskReportRecord> riskPageList(String keyWords, Integer alarmType, String sortName, String dateTime,
 			String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum,Integer num,String orderName, Integer deptId) {
-		return riskReportRecordMapper.riskPageList(keyWords, alarmType, sortName, dateTime, lastDateTime, lastMonthTime,
+		List<RiskReportRecord> result = riskReportRecordMapper.riskPageList(keyWords, alarmType, sortName, dateTime, lastDateTime, lastMonthTime,
 				pageSize, pageNum,num,orderName,deptId);
+
+		GlobalIndexNumResultDO currentMonth = riskReportRecordMapper.findRiskReportRecordGlobalTotalNum(dateTime);
+		GlobalIndexNumResultDO lastMonth = riskReportRecordMapper.findRiskReportRecordGlobalTotalNum(lastDateTime);
+		GlobalIndexNumResultDO indexDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "total_num");
+		GlobalIndexNumResultDO conductDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "conduct_num");
+		GlobalIndexNumResultDO caseDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "handling_case_num");
+		GlobalIndexNumResultDO dutyDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "duty_num");
+		GlobalIndexNumResultDO trainDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "train_num");
+		GlobalIndexNumResultDO socialContactDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "social_contact_num");
+		GlobalIndexNumResultDO amilyEvaluationDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "amily_evaluation_num");
+		GlobalIndexNumResultDO healthDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "health_num");
+
+		return result.parallelStream().peek(e -> {
+			e.setCurrentTotalNum(RiskCompute.normalizationCompute(currentMonth.getMaxNum(), currentMonth.getMinNum(), e.getCurrentTotalNum()));
+			e.setTotalNum(RiskCompute.normalizationCompute(indexDO.getMaxNum(), indexDO.getMinNum(), e.getTotalNum()));
+			e.setConductNum(RiskCompute.normalizationCompute(conductDO.getMaxNum(), conductDO.getMinNum(), e.getConductNum()));
+			e.setHandlingCaseNum(RiskCompute.normalizationCompute(caseDO.getMaxNum(), caseDO.getMinNum(), e.getHandlingCaseNum()));
+			e.setDutyNum(RiskCompute.normalizationCompute(dutyDO.getMaxNum(), dutyDO.getMinNum(), e.getDutyNum()));
+			e.setTrainNum(RiskCompute.normalizationCompute(trainDO.getMaxNum(), trainDO.getMinNum(), e.getTrainNum()));
+			e.setSocialContactNum(RiskCompute.normalizationCompute(socialContactDO.getMaxNum(), socialContactDO.getMinNum(), e.getSocialContactNum()));
+			e.setAmilyEvaluationNum(RiskCompute.normalizationCompute(amilyEvaluationDO.getMaxNum(), amilyEvaluationDO.getMinNum(), e.getAmilyEvaluationNum()));
+			e.setHealthNum(RiskCompute.normalizationCompute(healthDO.getMaxNum(), healthDO.getMinNum(), e.getHealthNum()));
+			e.setLastTotalNum(RiskCompute.normalizationCompute(lastMonth.getMaxNum(), lastMonth.getMinNum(), e.getLastTotalNum()));
+		}).collect(Collectors.toList());
 	}
 
 	// 警员风险列表总数
@@ -182,21 +212,81 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public List<ScreenDoubeChart> riskChartList(String policeId, String dateTime, String lastMonthTime,
 												Integer timeType) {
-		return riskReportRecordMapper.riskChartList(policeId, dateTime, lastMonthTime, timeType);
+		GlobalIndexNumResultDO conductDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "conduct_num");
+		GlobalIndexNumResultDO caseDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "handling_case_num");
+		GlobalIndexNumResultDO dutyDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "duty_num");
+		GlobalIndexNumResultDO trainDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "train_num");
+		GlobalIndexNumResultDO socialContactDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "social_contact_num");
+		GlobalIndexNumResultDO amilyEvaluationDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "amily_evaluation_num");
+//		GlobalIndexNumResultDO healthDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "health_num");
+
+		List<ScreenDoubeChart> result = riskReportRecordMapper.riskChartList(policeId, dateTime, lastMonthTime, timeType);
+		if (timeType == 1) {
+			for (ScreenDoubeChart chart : result) {
+				if ("行为风险".equals(chart.getName())) {
+					chart.setValue(RiskCompute.normalizationCompute(conductDO.getMaxNum(), conductDO.getMinNum(), chart.getValue()));
+				} else if ("执法风险".equals(chart.getName())) {
+					chart.setValue(RiskCompute.normalizationCompute(caseDO.getMaxNum(), caseDO.getMinNum(), chart.getValue()));
+				} else if ("接处警风险".equals(chart.getName())) {
+					chart.setValue(RiskCompute.normalizationCompute(dutyDO.getMaxNum(), dutyDO.getMinNum(), chart.getValue()));
+				} else if ("训练风险".equals(chart.getName())) {
+					chart.setValue(RiskCompute.normalizationCompute(trainDO.getMaxNum(), trainDO.getMinNum(), chart.getValue()));
+				} else if ("社交风险".equals(chart.getName())) {
+					chart.setValue(RiskCompute.normalizationCompute(socialContactDO.getMaxNum(), socialContactDO.getMinNum(), chart.getValue()));
+				} else if ("评价风险".equals(chart.getName())) {
+					chart.setValue(RiskCompute.normalizationCompute(amilyEvaluationDO.getMaxNum(), amilyEvaluationDO.getMinNum(), chart.getValue()));
+				}/* else if ("健康风险".equals(chart.getName())) {
+					chart.setValue(RiskCompute.normalizationCompute(healthDO.getMaxNum(), healthDO.getMinNum(), chart.getValue()));
+				}*/
+			}
+		}
+		return result;
 	}
 
 	// 警员风险详情查询
 	@Override
 	public RiskReportRecord riskReportRecordItem(Integer id, String policeId, String dateTime, String lastDateTime,
 												 String lastMonthTime, Integer timeType) {
-		return riskReportRecordMapper.riskReportRecordItem(id, policeId, dateTime, lastDateTime, lastMonthTime,
+		RiskReportRecord reportRecord = riskReportRecordMapper.riskReportRecordItem(id, policeId, dateTime, lastDateTime, lastMonthTime,
 				timeType);
+		if (reportRecord != null && timeType == 1) {
+			GlobalIndexNumResultDO indexDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "total_num");
+			GlobalIndexNumResultDO conductDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "conduct_num");
+			GlobalIndexNumResultDO caseDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "handling_case_num");
+			GlobalIndexNumResultDO dutyDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "duty_num");
+			GlobalIndexNumResultDO trainDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "train_num");
+			GlobalIndexNumResultDO socialContactDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "social_contact_num");
+			GlobalIndexNumResultDO amilyEvaluationDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "amily_evaluation_num");
+			GlobalIndexNumResultDO healthDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "health_num");
+//			GlobalIndexNumResultDO drinkDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "drink_num");
+//			GlobalIndexNumResultDO studyDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "study_num");
+//			GlobalIndexNumResultDO workDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "work_num");
+
+			reportRecord.setTotalNum(RiskCompute.normalizationCompute(indexDO.getMaxNum(), indexDO.getMinNum(), reportRecord.getTotalNum()));
+			reportRecord.setConductNum(RiskCompute.normalizationCompute(conductDO.getMaxNum(), conductDO.getMinNum(), reportRecord.getConductNum()));
+			reportRecord.setHandlingCaseNum(RiskCompute.normalizationCompute(caseDO.getMaxNum(), caseDO.getMinNum(), reportRecord.getHandlingCaseNum()));
+			reportRecord.setDutyNum(RiskCompute.normalizationCompute(dutyDO.getMaxNum(), dutyDO.getMinNum(), reportRecord.getDutyNum()));
+			reportRecord.setTrainNum(RiskCompute.normalizationCompute(trainDO.getMaxNum(), trainDO.getMinNum(), reportRecord.getTrainNum()));
+			reportRecord.setSocialContactNum(RiskCompute.normalizationCompute(socialContactDO.getMaxNum(), socialContactDO.getMinNum(), reportRecord.getSocialContactNum()));
+			reportRecord.setAmilyEvaluationNum(RiskCompute.normalizationCompute(amilyEvaluationDO.getMaxNum(), amilyEvaluationDO.getMinNum(), reportRecord.getAmilyEvaluationNum()));
+			reportRecord.setHealthNum(RiskCompute.normalizationCompute(healthDO.getMaxNum(), healthDO.getMinNum(), reportRecord.getHealthNum()));
+//			reportRecord.setDrinkNum(RiskCompute.normalizationCompute(drinkDO.getMaxNum(), drinkDO.getMinNum(), reportRecord.getDrinkNum()));
+//			reportRecord.setStudyNum(RiskCompute.normalizationCompute(studyDO.getMaxNum(), studyDO.getMinNum(), reportRecord.getStudyNum()));
+//			reportRecord.setWorkNum(RiskCompute.normalizationCompute(workDO.getMaxNum(), workDO.getMinNum(), reportRecord.getWorkNum()));
+		}
+		return reportRecord;
 	}
 
 	// 警员警务技能指数查询
 	@Override
 	public RiskTrain riskTrainIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
-		return riskTrainMapper.riskTrainIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		RiskTrain riskTrain = riskTrainMapper.riskTrainIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		if (riskTrain != null && timeType == 1) {
+			GlobalIndexNumResultDO resultDO = riskTrainMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "index_num");
+
+			riskTrain.setIndexNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), riskTrain.getIndexNum()));
+		}
+		return riskTrain;
 	}
 
 	// 警员综合训练不合格趋势图
@@ -208,7 +298,13 @@ public class RiskServiceImpl implements RiskService {
 	// 警员接警执勤指数查询
 	@Override
 	public RiskDuty riskDutyIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
-		return riskDutyMapper.riskDutyIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		RiskDuty riskDuty = riskDutyMapper.riskDutyIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		if (riskDuty != null && timeType == 1) {
+			GlobalIndexNumResultDO resultDO = riskDutyMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "index_num");
+
+			riskDuty.setIndexNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), riskDuty.getIndexNum()));
+		}
+		return riskDuty;
 	}
 
 	// 半年内接警执勤风险指数
@@ -235,7 +331,19 @@ public class RiskServiceImpl implements RiskService {
 	// 警员执法办案风险指数查询
 	@Override
 	public RiskCase riskCaseIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
-		return riskCaseMapper.riskCaseIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		RiskCase riskCase = riskCaseMapper.riskCaseIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		if (riskCase != null && timeType == 1) {
+			GlobalIndexNumResultDO indexResultDO = riskCaseMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "index_num");
+			GlobalIndexNumResultDO abilityResultDO = riskCaseMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "ability_num");
+			GlobalIndexNumResultDO lawEnforcementResultDO = riskCaseMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "law_enforcement_num");
+			GlobalIndexNumResultDO testResultDO = riskCaseMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "test_num");
+
+			riskCase.setIndexNum(RiskCompute.normalizationCompute(indexResultDO.getMaxNum(), indexResultDO.getMinNum(), riskCase.getIndexNum()));
+			riskCase.setAbilityNum(RiskCompute.normalizationCompute(abilityResultDO.getMaxNum(), abilityResultDO.getMinNum(), riskCase.getAbilityNum()));
+			riskCase.setLawEnforcementNum(RiskCompute.normalizationCompute(lawEnforcementResultDO.getMaxNum(), lawEnforcementResultDO.getMinNum(), riskCase.getLawEnforcementNum()));
+			riskCase.setTestNum(RiskCompute.normalizationCompute(testResultDO.getMaxNum(), testResultDO.getMinNum(), riskCase.getTestNum()));
+		}
+		return riskCase;
 	}
 
 	// 执法办案风险指数图例
@@ -295,7 +403,13 @@ public class RiskServiceImpl implements RiskService {
 	// 警员历史风险报告查询
 	@Override
 	public List<RiskHistoryReport> riskHistoryReportList(String policeId, String dateTime) {
-		return riskReportRecordMapper.riskHistoryReportList(policeId, dateTime);
+		List<RiskHistoryReport> result = riskReportRecordMapper.riskHistoryReportList(policeId, dateTime);
+
+		return result.parallelStream().peek(e -> {
+			GlobalIndexNumResultDO currentMonth = riskReportRecordMapper.findRiskReportRecordGlobalTotalNum(e.getDateTime());
+
+			e.setTotalNum(RiskCompute.normalizationCompute(currentMonth.getMaxNum(), currentMonth.getMinNum(), e.getTotalNum()));
+		}).collect(Collectors.toList());
 	}
 
 	// 警员警务技能统计查询
@@ -349,8 +463,22 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public RiskCaseLawEnforcement riskCaseLawEnforcementIndexItem(String policeId, String dateTime,
 																  String lastMonthTime, Integer timeType) {
-		return riskCaseLawEnforcementMapper.riskCaseLawEnforcementIndexItem(policeId, dateTime, lastMonthTime,
+		RiskCaseLawEnforcement lawEnforcement = riskCaseLawEnforcementMapper.riskCaseLawEnforcementIndexItem(policeId, dateTime, lastMonthTime,
 				timeType);
+		if (lawEnforcement == null) {
+			lawEnforcement = new RiskCaseLawEnforcement();
+			lawEnforcement.setIsDisplay(0);
+			lawEnforcement.setPoliceId(policeId);
+//			lawEnforcement.setIndexNum();
+			lawEnforcement.setTotalDeductionScore(0d);
+			lawEnforcement.setTotalDeductionCount(0);
+		}
+		if (timeType == 1) {
+			GlobalIndexNumResultDO resultDO = riskCaseMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "law_enforcement_num");
+
+			lawEnforcement.setIndexNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), lawEnforcement.getIndexNum()));
+		}
+		return lawEnforcement;
 	}
 
 	// 警员执法管理数据列表查询
@@ -365,13 +493,25 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public RiskCaseAbility riskCaseAbilityIndexItem(String policeId, String dateTime, String lastMonthTime,
 													Integer timeType) {
-		return riskCaseAbilityMapper.riskCaseAbilityIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		RiskCaseAbility ability = riskCaseAbilityMapper.riskCaseAbilityIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		if (ability != null && timeType == 1) {
+			GlobalIndexNumResultDO resultDO = riskCaseMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "ability_num");
+
+			ability.setIndexNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), ability.getIndexNum()));
+		}
+		return ability;
 	}
 
 	// 警员执法考试风险查询
 	@Override
 	public RiskCaseTest riskCaseTestIndexItem(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
-		return riskCaseTestMapper.riskCaseTestIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		RiskCaseTest caseTest = riskCaseTestMapper.riskCaseTestIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		if (caseTest != null && timeType == 1) {
+			GlobalIndexNumResultDO resultDO = riskCaseMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "test_num");
+
+			caseTest.setIndexNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), caseTest.getIndexNum()));
+		}
+		return caseTest;
 	}
 
 	// 警员执法考试数据列表查询
@@ -385,7 +525,21 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public RiskConductBureauRule riskConductBureauRuleIndexItem(String policeId, String dateTime, String lastMonthTime,
 																Integer timeType) {
-		return riskConductBureauRuleMapper.riskConductBureauRuleIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		RiskConductBureauRule bureauRule = riskConductBureauRuleMapper.riskConductBureauRuleIndexItem(policeId, dateTime, lastMonthTime, timeType);
+		if (bureauRule == null) {
+			bureauRule = new RiskConductBureauRule();
+			bureauRule.setPoliceId(policeId);
+			bureauRule.setIndexNum(0d);
+			bureauRule.setDeductionScoreCount(0);
+			bureauRule.setTotalDeductionScore(0d);
+		}
+
+		if (timeType == 1) {
+			GlobalIndexNumResultDO bureauRuleResultDO = riskConductMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "bureau_rule_score");
+
+			bureauRule.setIndexNum(RiskCompute.normalizationCompute(bureauRuleResultDO.getMaxNum(), bureauRuleResultDO.getMinNum(), bureauRule.getIndexNum()));
+		}
+		return bureauRule;
 	}
 
 	@Override
@@ -510,8 +664,13 @@ public class RiskServiceImpl implements RiskService {
 	}
 
 	@Override
-	public List<Map<String, String>> riskHistoryYearList(String policeId) {
-		return riskReportRecordMapper.riskHistoryYearList(policeId);
+	public List<RiskHistoryYearListResultDO> riskHistoryYearList(String policeId) {
+		List<RiskHistoryYearListResultDO> resultDOS = riskReportRecordMapper.riskHistoryYearList(policeId);
+		return resultDOS.parallelStream().peek(e -> {
+			GlobalIndexNumResultDO indexDO = riskReportRecordMapper.findGlobalIndexNumByYear(e.getDateTime(), e.getLastDateTime(), "total_num");
+
+			e.setTotalNum(RiskCompute.normalizationCompute(indexDO.getMaxNum(), indexDO.getMinNum(), e.getTotalNum()));
+		}).collect(Collectors.toList());
 	}
 
 	@Override
@@ -537,4 +696,10 @@ public class RiskServiceImpl implements RiskService {
 																  String lastMonthTime, Integer timeType) {
 		return riskDutyDealPoliceRecordMapper.dutyReportTypeDOQuery(policeId, dateTime, lastMonthTime, timeType);
 	}
+
+	@Override
+	public GlobalIndexNumResultDO findRiskHealthGlobalIndexNum(String date) {
+		return riskHealthMapper.findGlobalIndexNum(date);
+	}
+
 }

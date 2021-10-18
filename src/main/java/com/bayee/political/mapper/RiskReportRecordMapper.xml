@@ -67,14 +67,14 @@
       month, total_num, conduct_num, 
       handling_case_num, duty_num, train_num, 
       social_contact_num, amily_evaluation_num, health_num,
-      drink_num,study_num, 
+      drink_num,study_num, total_sum_num,
       creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, 
       #{month,jdbcType=VARCHAR}, #{totalNum,jdbcType=DOUBLE}, #{conductNum,jdbcType=DOUBLE}, 
       #{handlingCaseNum,jdbcType=DOUBLE}, #{dutyNum,jdbcType=DOUBLE}, #{trainNum,jdbcType=DOUBLE}, 
       #{socialContactNum,jdbcType=DOUBLE}, #{amilyEvaluationNum,jdbcType=DOUBLE}, 
       #{healthNum,jdbcType=DOUBLE}, #{drinkNum,jdbcType=DOUBLE},
-      #{studyNum,jdbcType=DOUBLE},
+      #{studyNum,jdbcType=DOUBLE}, #{totalSumNum},
       #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <!-- 警员指标历史记录新增 -->
@@ -83,14 +83,14 @@
       month, total_num, conduct_num, 
       handling_case_num, duty_num, train_num, 
       social_contact_num, amily_evaluation_num, health_num,
-      drink_num,study_num, 
+      drink_num,study_num, total_sum_num,
       creation_date, update_date)
     values (#{policeId,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, 
       #{month,jdbcType=VARCHAR}, #{totalNum,jdbcType=DOUBLE}, #{conductNum,jdbcType=DOUBLE}, 
       #{handlingCaseNum,jdbcType=DOUBLE}, #{dutyNum,jdbcType=DOUBLE}, #{trainNum,jdbcType=DOUBLE}, 
       #{socialContactNum,jdbcType=DOUBLE}, #{amilyEvaluationNum,jdbcType=DOUBLE}, 
       #{healthNum,jdbcType=DOUBLE}, #{drinkNum,jdbcType=DOUBLE},
-      #{studyNum,jdbcType=DOUBLE},
+      #{studyNum,jdbcType=DOUBLE}, #{totalSumNum},
       #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskReportRecord" useGeneratedKeys="true" keyProperty="id">
@@ -131,6 +131,9 @@
       </if>
       <if test="healthNum != null" >
         health_num,
+      </if>
+      <if test="totalSumNum != null" >
+        total_sum_num,
       </if>
       <if test="creationDate != null" >
         creation_date,
@@ -175,6 +178,9 @@
       </if>
       <if test="healthNum != null" >
         #{healthNum,jdbcType=DOUBLE},
+      </if>
+      <if test="totalSumNum != null" >
+        #{totalSumNum},
       </if>
       <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
@@ -226,6 +232,9 @@
        <if test="studyNum != null" >
         study_num = #{studyNum,jdbcType=DOUBLE},
       </if>
+      <if test="totalSumNum != null" >
+        total_sum_num = #{totalSumNum},
+      </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -250,6 +259,7 @@
       health_num = #{healthNum,jdbcType=DOUBLE},
       drink_num = #{drinkNum,jdbcType=DOUBLE},
       study_num = #{studyNum,jdbcType=DOUBLE},
+      total_sum_num = #{totalSumNum},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
@@ -329,7 +339,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
 </select>
   <!-- 警员风险雷达图 -->
 <select id="riskChartList" parameterType="com.bayee.political.domain.ScreenDoubeChart" resultMap="ScreenDoubeChartMap">
-    select '行为规范' as name,(case when round(sum(conduct_num),2) >= 25 then 25 else round(sum(conduct_num),2) end) as value from risk_report_record
+    select '行为风险' as name,(case when round(sum(conduct_num),2) >= 25 then 25 else round(sum(conduct_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -338,7 +348,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
     UNION ALL
-    select '执法办案' as name,(case when round(sum(handling_case_num),2) >= 20 then 20 else round(sum(handling_case_num),2) end) as value from risk_report_record
+    select '执法风险' as name,(case when round(sum(handling_case_num),2) >= 20 then 20 else round(sum(handling_case_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -347,7 +357,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
     UNION ALL
-    select '接警执勤' as name,(case when round(sum(duty_num),2) >= 20 then 20 else round(sum(duty_num),2) end) as value from risk_report_record
+    select '接处警风险' as name,(case when round(sum(duty_num),2) >= 20 then 20 else round(sum(duty_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -356,7 +366,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
     UNION ALL
-    select '警务技能' as name,(case when round(sum(train_num),2) >= 10 then 10 else round(sum(train_num),2) end) as value from risk_report_record
+    select '训练风险' as name,(case when round(sum(train_num),2) >= 10 then 10 else round(sum(train_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -365,7 +375,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
     UNION ALL
-    select '社交' as name,(case when round(sum(social_contact_num),2) >= 15 then 15 else round(sum(social_contact_num),2) end) as value from risk_report_record
+    select '社交风险' as name,(case when round(sum(social_contact_num),2) >= 15 then 15 else round(sum(social_contact_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -374,7 +384,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
     UNION ALL
-    select '家属评价' as name,(case when round(sum(amily_evaluation_num),2) >= 5 then 5 else round(sum(amily_evaluation_num),2) end) as value from risk_report_record
+    select '评价风险' as name,(case when round(sum(amily_evaluation_num),2) >= 5 then 5 else round(sum(amily_evaluation_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
         and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -383,7 +393,8 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
       </if>
   UNION ALL
-  select '健康' as name,(select index_num from risk_health where police_id=#{policeId,jdbcType=VARCHAR}
+  select '健康风险' as name,(select index_num from risk_health
+  where police_id=#{policeId,jdbcType=VARCHAR} and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
   order by creation_date desc limit 1)
 </select>
 <!-- 警员风险详情查询 -->
@@ -399,7 +410,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
   ifnull(sum(amily_evaluation_num), 0) as amily_evaluation_num,
     sum(drink_num) as drink_num,
     sum(study_num) as study_num,
-    sum(work_num) as work_num,creation_date
+    sum(work_num) as work_num, sum(total_num) as total_num,creation_date
   from risk_report_record where 1=1 and police_id = #{policeId}
   <if test="timeType == 1">
     and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
@@ -623,7 +634,7 @@ order by DATE_FORMAT(a.creation_date, '%Y-%m') desc
           month, total_num, conduct_num,
           handling_case_num, duty_num, train_num,
           social_contact_num, amily_evaluation_num, health_num,
-          drink_num,study_num,
+          drink_num,study_num, total_sum_num,
           creation_date, update_date)
     values
     <foreach collection="list" item="item" separator=",">
@@ -632,7 +643,7 @@ order by DATE_FORMAT(a.creation_date, '%Y-%m') desc
       #{item.handlingCaseNum,jdbcType=DOUBLE}, #{item.dutyNum,jdbcType=DOUBLE}, #{item.trainNum,jdbcType=DOUBLE},
       #{item.socialContactNum,jdbcType=DOUBLE}, #{item.amilyEvaluationNum,jdbcType=DOUBLE},
       #{item.healthNum,jdbcType=DOUBLE}, #{item.drinkNum,jdbcType=DOUBLE},
-      #{item.studyNum,jdbcType=DOUBLE},
+      #{item.studyNum,jdbcType=DOUBLE}, #{item.totalSumNum},
       #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
     </foreach>
   </insert>
@@ -665,7 +676,7 @@ GROUP BY DATE_FORMAT(creation_date, '%Y') order by DATE_FORMAT(creation_date, '%
            LEFT JOIN (SELECT rh.index_num, rh.police_id, rh.`year`, ra.`name` FROM risk_health rh
                     LEFT JOIN risk_health_bmi_standard ra ON rh.bmi_id = ra.id) rah
                 ON rah.police_id = tr.police_id AND rah.`year` = DATE_FORMAT(tr.creation_date, '%Y')
-    where tr.police_id = #{policeId} and DATE_FORMAT(tr.creation_date, '%Y-%m') = #{date}
+    where tr.police_id = #{policeId} and DATE_FORMAT(tr.creation_date, '%Y-%m') = #{date} limit 1
   </select>
 
   <select id="findPoliceAllRiskMonth" resultType="com.bayee.political.json.ChartResult">
@@ -705,9 +716,11 @@ GROUP BY DATE_FORMAT(creation_date, '%Y') order by DATE_FORMAT(creation_date, '%
       AND DATE_FORMAT(tr.creation_date, '%Y-%m') >= #{lastDate}
   </select>
 
-  <select id="riskHistoryYearList" resultType="HashMap">
+  <select id="riskHistoryYearList" resultType="com.bayee.political.pojo.RiskHistoryYearListResultDO">
     SELECT
-      DATE_FORMAT(a.creation_date, '%Y年') AS dateTimeMonth,CONCAT(DATE_FORMAT(a.creation_date, '%Y'), '-01') AS `dateTime`,
+      DATE_FORMAT(a.creation_date, '%Y年') AS dateTimeMonth,
+      CONCAT(DATE_FORMAT(a.creation_date, '%Y'), '-01') AS `dateTime`,
+      concat(DATE_FORMAT(a.creation_date, '%Y'), '-12') as `lastDateTime`,
       police_id AS policeId,
       SUM(total_num) AS totalNum
 --       (case when SUM(total_num) > 100 then 100 else SUM(total_num) end) AS totalNum
@@ -715,6 +728,29 @@ GROUP BY DATE_FORMAT(creation_date, '%Y') order by DATE_FORMAT(creation_date, '%
         WHERE a.police_id=#{policeId}
     GROUP BY DATE_FORMAT(a.creation_date, '%Y')
     ORDER BY DATE_FORMAT(a.creation_date, '%Y') DESC;
+  </select>
+
+  <select id="findRiskReportRecordGlobalIndexNum" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(total_sum_num), 0) as maxNum, ifnull(min(total_sum_num), 0) as minNum
+    FROM risk_report_record
+    where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
+  <select id="findRiskReportRecordGlobalTotalNum" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(total_num), 0) as maxNum, ifnull(min(total_num), 0) as minNum
+    FROM risk_report_record
+    where DATE_FORMAT(creation_date, '%Y-%m') = #{date}
+  </select>
+
+  <select id="findGlobalIndexNumByYear" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+        ifnull(MAX(a.sumNum), 0) as maxNum, ifnull(MIN(a.sumNum), 0) as minNum
+    FROM (SELECT SUM(${column}) AS sumNum
+        FROM risk_report_record
+        WHERE DATE_FORMAT(creation_date, '%Y-%m')>=#{lastDateTime} AND DATE_FORMAT(creation_date, '%Y-%m') &lt;= #{date}
+        GROUP BY police_id) a
   </select>
 
 </mapper>

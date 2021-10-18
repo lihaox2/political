@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.bayee.political.json.ChartResult;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
+import com.bayee.political.pojo.RiskHistoryYearListResultDO;
 import com.bayee.political.pojo.dto.RiskReportRecordDO;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,8 +23,6 @@ public interface RiskReportRecordMapper {
 	int insertSelective(RiskReportRecord record);
 
 	RiskReportRecord selectByPrimaryKey(Integer id);
-
-	int updateByPrimaryKeySelective(RiskReportRecord record);
 
 	int updateByPrimaryKey(RiskReportRecord record);
 
@@ -139,5 +139,27 @@ public interface RiskReportRecordMapper {
 	 * @param policeId
 	 * @return
 	 */
-	List<Map<String, String>> riskHistoryYearList(String policeId);
+	List<RiskHistoryYearListResultDO> riskHistoryYearList(String policeId);
+
+	/**
+	 * 取得全局扣分 的最高分 - 最低分分值
+	 * @param date
+	 * @return
+	 */
+	GlobalIndexNumResultDO findRiskReportRecordGlobalIndexNum(@Param("date") String date);
+
+	/**
+	 * 取得全局扣分 的最高分 - 最低分分值
+	 * @param date
+	 * @return
+	 */
+	GlobalIndexNumResultDO findRiskReportRecordGlobalTotalNum(@Param("date") String date);
+	
+	/**
+	 * 取得全局扣分 的最高分 & 最低分分值
+	 * @param date
+	 * @return
+	 */
+	GlobalIndexNumResultDO findGlobalIndexNumByYear(@Param("lastDateTime") String lastDateTime, @Param("date") String date,
+											  		@Param("column") String column);
 }

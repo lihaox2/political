@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.bayee.political.mapper.PoliceRelevantMapper" >
-  <resultMap id="BaseResultMap" type="com.bayee.political.domain.PoliceRelevant" >
+<mapper namespace="com.bayee.political.mapper.RiskRelevantRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskRelevantRecord" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="police_id" property="policeId" jdbcType="VARCHAR" />
     <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
@@ -18,23 +18,23 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from police_relevant
+    from risk_relevant_record
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from police_relevant
+    delete from risk_relevant_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.bayee.political.domain.PoliceRelevant" >
-    insert into police_relevant (id, police_id, type_code, 
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskRelevantRecord" >
+    insert into risk_relevant_record (id, police_id, type_code,
       deduction_score, business_date, remark, 
       creation_date, udpate_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{typeCode,jdbcType=VARCHAR}, 
       #{deductionScore,jdbcType=DOUBLE}, #{businessDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, 
       #{creationDate,jdbcType=TIMESTAMP}, #{udpateDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.bayee.political.domain.PoliceRelevant" >
-    insert into police_relevant
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskRelevantRecord" >
+    insert into risk_relevant_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -88,8 +88,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.PoliceRelevant" >
-    update police_relevant
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskRelevantRecord" >
+    update risk_relevant_record
     <set >
       <if test="policeId != null" >
         police_id = #{policeId,jdbcType=VARCHAR},
@@ -115,8 +115,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.PoliceRelevant" >
-    update police_relevant
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskRelevantRecord" >
+    update risk_relevant_record
     set police_id = #{policeId,jdbcType=VARCHAR},
       type_code = #{typeCode,jdbcType=VARCHAR},
       deduction_score = #{deductionScore,jdbcType=DOUBLE},
@@ -127,15 +127,15 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="policeRelevantPage" resultType="com.bayee.political.pojo.PoliceRelevantPageResultDO"
-          parameterType="com.bayee.political.json.PoliceRelevantPageQueryParam">
+  <select id="policeRelevantPage" resultType="com.bayee.political.pojo.RiskRelevantPageResultDO"
+          parameterType="com.bayee.political.json.RiskRelevantPageQueryParam">
     select
         pr.id, pr.police_id as policeId, u.name as policeName, pr.deduction_score as deductionScore,
         prt2.name as typeName, prt1.name as childTypeName, date_format(pr.business_date, '%Y-%m-%d') as businessDate
-    from police_relevant pr
+    from risk_relevant_record pr
         left join user u on pr.police_id = u.police_id
-        left join police_relevant_type prt1 on pr.type_code = prt1.code
-        left join police_relevant_type prt2 on prt1.p_code = prt2.code
+        left join risk_relevant_type prt1 on pr.type_code = prt1.code
+        left join risk_relevant_type prt2 on prt1.p_code = prt2.code
     where 1 = 1
         <if test="typeCode != null and typeCode != ''">
            and prt1.code = #{typeCode}
@@ -151,10 +151,10 @@
   <select id="policeRelevantPageCount" resultType="Integer">
     select
       count(1)
-    from police_relevant pr
+    from risk_relevant_record pr
       left join user u on pr.police_id = u.police_id
-      left join police_relevant_type prt1 on pr.type_code = prt1.code
-      left join police_relevant_type prt2 on prt1.p_code = prt2.code
+      left join risk_relevant_type prt1 on pr.type_code = prt1.code
+      left join risk_relevant_type prt2 on prt1.p_code = prt2.code
     where 1 = 1
     <if test="typeCode != null and typeCode != ''">
       and prt1.code = #{typeCode}

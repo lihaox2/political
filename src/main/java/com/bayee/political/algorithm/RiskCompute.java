@@ -1,5 +1,7 @@
 package com.bayee.political.algorithm;
 
+import java.text.DecimalFormat;
+
 /**
  * @author xxl
  * @date 2021/8/31 11:09
@@ -14,6 +16,45 @@ public class RiskCompute {
      */
     public static double log10(double minV, double maxV) {
         return Math.log10(10) * minV / Math.log10(10) * maxV;
+    }
+
+    /**
+     * 数据归一化计算 (iValue - gMin) / (gMax - gMin) * 10
+     * @param GMax
+     * @param GMin
+     * @param value
+     * @return
+     */
+    public static Double normalizationCompute(double GMax, double GMin, Double value) {
+        if (value == null) {
+            return value;
+        }
+
+        double result = value;
+
+        double gValue = GMax - GMin;
+        double iValue = value - GMin;
+        if (iValue > gValue) {
+            gValue = value;
+        }
+        if (gValue > 0) {
+            double divValue = iValue / gValue;
+            if (divValue > 1) {
+                divValue = 1;
+            }
+            result = parserDecimal(divValue * 10);
+        }
+        return result;
+    }
+
+    /**
+     * 解析小数位
+     * @param v
+     * @return
+     */
+    public static double parserDecimal(double v) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        return Double.parseDouble(df.format(v));
     }
 
     /**

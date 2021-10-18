@@ -3,6 +3,7 @@
  */
 package com.bayee.political.service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import com.bayee.political.json.TalentsParticularsResultList;
@@ -262,5 +263,12 @@ public interface UserService {
 	 * @param sendId
 	 * @return
 	 */
-	TalentsParticularsResultList findTalentsUserInfo(String firstId, String sendId);
+	TalentsParticularsResultList findTalentsUserInfo(String firstId, String sendId) throws ParseException;
+
+	/**
+	 * 修改警员健康风险全局查看标识
+	 * @param policeId 警号
+	 * @param showFlag 查看标识 1.允许，2.不允许
+	 */
+	void updateRiskHealthShowFlagByPoliceId(String policeId, Integer showFlag);
 }

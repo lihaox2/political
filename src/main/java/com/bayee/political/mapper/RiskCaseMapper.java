@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskCase;
@@ -41,5 +42,22 @@ public interface RiskCaseMapper {
 	 * @param riskCaseList
 	 */
 	void insertRiskCases(List<RiskCase> riskCaseList);
+
+	/**
+	 * 取得全局扣分 的最高分 - 最低分分值
+	 * @param date
+	 * @return
+	 */
+	GlobalIndexNumResultDO findGlobalIndexNum(@Param("date") String date);
+
+	/**
+	 * 取得全局扣分 的最高分 & 最低分
+	 * @param lastDateTime
+	 * @param date
+	 * @param column
+	 * @return
+	 */
+	GlobalIndexNumResultDO findGlobalIndexNumByYear(@Param("lastDateTime") String lastDateTime, @Param("date") String date,
+													@Param("column") String column);
 
 }

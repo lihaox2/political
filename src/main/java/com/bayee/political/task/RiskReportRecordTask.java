@@ -30,7 +30,7 @@ public class RiskReportRecordTask {
     public void riskReportTask() {
         List<User> userList = userService.userAllList();
 
-        riskReportRecordService.policeRiskDetails(userList, LocalDate.now());
+        riskReportRecordService.policeRiskDetailsV2(userList, LocalDate.now());
 
     }
 

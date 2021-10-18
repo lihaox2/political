@@ -53,10 +53,10 @@ public class ConductController {
     PoliceRelevantTypeService policeRelevantTypeService;
 
     @Autowired
-    PoliceRelevantService policeRelevantService;
+    RiskRelevantRecordService policeRelevantService;
 
     @GetMapping("/police/relevant/page")
-    public ResponseEntity<?> policeRelevantPage(PoliceRelevantPageQueryParam queryParam) {
+    public ResponseEntity<?> policeRelevantPage(RiskRelevantPageQueryParam queryParam) {
 
         Map<String, Object> result = new HashMap<>();
         result.put("pageIndex", queryParam.getPageIndex());
@@ -69,10 +69,10 @@ public class ConductController {
     @GetMapping("/police/relevant/details")
     public ResponseEntity<?> policeRelevantDetails(@RequestParam("id") Integer id) {
 
-        PoliceRelevant relevant = policeRelevantService.findById(id);
+        RiskRelevantRecord relevant = policeRelevantService.findById(id);
         User user = userService.findByPoliceId(relevant.getPoliceId());
-        PoliceRelevantType relevantType = policeRelevantTypeService.findByCode(relevant.getTypeCode());
-        PoliceRelevantType parentRelevantType = policeRelevantTypeService.findByCode(relevantType.getpCode());
+        RiskRelevantType relevantType = policeRelevantTypeService.findByCode(relevant.getTypeCode());
+        RiskRelevantType parentRelevantType = policeRelevantTypeService.findByCode(relevantType.getpCode());
 
         PoliceRelevantDetailsResult result = new PoliceRelevantDetailsResult();
         result.setPoliceId(relevant.getPoliceId());
@@ -95,7 +95,7 @@ public class ConductController {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
-        PoliceRelevant relevant = policeRelevantService.findById(id);
+        RiskRelevantRecord relevant = policeRelevantService.findById(id);
         relevant.setPoliceId(saveParam.getPoliceId());
         relevant.setTypeCode(saveParam.getTypeCode());
         relevant.setDeductionScore(saveParam.getDeductionScore());
@@ -113,7 +113,7 @@ public class ConductController {
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
 
-        PoliceRelevant relevant = new PoliceRelevant();
+        RiskRelevantRecord relevant = new RiskRelevantRecord();
         relevant.setPoliceId(saveParam.getPoliceId());
         relevant.setTypeCode(saveParam.getTypeCode());
         relevant.setDeductionScore(saveParam.getDeductionScore());
@@ -228,7 +228,7 @@ public class ConductController {
         record.setIsEffective(1);
 
         riskConductBureauRuleRecordService.insert(record);
-        totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
+        totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -256,7 +256,7 @@ public class ConductController {
         record.setImgArr(saveParam.getFileList());
 
         riskConductBureauRuleRecordService.updateByPrimaryKey(record);
-        totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
+        totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -293,7 +293,7 @@ public class ConductController {
         ConductBureauRuleDetailsDO detailsDTO = riskConductBureauRuleRecordService.findById(id);
 
         riskConductBureauRuleRecordService.deleteByPrimaryKey(id);
-        totalRiskDetailsService.conductRiskDetails(detailsDTO.getPoliceId(), LocalDate.parse(detailsDTO.getDate()));
+        totalRiskDetailsService.conductRiskDetails(LocalDate.parse(detailsDTO.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -366,7 +366,7 @@ public class ConductController {
         record.setIsEffective(1);
 
         riskConductVisitRecordService.insert(record);
-        totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
+        totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -393,7 +393,7 @@ public class ConductController {
         record.setOriginId(saveParam.getOriginId());
 
         riskConductVisitRecordService.updateByPrimaryKey(record);
-        totalRiskDetailsService.conductRiskDetails(saveParam.getPoliceId(), LocalDate.parse(saveParam.getDate()));
+        totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -430,7 +430,7 @@ public class ConductController {
         RiskConductVisitRecord record = riskConductVisitRecordService.selectByPrimaryKey(id);
 
         riskConductVisitRecordService.deleteByPrimaryKey(id);
-        totalRiskDetailsService.conductRiskDetails(record.getPoliceId(), LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
+        totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 

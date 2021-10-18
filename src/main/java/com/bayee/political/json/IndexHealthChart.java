@@ -21,6 +21,19 @@ public class IndexHealthChart {
      */
     private String name;
 
+    /**
+     * key
+     */
+    private String key;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     public Integer getHealthyCount() {
         return healthyCount;
     }

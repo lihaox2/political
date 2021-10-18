@@ -103,7 +103,7 @@ public class RiskReportController {
     public ResponseEntity<?> createPoliceRiskReport(@RequestParam("policeId") String policeId,
                                                     @RequestParam("timeType") Integer timeType,
                                                     @RequestParam("dateTime") String dateTime,
-                                                    @RequestParam(value = "endDate", required = false) String desc,
+                                                    @RequestParam(value = "desc", required = false) String desc,
                                                     @RequestParam(value = "beginDate", required = false) String beginDate,
                                                     @RequestParam(value = "endDate", required = false) String endDate) throws Exception {
         String lastMonthTime = DateUtils.getCurrentYearFirstMonthTime();
@@ -116,17 +116,17 @@ public class RiskReportController {
             year = dateTime.substring(0, 4);
         }
 
-        String lastDateTime = "";
+//        String lastDateTime = "";
         if (timeType != null && timeType == 1) {
             timeType = 1;
-            lastDateTime = year+"-01";
+            lastMonthTime = year+"-01";
             dateTime = year+"-12";
         } else if(timeType == 2) {
             timeType = 2;
 
         } else if(timeType == 3) {
             timeType = 1;
-            lastDateTime = beginDate;
+            lastMonthTime = beginDate;
             dateTime = endDate;
         }
 
@@ -207,7 +207,7 @@ public class RiskReportController {
         if (healthReportDO == null) {
             healthReportDO = new RiskHealthReportDO();
         }
-        RiskReportRecord reportRecord = riskService.riskReportRecordItem(null, policeId, dateTime, lastDateTime,
+        RiskReportRecord reportRecord = riskService.riskReportRecordItem(null, policeId, dateTime, lastMonthTime,
                 lastMonthTime, timeType);
         if (reportRecord == null) {
             reportRecord = new RiskReportRecord();
@@ -228,7 +228,8 @@ public class RiskReportController {
         if (timeType == 1) {
             dateUnit = "年";
             inputDate = DateUtils.formatDate(DateUtils.parseDate(lastMonthTime, "yyyy-MM"), "yyyy年MM月")
-                    + "~" + DateUtils.formatDate(DateUtils.parseDate(dateTime, "yyyy-MM"), "yyyy年MM月");
+                    + "~" +
+                    DateUtils.formatDate(DateUtils.parseDate(dateTime, "yyyy-MM"), "yyyy年MM月");
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -313,7 +314,7 @@ public class RiskReportController {
 
         //家属评价
         map.put("familyCommentTotalScore", nullToZero(familyEvaluation.getIndexNum()));
-        map.put("familyComment", "A");
+        map.put("familyComment", "暂无家属评价");
 
         map.put("lawEnforcementTypeList", lawEnforcementTypeList);
         map.put("conductVisitTypeList", conductVisitTypeList);
@@ -366,7 +367,7 @@ public class RiskReportController {
         String summary = "行为规范上";
         if (nullToZero(bureauRuleReportDO.getTotalCount()) > 0 || nullToZero(conduct.getVisitScore()) > 0) {
             if (nullToZero(bureauRuleReportDO.getTotalCount()) > 0) {
-                summary += "，局规记分次数达到"+bureauRuleReportDO.getTotalCount()+"次";
+                summary += "，行为风险次数达到"+bureauRuleReportDO.getTotalCount()+"次";
             }
             if (nullToZero(conduct.getVisitScore()) > 0) {
                 summary += "，信访次数达到"+conduct.getVisitScore()+"次";

@@ -17,7 +17,7 @@
     <result column="value" property="value" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, police_id, index_num, ability_num, law_enforcement_num, test_num, creation_date, 
+    id, police_id, index_num, ability_num, law_enforcement_num, test_num, total_num, creation_date,
     update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -32,10 +32,10 @@
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskCase" >
     insert into risk_case (id, police_id, index_num, 
-      ability_num, law_enforcement_num, test_num, 
+      ability_num, law_enforcement_num, test_num, total_num,
       creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
-      #{abilityNum,jdbcType=DOUBLE}, #{lawEnforcementNum,jdbcType=DOUBLE}, #{testNum,jdbcType=DOUBLE}, 
+      #{abilityNum,jdbcType=DOUBLE}, #{lawEnforcementNum,jdbcType=DOUBLE}, #{testNum,jdbcType=DOUBLE}, #{totalNum},
       #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskCase" >
@@ -58,6 +58,9 @@
       </if>
       <if test="testNum != null" >
         test_num,
+      </if>
+      <if test="total_num ! = null">
+        total_num,
       </if>
       <if test="creationDate != null" >
         creation_date,
@@ -84,6 +87,9 @@
       </if>
       <if test="testNum != null" >
         #{testNum,jdbcType=DOUBLE},
+      </if>
+      <if test="total_num ! = null">
+        #{totalNum},
       </if>
       <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
@@ -127,6 +133,7 @@
       ability_num = #{abilityNum,jdbcType=DOUBLE},
       law_enforcement_num = #{lawEnforcementNum,jdbcType=DOUBLE},
       test_num = #{testNum,jdbcType=DOUBLE},
+      total_num = #{totalNum},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
@@ -165,14 +172,31 @@ order by a.year_month
 
   <insert id="insertRiskCases" parameterType="List">
     insert into risk_case (id, police_id, index_num,
-    ability_num, law_enforcement_num, test_num,
+    ability_num, law_enforcement_num, test_num, total_num,
     creation_date, update_date)
     values
     <foreach collection="list" item="item" separator=",">
       (null, #{item.policeId,jdbcType=VARCHAR}, #{item.indexNum,jdbcType=DOUBLE},
       #{item.abilityNum,jdbcType=DOUBLE}, #{item.lawEnforcementNum,jdbcType=DOUBLE}, #{item.testNum,jdbcType=DOUBLE},
+      #{item.totalNum},
       #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
     </foreach>
   </insert>
+
+  <select id="findGlobalIndexNum" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(total_num), 0) as maxNum, ifnull(min(total_num), 0) as minNum
+    FROM risk_case
+    where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
+  <select id="findGlobalIndexNumByYear" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(a.sumNum), 0) as maxNum, ifnull(MIN(a.sumNum), 0) as minNum
+    FROM (SELECT SUM(${column}) AS sumNum FROM risk_case
+          WHERE DATE_FORMAT(creation_date, '%Y-%m')>=#{lastDateTime}
+            AND DATE_FORMAT(creation_date, '%Y-%m') &lt;= #{date}
+          GROUP BY police_id) a
+  </select>
 
 </mapper>

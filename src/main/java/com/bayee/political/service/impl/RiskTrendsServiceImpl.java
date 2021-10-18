@@ -2,7 +2,12 @@ package com.bayee.political.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.bayee.political.algorithm.RiskCompute;
+import com.bayee.political.json.ChartResult;
+import com.bayee.political.mapper.RiskReportRecordMapper;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import com.bayee.political.pojo.dto.RiskAlarmTypeDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +26,9 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 	
 	@Autowired
 	private RiskAlarmMapper riskAlarmMapper;
+
+	@Autowired
+	RiskReportRecordMapper riskReportRecordMapper;// 警员风险记录
 
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
@@ -79,8 +87,27 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 	@Override
 	public List<RiskReportRecord> selectPoliceRiskTopTen(String sortName, String dateTime, String lastMonthTime,
 			String orderName) {
-		// TODO Auto-generated method stub
-		return riskTrendsMapper.selectPoliceRiskTopTen(sortName, dateTime, lastMonthTime, orderName);
+		List<RiskReportRecord> result = riskTrendsMapper.selectPoliceRiskTopTen(sortName, dateTime, lastMonthTime, orderName);
+
+		GlobalIndexNumResultDO indexDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "total_num");
+		GlobalIndexNumResultDO conductDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "conduct_num");
+		GlobalIndexNumResultDO caseDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "handling_case_num");
+		GlobalIndexNumResultDO dutyDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "duty_num");
+		GlobalIndexNumResultDO trainDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "train_num");
+		GlobalIndexNumResultDO socialContactDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "social_contact_num");
+		GlobalIndexNumResultDO amilyEvaluationDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "amily_evaluation_num");
+		GlobalIndexNumResultDO healthDO = riskReportRecordMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "health_num");
+
+		return result.parallelStream().peek(e -> {
+			e.setTotalNum(RiskCompute.normalizationCompute(indexDO.getMaxNum(), indexDO.getMinNum(), e.getTotalNum()));
+			e.setConductNum(RiskCompute.normalizationCompute(conductDO.getMaxNum(), conductDO.getMinNum(), e.getConductNum()));
+			e.setHandlingCaseNum(RiskCompute.normalizationCompute(caseDO.getMaxNum(), caseDO.getMinNum(), e.getHandlingCaseNum()));
+			e.setDutyNum(RiskCompute.normalizationCompute(dutyDO.getMaxNum(), dutyDO.getMinNum(), e.getDutyNum()));
+			e.setTrainNum(RiskCompute.normalizationCompute(trainDO.getMaxNum(), trainDO.getMinNum(), e.getTrainNum()));
+			e.setSocialContactNum(RiskCompute.normalizationCompute(socialContactDO.getMaxNum(), socialContactDO.getMinNum(), e.getSocialContactNum()));
+			e.setAmilyEvaluationNum(RiskCompute.normalizationCompute(amilyEvaluationDO.getMaxNum(), amilyEvaluationDO.getMinNum(), e.getAmilyEvaluationNum()));
+			e.setHealthNum(RiskCompute.normalizationCompute(healthDO.getMaxNum(), healthDO.getMinNum(), e.getHealthNum()));
+		}).collect(Collectors.toList());
 	}
 
 	@Override
@@ -306,6 +333,36 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 	public List<Map<String, Object>> qualifiedRateEcharts() {
 		// TODO Auto-generated method stub
 		return riskTrendsMapper.qualifiedRateEcharts();
+	}
+
+	@Override
+	public List<ChartResult> riskDeptAlarmChart(String date) {
+		return riskTrendsMapper.riskDeptAlarmChart(date);
+	}
+
+	@Override
+	public List<ChartResult> caseDeptChart(String date) {
+		return riskTrendsMapper.caseDeptChart(date);
+	}
+
+	@Override
+	public List<ChartResult> dutyDeptChart(String date) {
+		return riskTrendsMapper.dutyDeptChart(date);
+	}
+
+	@Override
+	public List<ChartResult> physicalTrainDeptChart(Integer id) {
+		return riskTrendsMapper.physicalTrainDeptChart(id);
+	}
+
+	@Override
+	public List<ChartResult> firearmTrainDeptChart(Integer id) {
+		return riskTrendsMapper.firearmTrainDeptChart(id);
+	}
+
+	@Override
+	public List<ChartResult> healthAlarmDeptChart(String key) {
+		return riskTrendsMapper.healthAlarmDeptChart(key);
 	}
 
 }

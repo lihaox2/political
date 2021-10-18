@@ -7117,7 +7117,7 @@ public class TrainController extends BaseController {
 					item.setAchievement(score1);
 					item.setAchievementStr(score1 + "环");
 					item.setAchievementGrade(1);
-					if (score1 > 60) {
+					if (score1 >= 60) {
 						item.setAchievementGrade(2);
 					}
 					item.setAchievementDate(new Date());
@@ -7525,38 +7525,11 @@ public class TrainController extends BaseController {
 						fItem.setAchievementStr(score1 + "环");
 						fItem.setUpdateDate(new Date());
 						fItem.setAchievementDate(new Date());
-						// 根据项目id/组别查询算分规则
-						TrainProjectRule ruleItem = trainService.trainProjectPoliceRuleItem(2, null);
-						if (ruleItem.getSymbol() == 1) {// 1>= 2> 3<= 4< 5=
-							if (score1 >= ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 2) {
-							if (score1 > ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 3) {
-							if (score1 <= ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 4) {
-							if (score1 < ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 5) {
-							if (score1 == ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
+
+						if (score1 >= 60) {
+							fItem.setAchievementGrade(2);
+						} else {
+							fItem.setAchievementGrade(1);
 						}
 						fItem.setSignDate(trainFirearm.getRegistrationStartDate());
 						finalList.add(fItem);
@@ -7574,38 +7547,11 @@ public class TrainController extends BaseController {
 						fItem.setIsSubmit(1);
 						fItem.setCreationDate(new Date());
 						fItem.setQrCode("/train-qrcode/physical-870c515b-6d06-445f-bf11-c143bdc6a878.jpg");
-						// 根据项目id/组别查询算分规则
-						TrainProjectRule ruleItem = trainService.trainProjectPoliceRuleItem(2, null);
-						if (ruleItem.getSymbol() == 1) {// 1>= 2> 3<= 4< 5=
-							if (score1 >= ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 2) {
-							if (score1 > ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 3) {
-							if (score1 <= ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 4) {
-							if (score1 < ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
-						} else if (ruleItem.getSymbol() == 5) {
-							if (score1 == ruleItem.getQualifiedFirearmA()) {
-								fItem.setAchievementGrade(2);
-							} else {
-								fItem.setAchievementGrade(1);
-							}
+
+						if (score1 >= 60) {
+							fItem.setAchievementGrade(2);
+						} else {
+							fItem.setAchievementGrade(1);
 						}
 						insertList.add(fItem);
 					}

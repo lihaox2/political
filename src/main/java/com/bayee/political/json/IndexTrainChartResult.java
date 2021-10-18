@@ -28,7 +28,7 @@ public class IndexTrainChartResult {
     /**
      * 趋势图
      */
-    private List<ScreenDoubeChart> chartList;
+    private List<TrainChartResult> chartList;
 
     public Integer getTrainCount() {
         return trainCount;
@@ -54,11 +54,11 @@ public class IndexTrainChartResult {
         this.eligibleRatio = eligibleRatio;
     }
 
-    public List<ScreenDoubeChart> getChartList() {
+    public List<TrainChartResult> getChartList() {
         return chartList;
     }
 
-    public void setChartList(List<ScreenDoubeChart> chartList) {
+    public void setChartList(List<TrainChartResult> chartList) {
         this.chartList = chartList;
     }
 }

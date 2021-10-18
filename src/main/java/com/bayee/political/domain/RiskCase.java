@@ -15,12 +15,22 @@ public class RiskCase {
     private Double lawEnforcementNum;
 
     private Double testNum;
+
+    private Double totalNum;
     
     private List<ScreenDoubeChart> list;
 
     private Date creationDate;
 
     private Date updateDate;
+
+    public Double getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(Double totalNum) {
+        this.totalNum = totalNum;
+    }
 
     public Integer getId() {
         return id;

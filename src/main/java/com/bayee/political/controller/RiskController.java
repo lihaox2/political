@@ -10,7 +10,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.bayee.political.algorithm.RiskCompute;
+import com.bayee.political.domain.*;
 import com.bayee.political.json.RiskHealthIndexItemResult;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import com.bayee.political.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,25 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.bayee.political.domain.RiskAlarm;
-import com.bayee.political.domain.RiskAlarmType;
-import com.bayee.political.domain.RiskCase;
-import com.bayee.political.domain.RiskConductBureauRule;
-import com.bayee.political.domain.RiskConductBureauRuleRecord;
-import com.bayee.political.domain.RiskDuty;
-import com.bayee.political.domain.RiskDutyDealPoliceRecord;
-import com.bayee.political.domain.RiskHealth;
-import com.bayee.political.domain.RiskIndexMonitorChild;
-import com.bayee.political.domain.RiskReportRecord;
-import com.bayee.political.domain.RiskSocialContact;
-import com.bayee.political.domain.RiskSocialContactRecord;
-import com.bayee.political.domain.RiskTrain;
-import com.bayee.political.domain.RiskTrainFailChart;
-import com.bayee.political.domain.RiskTrainFirearmRecord;
-import com.bayee.political.domain.RiskTrainPhysicalAchievementDetails;
-import com.bayee.political.domain.RiskTrainPhysicalRecord;
-import com.bayee.political.domain.ScreenChart;
-import com.bayee.political.domain.ScreenDoubeChart;
 import com.bayee.political.utils.DataListPage;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
@@ -140,11 +124,11 @@ public class RiskController extends BaseController {
 				} else {
 					list.get(i).setHealthNum(0.0);
 				}
-				Double totalNum = list.get(i).getConductNum() + list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum()
+				/*Double totalNum = list.get(i).getConductNum() + list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum()
 						+ list.get(i).getTrainNum() + list.get(i).getSocialContactNum()
 						+ list.get(i).getAmilyEvaluationNum() + list.get(i).getDrinkNum() + list.get(i).getStudyNum()
 						+ list.get(i).getWorkNum() + list.get(i).getHealthNum();
-				list.get(i).setTotalNum(Double.valueOf(df.format(Math.min(totalNum, 100))));
+				list.get(i).setTotalNum(Double.valueOf(df.format(Math.min(totalNum, 100))));*/
 				// 警员风险雷达图
 				List<ScreenDoubeChart> list2 = riskService.riskChartList(list.get(i).getPoliceId(), dateTime, lastMonthTime,
 						1);
@@ -253,11 +237,11 @@ public class RiskController extends BaseController {
 					} else {
 						list.get(i).setHealthNum(0.0);
 					}
-					Double totalNum = list.get(i).getConductNum() + list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum()
+					/*Double totalNum = list.get(i).getConductNum() + list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum()
 							+ list.get(i).getTrainNum() + list.get(i).getSocialContactNum()
 							+ list.get(i).getAmilyEvaluationNum() + list.get(i).getDrinkNum() + list.get(i).getStudyNum()
 							+ list.get(i).getWorkNum() + list.get(i).getHealthNum();
-					list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));
+					list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));*/
 				}
 				dlr.setMessage("success");
 				if(sortType == null || sortType == 11001) {
@@ -290,20 +274,23 @@ public class RiskController extends BaseController {
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
 		String lastDateTime = sd.format(calendar.getTime());
 		String lastMonthTime = DateUtils.lastMonthTime();
+
 		// 警员风险详情查询
 		RiskReportRecord item = riskService.riskReportRecordItem(id, policeId, dateTime, lastDateTime, lastMonthTime,
 				timeType);
 		if (item != null) {
+			User user = userService.findByPoliceId(policeId);
+			item.setHealthShowFlag(user.getRiskHealthShowFlag());
 			// 警员健康风险指数查询
-			RiskHealth ritem = riskService.riskHealthIndexNewestItem(policeId);
+			RiskHealth ritem = riskService.riskHealthIndexItem(policeId, dateTime);
 			if (ritem != null && ritem.getIndexNum() != null) {
 				item.setHealthNum(ritem.getIndexNum());
 			} else {
 				item.setHealthNum(0.0);
 			}
-			Double totalNum = item.getConductNum() + item.getHandlingCaseNum() + item.getDutyNum() + item.getTrainNum()
+			/*Double totalNum = item.getConductNum() + item.getHandlingCaseNum() + item.getDutyNum() + item.getTrainNum()
 					+ item.getSocialContactNum() + item.getAmilyEvaluationNum() + item.getHealthNum();
-			item.setTotalNum(Double.valueOf(df.format(totalNum)));
+			item.setTotalNum(Double.valueOf(df.format(totalNum)));*/
 			// 警员风险雷达图
 			List<ScreenDoubeChart> list2 = riskService.riskChartList(item.getPoliceId(), dateTime, lastMonthTime,
 					timeType);
@@ -393,7 +380,6 @@ public class RiskController extends BaseController {
 	public ResponseEntity<?> riskCaseIndexItem(@RequestParam(value = "policeId", required = false) String policeId,
 			@RequestParam(value = "dateTime", required = false) String dateTime,
 			@RequestParam(value = "timeType", required = false) Integer timeType) throws ApiException, ParseException {
-		DataListReturn dlr = new DataListReturn();
 		if (timeType == null) {
 			timeType = 1;
 		}
@@ -405,6 +391,7 @@ public class RiskController extends BaseController {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(currdate);
 		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
+
 		String lastDateTime = sd.format(calendar.getTime());
 		// 警员执法办案风险指数查询
 		RiskCase item = riskService.riskCaseIndexItem(policeId, dateTime, lastMonthTime, timeType);
@@ -436,11 +423,8 @@ public class RiskController extends BaseController {
 		} else {
 			item = new RiskCase();
 		}
-		dlr.setStatus(true);
-		dlr.setMessage("success");
-		dlr.setResult(item);
-		dlr.setCode(StatusCode.getSuccesscode());
-		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
+
+		return new ResponseEntity<DataListReturn>(DataListReturn.ok(item), HttpStatus.OK);
 	}
 
 	// 执法办案风险指数图例
@@ -456,35 +440,6 @@ public class RiskController extends BaseController {
 		dlr.setCode(StatusCode.getSuccesscode());
 		return new ResponseEntity<DataListReturn>(dlr, HttpStatus.OK);
 	}
-
-	// 警员执法管理风险查询
-	/*
-	 * @RequestMapping(value = "/risk/case/law/enforcement/index/item", method =
-	 * RequestMethod.GET) public ResponseEntity<?> riskCaseLawEnforcementIndexItem(
-	 * 
-	 * @RequestParam(value = "policeId", required = false) String policeId,
-	 * 
-	 * @RequestParam(value = "dateTime", required = false) String dateTime) throws
-	 * ApiException, ParseException { DataListReturn dlr = new DataListReturn(); if
-	 * (dateTime == null) { dateTime = sd.format(new Date()); } Date currdate =
-	 * sd.parse(dateTime); Calendar calendar = Calendar.getInstance();
-	 * calendar.setTime(currdate); calendar.set(Calendar.MONTH,
-	 * calendar.get(Calendar.MONTH) - 1); String lastDateTime =
-	 * sd.format(calendar.getTime()); // 警员执法办案风险指数查询 RiskCase item =
-	 * riskService.riskCaseIndexItem(policeId, dateTime); if (item != null) {
-	 * List<ScreenDoubeChart> list = new ArrayList<ScreenDoubeChart>(); //
-	 * 上个月警员接警执勤指数查询 RiskCase item2 = riskService.riskCaseIndexItem(policeId,
-	 * lastDateTime); ScreenDoubeChart itemChart2 = new ScreenDoubeChart();
-	 * itemChart2.setId(1); itemChart2.setName("上月"); if (item2 != null) {
-	 * itemChart2.setValue(item2.getIndexNum()); } else { itemChart2.setValue(0.0);
-	 * } list.add(itemChart2); ScreenDoubeChart itemChart1 = new ScreenDoubeChart();
-	 * itemChart1.setId(2); itemChart1.setName("本月");
-	 * itemChart1.setValue(item.getIndexNum()); list.add(itemChart1);
-	 * item.setList(list); } else { item = new RiskCase(); } dlr.setStatus(true);
-	 * dlr.setMessage("success"); dlr.setResult(item);
-	 * dlr.setCode(StatusCode.getSuccesscode()); return new
-	 * ResponseEntity<DataListReturn>(dlr, HttpStatus.OK); }
-	 */
 
 	// 警员接警执勤指数查询
 	@RequestMapping(value = "/risk/duty/index/item", method = RequestMethod.GET)
@@ -724,13 +679,7 @@ public class RiskController extends BaseController {
 			dateTime = sd.format(new Date());
 		}
 		dateTime = dateTime.substring(0, 4);
-		// 警员历史风险报告年份查询
-		/*List<RiskHistoryReportTime> list = riskService.riskHistoryReportTimeList(policeId);
-		for (int i = 0; i < list.size(); i++) {
-			// 警员历史风险报告月份查询
-			List<RiskHistoryReport> list2 = riskService.riskHistoryReportList(policeId, String.valueOf(list.get(i).getId()));
-			list.get(i).setMonthList(list2);
-		}*/
+
 		dlr.setStatus(true);
 		dlr.setMessage("success");
 		dlr.setResult(riskService.riskHistoryReportList(policeId, ""));
@@ -815,7 +764,7 @@ public class RiskController extends BaseController {
 		RiskIndexMonitorChild item2 = riskService.conductIndex(dateTime,(int) (userNum*num2));
 		if (item2 != null) {
 			item2.setId(11002);
-			item2.setName("行为规范风险");
+			item2.setName("行为风险");
 			if(item2.getAlarmPoliceRate()==0) {
 				item2.setAlarmPoliceNum(0);
 			}else {
@@ -824,14 +773,14 @@ public class RiskController extends BaseController {
 			list.add(item2);
 		} else {
 			item0.setId(11002);
-			item0.setName("行为规范风险");
+			item0.setName("行为风险");
 			list.add(item0);
 		}
 		// 执法办案风险
 		RiskIndexMonitorChild item3 = riskService.caseIndex(dateTime,(int) (userNum*num3));
 		if (item3 != null) {
 			item3.setId(11003);
-			item3.setName("执法办案风险");
+			item3.setName("执法风险");
 			if(item3.getAlarmPoliceRate()==0) {
 				item3.setAlarmPoliceNum(0);
 			}else {
@@ -840,14 +789,14 @@ public class RiskController extends BaseController {
 			list.add(item3);
 		} else {
 			item0.setId(11003);
-			item0.setName("执法办案风险");
+			item0.setName("执法风险");
 			list.add(item0);
 		}
 		// 接警执勤风险
 		RiskIndexMonitorChild item4 = riskService.dutyIndex(dateTime,(int) (userNum*num4));
 		if (item4 != null) {
 			item4.setId(11004);
-			item4.setName("接警执勤风险");
+			item4.setName("接处警风险");
 			if(item4.getAlarmPoliceRate()==0) {
 				item4.setAlarmPoliceNum(0);
 			}else {
@@ -856,14 +805,14 @@ public class RiskController extends BaseController {
 			list.add(item4);
 		} else {
 			item0.setId(11004);
-			item0.setName("接警执勤风险");
+			item0.setName("接处警风险");
 			list.add(item0);
 		}
 		// 警务技能风险
 		RiskIndexMonitorChild item5 = riskService.trainIndex(dateTime,(int) (userNum*num5));
 		if (item5 != null) {
 			item5.setId(11005);
-			item5.setName("警务技能风险");
+			item5.setName("训练风险");
 			if(item5.getAlarmPoliceRate()==0) {
 				item5.setAlarmPoliceNum(0);
 			}else {
@@ -872,7 +821,7 @@ public class RiskController extends BaseController {
 			list.add(item5);
 		} else {
 			item0.setId(11005);
-			item0.setName("警务技能风险");
+			item0.setName("训练风险");
 			list.add(item0);
 		}
 		// 社交风险
@@ -895,7 +844,7 @@ public class RiskController extends BaseController {
 		RiskIndexMonitorChild item7 = riskService.familyEvaluationIndex(dateTime,(int) (userNum*num7));
 		if (item7 != null) {
 			item7.setId(11007);
-			item7.setName("家属评价风险");
+			item7.setName("评价风险");
 			if(item7.getAlarmPoliceRate()==0) {
 				item7.setAlarmPoliceNum(0);
 			}else {
@@ -904,7 +853,7 @@ public class RiskController extends BaseController {
 			list.add(item7);
 		} else {
 			item0.setId(11007);
-			item0.setName("家属评价风险");
+			item0.setName("评价风险");
 			list.add(item0);
 		}
 		// 健康风险

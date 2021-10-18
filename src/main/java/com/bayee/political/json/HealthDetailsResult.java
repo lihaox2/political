@@ -116,7 +116,20 @@ public class HealthDetailsResult {
      */
     private String orthopaedicsDesc;
 
+    /**
+     * 其他健康描述
+     */
+    private String otherHealthDesc;
+
     private String year;
+
+    public String getOtherHealthDesc() {
+        return otherHealthDesc;
+    }
+
+    public void setOtherHealthDesc(String otherHealthDesc) {
+        this.otherHealthDesc = otherHealthDesc;
+    }
 
     public String getYear() {
         return year;

@@ -200,6 +200,7 @@ public class HealthController {
         recordInfo.setIsHeart(saveParam.getIsHeart());
         recordInfo.setIsTumorAntigen(saveParam.getIsTumorAntigen());
         recordInfo.setIsOrthopaedics(saveParam.getIsOrthopaedics());
+        recordInfo.setOtherHealthDesc(saveParam.getOtherHealthDesc());
         recordInfo.setCreationDate(DateUtils.parseDate(saveParam.getYear()+monthDate, "yyyy-MM-dd HH:mm:ss"));
 
         riskHealthRecordInfoService.insert(recordInfo);
@@ -306,6 +307,7 @@ public class HealthController {
             recordInfo.setIsHeart(saveParam.getIsHeart());
             recordInfo.setIsTumorAntigen(saveParam.getIsTumorAntigen());
             recordInfo.setIsOrthopaedics(saveParam.getIsOrthopaedics());
+            recordInfo.setOtherHealthDesc(saveParam.getOtherHealthDesc());
             recordInfo.setCreationDate(DateUtils.parseDate(saveParam.getYear()+monthDate, "yyyy-MM-dd HH:mm:ss"));
 
             riskHealthRecordInfoService.updateByPrimaryKey(recordInfo);
@@ -347,6 +349,7 @@ public class HealthController {
         result.setTumorAntigenDesc(recordInfo.getTumorAntigenDesc());
         result.setIsOrthopaedics(recordInfo.getIsOrthopaedics());
         result.setOrthopaedicsDesc(recordInfo.getOrthopaedicsDesc());
+        result.setOtherHealthDesc(recordInfo.getOtherHealthDesc());
         result.setYear(DateUtils.formatDate(record.getCreationDate(), "yyyy"));
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);

@@ -40,9 +40,19 @@ public class RiskConductBureauRuleType {
      */
     private Date updateDate;
 
+    private String code;
+
     private String typeName;
 
     private String rootName;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getRootName() {
         return rootName;

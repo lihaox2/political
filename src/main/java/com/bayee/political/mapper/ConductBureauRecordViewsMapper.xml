@@ -10,6 +10,7 @@
             m.mark_org_id as markOrgId, m.short_name as shortName, m.hfyj, m.jftk, m.jfnr, m.mark_score as markScore,
             m.mark_desc as markDesc, m.mark_time as markTime, m.cqcs
         from mark_info_v as m
+        where police_no is not null and police_no != ''
     </select>
 
 </mapper>

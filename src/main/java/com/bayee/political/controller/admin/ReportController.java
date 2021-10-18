@@ -71,8 +71,8 @@ public class ReportController {
 
     SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
 
-//    final String HOST = "http://8.136.146.186:8099";
-    final static String HOST = "http://41.190.128.250:8080";
+    final static String HOST = "http://8.136.146.186:8099";
+//    final static String HOST = "http://41.190.128.250:8080";
 
 //    @GetMapping("/create/policeRisk/report")
     public ResponseEntity<?> createPoliceRiskReport(@RequestParam("policeId") String policeId,

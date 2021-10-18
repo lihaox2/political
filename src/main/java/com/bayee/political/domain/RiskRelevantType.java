@@ -2,7 +2,7 @@ package com.bayee.political.domain;
 
 import java.util.Date;
 
-public class PoliceRelevantType {
+public class RiskRelevantType {
     /**
      * code
      */

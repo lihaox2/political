@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
@@ -20,12 +21,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -37,6 +38,7 @@ import com.bayee.political.mapper.*;
 
 @Configuration
 @EnableWebMvc
+@EnableAsync
 @PropertySource({ "classpath:db.properties", "classpath:config.properties", "classpath:mail.properties",
 		"classpath:app.properties" })
 @ComponentScan(basePackages = "com.bayee.political")
@@ -50,6 +52,36 @@ public class AppConfiguration {
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 		return new PropertySourcesPlaceholderConfigurer();
 	}
+
+	@Bean
+	public Executor taskExecutor() {
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setCorePoolSize(10);
+		executor.setMaxPoolSize(200);
+		executor.setQueueCapacity(10);
+		executor.setThreadNamePrefix("MyExecutor-");
+
+		// rejection-policy：当pool已经达到max size的时候，怎样处理新任务
+		// CALLER_RUNS：不在新线程中运行任务。而是有调用者所在的线程来运行
+		executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+		executor.initialize();
+		return executor;
+	}
+
+	/*@Bean
+	public Executor logExecutor() {
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setCorePoolSize(10);
+		executor.setMaxPoolSize(200);
+		executor.setQueueCapacity(10);
+		executor.setThreadNamePrefix("MyExecutor-");
+
+		// rejection-policy：当pool已经达到max size的时候，怎样处理新任务
+		// CALLER_RUNS：不在新线程中运行任务。而是有调用者所在的线程来运行
+		executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+		executor.initialize();
+		return executor;
+	}*/
 
 	@Bean
 	public BasicDataSource dataSource() {
@@ -237,8 +269,8 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskHonourMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskHonourTypeMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskCaseIntegralMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceRelevantTypeMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceRelevantMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantTypeMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantRecordMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -270,15 +302,15 @@ public class AppConfiguration {
 	}
 
 	@Bean
-	public PoliceRelevantMapper policeRelevantMapper() throws Exception {
+	public RiskRelevantRecordMapper policeRelevantMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(PoliceRelevantMapper.class);
+		return sessionTemplate.getMapper(RiskRelevantRecordMapper.class);
 	}
 
 	@Bean
-	public PoliceRelevantTypeMapper policeRelevantTypeMapper() throws Exception {
+	public RiskRelevantTypeMapper policeRelevantTypeMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(PoliceRelevantTypeMapper.class);
+		return sessionTemplate.getMapper(RiskRelevantTypeMapper.class);
 	}
 
 	@Bean

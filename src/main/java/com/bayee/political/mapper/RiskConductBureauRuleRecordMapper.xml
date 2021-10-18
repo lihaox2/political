@@ -14,6 +14,8 @@
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     <result column="img_arr" property="imgArr" jdbcType="VARCHAR" />
     <result column="is_effective" property="isEffective" jdbcType="INTEGER" />
+    <result column="inspector_key" property="inspectorKey" jdbcType="VARCHAR" />
+    <result column="data_origin_flag" property="dataOriginFlag" jdbcType="INTEGER" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="type_name" property="typeName" jdbcType="VARCHAR" />
@@ -23,7 +25,8 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, police_id, type, input_time, content, deduction_score, scoring_level, scoring_dept, 
-    measures, remarks, img_arr, is_effective, creation_date, update_date
+    measures, remarks, img_arr, is_effective, inspector_key, data_origin_flag, creation_date,
+    update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select r1.*, (select name from risk_conduct_bureau_rule_type t where t.id = r2.parent_id) as type_name,
@@ -37,16 +40,18 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
-    insert into risk_conduct_bureau_rule_record (id, police_id, type, 
-      input_time, content, deduction_score, 
-      scoring_level, scoring_dept, measures, 
-      remarks, img_arr, is_effective, 
-      creation_date, update_date)
-    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
-      #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{deductionScore,jdbcType=DOUBLE}, 
-      #{scoringLevel,jdbcType=INTEGER}, #{scoringDept,jdbcType=INTEGER}, #{measures},
-      #{remarks,jdbcType=VARCHAR}, #{imgArr,jdbcType=VARCHAR}, #{isEffective,jdbcType=INTEGER},
-      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+    insert into risk_conduct_bureau_rule_record (id, police_id, type,
+                                                 input_time, content, deduction_score,
+                                                 scoring_level, scoring_dept, measures,
+                                                 remarks, img_arr, is_effective,
+                                                 inspector_key, data_origin_flag, creation_date,
+                                                 update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+            #{inputTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, #{deductionScore,jdbcType=DOUBLE},
+            #{scoringLevel,jdbcType=INTEGER}, #{scoringDept,jdbcType=INTEGER}, #{measures,jdbcType=VARCHAR},
+            #{remarks,jdbcType=VARCHAR}, #{imgArr,jdbcType=VARCHAR}, #{isEffective,jdbcType=INTEGER},
+            #{inspectorKey,jdbcType=VARCHAR}, #{dataOriginFlag,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP},
+            #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
     insert into risk_conduct_bureau_rule_record
@@ -87,6 +92,12 @@
       <if test="isEffective != null" >
         is_effective,
       </if>
+      <if test="inspectorKey != null" >
+        inspector_key,
+      </if>
+      <if test="dataOriginFlag != null" >
+        data_origin_flag,
+      </if>
       <if test="creationDate != null" >
         creation_date,
       </if>
@@ -120,7 +131,7 @@
         #{scoringDept,jdbcType=INTEGER},
       </if>
       <if test="measures != null" >
-        #{measures},
+        #{measures,jdbcType=VARCHAR},
       </if>
       <if test="remarks != null" >
         #{remarks,jdbcType=VARCHAR},
@@ -130,6 +141,12 @@
       </if>
       <if test="isEffective != null" >
         #{isEffective,jdbcType=INTEGER},
+      </if>
+      <if test="inspectorKey != null" >
+        #{inspectorKey,jdbcType=VARCHAR},
+      </if>
+      <if test="dataOriginFlag != null" >
+        #{dataOriginFlag,jdbcType=INTEGER},
       </if>
       <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
@@ -164,7 +181,7 @@
         scoring_dept = #{scoringDept,jdbcType=INTEGER},
       </if>
       <if test="measures != null" >
-        measures = #{measures},
+        measures = #{measures,jdbcType=VARCHAR},
       </if>
       <if test="remarks != null" >
         remarks = #{remarks,jdbcType=VARCHAR},
@@ -174,6 +191,12 @@
       </if>
       <if test="isEffective != null" >
         is_effective = #{isEffective,jdbcType=INTEGER},
+      </if>
+      <if test="inspectorKey != null" >
+        inspector_key = #{inspectorKey,jdbcType=VARCHAR},
+      </if>
+      <if test="dataOriginFlag != null" >
+        data_origin_flag = #{dataOriginFlag,jdbcType=INTEGER},
       </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -187,18 +210,20 @@
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskConductBureauRuleRecord" >
     update risk_conduct_bureau_rule_record
     set police_id = #{policeId,jdbcType=VARCHAR},
-      type = #{type,jdbcType=INTEGER},
-      input_time = #{inputTime,jdbcType=TIMESTAMP},
-      content = #{content,jdbcType=VARCHAR},
-      deduction_score = #{deductionScore,jdbcType=DOUBLE},
-      scoring_level = #{scoringLevel,jdbcType=INTEGER},
-      scoring_dept = #{scoringDept,jdbcType=INTEGER},
-      measures = #{measures},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      img_arr = #{imgArr,jdbcType=VARCHAR},
-      is_effective = #{isEffective,jdbcType=INTEGER},
-      creation_date = #{creationDate,jdbcType=TIMESTAMP},
-      update_date = #{updateDate,jdbcType=TIMESTAMP}
+        type = #{type,jdbcType=INTEGER},
+        input_time = #{inputTime,jdbcType=TIMESTAMP},
+        content = #{content,jdbcType=VARCHAR},
+        deduction_score = #{deductionScore,jdbcType=DOUBLE},
+        scoring_level = #{scoringLevel,jdbcType=INTEGER},
+        scoring_dept = #{scoringDept,jdbcType=INTEGER},
+        measures = #{measures,jdbcType=VARCHAR},
+        remarks = #{remarks,jdbcType=VARCHAR},
+        img_arr = #{imgArr,jdbcType=VARCHAR},
+        is_effective = #{isEffective,jdbcType=INTEGER},
+        inspector_key = #{inspectorKey,jdbcType=VARCHAR},
+        data_origin_flag = #{dataOriginFlag,jdbcType=INTEGER},
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+        update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   

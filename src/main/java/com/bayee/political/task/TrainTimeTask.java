@@ -55,7 +55,7 @@ public class TrainTimeTask extends BaseController {
 	String currentYearStr = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
 
 	// AI预警任务执行
-	@Scheduled(cron = "0 0/1 * * * ?") // 每分钟
+//	@Scheduled(cron = "0 0/1 * * * ?") // 每分钟
 	public void trainTotalRunTask() throws ParseException {
 		trainStatusTask();
 		matchStatusTask();

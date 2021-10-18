@@ -111,7 +111,8 @@ public class RiskConductBureauRuleTypeServiceImpl implements RiskConductBureauRu
     }
 
     @Override
-    public RiskConductBureauRuleType findConductBureauRuleTypeByCode(String code) {
-        return riskConductBureauRuleTypeMapper.findConductBureauRuleTypeByCode(code);
+    public RiskConductBureauRuleType findLevelTwoObjByCode(String code) {
+        return riskConductBureauRuleTypeMapper.findLevelTwoObjByCode(code);
     }
+
 }

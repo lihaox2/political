@@ -54,7 +54,7 @@ public class CockpitController {
 	
 	
 	@GetMapping("/cockpit/risk/trend")
-	public ResponseEntity<?> riskTrends() throws ParseException{
+	public ResponseEntity<?> riskTrends() throws ParseException {
 		
 		Date currdate = new Date();
 		Calendar calendar = Calendar.getInstance();
@@ -67,7 +67,7 @@ public class CockpitController {
 		//警员总数
 		Integer policeTotal=userService.policeForceOnlineCount();
 		
-		Integer risktotal=riskTrendsService.selectRiskTotal(startTime+"-01", endTime+"-30");
+		Integer risktotal=riskTrendsService.selectRiskTotal(startTime, endTime);
 		
 		List<Map<String,Object>>  riskTrends=riskTrendsService.selectRiskTrends();
 		
@@ -95,7 +95,7 @@ public class CockpitController {
 		String startTime= DateUtils.lastMonthTime();
 		//String startTime= sd.format(new Date().getTime());
 		
-		List<Map<String,Object>>  deptTopFive=riskTrendsService.selectDeptTopFive(startTime+"-01", endTime+"-30");
+		List<Map<String,Object>>  deptTopFive=riskTrendsService.selectDeptTopFive(startTime, endTime);
 		
 		return new ResponseEntity<>(deptTopFive, HttpStatus.OK);
 	}
@@ -149,11 +149,11 @@ public class CockpitController {
 			} else {
 				list.get(i).setHealthNum(0.0);
 			}
-			Double totalNum = list.get(i).getConductNum() + list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum()
+			/*Double totalNum = list.get(i).getConductNum() + list.get(i).getHandlingCaseNum() + list.get(i).getDutyNum()
 					+ list.get(i).getTrainNum() + list.get(i).getSocialContactNum()
 					+ list.get(i).getAmilyEvaluationNum() + list.get(i).getDrinkNum() + list.get(i).getStudyNum()
 					+ list.get(i).getWorkNum() + list.get(i).getHealthNum();
-			list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));
+			list.get(i).setTotalNum(Double.valueOf(df.format(totalNum)));*/
 		}
 		if(sortType==null || sortType == 11001) {
 			list=list.stream().sorted(Comparator.comparing(RiskReportRecord::getTotalNum).reversed()).collect(Collectors.toList());
@@ -191,40 +191,40 @@ public class CockpitController {
 		Integer drinkIndex=riskTrendsService.drinkIndex(dateTime+"-30", lastMonthTime);
 		
 		RiskProportionResult item2=new RiskProportionResult();
-		item2.setName("行为规范");
+		item2.setName("行为风险");
 		item2.setValue(drinkIndex);
 		
 		Integer conductIndex=riskTrendsService.conductIndex(dateTime+"-30", lastMonthTime);
 		
 		RiskProportionResult item3=new RiskProportionResult();
-		item3.setName("执法办案");
+		item3.setName("执法风险");
 		item3.setValue(conductIndex);
 		
 		Integer caseIndex=riskTrendsService.caseIndex(dateTime+"-30", lastMonthTime);
-		
+
 		RiskProportionResult item4=new RiskProportionResult();
-		item4.setName("接警执勤风险");
+		item4.setName("接处警风险");
 		item4.setValue(caseIndex);
 		
 		Integer dutyIndex=riskTrendsService.dutyIndex(dateTime+"-30", lastMonthTime);
-		
+
 		RiskProportionResult item5=new RiskProportionResult();
-		item5.setName("警务技能风险");
+		item5.setName("训练风险");
 		item5.setValue(dutyIndex);
 		
 		Integer trainIndex=riskTrendsService.trainIndex(dateTime, lastMonthTime);
-		
+
 		RiskProportionResult item6=new RiskProportionResult();
 		item6.setName("社交风险");
 		item6.setValue(trainIndex);
 		
 		Integer studyIndex=riskTrendsService.studyIndex(dateTime+"-30", lastMonthTime);
 		RiskProportionResult item7=new RiskProportionResult();
-		item7.setName("家属评价风险 ");
+		item7.setName("评价风险 ");
 		item7.setValue(studyIndex);
 		
 		Integer healthIndex=riskTrendsService.healthIndex(dateTime+"-30", lastMonthTime);
-		
+
 		RiskProportionResult item8=new RiskProportionResult();
 		item8.setName("健康");
 		item8.setValue(healthIndex);
@@ -276,36 +276,36 @@ public class CockpitController {
 		Integer drinkIndex=riskTrendsService.drinkIndex(dateTime+"-30", lastMonthTime);
 		
 		RiskProportionResult item2=new RiskProportionResult();
-		item2.setName("行为规范");
+		item2.setName("行为风险");
 		item2.setValue(drinkIndex);
 		
 		Integer conductIndex=riskTrendsService.conductIndex(dateTime+"-30", lastMonthTime);
-		
+
 		RiskProportionResult item3=new RiskProportionResult();
-		item3.setName("执法办案");
+		item3.setName("执法风险");
 		item3.setValue(conductIndex);
 		
 		Integer caseIndex=riskTrendsService.caseIndex(dateTime+"-30", lastMonthTime);
-		
+
 		RiskProportionResult item4=new RiskProportionResult();
-		item4.setName("接警执勤风险");
+		item4.setName("接处警风险");
 		item4.setValue(caseIndex);
 		
 		Integer dutyIndex=riskTrendsService.dutyIndex(dateTime+"-30", lastMonthTime);
-		
+
 		RiskProportionResult item5=new RiskProportionResult();
-		item5.setName("警务技能风险");
+		item5.setName("训练风险");
 		item5.setValue(dutyIndex);
 		
 		Integer trainIndex=riskTrendsService.trainIndex(dateTime, lastMonthTime);
-		
+
 		RiskProportionResult item6=new RiskProportionResult();
 		item6.setName("社交风险");
 		item6.setValue(trainIndex);
 		
 		Integer studyIndex=riskTrendsService.studyIndex(dateTime+"-30", lastMonthTime);
 		RiskProportionResult item7=new RiskProportionResult();
-		item7.setName("家属评价风险 ");
+		item7.setName("评价风险 ");
 		item7.setValue(studyIndex);
 		
 		Integer healthIndex=riskTrendsService.healthIndex(dateTime+"-30", lastMonthTime);

@@ -169,7 +169,7 @@ public class RiskCaseController extends BaseController {
 			itemChart2.setId(1);
 			itemChart2.setName("上月");
 			if (item2 != null) {
-				itemChart2.setValue(item2.getIndexNum());
+				itemChart2.setValue(item2.getIndexNum() == null ? 0 : item2.getIndexNum());
 			} else {
 				itemChart2.setValue(0.0);
 			}
@@ -181,7 +181,7 @@ public class RiskCaseController extends BaseController {
 			itemChart1.setId(2);
 			itemChart1.setName("本月");
 			if (item3 != null) {
-				itemChart1.setValue(item3.getIndexNum());
+				itemChart1.setValue(item3.getIndexNum() == null ? 0 : item3.getIndexNum());
 			} else {
 				itemChart1.setValue(0.0);
 			}

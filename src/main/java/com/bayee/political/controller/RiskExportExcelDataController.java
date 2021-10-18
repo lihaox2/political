@@ -915,7 +915,7 @@ public class RiskExportExcelDataController {
 
 			passCount++;
 			riskDutyDealPoliceRecordService.insert(policeRecord);
-			totalRiskDetailsService.dutyRiskDetails(policeId, LocalDate.parse(DateUtils.formatDate(policeRecord.getCreationDate(), "yyyy-MM-dd")));
+			totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(DateUtils.formatDate(policeRecord.getCreationDate(), "yyyy-MM-dd")));
 		}
 
 		Map<String, Object> result = new HashMap<>();
@@ -978,7 +978,7 @@ public class RiskExportExcelDataController {
 
 			passCount++;
 			riskCaseLawEnforcementRecordService.insert(record);
-			totalRiskDetailsService.caseRiskDetails(policeId, LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
+			totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
 		}
 
 		Map<String, Object> result = new HashMap<>();
@@ -1106,7 +1106,7 @@ public class RiskExportExcelDataController {
 			riskCaseTestRecordService.insertTest(riskCaseTestRecord);
 
 			passCount++;
-			totalRiskDetailsService.caseRiskDetails(policeId, LocalDate.parse(DateUtils.formatDate(riskCaseTestRecord.getCreationDate(), "yyyy-MM-dd")));
+			totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(riskCaseTestRecord.getCreationDate(), "yyyy-MM-dd")));
 		}
 
 		Map<String, Object> result = new HashMap<>();
@@ -1179,7 +1179,7 @@ public class RiskExportExcelDataController {
 			}
 
 			passCount++;
-			totalRiskDetailsService.caseRiskDetails(policeId, LocalDate.parse(DateUtils.formatDate(riskCaseAbilityRecord.getCreationDate(), "yyyy-MM-dd")));
+			totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(riskCaseAbilityRecord.getCreationDate(), "yyyy-MM-dd")));
 		}
 
 		Map<String, Object> result = new HashMap<>();
@@ -1314,7 +1314,7 @@ public class RiskExportExcelDataController {
 
 			passCount++;
 			riskConductVisitRecordService.insertSelective(riskConductVisitRecord);
-			totalRiskDetailsService.conductRiskDetails(policeId, LocalDate.parse(DateUtils.formatDate(riskConductVisitRecord.getCreationDate(), "yyyy-MM-dd")));
+			totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(riskConductVisitRecord.getCreationDate(), "yyyy-MM-dd")));
 		}
 
 		Map<String, Object> result = new HashMap<>();

@@ -4,21 +4,18 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import cn.hutool.core.util.StrUtil;
+import com.bayee.political.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bayee.political.domain.ScreenChart;
 import com.bayee.political.domain.ScreenDoubeChart;
-import com.bayee.political.json.IndexCaseChartResult;
-import com.bayee.political.json.IndexHeadDataResult;
-import com.bayee.political.json.IndexHealthAlarmChartResult;
-import com.bayee.political.json.IndexHealthChart;
-import com.bayee.political.json.IndexRiskAlarmChartResult;
-import com.bayee.political.json.IndexTrainChartResult;
 import com.bayee.political.service.RiskCaseLawEnforcementRecordService;
 import com.bayee.political.service.RiskConductBureauRuleRecordService;
 import com.bayee.political.service.RiskConductVisitRecordService;
@@ -126,6 +123,20 @@ public class AdminIndexController {
     }
 
     /**
+     * 警员风险下钻
+     * @param date 时间 yyyy-MM
+     * @return
+     */
+    @GetMapping("/risk/dept/alarm/chart")
+    public ResponseEntity<?> riskDeptAlarmChart(@RequestParam("date") String date) {
+        if (StrUtil.isBlank(date)) {
+            return new ResponseEntity<>(DataListReturn.error("时间错误！"), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(DataListReturn.ok(riskTrendsService.riskDeptAlarmChart(date)), HttpStatus.OK);
+    }
+
+    /**
      * 执法办案
      * @return
      */
@@ -155,6 +166,20 @@ public class AdminIndexController {
         result.setChartList(chartList);
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
+    }
+
+    /**
+     * 执法办案下钻
+     * @param date yyyy-MM-dd
+     * @return
+     */
+    @GetMapping("/case/dept/chart")
+    public ResponseEntity<?> caseDeptChart(@RequestParam("date") String date) {
+        if (StrUtil.isBlank(date)) {
+            return new ResponseEntity<>(DataListReturn.error("时间错误！"), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(DataListReturn.ok(riskTrendsService.caseDeptChart(date)), HttpStatus.OK);
     }
 
     /**
@@ -191,11 +216,22 @@ public class AdminIndexController {
     }
 
     /**
+     * 接警执勤下钻
+     * @param date - yyyy-MM-dd
+     * @return
+     */
+    @GetMapping("/duty/dept/chart")
+    public ResponseEntity<?> dutyDeptChart(@RequestParam("date") String date) {
+
+        return new ResponseEntity<>(DataListReturn.ok(riskTrendsService.dutyDeptChart(date)), HttpStatus.OK);
+    }
+
+    /**
      * 警务技能
      * @return
      */
     @GetMapping("/train/chart")
-    public ResponseEntity<?> trainChart() {
+    public ResponseEntity<?> trainChart()  {
         IndexTrainChartResult result = new IndexTrainChartResult();
         result.setTrainCount(trainFirearmService.countAll() + trainPhysicalService.countAll());
         result.setEligibleCount(riskTrendsService.qualifiedNum());
@@ -203,19 +239,38 @@ public class AdminIndexController {
         
         List<Map<String,Object>>  riskTrends=riskTrendsService.qualifiedRateEcharts();
         
-        List<ScreenDoubeChart> chartList=new ArrayList<ScreenDoubeChart>();
+        List<TrainChartResult> chartList=new ArrayList<TrainChartResult>();
         for(Map<String,Object> m:riskTrends) {
-        	ScreenDoubeChart screenDoubeChart=new ScreenDoubeChart();
-        	screenDoubeChart.setName(m.get("name").toString());
-        	screenDoubeChart.setValue(Double.valueOf(m.get("rate").toString()));
-        	chartList.add(screenDoubeChart);
+            TrainChartResult chartResult=new TrainChartResult();
+            chartResult.setId(Integer.parseInt(m.get("id").toString()));
+            chartResult.setType(Integer.parseInt(m.get("type").toString()));
+            chartResult.setName(m.get("name").toString());
+            chartResult.setValue(Double.valueOf(m.get("rate").toString()));
+        	chartList.add(chartResult);
         }
-        
-        
-        
+
         result.setChartList(chartList);
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
+    }
+
+    /**
+     * 警务技能下钻
+     * @param type 类型 1.综合训练，2.射击训练
+     * @param id
+     * @return
+     */
+    @GetMapping("/train/dept/chart")
+    public ResponseEntity<?> trainDeptChart(@RequestParam("type") Integer type, @RequestParam("id") Integer id) {
+
+        if (type == null || type == 1) {
+            return new ResponseEntity<>(DataListReturn.ok(riskTrendsService.physicalTrainDeptChart(id)), HttpStatus.OK);
+        }
+
+        if (type == 2) {
+            return new ResponseEntity<>(DataListReturn.ok(riskTrendsService.firearmTrainDeptChart(id)), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(DataListReturn.error("类型错误！"), HttpStatus.OK);
     }
 
     /**
@@ -261,65 +316,87 @@ public class AdminIndexController {
         indexHealthChart.setHealthyCount(Integer.valueOf(ishealth.get("noOverweight").toString()));
         indexHealthChart.setAlarmCount(Integer.valueOf(nohealth.get("isOverweight").toString()));
         indexHealthChart.setName("体重");
+        indexHealthChart.setKey("is_overweight");
         chartList.add(indexHealthChart);
         
         IndexHealthChart indexHealthChart2=new IndexHealthChart();
         indexHealthChart2.setHealthyCount(Integer.valueOf(ishealth.get("noHyperlipidemia").toString()));
         indexHealthChart2.setAlarmCount(Integer.valueOf(nohealth.get("isHyperlipidemia").toString()));
         indexHealthChart2.setName("高血脂");
+        indexHealthChart2.setKey("is_hyperlipidemia");
         chartList.add(indexHealthChart2);
         
         IndexHealthChart indexHealthChart3=new IndexHealthChart();
         indexHealthChart3.setHealthyCount(Integer.valueOf(ishealth.get("noHypertension").toString()));
         indexHealthChart3.setAlarmCount(Integer.valueOf(nohealth.get("isHypertension").toString()));
         indexHealthChart3.setName("高血压");
+        indexHealthChart3.setKey("is_hypertension");
         chartList.add(indexHealthChart3);
         
         IndexHealthChart indexHealthChart4=new IndexHealthChart();
         indexHealthChart4.setHealthyCount(Integer.valueOf(ishealth.get("noHyperglycemia").toString()));
         indexHealthChart4.setAlarmCount(Integer.valueOf(nohealth.get("isHyperglycemia").toString()));
         indexHealthChart4.setName("高血糖");
+        indexHealthChart4.setKey("is_hyperglycemia");
         chartList.add(indexHealthChart4);
         
         IndexHealthChart indexHealthChart5=new IndexHealthChart();
         indexHealthChart5.setHealthyCount(Integer.valueOf(ishealth.get("noHyperuricemia").toString()));
         indexHealthChart5.setAlarmCount(Integer.valueOf(nohealth.get("isHyperuricemia").toString()));
         indexHealthChart5.setName("高血尿酸");
+        indexHealthChart5.setKey("is_hyperuricemia");
         chartList.add(indexHealthChart5);
         
         IndexHealthChart indexHealthChart6=new IndexHealthChart();
         indexHealthChart6.setHealthyCount(Integer.valueOf(ishealth.get("noProstate").toString()));
         indexHealthChart6.setAlarmCount(Integer.valueOf(nohealth.get("isProstate").toString()));
         indexHealthChart6.setName("前列腺指标异常");
+        indexHealthChart6.setKey("is_prostate");
         chartList.add(indexHealthChart6);
         
         IndexHealthChart indexHealthChart7=new IndexHealthChart();
         indexHealthChart7.setHealthyCount(Integer.valueOf(ishealth.get("noMajorDiseases").toString()));
         indexHealthChart7.setAlarmCount(Integer.valueOf(nohealth.get("isMajorDiseases").toString()));
         indexHealthChart7.setName("重大疾病");
+        indexHealthChart7.setKey("is_major_diseases");
         chartList.add(indexHealthChart7);
         
         IndexHealthChart indexHealthChart8=new IndexHealthChart();
         indexHealthChart8.setHealthyCount(Integer.valueOf(ishealth.get("onHeart").toString()));
         indexHealthChart8.setAlarmCount(Integer.valueOf(nohealth.get("isHeart").toString()));
         indexHealthChart8.setName("心脏指标异常");
+        indexHealthChart8.setKey("is_heart");
         chartList.add(indexHealthChart8);
         
         IndexHealthChart indexHealthChart9=new IndexHealthChart();
         indexHealthChart9.setHealthyCount(Integer.valueOf(ishealth.get("onTumorAntigen").toString()));
         indexHealthChart9.setAlarmCount(Integer.valueOf(nohealth.get("isTumorAntigen").toString()));
         indexHealthChart9.setName("肿瘤抗原指标异常");
+        indexHealthChart9.setKey("is_tumor_antigen");
         chartList.add(indexHealthChart9);
         
         IndexHealthChart indexHealthChart10=new IndexHealthChart();
         indexHealthChart10.setHealthyCount(Integer.valueOf(ishealth.get("onOrthopaedics").toString()));
         indexHealthChart10.setAlarmCount(Integer.valueOf(nohealth.get("isOrthopaedics").toString()));
         indexHealthChart10.setName("骨科指标异常");
+        indexHealthChart10.setKey("is_orthopaedics");
         chartList.add(indexHealthChart10);
         
         result.setChartList(chartList);
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
+    }
+
+    /**
+     * 健康风险下钻
+     * @return
+     */
+    @GetMapping("/health/alarm/dept/chart")
+    public ResponseEntity<?> healthAlarmDeptChart(@RequestParam("key") String key) {
+        if (StrUtil.isBlank(key)) {
+            return new ResponseEntity<>(DataListReturn.error("key 错误！"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(DataListReturn.ok(riskTrendsService.healthAlarmDeptChart(key)), HttpStatus.OK);
     }
 
 }

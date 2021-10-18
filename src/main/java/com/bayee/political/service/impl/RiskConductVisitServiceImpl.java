@@ -2,6 +2,9 @@ package com.bayee.political.service.impl;
 
 import java.util.List;
 
+import com.bayee.political.algorithm.RiskCompute;
+import com.bayee.political.mapper.RiskConductMapper;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,9 @@ public class RiskConductVisitServiceImpl implements RiskConductVisitService{
 	
 	@Autowired
 	private RiskConductVisitMapper riskConductVisitMapper;
+
+	@Autowired
+	private RiskConductMapper riskConductMapper;
 
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
@@ -55,8 +61,20 @@ public class RiskConductVisitServiceImpl implements RiskConductVisitService{
 
 	@Override
 	public RiskConductVisit riskConductVisitItem(String policeId, String dateTime, String lastMonthTime, Integer timeType) {
-		// TODO Auto-generated method stub
-		return riskConductVisitMapper.riskConductVisitItem(policeId, dateTime, lastMonthTime, timeType);
+		RiskConductVisit conductVisit = riskConductVisitMapper.riskConductVisitItem(policeId, dateTime, lastMonthTime, timeType);
+		if (conductVisit == null) {
+			conductVisit = new RiskConductVisit();
+			conductVisit.setPoliceId(policeId);
+			conductVisit.setIndexNum(0d);
+			conductVisit.setDeductionScoreCount(0);
+			conductVisit.setTotalDeductionScore(0d);
+		}
+		if (timeType == 1) {
+			GlobalIndexNumResultDO visitResultDO = riskConductMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "visit_score");
+
+			conductVisit.setIndexNum(RiskCompute.normalizationCompute(visitResultDO.getMaxNum(), visitResultDO.getMinNum(), conductVisit.getIndexNum()));
+		}
+		return conductVisit;
 	}
 
 	@Override

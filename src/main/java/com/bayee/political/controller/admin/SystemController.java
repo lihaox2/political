@@ -217,7 +217,7 @@ public class SystemController {
     public ResponseEntity<?> getMeasuresTypeList() {
         List<MeasuresTypeListResult> resultList = measuresService.findAllMeasures().stream().map(e -> {
             MeasuresTypeListResult result = new MeasuresTypeListResult();
-            result.setId(e.getId());
+            result.setId(e.getName());
             result.setName(e.getName());
             return result;
         }).collect(Collectors.toList());

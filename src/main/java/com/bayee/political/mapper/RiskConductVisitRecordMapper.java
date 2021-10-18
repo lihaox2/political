@@ -78,4 +78,11 @@ public interface RiskConductVisitRecordMapper {
             @Param("conductVisitRecordMonth") String conductVisitRecordMonth,
             @Param("policeId") String policeId
     );
+
+    /**
+     * 通过警督平台key进行查询
+     * @param inspectorKey
+     * @return
+     */
+    Integer findByInspectorKey(String inspectorKey);
 }

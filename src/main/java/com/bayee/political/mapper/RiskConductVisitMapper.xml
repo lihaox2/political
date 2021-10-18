@@ -197,4 +197,11 @@ order by a.year_month
     ORDER BY typeCount DESC
   </select>
 
+  <select id="findGlobalIndexNum" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(total_deduction_score), 0) as maxNum, ifnull(min(total_deduction_score), 0) as minNum
+    FROM risk_conduct_visit
+    where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
 </mapper>

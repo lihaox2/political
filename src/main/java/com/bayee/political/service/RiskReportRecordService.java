@@ -3,6 +3,7 @@ package com.bayee.political.service;
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.User;
 import com.bayee.political.json.ChartResult;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import com.bayee.political.pojo.dto.RiskReportRecordDO;
 import org.apache.ibatis.annotations.Param;
 
@@ -86,4 +87,10 @@ public interface RiskReportRecordService {
      */
     void policeRiskDetailsV2(List<User> userList, LocalDate localDate);
 
+    /**
+     * 取得全局扣分 的最高分 - 最低分分值
+     * @param date
+     * @return
+     */
+    GlobalIndexNumResultDO findRiskReportRecordGlobalIndexNum(@Param("date") String date);
 }

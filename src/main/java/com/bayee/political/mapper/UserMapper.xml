@@ -55,6 +55,7 @@
     <result column="train_scorer" property="trainScorer" />
     <result column="creation_date" property="creationDate" />
     <result column="update_date" property="updateDate" />
+        <result column="risk_health_show_flag" property="riskHealthShowFlag" />
 	</resultMap>
 
 	<select id="findByDDUserId" resultMap="userResult">
@@ -774,7 +775,7 @@ where 1=1 and department_id!=47
             and (u.police_id rlike #{likeName} or u.name rlike #{likeName} or u.police_label rlike #{likeName})
         </if>
         group by u.police_id
-        ORDER BY u.creation_date DESC
+        ORDER BY epi.`score` DESC
         limit #{pageIndex}, #{pageSize}
     </select>
 
@@ -871,5 +872,9 @@ where 1=1 and department_id!=47
             countNum DESC
             LIMIT 5
     </select>
+
+    <update id="updateRiskHealthShowFlagByPoliceId" >
+        update user set risk_health_show_flag = #{showFlag} where police_id = #{policeId}
+    </update>
 
 </mapper>

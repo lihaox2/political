@@ -183,7 +183,7 @@ public class DoExcel {
         Row headerRow1 = sheet.createRow(1);
         
         Cell headerRow1Cell2 = headerRow1.createCell(2);
-        headerRow1Cell2.setCellValue("局规记分");
+        headerRow1Cell2.setCellValue("行为风险");
         headerRow1Cell2.setCellStyle(createStyle(workbook, headerFont));
         
         Cell headerRow1Cell3 = headerRow1.createCell(4);

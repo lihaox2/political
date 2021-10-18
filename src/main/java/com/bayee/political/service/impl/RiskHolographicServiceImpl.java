@@ -117,7 +117,7 @@ public class RiskHolographicServiceImpl implements RiskHolographicService {
         result.add(createTypeMap("学习经历", 3));
         result.add(createTypeMap("执法管理", 4));
         result.add(createTypeMap("执法考试", 5));
-        result.add(createTypeMap("局规记分", 6));
+        result.add(createTypeMap("行为风险", 6));
         result.add(createTypeMap("信访投诉", 7));
         result.add(createTypeMap("工作经历", 8));
         result.add(createTypeMap("射击训练", 9));

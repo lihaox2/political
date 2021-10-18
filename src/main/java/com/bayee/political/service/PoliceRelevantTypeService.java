@@ -1,6 +1,6 @@
 package com.bayee.political.service;
 
-import com.bayee.political.domain.PoliceRelevantType;
+import com.bayee.political.domain.RiskRelevantType;
 
 import java.util.List;
 
@@ -14,13 +14,13 @@ public interface PoliceRelevantTypeService {
      * 查询所有
      * @return
      */
-    List<PoliceRelevantType> queryAll();
+    List<RiskRelevantType> queryAll();
 
     /**
      * 根据code查询
      * @param code
      * @return
      */
-    PoliceRelevantType findByCode(String code);
+    RiskRelevantType findByCode(String code);
 
 }

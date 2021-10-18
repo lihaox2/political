@@ -33,11 +33,11 @@
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConduct">
     insert into risk_conduct (id, police_id, index_num, 
-      bureau_rule_score, visit_score, traffic_violation_score, 
-      creation_date, update_date)
+      bureau_rule_score, visit_score, traffic_violation_score,
+      total_num, creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
-      #{bureauRuleScore,jdbcType=DOUBLE}, #{visitScore,jdbcType=DOUBLE}, #{trafficViolationScore,jdbcType=DOUBLE}, 
-      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+      #{bureauRuleScore,jdbcType=DOUBLE}, #{visitScore,jdbcType=DOUBLE}, #{trafficViolationScore,jdbcType=DOUBLE},
+      #{totalNum}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConduct">
     insert into risk_conduct
@@ -59,6 +59,9 @@
       </if>
       <if test="trafficViolationScore != null">
         traffic_violation_score,
+      </if>
+      <if test="totalNum != null">
+        total_num,
       </if>
       <if test="creationDate != null">
         creation_date,
@@ -86,6 +89,9 @@
       <if test="trafficViolationScore != null">
         #{trafficViolationScore,jdbcType=DOUBLE},
       </if>
+      <if test="totalNum != null">
+        #{totalNum},
+      </if>
       <if test="creationDate != null">
         #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -112,6 +118,9 @@
       <if test="trafficViolationScore != null">
         traffic_violation_score = #{trafficViolationScore,jdbcType=DOUBLE},
       </if>
+      <if test="totalNum != null">
+        total_num = #{totalNum},
+      </if>
       <if test="creationDate != null">
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -128,6 +137,7 @@
       bureau_rule_score = #{bureauRuleScore,jdbcType=DOUBLE},
       visit_score = #{visitScore,jdbcType=DOUBLE},
       traffic_violation_score = #{trafficViolationScore,jdbcType=DOUBLE},
+      total_num = #{totalNum},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
@@ -168,13 +178,29 @@ order by id desc
 
   <insert id="insertRiskConductList" parameterType="List">
     insert into  risk_conduct (id, police_id, index_num, bureau_rule_score,
-                               visit_score, traffic_violation_score, creation_date, update_date)
+                               visit_score, traffic_violation_score, total_num, creation_date, update_date)
     values
     <foreach collection="list" item="item" separator=",">
       (null, #{item.policeId,jdbcType=VARCHAR}, #{item.indexNum,jdbcType=DOUBLE},
       #{item.bureauRuleScore,jdbcType=DOUBLE}, #{item.visitScore,jdbcType=DOUBLE}, #{item.trafficViolationScore,jdbcType=DOUBLE},
-      #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
+      #{item.totalNum}, #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
     </foreach>
   </insert>
+
+  <select id="findGlobalIndexNum" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(total_num), 0) as maxNum, ifnull(min(total_num), 0) as minNum
+    FROM risk_conduct
+    where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
+  <select id="findGlobalIndexNumByYear" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(a.sumNum), 0) as maxNum, ifnull(MIN(a.sumNum), 0) as minNum
+    FROM (SELECT SUM(${column}) AS sumNum FROM risk_conduct
+          WHERE DATE_FORMAT(creation_date, '%Y-%m')>=#{lastDateTime}
+            AND DATE_FORMAT(creation_date, '%Y-%m') &lt;= #{date}
+          GROUP BY police_id) a
+  </select>
 
 </mapper>

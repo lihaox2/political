@@ -19,7 +19,7 @@ public interface RiskConductBureauRuleService {
      * @param date
      * @return
      */
-    RiskConduct riskConductBureauRuleDetails(User user, String date);
+    RiskConduct riskConductDetails(User user, String date);
 
     /**
      * 批量添加局规计分风险指数数据
@@ -33,5 +33,5 @@ public interface RiskConductBureauRuleService {
      * @param date
      * @return
      */
-    RiskConduct riskConductBureauRuleDetailsV2(User user, String date);
+    RiskConduct riskConductDetailsV2(User user, String date);
 }

@@ -9,11 +9,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.json.*;
 import com.bayee.political.mapper.PoliceLabelMapper;
 import com.bayee.political.pojo.dto.HolographicPoliceListDO;
 import com.bayee.political.pojo.dto.RiskReportRecordDO;
 import com.bayee.political.service.RiskReportRecordService;
+import com.bayee.political.service.RiskService;
 import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	RiskReportRecordService riskReportRecordService;
+
+	@Autowired
+	private RiskService riskService;
 
 	// 查询全部警员数据
 	@Override
@@ -323,17 +328,49 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public TalentsParticularsResultList findTalentsUserInfo(String firstId, String sendId) {
+	public TalentsParticularsResultList findTalentsUserInfo(String firstId, String sendId) throws ParseException {
 		//第一个人的信息
 		TalentsParticularsResult firstList = userMapper.findTalentsUserInfo(firstId);
+
+
 		//第二人的信息
 		TalentsParticularsResult sendList = userMapper.findTalentsUserInfo(sendId);
+
+		String dateTime = DateUtils.formatDate(new Date(), "yyyy-MM");
+		String lastMonthTime = DateUtils.lastMonthTime();
+
+		RiskReportRecord item1 = riskService.riskReportRecordItem(null, firstId, dateTime, null, lastMonthTime, 1);
+		firstList.setDutyScore(item1.getDutyNum());
+		firstList.setSocialContactScore(item1.getSocialContactNum());
+		firstList.setFamilyEvaluationNum(item1.getAmilyEvaluationNum());
+		firstList.setSynthesizeScore(item1.getTotalSumNum());
+		firstList.setConductScore(item1.getConductNum());
+		firstList.setEnforceScore(item1.getHandlingCaseNum());
+		firstList.setPerformScore(item1.getDutyNum());
+		firstList.setSkillScore(item1.getTrainNum());
+		firstList.setHealthScore(item1.getHealthNum());
+
+		RiskReportRecord item2 = riskService.riskReportRecordItem(null, sendId, dateTime, null, lastMonthTime, 1);
+		sendList.setDutyScore(item2.getDutyNum());
+		sendList.setSocialContactScore(item2.getSocialContactNum());
+		sendList.setFamilyEvaluationNum(item2.getAmilyEvaluationNum());
+		sendList.setSynthesizeScore(item2.getTotalSumNum());
+		sendList.setConductScore(item2.getConductNum());
+		sendList.setEnforceScore(item2.getHandlingCaseNum());
+		sendList.setPerformScore(item2.getDutyNum());
+		sendList.setSkillScore(item2.getTrainNum());
+		sendList.setHealthScore(item2.getHealthNum());
 
 		TalentsParticularsResultList resultList = new TalentsParticularsResultList();
 		resultList.setFirstListMessage(firstList);
 		resultList.setSendListMessage(sendList);
 
 		return resultList;
+	}
+
+	@Override
+	public void updateRiskHealthShowFlagByPoliceId(String policeId, Integer showFlag) {
+		userMapper.updateRiskHealthShowFlagByPoliceId(policeId, showFlag);
 	}
 
 }

@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -97,7 +98,7 @@ public class TalentsController {
      * @return
      */
     @GetMapping("/find/user/info")
-    public ResponseEntity<?> findTalentsUserInfo(String firstId, String sendId){
+    public ResponseEntity<?> findTalentsUserInfo(String firstId, String sendId)throws ParseException {
         TalentsParticularsResultList talentsUserInfo = userService.findTalentsUserInfo(firstId, sendId);
         if(talentsUserInfo == null){
             return new ResponseEntity<>(DataListReturn.error("查询失败！"), HttpStatus.OK);

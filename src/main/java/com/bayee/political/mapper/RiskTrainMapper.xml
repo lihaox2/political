@@ -25,7 +25,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, police_id, index_num, physical_num, physical_pass_num, physical_fail_num, physical_standard_status, 
-    firearm_num, firearm_pass_num, firearm_fail_num, firearm_standard_status, physical_score, firearm_score, creation_date,
+    firearm_num, firearm_pass_num, firearm_fail_num, firearm_standard_status, physical_score, firearm_score, total_num, creation_date,
     update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -44,24 +44,24 @@
       physical_num, physical_pass_num, physical_fail_num,
       physical_standard_status, firearm_num, firearm_pass_num,
       firearm_fail_num, firearm_standard_status, physical_score, firearm_score,
-      creation_date, update_date)
+      total_num, creation_date, update_date)
     values (#{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
       #{physicalNum,jdbcType=INTEGER}, #{physicalPassNum,jdbcType=INTEGER}, #{physicalFailNum,jdbcType=INTEGER}, 
       #{physicalStandardStatus,jdbcType=INTEGER}, #{firearmNum,jdbcType=INTEGER}, #{firearmPassNum,jdbcType=INTEGER}, 
       #{firearmFailNum,jdbcType=INTEGER}, #{firearmStandardStatus,jdbcType=INTEGER}, #{physicalScore}, #{firearmScore},
-      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+      #{totalNum}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskTrain" >
     insert into risk_train (id, police_id, index_num, 
       physical_num, physical_pass_num, physical_fail_num, 
       physical_standard_status, firearm_num, firearm_pass_num, 
       firearm_fail_num, firearm_standard_status, physical_score, firearm_score,
-      creation_date, update_date)
+      total_num, creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
       #{physicalNum,jdbcType=INTEGER}, #{physicalPassNum,jdbcType=INTEGER}, #{physicalFailNum,jdbcType=INTEGER}, 
       #{physicalStandardStatus,jdbcType=INTEGER}, #{firearmNum,jdbcType=INTEGER}, #{firearmPassNum,jdbcType=INTEGER}, 
       #{firearmFailNum,jdbcType=INTEGER}, #{firearmStandardStatus,jdbcType=INTEGER}, #{physicalScore}, #{firearmScore},
-      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+      #{totalNum}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskTrain" >
     insert into risk_train
@@ -104,6 +104,9 @@
       </if>
       <if test="firearmScore != null" >
         firearm_score,
+      </if>
+      <if test="totalNum != null" >
+        total_num,
       </if>
       <if test="creationDate != null" >
         creation_date,
@@ -152,6 +155,9 @@
       <if test="firearmScore != null" >
         #{firearmScore},
       </if>
+      <if test="totalNum != null" >
+        #{totalNum},
+      </if>
       <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -198,6 +204,9 @@
       </if>
       <if test="firearmScore != null" >
         firearm_score = #{firearmScore},
+      </if>
+      <if test="totalNum != null" >
+        total_num = #{totalNum},
       </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -248,6 +257,9 @@
       <if test="firearmScore != null" >
         firearm_score = #{firearmScore},
       </if>
+      <if test="totalNum != null" >
+        total_num = #{totalNum},
+      </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
       </if>
@@ -271,6 +283,7 @@
       firearm_standard_status = #{firearmStandardStatus,jdbcType=INTEGER},
       physical_score = #{physicalScore},
       firearm_score = #{firearmScore},
+      total_num = #{totalNum},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
@@ -334,15 +347,15 @@ and achievement_grade >1 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) d
     insert into  risk_train (id, police_id, index_num,
          physical_num, physical_pass_num, physical_fail_num,
          physical_standard_status, firearm_num, firearm_pass_num,
-         firearm_fail_num, firearm_standard_status, physical_score, firearm_score,
-         creation_date, update_date)
+         firearm_fail_num, firearm_standard_status, physical_score,
+         firearm_score, total_num, creation_date, update_date)
     values
     <foreach collection="list" separator="," item="t">
       (null, #{t.policeId,jdbcType=VARCHAR}, #{t.indexNum,jdbcType=DOUBLE},
       #{t.physicalNum,jdbcType=INTEGER}, #{t.physicalPassNum,jdbcType=INTEGER}, #{t.physicalFailNum,jdbcType=INTEGER},
       #{t.physicalStandardStatus,jdbcType=INTEGER}, #{t.firearmNum,jdbcType=INTEGER}, #{t.firearmPassNum,jdbcType=INTEGER},
-      #{t.firearmFailNum,jdbcType=INTEGER}, #{t.firearmStandardStatus,jdbcType=INTEGER},#{t.physicalScore}, #{t.firearmScore}
-      #{t.creationDate,jdbcType=TIMESTAMP}, #{t.updateDate,jdbcType=TIMESTAMP})
+      #{t.firearmFailNum,jdbcType=INTEGER}, #{t.firearmStandardStatus,jdbcType=INTEGER},#{t.physicalScore}, #{t.firearmScore},
+      #{t.totalNum}, #{t.creationDate,jdbcType=TIMESTAMP}, #{t.updateDate,jdbcType=TIMESTAMP})
     </foreach>
   </insert>
   
@@ -352,4 +365,19 @@ and achievement_grade >1 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) d
     where police_id=#{policeId} and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m') limit 1
   </select>
 
+  <select id="findGlobalIndexNum" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(total_num), 0) as maxNum, ifnull(min(total_num), 0) as minNum
+    FROM risk_train
+    where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
+  <select id="findGlobalIndexNumByYear" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(a.sumNum), 0) as maxNum, ifnull(MIN(a.sumNum), 0) as minNum
+    FROM (SELECT SUM(${column}) AS sumNum FROM risk_train
+          WHERE DATE_FORMAT(creation_date, '%Y-%m')>=#{lastDateTime}
+            AND DATE_FORMAT(creation_date, '%Y-%m') &lt;= #{date}
+          GROUP BY police_id) a
+  </select>
 </mapper>

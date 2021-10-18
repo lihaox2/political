@@ -178,4 +178,20 @@ order by a.year_month
     </if>
   </select>
 
+  <select id="findGlobalIndexNum" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(total_deduction_score), 0) as maxNum, ifnull(min(total_deduction_score), 0) as minNum
+    FROM risk_duty
+    where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
+  <select id="findGlobalIndexNumByYear" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(a.sumNum), 0) as maxNum, ifnull(MIN(a.sumNum), 0) as minNum
+    FROM (SELECT SUM(${column}) AS sumNum FROM risk_duty
+          WHERE DATE_FORMAT(creation_date, '%Y-%m')>=#{lastDateTime}
+            AND DATE_FORMAT(creation_date, '%Y-%m') &lt;= #{date}
+          GROUP BY police_id) a
+  </select>
+
 </mapper>

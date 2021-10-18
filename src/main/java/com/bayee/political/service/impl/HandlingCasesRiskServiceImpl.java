@@ -4,6 +4,7 @@ import com.bayee.political.algorithm.RiskCompute;
 import com.bayee.political.domain.*;
 import com.bayee.political.enums.AlarmTypeEnum;
 import com.bayee.political.mapper.*;
+import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import com.bayee.political.service.HandlingCasesRiskService;
 import com.bayee.political.service.RiskAlarmService;
 import com.bayee.political.utils.DateUtils;
@@ -168,8 +169,8 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 
 	@Override
 	public RiskCase handlingCasesRiskDetailsV2(User user, String date) {
-		double maxScore = 10d;
-		double alarmScore = 6d;
+		double maxScore = 20d;
+		double alarmScore = 5d;
 
 		RiskCase riskCase = new RiskCase();
 		riskCase.setIndexNum(0d);
@@ -198,14 +199,29 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 			riskCaseTestMapper.insert(riskCaseTest);
 		}
 		riskCase.setTestNum(riskCaseTest.getIndexNum());
+		riskCase.setTotalNum(riskCase.getAbilityNum() + riskCase.getLawEnforcementNum() + riskCase.getTestNum());
+		riskCase.setIndexNum(riskCase.getTotalNum());
 
-		riskCase.setIndexNum(Math.min((riskCase.getAbilityNum() + riskCase.getLawEnforcementNum()
-				+ riskCase.getTestNum()), maxScore));
+		//数据归一化计算
+		GlobalIndexNumResultDO resultDO = riskCaseMapper.findGlobalIndexNum(date);
+		double globalScore = resultDO.getMaxNum() - resultDO.getMinNum();
+		double indexNum = riskCase.getIndexNum() - resultDO.getMinNum();
+		if (indexNum > globalScore) {
+			globalScore = riskCase.getIndexNum();
+		}
+		if (globalScore > 0) {
+			double divValue = indexNum / globalScore;
+			if (divValue > 1) {
+				divValue = 1;
+			}
+			riskCase.setIndexNum(RiskCompute.parserDecimal(divValue * 10));
+		}
 
 		RiskCase olsRiskCase = riskCaseMapper.findPoliceRiskCase(user.getPoliceId(), date);
 		if (olsRiskCase != null && olsRiskCase.getId() != null) {
 			riskCase.setId(olsRiskCase.getId());
 
+			olsRiskCase.setTotalNum(riskCase.getTotalNum());
 			olsRiskCase.setIndexNum(riskCase.getIndexNum());
 			olsRiskCase.setAbilityNum(riskCase.getAbilityNum());
 			olsRiskCase.setLawEnforcementNum(riskCase.getLawEnforcementNum());
@@ -422,10 +438,10 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 		// 校验规则
 
 		// 扣分规则
-		double reconsiderationLitigationScore = 5;
-		double letterVisitScore = 5;
-		double lawEnforcementFaultScore = 10;
-		double judicialSupervisionScore = 10;
+		double reconsiderationLitigationScore = 1;
+		double letterVisitScore = 1;
+		double lawEnforcementFaultScore = 2;
+		double judicialSupervisionScore = 2;
 
 		RiskCaseAbility riskCaseAbility = new RiskCaseAbility();
 		riskCaseAbility.setIndexNum(0d);
@@ -462,15 +478,27 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 							riskCaseAbility.getJudicialSupervisionScore() + judicialSupervisionScore);
 				}
 			}
-			double maxScore = RiskCompute.max(riskCaseAbility.getReconsiderationLitigationScore()
-					, riskCaseAbility.getLetterVisitScore(), riskCaseAbility.getLawEnforcementFaultScore()
-					, riskCaseAbility.getJudicialSupervisionScore());
 
-			double minScore = RiskCompute.min(riskCaseAbility.getReconsiderationLitigationScore()
-					, riskCaseAbility.getLetterVisitScore(), riskCaseAbility.getLawEnforcementFaultScore()
-					, riskCaseAbility.getJudicialSupervisionScore());
+			riskCaseAbility.setTotalNum(riskCaseAbility.getReconsiderationLitigationScore()
+					+ riskCaseAbility.getLetterVisitScore() + riskCaseAbility.getLawEnforcementFaultScore()
+					+ riskCaseAbility.getJudicialSupervisionScore());
+			riskCaseAbility.setIndexNum(riskCaseAbility.getTotalNum());
 
-			riskCaseAbility.setIndexNum(RiskCompute.log10(minScore, maxScore));
+			//数据归一化计算
+			GlobalIndexNumResultDO resultDO = riskCaseAbilityMapper.findGlobalIndexNum(date);
+			double globalIndexNum = resultDO.getMaxNum() - resultDO.getMinNum();
+			double indexNum = riskCaseAbility.getIndexNum() - resultDO.getMinNum();
+			if (indexNum > globalIndexNum) {
+				globalIndexNum = riskCaseAbility.getIndexNum();
+			}
+			if (globalIndexNum > 0) {
+				double divValue = indexNum / globalIndexNum;
+				if (divValue > 1) {
+					divValue = 1;
+				}
+
+				riskCaseAbility.setIndexNum(RiskCompute.parserDecimal(divValue * 10));
+			}
 		}
 
 		// 处理已产生过的报备数据
@@ -480,6 +508,7 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 			riskCaseAbility.setId(oldRiskCaseAbility.getId());
 
 			oldRiskCaseAbility.setIndexNum(riskCaseAbility.getIndexNum());
+			oldRiskCaseAbility.setTotalNum(riskCaseAbility.getTotalNum());
 			oldRiskCaseAbility.setReconsiderationLitigationScore(riskCaseAbility.getReconsiderationLitigationScore());
 			oldRiskCaseAbility.setLetterVisitScore(riskCaseAbility.getLetterVisitScore());
 			oldRiskCaseAbility.setLawEnforcementFaultScore(riskCaseAbility.getLawEnforcementFaultScore());
@@ -514,26 +543,36 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 		if (recordList.size() > 0) {
 			int count = 0;
 			double score = 0d;
+			double minScore = recordList.get(0).getDeductionScore();
 
-			double maxV = 0;
-			double minV = recordList.get(0).getDeductionScore();
 			for (RiskCaseLawEnforcementRecord record : recordList) {
 				if (record.getDeductionScore() != null && record.getDeductionScore() > 0) {
 					score += record.getDeductionScore();
-
-					if (record.getDeductionScore() > maxV) {
-						maxV = record.getDeductionScore();
-					}
-					if (record.getDeductionScore() < minV) {
-						minV = record.getDeductionScore();
+					if (record.getDeductionScore() < minScore) {
+						minScore = record.getDeductionScore();
 					}
 				}
 				count++;
 			}
-
-			enforcement.setIndexNum(RiskCompute.log10(minV, maxV));
+			enforcement.setIndexNum(score);
 			enforcement.setTotalDeductionScore(score);
 			enforcement.setTotalDeductionCount(count);
+
+			//数据归一化计算
+			GlobalIndexNumResultDO resultDO = riskCaseLawEnforcementMapper.findGlobalIndexNum(date);
+			double globalScore = resultDO.getMaxNum() - resultDO.getMinNum();
+			double indexNum = enforcement.getIndexNum() - resultDO.getMinNum();
+			if (indexNum > globalScore) {
+				globalScore = enforcement.getIndexNum();
+			}
+			if (globalScore > 0) {
+				double divValue = indexNum / globalScore;
+				if (divValue > 1) {
+					divValue = 1;
+				}
+
+				enforcement.setIndexNum(RiskCompute.parserDecimal(divValue * 10));
+			}
 		}
 
 		//处理已产生过的预警
@@ -590,6 +629,21 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 		}
 		riskCaseTest.setIndexNum(deductionScore);
 		riskCaseTest.setDeductionScore(deductionScore);
+
+		//数据归一化计算
+		GlobalIndexNumResultDO resultDO = riskCaseTestMapper.findGlobalIndexNum(date);
+		double globalIndexNum = resultDO.getMaxNum() - resultDO.getMinNum();
+		double indexNum = deductionScore - resultDO.getMinNum();
+		if (indexNum > globalIndexNum) {
+			globalIndexNum = deductionScore;
+		}
+		if (globalIndexNum > 0) {
+			double divValue = indexNum / globalIndexNum;
+			if (divValue > 1) {
+				divValue = 1;
+			}
+			riskCaseTest.setIndexNum(RiskCompute.parserDecimal(divValue * 10));
+		}
 
 		//处理已产生过的数据
 		RiskCaseTest oldRiskCaseTest = riskCaseTestMapper.findPoliceRiskCaseTest(user.getPoliceId(), date);

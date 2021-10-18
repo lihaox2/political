@@ -19,8 +19,18 @@ public class RiskConduct {
     private Date creationDate;
 
     private Date updateDate;
+
+    private Double totalNum;
     
     List<ScreenDoubeChart> list;
+
+    public Double getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(Double totalNum) {
+        this.totalNum = totalNum;
+    }
 
     public Integer getId() {
         return id;

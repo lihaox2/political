@@ -188,4 +188,11 @@ order by a.year_month
       </if>
   </select>
 
+  <select id="findGlobalIndexNum" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(total_deduction_score), 0) as maxNum, ifnull(min(total_deduction_score), 0) as minNum
+    FROM risk_case_law_enforcement
+    where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+  </select>
+
 </mapper>

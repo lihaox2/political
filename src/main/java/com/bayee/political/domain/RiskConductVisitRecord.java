@@ -51,6 +51,29 @@ public class RiskConductVisitRecord {
      */
     private Integer isEffective;
 
+    /**
+     * 警督平台主键
+     */
+    private String inspectorKey;
+
+    private Integer dataOriginFlag;
+
+    public Integer getDataOriginFlag() {
+        return dataOriginFlag;
+    }
+
+    public void setDataOriginFlag(Integer dataOriginFlag) {
+        this.dataOriginFlag = dataOriginFlag;
+    }
+
+    public String getInspectorKey() {
+        return inspectorKey;
+    }
+
+    public void setInspectorKey(String inspectorKey) {
+        this.inspectorKey = inspectorKey;
+    }
+
     public Integer getAppealState() {
         return appealState;
     }

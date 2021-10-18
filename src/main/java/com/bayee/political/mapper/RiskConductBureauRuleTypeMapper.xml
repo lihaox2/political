@@ -12,7 +12,7 @@
     <result column="rootName" jdbcType="VARCHAR" property="rootName" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, deduct_score, parent_id, creation_date, update_date
+    id, name, deduct_score, parent_id, creation_date, update_date, code
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select t1.*, t2.`name` typeName from risk_conduct_bureau_rule_type t1,
@@ -24,10 +24,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConductBureauRuleType">
-    insert into risk_conduct_bureau_rule_type (id, name, deduct_score, parent_id, creation_date, update_date,level
+    insert into risk_conduct_bureau_rule_type (id, name, deduct_score, parent_id, creation_date, update_date,level, code
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{deductScore}, #{parentId},
-            #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{level}
+            #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{level}, #{code}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConductBureauRuleType">
@@ -44,6 +44,9 @@
       </if>
       <if test="parentId != null">
         parent_id,
+      </if>
+      <if test="code != null">
+        code,
       </if>
       <if test="creationDate != null">
         creation_date,
@@ -64,6 +67,9 @@
       </if>
       <if test="parentId != null">
         #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="code != null">
+        #{code},
       </if>
       <if test="creationDate != null">
         #{creationDate,jdbcType=TIMESTAMP},
@@ -86,7 +92,10 @@
         deduct_score = #{deductScore},
       </if>
       <if test="parentId != null">
-        parent_id = #{parentId}
+        parent_id = #{parentId},
+      </if>
+      <if test="code != null">
+        code = #{code},
       </if>
       <if test="creationDate != null">
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -102,8 +111,9 @@
     set name = #{name,jdbcType=VARCHAR},
         deduct_score = #{deductScore},
         parent_id = #{parentId},
-      creation_date = #{creationDate,jdbcType=TIMESTAMP},
-      update_date = #{updateDate,jdbcType=TIMESTAMP}
+        code = #{code},
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+        update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -111,7 +121,7 @@
     select
     r1.*, r2.`name` as typeName, r3.`name` as rootName
     from risk_conduct_bureau_rule_type r1, risk_conduct_bureau_rule_type r2, risk_conduct_bureau_rule_type r3
-    where r1.parent_id = r2.id and r2.parent_id = r3.id
+    where r1.parent_id = r2.id and r2.parent_id = r3.id and r1.code is null
     <if test="list != null and list.size > 0">
       and (r2.id in (
         <foreach collection="list" item="item" separator=",">
@@ -134,7 +144,7 @@
     select
     count(1)
     from risk_conduct_bureau_rule_type r1, risk_conduct_bureau_rule_type r2, risk_conduct_bureau_rule_type r3
-    where r1.parent_id = r2.id and r2.parent_id = r3.id
+    where r1.parent_id = r2.id and r2.parent_id = r3.id and r1.code is null
     <if test="list != null and list.size > 0">
       and (r2.id in (
           <foreach collection="list" item="item" separator=",">
@@ -152,18 +162,18 @@
   </select>
 
   <select id="getAllRiskConductBureauRuleType" resultMap="BaseResultMap">
-    select * from risk_conduct_bureau_rule_type
+    select * from risk_conduct_bureau_rule_type where code is null
   </select>
 
   <select id="countRuleTypeByNameAndRuleType" resultType="Integer">
-    select count(1) from risk_conduct_bureau_rule_type where name = #{name} and parent_id = #{parentId}
+    select count(1) from risk_conduct_bureau_rule_type where name = #{name} and parent_id = #{parentId} and code is null
     <if test="id != null">
       and id != #{id}
     </if>
   </select>
 
   <select id="getMeasuresType" resultMap="BaseResultMap">
-    select * from risk_conduct_bureau_rule_type where level = 1
+    select * from risk_conduct_bureau_rule_type where level = 1 and code is null
   </select>
 
   <select id="findById" resultType="com.bayee.political.pojo.dto.ConductBureauRuleTypeDetailsDO">
@@ -184,6 +194,12 @@
 
   <select id="findTypeByCode" resultMap="BaseResultMap">
     select * from risk_conduct_bureau_rule_type where code = #{typeCode}
+  </select>
+
+  <select id="findLevelTwoObjByCode" resultMap="BaseResultMap">
+    select * from risk_conduct_bureau_rule_type
+      where id = (select parent_id from risk_conduct_bureau_rule_type
+          where id = (select parent_id from risk_conduct_bureau_rule_type where code = '05010102'))
   </select>
 
 </mapper>

@@ -13,21 +13,21 @@ public interface TotalRiskDetailsService {
      * @param policeId
      * @param localDate
      */
-    void caseRiskDetails(String policeId, LocalDate localDate);
+    void caseRiskDetails(LocalDate localDate);
 
     /**
      * 行为规范处理
      * @param policeId
      * @param localDate
      */
-    void conductRiskDetails(String policeId, LocalDate localDate);
+    void conductRiskDetails(LocalDate localDate);
 
     /**
      * 接警执勤处理
      * @param policeId
      * @param localDate
      */
-    void dutyRiskDetails(String policeId, LocalDate localDate);
+    void dutyRiskDetails(LocalDate localDate);
 
     /**
      * 健康风险处理
@@ -40,5 +40,11 @@ public interface TotalRiskDetailsService {
      * @param localDate
      */
     void skillRiskDetails(LocalDate localDate);
+
+    /**
+     * 动态排摸处理
+     * @param localDate
+     */
+    void relevantRiskDetails(LocalDate localDate);
 
 }

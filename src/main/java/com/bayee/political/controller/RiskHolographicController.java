@@ -225,22 +225,22 @@ public class RiskHolographicController {
 
         ChartResult conductChart = new ChartResult();
         conductChart.setId(1);
-        conductChart.setName("行为规范");
+        conductChart.setName("行为风险");
         conductChart.setValue(reportRecordDO.getConductNum());
 
         ChartResult disciplineStyleChart = new ChartResult();
         disciplineStyleChart.setId(2);
-        disciplineStyleChart.setName("接警执勤");
+        disciplineStyleChart.setName("接处警风险");
         disciplineStyleChart.setValue(reportRecordDO.getDutyNum());
 
         ChartResult caseChart = new ChartResult();
         caseChart.setId(3);
-        caseChart.setName("执法办案");
+        caseChart.setName("执法风险");
         caseChart.setValue(reportRecordDO.getHandlingCaseNum());
 
         ChartResult trainChart = new ChartResult();
         trainChart.setId(4);
-        trainChart.setName("警务技能");
+        trainChart.setName("训练风险");
         trainChart.setValue(reportRecordDO.getTrainNum());
 
         ChartResult socialContactChart = new ChartResult();
@@ -250,12 +250,12 @@ public class RiskHolographicController {
 
         ChartResult amilyEvaluationChart = new ChartResult();
         amilyEvaluationChart.setId(6);
-        amilyEvaluationChart.setName("家属评价");
+        amilyEvaluationChart.setName("评价风险");
         amilyEvaluationChart.setValue(reportRecordDO.getAmilyEvaluationNum());
 
         ChartResult healthChart = new ChartResult();
         healthChart.setId(7);
-        healthChart.setName("健康指数");
+        healthChart.setName("健康风险");
         healthChart.setValue(reportRecordDO.getHealthNum());
 
         result.setChartResultList(Arrays.asList(conductChart, disciplineStyleChart, caseChart, trainChart,

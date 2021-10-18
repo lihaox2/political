@@ -3,6 +3,7 @@ package com.bayee.political.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.bayee.political.json.ChartResult;
 import com.bayee.political.pojo.dto.RiskAlarmTypeDO;
 import org.apache.ibatis.annotations.Param;
 
@@ -110,5 +111,47 @@ public interface RiskTrendsMapper {
 	Double qualifiedRate();
 	
 	List<Map<String,Object>> qualifiedRateEcharts();
+
+	/**
+	 * 警员风险下钻
+	 * @param date
+	 * @return
+	 */
+	List<ChartResult> riskDeptAlarmChart(String date);
+
+	/**
+	 * 执法办案下钻
+	 * @param date
+	 * @return
+	 */
+	List<ChartResult> caseDeptChart(String date);
+
+	/**
+	 * 接警执勤下钻
+	 * @param date
+	 * @return
+	 */
+	List<ChartResult> dutyDeptChart(String date);
+
+	/**
+	 * 综合训练下钻
+	 * @param id
+	 * @return
+	 */
+	List<ChartResult> physicalTrainDeptChart(Integer id);
+
+	/**
+	 * 枪械训练下钻
+	 * @param id
+	 * @return
+	 */
+	List<ChartResult> firearmTrainDeptChart(Integer id);
+
+	/**
+	 * 健康风险下钻
+	 * @param key
+	 * @return
+	 */
+	List<ChartResult> healthAlarmDeptChart(String key);
 
 }

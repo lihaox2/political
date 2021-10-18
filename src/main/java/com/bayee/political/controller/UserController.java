@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bayee.political.json.UpdatePoliceRiskHealthShowFlagParam;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -31,10 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -96,6 +94,16 @@ public class UserController<V> extends BaseController {
 
 	static {
 		gson = new Gson();
+	}
+
+	/**
+	 * 修改警员的健康风险查看标识
+	 */
+	@PostMapping("/user/update/riskHealth/showFlag")
+	public ResponseEntity<?> updatePoliceRiskHealthShowFlag(@RequestBody UpdatePoliceRiskHealthShowFlagParam param) {
+
+		userService.updateRiskHealthShowFlagByPoliceId(param.getPoliceId(), param.getShowFlag());
+		return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
 	}
 
 	// 钉钉修改人员入职时间(自动定时抓取钉钉请假数据，每天6点执行一次)
@@ -510,7 +518,7 @@ public class UserController<V> extends BaseController {
 		//是否管理训练
 		item.setTrainScorer(trainScorer);
 		// 参加工作时间
-		item.setWorkingStartDate(DateUtil.parseDate(workingStartDate));
+//		item.setWorkingStartDate(DateUtil.parseDate(workingStartDate));
 		if (null != file.getOriginalFilename() && !"".equals(file.getOriginalFilename())) {
 			item.setHeadImage("/police/" + nameBelong);
 		}

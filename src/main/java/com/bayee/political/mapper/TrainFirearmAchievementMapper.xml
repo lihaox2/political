@@ -509,7 +509,6 @@ order by a.creation_date desc
         where achievement_grade is not null and achievement > 0 and police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m')) as a_count,
         (select count(1) from train_firearm_achievement
         where achievement_grade = 1 and achievement > 0 and police_id = #{policeId} and DATE_FORMAT(sign_date,'%Y-%m') = DATE_FORMAT(#{date},'%Y-%m')) as b_count) firearm_train
-
     </select>
 
     <select id="findTrainFirearmAchievementPage" resultMap="BaseResultMap">
@@ -522,11 +521,11 @@ order by a.creation_date desc
         <if test="key != null and key != ''">
             and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%'))
         </if>
-        <if test="searchFlag != null and searchFlag == 1">
-            and fa.achievement_grade = 2
-        </if>
         <if test="searchFlag != null and searchFlag == 2">
             and fa.achievement_grade = 1
+        </if>
+        <if test="searchFlag != null and searchFlag == 1">
+            and fa.achievement_grade = 2
         </if>
         <if test="deptId != null and deptId != ''">
             and u.department_id = #{deptId}
@@ -545,11 +544,11 @@ order by a.creation_date desc
         <if test="key != null and key != ''">
             and (u.police_id like concat('%', #{key}, '%') or u.name like concat('%', #{key}, '%'))
         </if>
-        <if test="searchFlag != null and searchFlag == 1">
-            and fa.achievement_grade = 2
-        </if>
         <if test="searchFlag != null and searchFlag == 2">
             and fa.achievement_grade = 1
+        </if>
+        <if test="searchFlag != null and searchFlag == 1">
+            and fa.achievement_grade = 2
         </if>
         <if test="deptId != null and deptId != ''">
             and u.department_id = #{deptId}

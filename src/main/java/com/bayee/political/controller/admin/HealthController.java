@@ -172,6 +172,7 @@ public class HealthController {
         record.setIsOverweight(isOverweight);
         record.setMajorDiseasesDescribe(saveParam.getMajorDiseasesDesc());
         record.setCreationDate(DateUtils.parseDate(saveParam.getYear()+monthDate, "yyyy-MM-dd HH:mm:ss"));
+        record.setOther(saveParam.getOtherHealthDesc());
         /*record.setUpdateDate();
         record.setBlood();*/
 
@@ -277,6 +278,7 @@ public class HealthController {
         record.setHeartDescribe(saveParam.getHeartDesc());
         record.setMajorDiseasesDescribe(saveParam.getMajorDiseasesDesc());
         record.setUpdateDate(new Date());
+        record.setOther(saveParam.getOtherHealthDesc());
         record.setCreationDate(DateUtils.parseDate(saveParam.getYear()+monthDate, "yyyy-MM-dd HH:mm:ss"));
         /*record.setUpdateDate();
         record.setBlood();*/

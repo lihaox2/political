@@ -907,7 +907,7 @@ public class RiskExportExcelDataController {
 			policeRecord.setPoliceListInfo(excel.get(7));
 			policeRecord.setIsVerified("已核实".equals(excel.get(10)) ? 1 : 0);
 			policeRecord.setPoliceId(policeId);
-			policeRecord.setContent(excel.get(9));
+			policeRecord.setContent(excel.get(9)==null?"":excel.get(9));
 			policeRecord.setInputTime(new Date());
 			policeRecord.setCreationDate(DateUtils.parseDate(excel.get(3), "yyyy-MM-dd HH:mm"));
 			policeRecord.setDeductionScore(Double.valueOf(excel.get(11)));

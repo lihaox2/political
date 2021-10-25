@@ -51,6 +51,8 @@ public class RiskHealthRecord {
 
     private Date updateDate;
 
+    private String other;
+
     public Integer getId() {
         return id;
     }
@@ -241,5 +243,13 @@ public class RiskHealthRecord {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public String getOther() {
+        return other;
+    }
+
+    public void setOther(String other) {
+        this.other = other;
     }
 }

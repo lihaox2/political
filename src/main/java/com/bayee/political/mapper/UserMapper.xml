@@ -692,26 +692,116 @@ where 1=1 and department_id!=47
         WHERE u.police_id = #{id}
     </select>
 
+<!--    <select id="talentsFindPageList" resultType="com.bayee.political.json.TalentsUserResult"-->
+<!--            parameterType="com.bayee.political.json.TalentsUserParam">-->
+<!--        SELECT-->
+<!--            u.head_image headImage,-->
+<!--            u.police_id policeId,-->
+<!--            u.name `name`,-->
+<!--            c.position_name policeType,-->
+<!--            k.police_king_name kingName,-->
+<!--            d.`name` policeDeptName,-->
+<!--            YEAR (NOW()) - SUBSTR(u.id_card, 7, 4) age,-->
+<!--            epi.`score`-->
+<!--        FROM (SELECT police_id, SUM(score) AS score FROM excellent_police_info where 1 = 1-->
+<!--            <if test="labelId != null">-->
+<!--                and label = #{labelId}-->
+<!--            </if>-->
+<!--             GROUP BY police_id) epi-->
+<!--            LEFT JOIN `user` u ON epi.`police_id` = u.`police_id`-->
+<!--            LEFT JOIN department d ON u.department_id = d.id-->
+<!--            LEFT JOIN police_kind k ON u.kind_id = k.id-->
+<!--            LEFT JOIN police_position c ON c.id = u.position_id-->
+<!--        WHERE-->
+<!--        1 = 1-->
+<!--        <if test="gender != null">-->
+<!--            and u.gender = #{gender}-->
+<!--        </if>-->
+<!--        <if test="degree !=null">-->
+<!--            AND u.degree = #{degree}-->
+<!--        </if>-->
+<!--        <if test="(minAge != null) and !(maxAge != null)">-->
+<!--            and YEAR (now()) - SUBSTR( u.id_card, 7, 4 ) BETWEEN #{minAge} and YEAR (now()) - SUBSTR( u.id_card, 7, 4 )-->
+<!--        </if>-->
+<!--        <if test="(maxAge != null) and !(minAge != null)">-->
+<!--            and YEAR (now()) - SUBSTR( u.id_card, 7, 4 ) BETWEEN YEAR(now()) - SUBSTR( u.id_card, 7, 4 ) and #{maxAge}-->
+<!--        </if>-->
+<!--        <if test="(minAge != null) and (maxAge != null)">-->
+<!--            and YEAR (now()) - SUBSTR( u.id_card, 7, 4 ) BETWEEN #{minAge} and #{maxAge}-->
+<!--        </if>-->
+<!--        <if test="politicalStatus != null and politicalStatus != ''">-->
+<!--            and u.political_status like concat('%', #{politicalStatus}, '%')-->
+<!--        </if>-->
+<!--        <if test="nativePlace != null and nativePlace != ''">-->
+<!--            and u.native_place like concat('%', #{nativePlace}, '%')-->
+<!--        </if>-->
+<!--        <if test="marriageStatus != null and marriageStatus != ''">-->
+<!--            and u.marriage_status = #{marriageStatus}-->
+<!--        </if>-->
+<!--        <if test="kindId != null">-->
+<!--            and k.id = #{kindId}-->
+<!--        </if>-->
+<!--        <if test="workIngYear != null">-->
+<!--            <if test="workIngYear == 1">-->
+<!--                and year(NOW()) - year(u.working_start_date) BETWEEN 1 and 3-->
+<!--            </if>-->
+<!--            <if test="workIngYear == 2">-->
+<!--                and year(NOW()) - year(u.working_start_date) BETWEEN 3 and 5-->
+<!--            </if>-->
+<!--            <if test="workIngYear == 3">-->
+<!--                and year(NOW()) - year(u.working_start_date) BETWEEN 5 and 10-->
+<!--            </if>-->
+<!--            <if test="workIngYear == 4">-->
+<!--                and year(NOW()) - year(u.working_start_date) >= 10-->
+<!--            </if>-->
+<!--        </if>-->
+
+<!--        <if test="workEmploymentYear != null and workEmploymentYear == 1">-->
+<!--            and year(NOW()) - year(u.employment_date) BETWEEN 1 and 3-->
+<!--        </if>-->
+<!--        <if test="workEmploymentYear != null and workEmploymentYear == 2">-->
+<!--            and year(NOW()) - year(u.employment_date) BETWEEN 3 and 5-->
+<!--        </if>-->
+<!--        <if test="workEmploymentYear != null and workEmploymentYear == 3">-->
+<!--            and year(NOW()) - year(u.employment_date) BETWEEN 5 and 10-->
+<!--        </if>-->
+<!--        <if test="workEmploymentYear != null and workEmploymentYear == 4">-->
+<!--            and year(NOW()) - year(u.employment_date) >= 10-->
+<!--        </if>-->
+<!--        <if test="deptId != null">-->
+<!--            and d.id = #{deptId}-->
+<!--        </if>-->
+<!--        <if test="likeName != null and likeName != ''">-->
+<!--            and (u.police_id rlike #{likeName} or u.name rlike #{likeName} or u.police_label rlike #{likeName})-->
+<!--        </if>-->
+<!--        group by u.police_id-->
+<!--        ORDER BY epi.`score` DESC-->
+<!--        limit #{pageIndex}, #{pageSize}-->
+<!--    </select>-->
+
+    <!-- 改后的-->
     <select id="talentsFindPageList" resultType="com.bayee.political.json.TalentsUserResult"
             parameterType="com.bayee.political.json.TalentsUserParam">
         SELECT
-            u.head_image headImage,
-            u.police_id policeId,
-            u.name `name`,
-            c.position_name policeType,
-            k.police_king_name kingName,
-            d.`name` policeDeptName,
-            YEAR (NOW()) - SUBSTR(u.id_card, 7, 4) age,
-            epi.`score`
+        u.head_image headImage,
+        u.police_id policeId,
+        u.name `name`,
+        c.position_name policeType,
+        k.police_king_name kingName,
+        d.`name` policeDeptName,
+        YEAR (NOW()) - SUBSTR(u.id_card, 7, 4) age,
+        epi.`score`
         FROM (SELECT police_id, SUM(score) AS score FROM excellent_police_info where 1 = 1
-            <if test="labelId != null">
-                and label = #{labelId}
-            </if>
-             GROUP BY police_id) epi
-            LEFT JOIN `user` u ON epi.`police_id` = u.`police_id`
-            LEFT JOIN department d ON u.department_id = d.id
-            LEFT JOIN police_kind k ON u.kind_id = k.id
-            LEFT JOIN police_position c ON c.id = u.position_id
+        <if test="labelId != null">
+            and label = #{labelId}
+        </if>
+        GROUP BY police_id) epi
+        LEFT JOIN `user` u ON epi.`police_id` = u.`police_id`
+        LEFT JOIN department d ON u.department_id = d.id
+        LEFT JOIN police_kind k ON u.kind_id = k.id
+        LEFT JOIN police_position c ON c.id = u.position_id
+        LEFT JOIN police_user_label l ON u.police_id=l.police_id
+        LEFT JOIN police_label p ON l.label_id=p.id
         WHERE
         1 = 1
         <if test="gender != null">
@@ -772,13 +862,12 @@ where 1=1 and department_id!=47
             and d.id = #{deptId}
         </if>
         <if test="likeName != null and likeName != ''">
-            and (u.police_id rlike #{likeName} or u.name rlike #{likeName} or u.police_label rlike #{likeName})
+            and (u.police_id rlike #{likeName} or u.name rlike #{likeName} or p.label_name rlike #{likeName})
         </if>
         group by u.police_id
         ORDER BY epi.`score` DESC
         limit #{pageIndex}, #{pageSize}
     </select>
-
     <select id="talentsFindPageCount" resultType="Integer">
         SELECT
             count(1)

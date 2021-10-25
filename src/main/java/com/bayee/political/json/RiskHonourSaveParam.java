@@ -48,6 +48,12 @@ public class RiskHonourSaveParam {
      */
     private String businessTime;
 
+    /**
+     * 文号
+     * @return
+     */
+    private String documentNumber;
+
     public String getPoliceId() {
         return policeId;
     }
@@ -110,5 +116,13 @@ public class RiskHonourSaveParam {
 
     public void setBusinessTime(String businessTime) {
         this.businessTime = businessTime;
+    }
+
+    public String getDocumentNumber() {
+        return documentNumber;
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
     }
 }

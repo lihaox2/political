@@ -58,6 +58,12 @@ public class RiskHonour {
      */
     private Date updateDate;
 
+    /**
+     * 文号
+     * @return
+     */
+    private String documentNumber;
+
     public Integer getId() {
         return id;
     }
@@ -144,5 +150,13 @@ public class RiskHonour {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public String getDocumentNumber() {
+        return documentNumber;
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
     }
 }

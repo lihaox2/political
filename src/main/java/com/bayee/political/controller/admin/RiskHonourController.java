@@ -67,7 +67,7 @@ public class RiskHonourController {
         honour.setRemark(saveParam.getRemark());
         honour.setBusinessTime(DateUtils.parseDate(saveParam.getBusinessTime(), "yyyy-MM-dd"));
         honour.setCreationDate(new Date());
-
+        honour.setDocumentNumber(saveParam.getDocumentNumber());
         riskHonourService.addRiskHonour(honour);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
@@ -105,6 +105,7 @@ public class RiskHonourController {
         honour.setRemark(saveParam.getRemark());
         honour.setBusinessTime(DateUtils.parseDate(saveParam.getBusinessTime(), "yyyy-MM-dd"));
         honour.setUpdateDate(new Date());
+        honour.setDocumentNumber(saveParam.getDocumentNumber());
 
         riskHonourService.updateRiskHonour(honour);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);

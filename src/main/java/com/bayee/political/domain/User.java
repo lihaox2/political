@@ -53,6 +53,7 @@ public class User {
 	private Integer roleId;// 角色id
 	private Integer groupId;// 群组id
 
+	@JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
 	private Date lastLoginTime;// 最后登录时间
 	private Integer loginTimes;// 登录次数
 	private Integer isActive;// 是否首次登录

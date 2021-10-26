@@ -454,10 +454,10 @@ public class UserServiceImpl implements UserService {
 				writer.close();
 				return new ResponseEntity<DataListReturn>(DataListReturn.ok(), HttpStatus.OK);
 			}catch (Exception e){
-				return new ResponseEntity<DataListReturn>(DataListReturn.ok(), HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<DataListReturn>(DataListReturn.error("数据异常"), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-		return  new ResponseEntity<DataListReturn>(DataListReturn.ok(), HttpStatus.OK);
+		return  new ResponseEntity<DataListReturn>(DataListReturn.ok("导入成功"), HttpStatus.OK);
 	}
 
 }

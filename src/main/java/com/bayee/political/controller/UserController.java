@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -368,7 +369,7 @@ public class UserController<V> extends BaseController {
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping("/account/only")
-	public @ResponseBody byte[] queryAccountById(Integer id) throws UnsupportedEncodingException {
+	public @ResponseBody byte[] queryAccountById(Integer id) throws UnsupportedEncodingException, ParseException {
 
 		User userItem = userService.userItem(id);
 
@@ -387,6 +388,14 @@ public class UserController<V> extends BaseController {
 			names = names.substring(0, names.length() - 1);
 
 			userItem.setAlarmDepartmentNames(names);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy年MM月dd日");
+			Date parse = sdf1.parse(userItem.getBirthday());
+			String format = sdf2.format(parse);
+			userItem.setBirthday(format);
+			String format1 = sdf.format(userItem.getEmploymentDate());
+			userItem.setEmploymentDate(sdf.parse(format1));
 		}
 
 		// 格式化时间
@@ -560,7 +569,7 @@ public class UserController<V> extends BaseController {
 	/**
 	 * 用户禁用或启动
 	 * 
-	 * @param model
+	 * @param
 	 * @param id
 	 * @return
 	 * @throws UnsupportedEncodingException
@@ -604,7 +613,7 @@ public class UserController<V> extends BaseController {
 	/**
 	 * 获得机关单位及派出所
 	 * 
-	 * @param parentId
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(value = "/account/get_target_department", method = RequestMethod.POST)

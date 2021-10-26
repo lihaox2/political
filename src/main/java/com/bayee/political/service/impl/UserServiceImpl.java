@@ -327,6 +327,7 @@ public class UserServiceImpl implements UserService {
 		talentsUserParam.setPageIndex((talentsUserParam.getPageIndex() - 1) * talentsUserParam.getPageSize());
 
 		return userMapper.talentsFindPageList(talentsUserParam).parallelStream().map(e -> {
+			//查询警员标签
 			e.setLabelList(policeLabelMapper.findPoliceLabel(e.getPoliceId()));
 			return e;
 		}).collect(Collectors.toList());

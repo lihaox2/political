@@ -661,8 +661,8 @@ where 1=1 and department_id!=47
         a.police_id as policeId, a.name as policeName, b.`name` as deptName,p.label_name as labelName
         from user a
         left join department b on b.id=a.department_id
-        LEFT JOIN police_user_label l ON a.police_id=l.police_id
-        LEFT JOIN police_label p ON l.label_id=p.id
+        LEFT JOIN excellent_police_info l ON a.police_id=l.police_id
+        LEFT JOIN police_label p ON l.label=p.id
         where a.police_id not in ('000001')
         <if test="key != null and key != ''">
             and (a.police_id like concat('%' , #{key}, '%') or a.name like concat('%' , #{key}, '%')
@@ -816,8 +816,8 @@ where 1=1 and department_id!=47
         LEFT JOIN department d ON u.department_id = d.id
         LEFT JOIN police_kind k ON u.kind_id = k.id
         LEFT JOIN police_position c ON c.id = u.position_id
-        LEFT JOIN police_user_label l ON u.police_id=l.police_id
-        LEFT JOIN police_label p ON l.label_id=p.id
+        LEFT JOIN excellent_police_info l ON u.police_id=l.police_id
+        LEFT JOIN police_label p ON l.label=p.id
         WHERE
         1 = 1
         <if test="gender != null">
@@ -956,7 +956,7 @@ where 1=1 and department_id!=47
             and d.id = #{deptId}
         </if>
         <if test="likeName != null and likeName != ''">
-            and (u.police_id rlike #{likeName} or u.name rlike #{likeName} or u.police_label rlike #{likeName})
+            and (u.police_id rlike #{likeName} or u.name rlike #{likeName} or p.label_name rlike #{likeName})
         </if>
     </select>
 

@@ -3,6 +3,7 @@
  */
 package com.bayee.political.service.impl;
 
+import java.io.File;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -428,6 +429,8 @@ public class UserServiceImpl implements UserService {
 				list.add(map);
 			});
 			try {
+				File file = new File("D:/Downloads/警员花名册.xlsx");
+				file.delete();
 				//通过工具类创建writer
 				ExcelWriter writer = ExcelUtil.getWriter("D:/Downloads/警员花名册.xlsx");
 
@@ -455,6 +458,7 @@ public class UserServiceImpl implements UserService {
 				log.info("======================{}");
 				//关闭writer，释放内存
 				writer.close();
+
 				return new ResponseEntity<DataListReturn>(DataListReturn.ok(HOST+"/policeInfo/警员花名册.xlsx"), HttpStatus.OK);
 			}catch (Exception e){
 				return new ResponseEntity<DataListReturn>(DataListReturn.error("异常报错"), HttpStatus.INTERNAL_SERVER_ERROR);

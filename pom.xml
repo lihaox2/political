@@ -79,11 +79,11 @@
 	</dependency>
 	
 	<!-- apache POI for xls -->
-<!-- 	<dependency>
+ 	<dependency>
 	    <groupId>org.apache.poi</groupId>
 	    <artifactId>poi</artifactId>
-	    <version>3.9</version>
-	</dependency> -->
+	    <version>4.1.2</version>
+	</dependency>
 	
 	<!--poi start  -->
 <!-- 	<dependency>
@@ -419,11 +419,11 @@
 		<version>1.0</version>
 	</dependency>
 	
-	<dependency>
-		<groupId>cn.hutool</groupId>
-		<artifactId>hutool-all</artifactId>
-		<version>4.3.1</version>
-	</dependency>
+<!--	<dependency>-->
+<!--		<groupId>cn.hutool</groupId>-->
+<!--		<artifactId>hutool-all</artifactId>-->
+<!--		<version>4.3.1</version>-->
+<!--	</dependency>-->
 
 	  <dependency>
 		  <groupId>com.google.zxing</groupId>
@@ -458,6 +458,12 @@
 		  <groupId>com.itextpdf</groupId>
 		  <artifactId>itext-asian</artifactId>
 		  <version>5.2.0</version>
+	  </dependency>
+	  <!-- hutool转换工具-->
+	  <dependency>
+		  <groupId>cn.hutool</groupId>
+		  <artifactId>hutool-all</artifactId>
+		  <version>5.4.3</version>
 	  </dependency>
   </dependencies>
   <build>

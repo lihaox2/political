@@ -4,11 +4,11 @@
 package com.bayee.political.service.impl;
 
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.json.*;
 import com.bayee.political.mapper.PoliceLabelMapper;
@@ -16,8 +16,13 @@ import com.bayee.political.pojo.dto.HolographicPoliceListDO;
 import com.bayee.political.pojo.dto.RiskReportRecordDO;
 import com.bayee.political.service.RiskReportRecordService;
 import com.bayee.political.service.RiskService;
+import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bayee.political.domain.PolicePosition;
@@ -31,7 +36,10 @@ import com.bayee.political.service.UserService;
  *
  */
 @Service
+
 public class UserServiceImpl implements UserService {
+
+	private Logger log= LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Autowired
 	UserMapper userMapper;
@@ -371,6 +379,85 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateRiskHealthShowFlagByPoliceId(String policeId, Integer showFlag) {
 		userMapper.updateRiskHealthShowFlagByPoliceId(policeId, showFlag);
+	}
+
+	/**
+	 * 用户花名册导出
+	 * @return
+	 */
+	@Override
+	public ResponseEntity<?> export() {
+		List<User> users = userMapper.userAllList();
+		List<Map<String,Object>> list=new ArrayList<>();
+		if(users!=null && users.size()>0){
+			users.stream().forEach(e->{
+				Map<String,Object> map=new HashMap<>();
+//				map.put("序列",e.getId());
+//				map.put("单位职务",e.getTitle());
+//				map.put("姓 名",e.getName());
+//				map.put("性 别",e.getGender()==1?"男":"女");
+//				map.put("出生年月",e.getBirthday());
+//				map.put("籍贯",e.getNativePlace());
+//				map.put("学历",e.getDegree());
+//				map.put("参加工作时间",e.getWorkingStartDate());
+//				map.put("参加公安时间",e.getEmploymentDate());
+//				map.put("入党时间",e.getJoiningPartyTime());
+////				map.put("职务序列改革后职务","");
+////				map.put("改革后职务任职起算时间","");
+//				map.put("警  衔",e.getPoliceRank());
+////				map.put("授衔时间","");
+
+				map.put("id",e.getId());
+				map.put("title",e.getTitle());
+				map.put("name",e.getName());
+				map.put("gender",e.getGender()==1?"男":"女");
+				map.put("birthday",e.getBirthday());
+				map.put("nativePlace",e.getNativePlace());
+				map.put("degree",e.getDegree());
+				map.put("workingStartDate",e.getWorkingStartDate());
+				map.put("employmentDate",e.getEmploymentDate());
+				map.put("joiningPartyTime",e.getJoiningPartyTime());
+				map.put("reform","");
+				map.put("reformTime","");
+				map.put("policeRank",e.getPoliceRank());
+				map.put("confermentTime","");
+				log.info("======================map:{}",map);
+				list.add(map);
+			});
+			try {
+				//通过工具类创建writer
+				ExcelWriter writer = ExcelUtil.getWriter("D:/Downloads/警员花名册.xlsx");
+
+				//跳过当前行，既第一行，非必须，在此演示用
+				writer.passCurrentRow();
+				writer.addHeaderAlias("id","序列");
+				writer.addHeaderAlias("title","单位职务");
+				writer.addHeaderAlias("name","姓 名");
+				writer.addHeaderAlias("gender","性 别");
+				writer.addHeaderAlias("birthday","出生年月");
+				writer.addHeaderAlias("nativePlace","籍贯");
+				writer.addHeaderAlias("degree","学历");
+				writer.addHeaderAlias("workingStartDate","参加工作时间");
+				writer.addHeaderAlias("employmentDate","参加公安时间");
+				writer.addHeaderAlias("joiningPartyTime","入党时间");
+				writer.addHeaderAlias("reform","职务序列改革后职务");
+				writer.addHeaderAlias("reformTime","改革后职务任职起算时间");
+				writer.addHeaderAlias("policeRank","警  衔");
+				writer.addHeaderAlias("confermentTime","授衔时间");
+				//合并单元格后的标题行，使用默认标题样式
+				writer.merge(13, "警员花名册");
+				//一次性写出内容，强制输出标题
+				ExcelWriter write = writer.write(list,true);
+
+				log.info("======================{}");
+				//关闭writer，释放内存
+				writer.close();
+				return new ResponseEntity<DataListReturn>(DataListReturn.ok(), HttpStatus.OK);
+			}catch (Exception e){
+				return new ResponseEntity<DataListReturn>(DataListReturn.ok(), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		return  new ResponseEntity<DataListReturn>(DataListReturn.ok(), HttpStatus.OK);
 	}
 
 }

@@ -6,6 +6,7 @@ package com.bayee.political.domain;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Transient;
 
 /**
@@ -51,6 +52,7 @@ public class User {
 	private Integer participantId;// 参与评价角色id
 	private Integer roleId;// 角色id
 	private Integer groupId;// 群组id
+
 	private Date lastLoginTime;// 最后登录时间
 	private Integer loginTimes;// 登录次数
 	private Integer isActive;// 是否首次登录
@@ -62,10 +64,14 @@ public class User {
 	private String birthPlace;// 出生地
 	private String bloodType;// 血型
 	private String workCompany;// 工作单位
+
+	@JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
 	private Date workingStartDate;// 参加工作日期
 	private String workingStartDateStr;// 参加工作日期字符串
+	@JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
 	private Date employmentDate;// 参加公安工作日期
 	private String politicalStatus;// 政治面貌
+	@JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
 	private Date joiningPartyTime;// 参加组织时间
 	@Transient
 	private String residentId; // 居民身份证

@@ -642,16 +642,32 @@ where 1=1 and department_id!=47
         and police_id != '000001'
     </select>
 
+<!--    <select id="holographicFindPoliceByKey" resultType="com.bayee.political.pojo.dto.HolographicPoliceListDO">-->
+<!--        select-->
+<!--            a.police_id as policeId, a.name as policeName, b.`name` as deptName-->
+<!--        from user a-->
+<!--            left join department b on b.id=a.department_id-->
+<!--        where a.police_id not in ('000001')-->
+<!--            <if test="key != null and key != ''">-->
+<!--                and (a.police_id like concat('%' , #{key}, '%') or a.name like concat('%' , #{key}, '%')-->
+<!--                or b.`name` like concat('%' , #{key}, '%'))-->
+<!--            </if>-->
+<!--        order by a.creation_date desc-->
+<!--    </select>-->
+
+    <!-- 改后的-->
     <select id="holographicFindPoliceByKey" resultType="com.bayee.political.pojo.dto.HolographicPoliceListDO">
         select
-            a.police_id as policeId, a.name as policeName, b.`name` as deptName
+        a.police_id as policeId, a.name as policeName, b.`name` as deptName,p.label_name as labelName
         from user a
-            left join department b on b.id=a.department_id
+        left join department b on b.id=a.department_id
+        LEFT JOIN police_user_label l ON a.police_id=l.police_id
+        LEFT JOIN police_label p ON l.label_id=p.id
         where a.police_id not in ('000001')
-            <if test="key != null and key != ''">
-                and (a.police_id like concat('%' , #{key}, '%') or a.name like concat('%' , #{key}, '%')
-                or b.`name` like concat('%' , #{key}, '%'))
-            </if>
+        <if test="key != null and key != ''">
+            and (a.police_id like concat('%' , #{key}, '%') or a.name like concat('%' , #{key}, '%')
+            or b.`name` like concat('%' , #{key}, '%') or p.label_name like concat('%',#{key},'%'))
+        </if>
         order by a.creation_date desc
     </select>
 

@@ -650,4 +650,13 @@ public class UserController<V> extends BaseController {
 		return new ResponseEntity<DataListReturn>(dataListReturn, HttpStatus.OK);
 	}
 
+	/**
+	 * 用户花名册导出
+	 * @return
+	 */
+	@GetMapping("user/export")
+	public ResponseEntity<?> export(){
+		return userService.export();
+	}
+
 }

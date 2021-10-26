@@ -11,6 +11,7 @@ import com.bayee.political.json.TalentsUserParam;
 import com.bayee.political.json.TalentsUserResult;
 import com.bayee.political.pojo.dto.HolographicPoliceListDO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bayee.political.domain.PolicePosition;
@@ -271,4 +272,10 @@ public interface UserService {
 	 * @param showFlag 查看标识 1.允许，2.不允许
 	 */
 	void updateRiskHealthShowFlagByPoliceId(String policeId, Integer showFlag);
+
+	/**
+	 * 用户花名册导出
+	 * @return
+	 */
+	ResponseEntity<?> export();
 }

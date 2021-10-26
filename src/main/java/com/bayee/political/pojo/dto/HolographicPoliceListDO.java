@@ -21,6 +21,11 @@ public class HolographicPoliceListDO {
      */
     private String deptName;
 
+    /**
+     * 人才标签
+     */
+    private String labelName;
+
     public String getPoliceId() {
         return policeId;
     }
@@ -43,5 +48,13 @@ public class HolographicPoliceListDO {
 
     public void setDeptName(String deptName) {
         this.deptName = deptName;
+    }
+
+    public String getLabelName() {
+        return labelName;
+    }
+
+    public void setLabelName(String labelName) {
+        this.labelName = labelName;
     }
 }

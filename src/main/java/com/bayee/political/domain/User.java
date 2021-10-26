@@ -80,7 +80,9 @@ public class User {
 	private String degree;// 学历
 	private String major;// 学位
 	private String title;// 身份或职务
+	@JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
 	private Date creationDate;// 创建时间
+	@JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
 	private Date updateDate;// 修改时间
 
 	List<UserReward> rewards;

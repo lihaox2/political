@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSON;
 import com.bayee.political.json.UpdatePoliceRiskHealthShowFlagParam;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -386,22 +387,22 @@ public class UserController<V> extends BaseController {
 			}
 
 			names = names.substring(0, names.length() - 1);
-
 			userItem.setAlarmDepartmentNames(names);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
-			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy年MM月dd日");
-			Date parse = sdf1.parse(userItem.getBirthday());
-			String format = sdf2.format(parse);
-			userItem.setBirthday(format);
-			String format1 = sdf.format(userItem.getEmploymentDate());
-			userItem.setEmploymentDate(sdf.parse(format1));
-		}
 
+		}
 		// 格式化时间
 		userItem.setWorkingStartDateStr(DateUtils.formatDate(userItem.getWorkingStartDate(), "yyyy-MM-dd"));
 
-		return gson.toJson(userItem).getBytes("utf-8");
+		Map map = JSON.parseObject(JSON.toJSONString(userItem), Map.class);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy年MM月dd日");
+		Date parse = sdf1.parse(userItem.getBirthday());
+		String format = sdf2.format(parse);
+		map.put("birthday",format);
+		String format1 = sdf.format(userItem.getEmploymentDate());
+		map.put("employmentDate",format1);
+		return gson.toJson(map).getBytes("utf-8");
 
 	}
 

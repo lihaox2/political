@@ -429,10 +429,10 @@ public class UserServiceImpl implements UserService {
 				list.add(map);
 			});
 			try {
-				File file = new File("D:/Downloads/警员花名册.xlsx");
+				File file = new File("mnt/qiantang/policeInfo/警员花名册.xlsx");
 				file.delete();
 				//通过工具类创建writer
-				ExcelWriter writer = ExcelUtil.getWriter("D:/Downloads/警员花名册.xlsx");
+				ExcelWriter writer = ExcelUtil.getWriter("mnt/qiantang/policeInfo/警员花名册.xlsx");
 
 				//跳过当前行，既第一行，非必须，在此演示用
 				writer.passCurrentRow();

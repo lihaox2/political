@@ -622,6 +622,7 @@ public class RiskExportExcelDataController {
 					recordInfo.setIsOrthopaedics(0);
 				}
 			}
+			recordInfo.setOtherHealthDesc(excel.get(23));
 
 			if(riskHealthRecordId!=null) {
 				riskHealthRecord.setId(riskHealthRecordId);

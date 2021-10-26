@@ -49,6 +49,11 @@ public class RiskHonourDetailsResult {
     private String honourUnitLevel;
 
     /**
+     * 文号
+     */
+    private String documentNumber;
+
+    /**
      * 备注
      */
     private String remark;
@@ -57,6 +62,14 @@ public class RiskHonourDetailsResult {
      * 批准时间
      */
     private String businessTime;
+
+    public String getDocumentNumber() {
+        return documentNumber;
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
+    }
 
     public String getPoliceId() {
         return policeId;

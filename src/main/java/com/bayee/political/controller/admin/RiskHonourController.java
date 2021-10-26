@@ -89,6 +89,7 @@ public class RiskHonourController {
         result.setHonourUnit(honour.getHonourUnit());
         result.setHonourUnitLevel(honour.getHonourUnitLevel());
         result.setRemark(honour.getRemark());
+        result.setDocumentNumber(honour.getDocumentNumber());
         result.setBusinessTime(DateUtils.formatDate(honour.getBusinessTime(), "yyyy-MM"));
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);

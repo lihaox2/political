@@ -41,6 +41,8 @@ public class UserServiceImpl implements UserService {
 
 	private Logger log= LoggerFactory.getLogger(UserServiceImpl.class);
 
+	private final String HOST = "http://8.136.146.186/static";
+
 	@Autowired
 	UserMapper userMapper;
 
@@ -426,7 +428,7 @@ public class UserServiceImpl implements UserService {
 			});
 			try {
 				//通过工具类创建writer
-				ExcelWriter writer = ExcelUtil.getWriter("D:/Downloads/警员花名册.xlsx");
+				ExcelWriter writer = ExcelUtil.getWriter("/mnt/qiantang/policeInfo/警员花名册.xlsx");
 
 				//跳过当前行，既第一行，非必须，在此演示用
 				writer.passCurrentRow();
@@ -457,7 +459,7 @@ public class UserServiceImpl implements UserService {
 				return new ResponseEntity<DataListReturn>(DataListReturn.ok(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-		return  new ResponseEntity<DataListReturn>(DataListReturn.ok(), HttpStatus.OK);
+		return  new ResponseEntity<DataListReturn>(DataListReturn.ok(HOST+"/policeInfo/警员花名册.xlsx"), HttpStatus.OK);
 	}
 
 }

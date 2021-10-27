@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
 	private Logger log= LoggerFactory.getLogger(UserServiceImpl.class);
 
-	private final String HOST = "http://8.136.146.186/static";
+	private final String HOST = "http://8.136.146.186:8099/static";
 
 	@Autowired
 	UserMapper userMapper;
@@ -391,11 +391,12 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public ResponseEntity<?> export() {
-		List<User> users = userMapper.userAllList();
+		List<User> users = userMapper.userExport();
 		List<Map<String,Object>> list=new ArrayList<>();
 		if(users!=null && users.size()>0){
 			users.stream().forEach(e->{
-				Map<String,Object> map=new HashMap<>();
+				if(e.getName()!="admin"){
+					Map<String,Object> map=new HashMap<>();
 //				map.put("序列",e.getId());
 //				map.put("单位职务",e.getTitle());
 //				map.put("姓 名",e.getName());
@@ -411,22 +412,23 @@ public class UserServiceImpl implements UserService {
 //				map.put("警  衔",e.getPoliceRank());
 ////				map.put("授衔时间","");
 
-				map.put("id",e.getId());
-				map.put("title",e.getTitle());
-				map.put("name",e.getName());
-				map.put("gender",e.getGender()==1?"男":"女");
-				map.put("birthday",e.getBirthday());
-				map.put("nativePlace",e.getNativePlace());
-				map.put("degree",e.getDegree());
-				map.put("workingStartDate",e.getWorkingStartDate());
-				map.put("employmentDate",e.getEmploymentDate());
-				map.put("joiningPartyTime",e.getJoiningPartyTime());
-				map.put("reform","");
-				map.put("reformTime","");
-				map.put("policeRank",e.getPoliceRank());
-				map.put("confermentTime","");
-				log.info("======================map:{}",map);
-				list.add(map);
+					map.put("id",e.getId());
+					map.put("title",e.getPositionName());
+					map.put("name",e.getName());
+					map.put("gender",e.getGender()==1?"男":"女");
+					map.put("birthday",e.getBirthday());
+					map.put("nativePlace",e.getNativePlace());
+					map.put("degree",e.getDegree());
+					map.put("workingStartDate",e.getWorkingStartDate());
+					map.put("employmentDate",e.getEmploymentDate());
+					map.put("joiningPartyTime",e.getJoiningPartyTime());
+					map.put("reform","");
+					map.put("reformTime","");
+					map.put("policeRank",e.getPoliceRank());
+					map.put("confermentTime","");
+					log.info("======================map:{}",map);
+					list.add(map);
+				}
 			});
 			try {
 				File file = new File("/mnt/qiantang/policeInfo/警员花名册.xlsx");

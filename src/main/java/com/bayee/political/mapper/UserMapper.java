@@ -65,7 +65,7 @@ public interface UserMapper {
 	List<User> userList(@Param("departmentId") Integer departmentId, @Param("positionId") Integer positionId,
 			@Param("isUnitLeader") Integer isUnitLeader, @Param("isCadre") Integer isCadre,
 			@Param("keywords") String keywords, @Param("pageSize") Integer pageSize);
-
+	List<User> userExport();
 	// 人员列表数量统计
 	int userListCount(@Param("departmentId") Integer departmentId, @Param("positionId") Integer positionId,
 			@Param("isUnitLeader") Integer isUnitLeader, @Param("isCadre") Integer isCadre,

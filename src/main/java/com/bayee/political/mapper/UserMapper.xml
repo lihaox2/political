@@ -415,7 +415,16 @@ where 1=1
       </if>
 order by id desc limit #{pageSize},10
   </select>
-  <!-- 人员列表数量统计 -->
+    <!--人员花名册导出-->
+    <!-- 人员列表查询 -->
+    <select id="userExport" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
+        select a.*,b.name as department_name,c.position_name from user a
+        left join department b on b.id=a.department_id
+        left join police_position c on c.id=a.position_id
+        where 1=1
+    </select>
+
+    <!-- 人员列表数量统计 -->
   <select id="userListCount" parameterType="com.bayee.political.domain.User" resultType="java.lang.Integer">
 select count(*) from(select a.*,b.name as department_name,c.position_name from user a
 left join department b on b.id=a.department_id

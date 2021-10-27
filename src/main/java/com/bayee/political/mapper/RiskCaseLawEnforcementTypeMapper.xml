@@ -122,7 +122,7 @@
 
   <select id="lawEnforcementReportTypeDOQuery" resultType="com.bayee.political.pojo.RiskReportTypeStatisticsDO">
     SELECT
-      et2.name as typeName, COUNT(1) as typeCount
+        CONCAT(et2.name, ' -> ', et1.name) as typeName, COUNT(1) as typeCount
     FROM risk_case_law_enforcement_record a
            LEFT JOIN risk_case_law_enforcement_type et1 ON a.type = et1.id
            LEFT JOIN risk_case_law_enforcement_type et2 ON et1.parent_id = et2.id

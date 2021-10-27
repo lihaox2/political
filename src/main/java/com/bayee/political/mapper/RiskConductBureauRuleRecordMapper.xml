@@ -360,7 +360,7 @@
 
   <select id="conductBureauRuleReportTypeDOQuery" resultType="com.bayee.political.pojo.RiskReportTypeStatisticsDO">
     SELECT
-      CONCAT(brt3.name, ' -> ', brt2.name) as typeName, COUNT(1) as typeCount
+        CONCAT(brt3.name, ' -> ', brt2.name, ' -> ', brt1.name) as typeName, COUNT(1) as typeCount
     FROM risk_conduct_bureau_rule_record brr
            LEFT JOIN risk_conduct_bureau_rule_type brt1 ON brr.type = brt1.id
            LEFT JOIN risk_conduct_bureau_rule_type brt2 ON brt1.parent_id = brt2.id

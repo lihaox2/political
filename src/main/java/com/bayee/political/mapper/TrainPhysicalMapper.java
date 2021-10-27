@@ -382,4 +382,19 @@ public interface TrainPhysicalMapper {
 	 */
 	Integer getCountByTrainType(@Param("type") Integer type);
 
+	/**
+	 * 查询警员不合格的综合训练项目
+	 * @param policeId
+	 * @return
+	 */
+	List<TrainPhysical> findPoliceUnQualifiedTrainPhysical(String policeId);
+
+	/**
+	 * 查询警员的不合格项目
+	 * @param physicalId
+	 * @param policeId
+	 * @return
+	 */
+	List<String> findPoliceUnQualifiedProject(@Param("physicalId") Integer physicalId, @Param("policeId") String policeId);
+
 }

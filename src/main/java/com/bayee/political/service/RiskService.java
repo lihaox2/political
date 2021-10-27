@@ -314,4 +314,26 @@ public interface RiskService {
 	 */
 	GlobalIndexNumResultDO findRiskHealthGlobalIndexNum(String date);
 
+	/**
+	 * 查询警员不合格的综合训练项目
+	 * @param policeId
+	 * @return
+	 */
+	List<TrainPhysical> findPoliceUnQualifiedTrainPhysical(String policeId);
+
+	/**
+	 * 查询警员的不合格项目
+	 * @param physicalId
+	 * @param policeId
+	 * @return
+	 */
+	List<String> findPoliceUnQualifiedProject(Integer physicalId, String policeId);
+
+	/**
+	 * 查询警员不合格的枪械训练项目
+	 * @param policeId
+	 * @return
+	 */
+	List<TrainFirearm> findPoliceUnQualifiedTrainFirearm(String policeId);
+
 }

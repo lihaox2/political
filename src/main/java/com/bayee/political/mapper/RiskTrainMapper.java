@@ -2,6 +2,8 @@ package com.bayee.political.mapper;
 
 import java.util.List;
 
+import com.bayee.political.domain.TrainFirearm;
+import com.bayee.political.domain.TrainPhysical;
 import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import org.apache.ibatis.annotations.Param;
 

@@ -2026,4 +2026,15 @@ order by ifnull(b.bnum/a.anum,0) desc limit 5
 		</where>
 	</select>
 
+	<select id="findPoliceUnQualifiedTrainPhysical" resultMap="BaseResultMap">
+		select tp.* from train_physical_achievement tpa, train_physical tp
+		where tp.id = tpa.train_physical_id and police_id = #{policeId} and achievement_grade = 1
+	</select>
+
+	<select id="findPoliceUnQualifiedProject" resultType="String">
+		select tp.name from train_physical_achievement_details tpad, train_project tp
+		where tpad.project_id = tp.id and train_physical_id = #{physicalId}
+		  and achievement_grade = 1 and police_id = #{policeId}
+	</select>
+
 </mapper>

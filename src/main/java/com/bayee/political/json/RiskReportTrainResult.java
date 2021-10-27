@@ -12,9 +12,22 @@ public class RiskReportTrainResult {
     private String name;
 
     /**
+     * 不合格项目成绩
+     */
+    private String unQualifiedProject;
+
+    /**
      * 训练时间
      */
     private String date;
+
+    public String getUnQualifiedProject() {
+        return unQualifiedProject;
+    }
+
+    public void setUnQualifiedProject(String unQualifiedProject) {
+        this.unQualifiedProject = unQualifiedProject;
+    }
 
     public String getName() {
         return name;

@@ -153,4 +153,11 @@ public interface TrainFirearmMapper {
 	 */
 	Integer getCount();
 
+	/**
+	 * 查询警员不合格的枪械训练项目
+	 * @param policeId
+	 * @return
+	 */
+	List<TrainFirearm> findPoliceUnQualifiedTrainFirearm(String policeId);
+
 }

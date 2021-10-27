@@ -2,6 +2,7 @@ package com.bayee.political.controller.admin;
 
 import cn.hutool.core.util.StrUtil;
 import com.bayee.political.domain.*;
+import com.bayee.political.json.RiskReportTrainResult;
 import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
 import com.bayee.political.pojo.dto.*;
 import com.bayee.political.service.*;
@@ -28,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author xxl
@@ -219,6 +221,10 @@ public class RiskReportController {
         List<RiskReportTypeStatisticsDO> conductBureauRuleTypeList = riskService.conductBureauRuleReportTypeDOQuery(policeId, dateTime, lastMonthTime, timeType);
         List<RiskReportTypeStatisticsDO> dutyTypeList = riskService.dutyReportTypeDOQuery(policeId, dateTime, lastMonthTime, timeType);
 
+        //新增需求-统计警员不合格的综合训练项目情况
+        List<TrainFirearm> trainFirearmList = riskService.findPoliceUnQualifiedTrainFirearm(policeId);
+        List<TrainPhysical> trainPhysicalList = riskService.findPoliceUnQualifiedTrainPhysical(policeId);
+
         Double totalNum = nullToZero(conduct.getIndexNum()) + nullToZero(riskCase.getIndexNum()) + nullToZero(duty.getIndexNum()) +
                 nullToZero(train.getIndexNum()) + nullToZero(socialContact.getIndexNum()) + nullToZero(familyEvaluation.getIndexNum()) +
                 nullToZero(health.getIndexNum());
@@ -298,13 +304,34 @@ public class RiskReportController {
         map.put("physicalAchievementTotalScore", nullToZero(train.getPhysicalScore()));
         map.put("physicalAchievementCount", nullToZero(train.getPhysicalNum()));
         map.put("physicalAchievementQualifiedCount", nullToZero(train.getPhysicalPassNum()));
+        map.put("physicalAchievementUnQualifiedCount", nullToZero(train.getPhysicalFailNum()));
         //TODO 免测和抽测数据来源
         map.put("physicalAchievementUnTestCount", "0");
         map.put("physicalAchievementDrawCount", "0");
+        map.put("physicalUnQualifiedList", trainPhysicalList.parallelStream().map(e -> {
+            RiskReportTrainResult result = new RiskReportTrainResult();
+            result.setName(textParser(e.getName(), 11));
+            result.setUnQualifiedProject(textParser(riskService.findPoliceUnQualifiedProject(e.getId(), policeId)
+                    .stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(",")), 9));
+            result.setDate(DateUtils.formatDate(e.getTrainStartDate(), "yyyy年MM月dd日") +"-"+
+                    DateUtils.formatDate(e.getTrainEndDate(), "yyyy年MM月dd日"));
+            return result;
+        }).collect(Collectors.toList()));
+
         //枪械训练
         map.put("firearmTotalScore", nullToZero(train.getFirearmScore()));
         map.put("firearmCount", nullToZero(train.getFirearmNum()));
         map.put("firearmQualifiedCount", nullToZero(train.getFirearmPassNum()));
+        map.put("firearmUnQualifiedCount", nullToZero(train.getFirearmFailNum()));
+        map.put("firearmUnQualifiedList", trainFirearmList.parallelStream().map(e -> {
+            RiskReportTrainResult result = new RiskReportTrainResult();
+            result.setName(textParser(e.getName(), 15));
+            result.setDate(DateUtils.formatDate(e.getTrainStartDate(), "yyyy年MM月dd日") +"-"+
+                    DateUtils.formatDate(e.getTrainEndDate(), "yyyy年MM月dd日"));
+            return result;
+        }).collect(Collectors.toList()));
 
         //社交风险
         map.put("socialContactTotalScore", nullToZero(socialContact.getIndexNum()));
@@ -365,12 +392,12 @@ public class RiskReportController {
         map.put("orthopaedicsDesc", textParser(healthRecordInfo.getOrthopaedicsDesc(), 36));
 
         String summary = "行为规范上";
-        if (nullToZero(bureauRuleReportDO.getTotalCount()) > 0 || nullToZero(conduct.getVisitScore()) > 0) {
+        if (nullToZero(bureauRuleReportDO.getTotalCount()) > 0 || nullToZero(visitReportDO.getTotalCount()) > 0) {
             if (nullToZero(bureauRuleReportDO.getTotalCount()) > 0) {
                 summary += "，行为风险次数达到"+bureauRuleReportDO.getTotalCount()+"次";
             }
-            if (nullToZero(conduct.getVisitScore()) > 0) {
-                summary += "，信访次数达到"+conduct.getVisitScore()+"次";
+            if (nullToZero(visitReportDO.getTotalCount()) > 0) {
+                summary += "，信访次数达到"+visitReportDO.getTotalCount()+"次";
             }
         } else {
             summary += "，一切正常";

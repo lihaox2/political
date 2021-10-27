@@ -380,4 +380,5 @@ and achievement_grade >1 and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}) d
             AND DATE_FORMAT(creation_date, '%Y-%m') &lt;= #{date}
           GROUP BY police_id) a
   </select>
+
 </mapper>

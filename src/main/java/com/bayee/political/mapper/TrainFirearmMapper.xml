@@ -397,4 +397,9 @@ select * from train_firearm where train_firearm_type = (select project_id from t
     select count(id) from train_firearm
   </select>
 
+  <select id="findPoliceUnQualifiedTrainFirearm" resultMap="BaseResultMap">
+    select tp.* from train_firearm_achievement tpa, train_firearm tp
+    where tp.id = tpa.train_firearm_id and police_id = '054799' and achievement_grade = 1
+  </select>
+
 </mapper>

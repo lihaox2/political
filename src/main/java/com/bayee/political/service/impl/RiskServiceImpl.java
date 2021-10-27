@@ -127,6 +127,12 @@ public class RiskServiceImpl implements RiskService {
 	@Autowired
 	RiskConductVisitMapper riskConductVisitMapper;
 
+	@Autowired
+	TrainPhysicalMapper trainPhysicalMapper;
+
+	@Autowired
+	TrainFirearmMapper trainFirearmMapper;
+
 	@Override
 	public int insertSelective(RiskHealth record) {
 		return riskHealthMapper.insertSelective(record);
@@ -700,6 +706,21 @@ public class RiskServiceImpl implements RiskService {
 	@Override
 	public GlobalIndexNumResultDO findRiskHealthGlobalIndexNum(String date) {
 		return riskHealthMapper.findGlobalIndexNum(date);
+	}
+
+	@Override
+	public List<TrainPhysical> findPoliceUnQualifiedTrainPhysical(String policeId) {
+		return trainPhysicalMapper.findPoliceUnQualifiedTrainPhysical(policeId);
+	}
+
+	@Override
+	public List<String> findPoliceUnQualifiedProject(Integer physicalId, String policeId) {
+		return trainPhysicalMapper.findPoliceUnQualifiedProject(physicalId, policeId);
+	}
+
+	@Override
+	public List<TrainFirearm> findPoliceUnQualifiedTrainFirearm(String policeId) {
+		return trainFirearmMapper.findPoliceUnQualifiedTrainFirearm(policeId);
 	}
 
 }

@@ -395,8 +395,7 @@ public class UserServiceImpl implements UserService {
 		List<Map<String,Object>> list=new ArrayList<>();
 		if(users!=null && users.size()>0){
 			users.stream().forEach(e->{
-				if(e.getName()!="admin"){
-					Map<String,Object> map=new HashMap<>();
+				Map<String,Object> map=new HashMap<>();
 //				map.put("序列",e.getId());
 //				map.put("单位职务",e.getTitle());
 //				map.put("姓 名",e.getName());
@@ -412,24 +411,24 @@ public class UserServiceImpl implements UserService {
 //				map.put("警  衔",e.getPoliceRank());
 ////				map.put("授衔时间","");
 
-					map.put("id",e.getId());
-					map.put("title",e.getPositionName());
-					map.put("name",e.getName());
-					map.put("gender",e.getGender()==1?"男":"女");
-					map.put("birthday",e.getBirthday());
-					map.put("nativePlace",e.getNativePlace());
-					map.put("degree",e.getDegree());
-					map.put("workingStartDate",e.getWorkingStartDate());
-					map.put("employmentDate",e.getEmploymentDate());
-					map.put("joiningPartyTime",e.getJoiningPartyTime());
-					map.put("reform","");
-					map.put("reformTime","");
-					map.put("policeRank",e.getPoliceRank());
-					map.put("confermentTime","");
-					log.info("======================map:{}",map);
-					list.add(map);
-				}
+				map.put("id",e.getId());
+				map.put("title",e.getPositionName());
+				map.put("name",e.getName());
+				map.put("gender",e.getGender()==1?"男":"女");
+				map.put("birthday",e.getBirthday());
+				map.put("nativePlace",e.getNativePlace());
+				map.put("degree",e.getDegree());
+				map.put("workingStartDate",e.getWorkingStartDate());
+				map.put("employmentDate",e.getEmploymentDate());
+				map.put("joiningPartyTime",e.getJoiningPartyTime());
+				map.put("reform","");
+				map.put("reformTime","");
+				map.put("policeRank",e.getPoliceRank());
+				map.put("confermentTime","");
+				log.info("======================map:{}",map);
+				list.add(map);
 			});
+			list.remove(0);
 			try {
 				File file = new File("/mnt/qiantang/policeInfo/警员花名册.xlsx");
 				file.delete();

@@ -397,11 +397,15 @@ public class UserController<V> extends BaseController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy年MM月dd日");
-		Date parse = sdf1.parse(userItem.getBirthday());
-		String format = sdf2.format(parse);
-		map.put("birthday",format);
-		String format1 = sdf.format(userItem.getEmploymentDate());
-		map.put("employmentDate",format1);
+		if(userItem.getBirthday()!=null || userItem.getBirthday()!=""){
+			Date parse = sdf1.parse(userItem.getBirthday());
+			String format = sdf2.format(parse);
+			map.put("birthday",format);
+		}
+		if(userItem.getEmploymentDate()!=null){
+			String format1 = sdf.format(userItem.getEmploymentDate());
+			map.put("employmentDate",format1);
+		}
 		return gson.toJson(map).getBytes("utf-8");
 
 	}

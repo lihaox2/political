@@ -43,11 +43,8 @@ public interface TrainFirearmAchievementService {
      * @param policeId
      * @return
      */
-    List<TrainFirearmAchievement> findFirearmRecordYearAndMont(
-            @Param("firearmRecordYear") String firearmRecordYear,
-            @Param("firearmRecordMonth") String firearmRecordMonth,
-            @Param("policeId") String policeId
-    );
+    List<TrainFirearmAchievement> findFirearmRecordYearAndMont(String firearmRecordYear,
+                                                               String firearmRecordMonth, String policeId);
 
     /**
      * 统计警员平均射击成绩

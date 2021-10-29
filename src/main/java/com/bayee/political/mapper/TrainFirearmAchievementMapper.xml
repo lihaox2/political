@@ -594,7 +594,7 @@ order by a.creation_date desc
         <if test="firearmRecordYear != null and firearmRecordYear != ''">
             and DATE_FORMAT(sign_date,'%Y') = #{firearmRecordYear}
         </if>
-        <if test="firearmRecordMonth != null and firearmRecordYear != ''">
+        <if test="firearmRecordMonth != null and firearmRecordMonth != ''">
             and DATE_FORMAT(sign_date,'%m') = #{firearmRecordMonth}
         </if>
         <if test="policeId != null and policeId != ''">

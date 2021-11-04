@@ -272,7 +272,11 @@
       AND (u.name like CONCAT('%',#{key},'%') OR u.police_id like CONCAT('%',#{key},'%') OR record.content LIKE CONCAT('%',#{key},'%'))
     </if>
     <if test="informationId != null">
-      AND itype.id = #{informationId}
+      AND itype.id in (
+      <foreach collection="informationId" item="item" separator=",">
+        #{item}
+      </foreach>
+      )
     </if>
     <if test="errorId != null">
       AND etype.id = #{errorId}
@@ -296,7 +300,11 @@
       AND (u.name like CONCAT('%',#{key},'%') OR u.police_id like CONCAT('%',#{key},'%') OR record.content LIKE CONCAT('%',#{key},'%'))
     </if>
     <if test="informationId != null">
-      AND itype.id = #{informationId}
+      AND itype.id in (
+          <foreach collection="informationId" item="item" separator=",">
+            #{item}
+          </foreach>
+      )
     </if>
     <if test="errorId != null">
       AND etype.id = #{errorId}

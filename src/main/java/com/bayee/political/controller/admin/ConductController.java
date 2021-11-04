@@ -1,6 +1,7 @@
 package com.bayee.political.controller.admin;
 
 import com.bayee.political.domain.*;
+import com.bayee.political.enums.RiskDataOperationType;
 import com.bayee.political.filter.UserSession;
 import com.bayee.political.pojo.dto.ConductBureauRuleDetailsDO;
 import com.bayee.political.pojo.dto.ConductBureauRuleTypeDetailsDO;
@@ -55,6 +56,14 @@ public class ConductController {
     @Autowired
     RiskRelevantRecordService policeRelevantService;
 
+    @Autowired
+    RiskDataOperationLogService riskDataOperationLogService;
+
+    /**
+     * 动态排摸
+     * @param queryParam
+     * @return
+     */
     @GetMapping("/police/relevant/page")
     public ResponseEntity<?> policeRelevantPage(RiskRelevantPageQueryParam queryParam) {
 
@@ -91,10 +100,13 @@ public class ConductController {
 
     @PostMapping("/update/police/relevant/{id}")
     public ResponseEntity<?> updatePoliceRelevant(@PathVariable Integer id,
-                                                  @RequestBody PoliceRelevantSaveParam saveParam) {
+                                                  @RequestBody PoliceRelevantSaveParam saveParam,
+                                                  HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
+
         RiskRelevantRecord relevant = policeRelevantService.findById(id);
         relevant.setPoliceId(saveParam.getPoliceId());
         relevant.setTypeCode(saveParam.getTypeCode());
@@ -102,16 +114,30 @@ public class ConductController {
         relevant.setBusinessDate(DateUtils.parseDate(saveParam.getBusinessDate(), "yyyy-MM-dd"));
         relevant.setRemark(saveParam.getRemark());
         relevant.setUdpateDate(new Date());
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.UPDATE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110023);
+        log.setDataOriginId(relevant.getId());
+        log.setDataOriginPoliceId(relevant.getPoliceId());
+        log.setDataOriginBusinessDate(relevant.getBusinessDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         policeRelevantService.updatePoliceRelevant(relevant);
 
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/add/police/relevant")
-    public ResponseEntity<?> addPoliceRelevant(@RequestBody PoliceRelevantSaveParam saveParam) {
+    public ResponseEntity<?> addPoliceRelevant(@RequestBody PoliceRelevantSaveParam saveParam,
+                                               HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
 
         RiskRelevantRecord relevant = new RiskRelevantRecord();
         relevant.setPoliceId(saveParam.getPoliceId());
@@ -122,11 +148,36 @@ public class ConductController {
         relevant.setCreationDate(new Date());
         policeRelevantService.insertPoliceRelevant(relevant);
 
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.ADD.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110023);
+        log.setDataOriginId(relevant.getId());
+        log.setDataOriginPoliceId(relevant.getPoliceId());
+        log.setDataOriginBusinessDate(relevant.getBusinessDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/police/relevant")
-    public ResponseEntity<?> deletePoliceRelevant(@RequestParam("id") Integer id) {
+    public ResponseEntity<?> deletePoliceRelevant(@RequestParam("id") Integer id,
+                                                  HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
+        RiskRelevantRecord relevant = policeRelevantService.findById(id);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.DELETE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110023);
+        log.setDataOriginId(relevant.getId());
+        log.setDataOriginPoliceId(relevant.getPoliceId());
+        log.setDataOriginBusinessDate(relevant.getBusinessDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         policeRelevantService.deleteById(id);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -206,10 +257,12 @@ public class ConductController {
     }
 
     @PostMapping("/add/bureau/rule")
-    public ResponseEntity<?> addConductBureauRule(@RequestBody ConductBureauRuleSaveParam saveParam) {
+    public ResponseEntity<?> addConductBureauRule(@RequestBody ConductBureauRuleSaveParam saveParam,
+                                                  HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
 
         RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(saveParam.getTypeId());
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -228,16 +281,30 @@ public class ConductController {
         record.setIsEffective(1);
 
         riskConductBureauRuleRecordService.insert(record);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.ADD.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110021);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/bureau/rule/{id}")
     public ResponseEntity<?> updateConductBureauRule(@PathVariable("id") Integer id,
-                                                     @RequestBody ConductBureauRuleSaveParam saveParam) {
+                                                     @RequestBody ConductBureauRuleSaveParam saveParam,
+                                                     HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
 
         RiskConductBureauRuleType ruleType = riskConductBureauRuleTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductBureauRuleRecord record = riskConductBureauRuleRecordService.selectByPrimaryKey(id);
@@ -254,6 +321,17 @@ public class ConductController {
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate() + " " + time, "yyyy-MM-dd HH:mm:ss"));
         record.setUpdateDate(new Date());
         record.setImgArr(saveParam.getFileList());
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.UPDATE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110021);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskConductBureauRuleRecordService.updateByPrimaryKey(record);
         totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
@@ -289,11 +367,24 @@ public class ConductController {
     }
 
     @DeleteMapping("/delete/bureau/rule")
-    public ResponseEntity<?> deleteConductBureauRule(@RequestParam("id") Integer id) {
-        ConductBureauRuleDetailsDO detailsDTO = riskConductBureauRuleRecordService.findById(id);
+    public ResponseEntity<?> deleteConductBureauRule(@RequestParam("id") Integer id,
+                                                     HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
+        RiskConductBureauRuleRecord record = riskConductBureauRuleRecordService.selectByPrimaryKey(id);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.DELETE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110021);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskConductBureauRuleRecordService.deleteByPrimaryKey(id);
-        totalRiskDetailsService.conductRiskDetails(LocalDate.parse(detailsDTO.getDate()));
+        totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -345,11 +436,13 @@ public class ConductController {
     }
 
     @PostMapping("/add/visit")
-    public ResponseEntity<?> addConductVisit(@RequestBody ConductVisitSaveParam saveParam) {
+    public ResponseEntity<?> addConductVisit(@RequestBody ConductVisitSaveParam saveParam,
+                                             HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
 
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
 //        RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductVisitRecord record = new RiskConductVisitRecord();
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -366,17 +459,31 @@ public class ConductController {
         record.setIsEffective(1);
 
         riskConductVisitRecordService.insert(record);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.ADD.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110022);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/visit/{id}")
     public ResponseEntity<?> updateConductVisit(@PathVariable("id") Integer id,
-                                                @RequestBody ConductVisitSaveParam saveParam) {
+                                                @RequestBody ConductVisitSaveParam saveParam,
+                                                HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
 
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
 //        RiskConductVisitType riskConductVisitType = riskConductVisitTypeService.selectByPrimaryKey(saveParam.getTypeId());
         RiskConductVisitRecord record = riskConductVisitRecordService.selectByPrimaryKey(id);
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -391,6 +498,17 @@ public class ConductController {
         record.setUpdateDate(new Date());
         record.setIsReally(saveParam.getIsReally());
         record.setOriginId(saveParam.getOriginId());
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.UPDATE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110022);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskConductVisitRecordService.updateByPrimaryKey(record);
         totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
@@ -426,8 +544,21 @@ public class ConductController {
     }
 
     @DeleteMapping("/delete/visit")
-    public ResponseEntity<?> deleteConductVisit(@RequestParam("id") Integer id) {
+    public ResponseEntity<?> deleteConductVisit(@RequestParam("id") Integer id,
+                                                HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskConductVisitRecord record = riskConductVisitRecordService.selectByPrimaryKey(id);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.DELETE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110022);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskConductVisitRecordService.deleteByPrimaryKey(id);
         totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));

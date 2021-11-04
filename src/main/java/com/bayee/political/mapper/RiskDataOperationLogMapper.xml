@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.RiskDataOperationLogMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.RiskDataOperationLog" >
+    <id column="operation_type" property="operationType" jdbcType="VARCHAR" />
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="operation_police_id" property="operationPoliceId" jdbcType="VARCHAR" />
+    <result column="data_origin_type" property="dataOriginType" jdbcType="INTEGER" />
+    <result column="data_origin_id" property="dataOriginId" jdbcType="INTEGER" />
+    <result column="data_origin_police_id" property="dataOriginPoliceId" jdbcType="VARCHAR" />
+    <result column="data_origin_business_date" property="dataOriginBusinessDate" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    operation_type, id, operation_police_id, data_origin_type, data_origin_id, data_origin_police_id, 
+    data_origin_business_date, creation_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from risk_data_operation_log
+    where operation_type = #{operationType,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from risk_data_operation_log
+    where operation_type = #{operationType,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskDataOperationLog" >
+    insert into risk_data_operation_log (operation_type, id, operation_police_id, 
+      data_origin_type, data_origin_id, data_origin_police_id, 
+      data_origin_business_date, creation_date
+      )
+    values (#{operationType,jdbcType=VARCHAR}, #{id,jdbcType=INTEGER}, #{operationPoliceId,jdbcType=VARCHAR}, 
+      #{dataOriginType,jdbcType=INTEGER}, #{dataOriginId,jdbcType=INTEGER}, #{dataOriginPoliceId,jdbcType=VARCHAR}, 
+      #{dataOriginBusinessDate,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskDataOperationLog" >
+    insert into risk_data_operation_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="operationType != null" >
+        operation_type,
+      </if>
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="operationPoliceId != null" >
+        operation_police_id,
+      </if>
+      <if test="dataOriginType != null" >
+        data_origin_type,
+      </if>
+      <if test="dataOriginId != null" >
+        data_origin_id,
+      </if>
+      <if test="dataOriginPoliceId != null" >
+        data_origin_police_id,
+      </if>
+      <if test="dataOriginBusinessDate != null" >
+        data_origin_business_date,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="operationType != null" >
+        #{operationType,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="operationPoliceId != null" >
+        #{operationPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataOriginType != null" >
+        #{dataOriginType,jdbcType=INTEGER},
+      </if>
+      <if test="dataOriginId != null" >
+        #{dataOriginId,jdbcType=INTEGER},
+      </if>
+      <if test="dataOriginPoliceId != null" >
+        #{dataOriginPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataOriginBusinessDate != null" >
+        #{dataOriginBusinessDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.RiskDataOperationLog" >
+    update risk_data_operation_log
+    <set >
+      <if test="id != null" >
+        id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="operationPoliceId != null" >
+        operation_police_id = #{operationPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataOriginType != null" >
+        data_origin_type = #{dataOriginType,jdbcType=INTEGER},
+      </if>
+      <if test="dataOriginId != null" >
+        data_origin_id = #{dataOriginId,jdbcType=INTEGER},
+      </if>
+      <if test="dataOriginPoliceId != null" >
+        data_origin_police_id = #{dataOriginPoliceId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataOriginBusinessDate != null" >
+        data_origin_business_date = #{dataOriginBusinessDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where operation_type = #{operationType,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.RiskDataOperationLog" >
+    update risk_data_operation_log
+    set id = #{id,jdbcType=INTEGER},
+      operation_police_id = #{operationPoliceId,jdbcType=VARCHAR},
+      data_origin_type = #{dataOriginType,jdbcType=INTEGER},
+      data_origin_id = #{dataOriginId,jdbcType=INTEGER},
+      data_origin_police_id = #{dataOriginPoliceId,jdbcType=VARCHAR},
+      data_origin_business_date = #{dataOriginBusinessDate,jdbcType=TIMESTAMP},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP}
+    where operation_type = #{operationType,jdbcType=VARCHAR}
+  </update>
+</mapper>

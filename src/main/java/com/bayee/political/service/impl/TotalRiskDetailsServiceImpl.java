@@ -148,7 +148,7 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
             if (reportRecord != null) {
                 reportRecord.setDutyNum(riskDuty.getIndexNum());
                 riskReportRecordService.updateRiskReportRecord(reportRecord);
-            }else {
+            } else {
                 reportRecord = new RiskReportRecord(0d);
                 GlobalIndexNumResultDO resultDO = riskReportRecordService.findRiskReportRecordGlobalIndexNum(date);
                 reportRecord.setPoliceId(user.getPoliceId());

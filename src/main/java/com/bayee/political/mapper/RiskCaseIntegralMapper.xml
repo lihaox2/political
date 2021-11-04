@@ -23,7 +23,7 @@
     delete from risk_case_integral
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseIntegral" >
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseIntegral" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into risk_case_integral (id, police_id, dept_id, 
       business_time, score, creation_date, 
       update_date)

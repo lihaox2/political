@@ -1,12 +1,16 @@
 package com.bayee.political.controller.admin;
 
 import cn.hutool.core.util.StrUtil;
+import com.bayee.political.domain.RiskDataOperationLog;
 import com.bayee.political.domain.RiskHonour;
 import com.bayee.political.domain.RiskHonourType;
 import com.bayee.political.domain.User;
+import com.bayee.political.enums.RiskDataOperationType;
+import com.bayee.political.filter.UserSession;
 import com.bayee.political.json.RiskHonourDetailsResult;
 import com.bayee.political.json.RiskHonourPageQueryParam;
 import com.bayee.political.json.RiskHonourSaveParam;
+import com.bayee.political.service.RiskDataOperationLogService;
 import com.bayee.political.service.RiskHonourService;
 import com.bayee.political.service.RiskHonourTypeService;
 import com.bayee.political.service.UserService;
@@ -17,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,6 +44,9 @@ public class RiskHonourController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    RiskDataOperationLogService riskDataOperationLogService;
+
     @GetMapping("/page")
     public ResponseEntity<?> riskHonourPage(RiskHonourPageQueryParam queryParam) {
 
@@ -51,12 +59,14 @@ public class RiskHonourController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addRiskHonour(@RequestBody RiskHonourSaveParam saveParam) {
+    public ResponseEntity<?> addRiskHonour(@RequestBody RiskHonourSaveParam saveParam,
+                                           HttpServletRequest httpServletRequest) {
         User user = userService.findByPoliceId(saveParam.getPoliceId());
         if (user == null || user.getId() == null) {
             return new ResponseEntity<>(DataListReturn.error("警员不存在！"), HttpStatus.OK);
         }
 
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskHonour honour = new RiskHonour();
         honour.setPoliceId(saveParam.getPoliceId());
         honour.setHonourName(saveParam.getHonourName());
@@ -69,6 +79,18 @@ public class RiskHonourController {
         honour.setCreationDate(new Date());
         honour.setDocumentNumber(saveParam.getDocumentNumber());
         riskHonourService.addRiskHonour(honour);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.ADD.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(11009);
+        log.setDataOriginId(honour.getId());
+        log.setDataOriginPoliceId(honour.getPoliceId());
+        log.setDataOriginBusinessDate(honour.getBusinessTime());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -96,7 +118,9 @@ public class RiskHonourController {
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<?> updateRiskHonour(@PathVariable Integer id, @RequestBody RiskHonourSaveParam saveParam) {
+    public ResponseEntity<?> updateRiskHonour(@PathVariable Integer id, @RequestBody RiskHonourSaveParam saveParam,
+                                              HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskHonour honour = riskHonourService.riskHonourDetails(id);
         honour.setHonourName(saveParam.getHonourName());
         honour.setHonourReason(saveParam.getHonourReason());
@@ -108,12 +132,37 @@ public class RiskHonourController {
         honour.setUpdateDate(new Date());
         honour.setDocumentNumber(saveParam.getDocumentNumber());
 
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.UPDATE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(11009);
+        log.setDataOriginId(honour.getId());
+        log.setDataOriginPoliceId(honour.getPoliceId());
+        log.setDataOriginBusinessDate(honour.getBusinessTime());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         riskHonourService.updateRiskHonour(honour);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/honour")
-    public ResponseEntity<?> DeleteRiskHonour(@RequestParam("id") Integer id) {
+    public ResponseEntity<?> deleteRiskHonour(@RequestParam("id") Integer id,
+                                              HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
+        RiskHonour honour = riskHonourService.riskHonourDetails(id);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.DELETE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(11009);
+        log.setDataOriginId(honour.getId());
+        log.setDataOriginPoliceId(honour.getPoliceId());
+        log.setDataOriginBusinessDate(honour.getBusinessTime());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskHonourService.deleteRiskHonour(id);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);

@@ -40,7 +40,7 @@
     delete from risk_health_record_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.bayee.political.domain.RiskHealthRecordInfo" >
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskHealthRecordInfo" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
     insert into risk_health_record_info (id, record_id, police_id,
                                          height, weight, high_density_lipoprotein,
                                          low_density_lipoprotein, triglyceride, cholesterol,

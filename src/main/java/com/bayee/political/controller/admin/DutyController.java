@@ -1,13 +1,17 @@
 package com.bayee.political.controller.admin;
 
+import cn.hutool.core.util.StrUtil;
+import com.bayee.political.domain.RiskDataOperationLog;
 import com.bayee.political.domain.RiskDutyDealPoliceRecord;
 import com.bayee.political.domain.User;
+import com.bayee.political.enums.RiskDataOperationType;
 import com.bayee.political.filter.UserSession;
 import com.bayee.political.pojo.dto.DutyDetailsDO;
 import com.bayee.political.pojo.dto.DutyPageDO;
 import com.bayee.political.json.DutyDetailsResult;
 import com.bayee.political.json.DutyPageResult;
 import com.bayee.political.json.DutySaveParam;
+import com.bayee.political.service.RiskDataOperationLogService;
 import com.bayee.political.service.RiskDutyDealPoliceRecordService;
 import com.bayee.political.service.TotalRiskDetailsService;
 import com.bayee.political.service.UserService;
@@ -39,6 +43,9 @@ public class DutyController {
     @Autowired
     TotalRiskDetailsService totalRiskDetailsService;
 
+    @Autowired
+    RiskDataOperationLogService riskDataOperationLogService;
+
     /**
      * 接警执勤
      * @param pageIndex
@@ -48,10 +55,10 @@ public class DutyController {
     @GetMapping("/duty/page")
     public ResponseEntity<?> dutyPage(@RequestParam("pageIndex") Integer pageIndex,
                                       @RequestParam("pageSize") Integer pageSize,
-                                      @RequestParam("informationId") Integer informationId,
                                       @RequestParam("errorId") Integer errorId,
                                       @RequestParam("key") String key,
                                       @RequestParam("deptId") Integer deptId,
+                                      @RequestParam("type") String type,
                                       HttpServletRequest httpServletRequest) {
         User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
 //        if (loginUser == null) {
@@ -60,6 +67,10 @@ public class DutyController {
         if (deptId != null && deptId == 1 || (loginUser != null && loginUser.getIsActive() != null
                 && loginUser.getIsActive() == 999)) {
             deptId = null;
+        }
+        List<Integer> informationId = null;
+        if (StrUtil.isNotBlank(type)) {
+            informationId = Arrays.stream(type.split(",")).map(Integer::parseInt).collect(Collectors.toList());
         }
 
         List<DutyPageDO> recordList = riskDutyDealPoliceRecordService.riskDutyDealPoliceRecordPage(pageIndex, pageSize, informationId, errorId, key, deptId);
@@ -86,11 +97,13 @@ public class DutyController {
     }
 
     @PostMapping("/add/duty")
-    public ResponseEntity<?> addDuty(@RequestBody DutySaveParam saveParam) {
+    public ResponseEntity<?> addDuty(@RequestBody DutySaveParam saveParam,
+                                     HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
 
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskDutyDealPoliceRecord record = new RiskDutyDealPoliceRecord();
         record.setInformationId(saveParam.getInformationId());
         record.setErrorId(saveParam.getErrorId());
@@ -107,16 +120,30 @@ public class DutyController {
         record.setIsEffective(1);
 
         riskDutyDealPoliceRecordService.insert(record);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.ADD.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(11004);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/duty/{id}")
-    public ResponseEntity<?> updateDuty(@PathVariable("id") Integer id,@RequestBody DutySaveParam saveParam) {
+    public ResponseEntity<?> updateDuty(@PathVariable("id") Integer id,@RequestBody DutySaveParam saveParam,
+                                        HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
 
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskDutyDealPoliceRecord record = riskDutyDealPoliceRecordService.selectByPrimaryKey(id);
         record.setInformationId(saveParam.getInformationId());
         record.setErrorId(saveParam.getErrorId());
@@ -130,6 +157,17 @@ public class DutyController {
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
         record.setDeductionScore(saveParam.getDeductScore());
         record.setImgArr(saveParam.getFileList());
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.UPDATE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(11004);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskDutyDealPoliceRecordService.updateByPrimaryKeySelective(record);
         totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
@@ -162,8 +200,21 @@ public class DutyController {
     }
 
     @DeleteMapping("/delete/duty")
-    public ResponseEntity<?> deleteDuty(@RequestParam("id") Integer id) {
+    public ResponseEntity<?> deleteDuty(@RequestParam("id") Integer id,
+                                        HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskDutyDealPoliceRecord record = riskDutyDealPoliceRecordService.selectByPrimaryKey(id);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.DELETE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(11004);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskDutyDealPoliceRecordService.deleteByPrimaryKey(id);
         totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));

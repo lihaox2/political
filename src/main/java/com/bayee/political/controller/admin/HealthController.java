@@ -1,16 +1,15 @@
 package com.bayee.political.controller.admin;
 
+import com.bayee.political.domain.RiskDataOperationLog;
 import com.bayee.political.domain.RiskHealthRecord;
 import com.bayee.political.domain.RiskHealthRecordInfo;
 import com.bayee.political.domain.User;
+import com.bayee.political.enums.RiskDataOperationType;
 import com.bayee.political.filter.UserSession;
 import com.bayee.political.json.HealthDetailsResult;
 import com.bayee.political.json.HealthPageResult;
 import com.bayee.political.json.HealthSaveParam;
-import com.bayee.political.service.RiskHealthRecordInfoService;
-import com.bayee.political.service.RiskHealthRecordService;
-import com.bayee.political.service.TotalRiskDetailsService;
-import com.bayee.political.service.UserService;
+import com.bayee.political.service.*;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +49,9 @@ public class HealthController {
 
     @Autowired
     TotalRiskDetailsService totalRiskDetailsService;
+
+    @Autowired
+    RiskDataOperationLogService riskDataOperationLogService;
 
     /**
      * 健康管理
@@ -105,10 +107,12 @@ public class HealthController {
     }
 
     @PostMapping("/add/health")
-    public ResponseEntity<?> addHealth(@RequestBody HealthSaveParam saveParam) {
+    public ResponseEntity<?> addHealth(@RequestBody HealthSaveParam saveParam,
+                                       HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
 
         String monthDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd HH:mm:ss"));
 
@@ -205,16 +209,30 @@ public class HealthController {
         recordInfo.setCreationDate(DateUtils.parseDate(saveParam.getYear()+monthDate, "yyyy-MM-dd HH:mm:ss"));
 
         riskHealthRecordInfoService.insert(recordInfo);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.ADD.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(11008);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         totalRiskDetailsService.healthRiskDetails(LocalDate.parse(saveParam.getYear()+LocalDate.now().format(DateTimeFormatter.ofPattern("-MM-dd"))));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/health/{id}")
-    public ResponseEntity<?> updateHealth(@PathVariable("id") Integer id, @RequestBody HealthSaveParam saveParam) {
+    public ResponseEntity<?> updateHealth(@PathVariable("id") Integer id, @RequestBody HealthSaveParam saveParam,
+                                          HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
 
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
 //        String year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
         String monthDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("-MM-dd HH:mm:ss"));
 
@@ -314,6 +332,18 @@ public class HealthController {
 
             riskHealthRecordInfoService.updateByPrimaryKey(recordInfo);
         }
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.UPDATE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(11008);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         totalRiskDetailsService.healthRiskDetails(LocalDate.parse(saveParam.getYear()+LocalDate.now().format(DateTimeFormatter.ofPattern("-MM-dd"))));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
@@ -358,8 +388,20 @@ public class HealthController {
     }
 
     @DeleteMapping("/delete/health")
-    public ResponseEntity<?> deleteHealth(@RequestParam("id") Integer id) {
+    public ResponseEntity<?> deleteHealth(@RequestParam("id") Integer id, HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskHealthRecord record = riskHealthRecordService.selectByPrimaryKey(id);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.DELETE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(11008);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskHealthRecordService.deleteByPrimaryKey(id);
         riskHealthRecordInfoService.deleteByRecordId(id);

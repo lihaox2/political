@@ -46,7 +46,7 @@
       #{highTestStatus,jdbcType=INTEGER}, #{judicialTestStatus,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, 
       #{updateDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskCaseAbilityRecord" >
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskCaseAbilityRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into risk_case_ability_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

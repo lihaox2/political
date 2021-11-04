@@ -66,7 +66,7 @@ public interface RiskDutyDealPoliceRecordMapper {
 	 */
 	List<DutyPageDO> riskDutyDealPoliceRecordPage(@Param("pageIndex") Integer pageIndex,
 												  @Param("pageSize") Integer pageSize,
-												  @Param("informationId") Integer informationId,
+												  @Param("informationId") List<Integer> informationId,
 												  @Param("errorId") Integer errorId,
 												  @Param("key") String key,
 												  @Param("deptId") Integer deptId);
@@ -78,7 +78,7 @@ public interface RiskDutyDealPoliceRecordMapper {
 	 * @param key
 	 * @return
 	 */
-	Integer riskDutyDealPoliceRecordPageCount(@Param("informationId") Integer informationId,
+	Integer riskDutyDealPoliceRecordPageCount(@Param("informationId") List<Integer> informationId,
 											  @Param("errorId") Integer errorId, @Param("key") String key,
 											  @Param("deptId") Integer deptId);
 

@@ -1,6 +1,7 @@
 package com.bayee.political.controller.admin;
 
 import com.bayee.political.domain.*;
+import com.bayee.political.enums.RiskDataOperationType;
 import com.bayee.political.filter.UserSession;
 import com.bayee.political.pojo.dto.CaseLawEnforcementDetailsDO;
 import com.bayee.political.pojo.dto.CaseLawEnforcementPageDO;
@@ -52,6 +53,14 @@ public class CaseController {
     @Autowired
     DepartmentService departmentService;
 
+    @Autowired
+    RiskDataOperationLogService riskDataOperationLogService;
+
+    /**
+     * 办案积分
+     * @param queryParam
+     * @return
+     */
     @GetMapping("/integral/page")
     public ResponseEntity<?> caseIntegralPage(CaseIntegralPageQueryParam queryParam) {
 
@@ -81,10 +90,12 @@ public class CaseController {
     }
 
     @PostMapping("/add/integral")
-    public ResponseEntity<?> addCaseIntegral(@RequestBody CaseIntegralSaveParam saveParam) {
+    public ResponseEntity<?> addCaseIntegral(@RequestBody CaseIntegralSaveParam saveParam,
+                                             HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
 
         RiskCaseIntegral integral = new RiskCaseIntegral();
         integral.setPoliceId(saveParam.getPoliceId());
@@ -94,15 +105,27 @@ public class CaseController {
         integral.setCreationDate(new Date());
 
         riskCaseIntegralService.addRiskCaseIntegral(integral);
+
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.ADD.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110034);
+        log.setDataOriginId(integral.getId());
+        log.setDataOriginPoliceId(integral.getPoliceId());
+        log.setDataOriginBusinessDate(integral.getBusinessTime());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/integral/{id}")
     public ResponseEntity<?> updateCaseIntegral(@PathVariable Integer id,
-                                                @RequestBody CaseIntegralSaveParam saveParam) {
+                                                @RequestBody CaseIntegralSaveParam saveParam,
+                                                HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
 
         RiskCaseIntegral integral = riskCaseIntegralService.findById(id);
         integral.setPoliceId(saveParam.getPoliceId());
@@ -111,12 +134,34 @@ public class CaseController {
         integral.setScore(saveParam.getScore());
         integral.setUpdateDate(new Date());
 
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.UPDATE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110034);
+        log.setDataOriginId(integral.getId());
+        log.setDataOriginPoliceId(integral.getPoliceId());
+        log.setDataOriginBusinessDate(integral.getBusinessTime());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
         riskCaseIntegralService.updateRiskCaseIntegral(integral);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/integral")
-    public ResponseEntity<?> deleteCaseIntegral(@RequestParam("id") Integer id) {
+    public ResponseEntity<?> deleteCaseIntegral(@RequestParam("id") Integer id,
+                                                HttpServletRequest httpServletRequest) {
+        RiskCaseIntegral integral = riskCaseIntegralService.findById(id);
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
+
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.DELETE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110034);
+        log.setDataOriginId(integral.getId());
+        log.setDataOriginPoliceId(integral.getPoliceId());
+        log.setDataOriginBusinessDate(integral.getBusinessTime());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
         riskCaseIntegralService.deleteRiskCaseIntegral(id);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
@@ -209,11 +254,12 @@ public class CaseController {
     }
 
     @PostMapping("/add/ability")
-    public ResponseEntity<?> addCaseAbility(@RequestBody CaseAbilitySaveParam caseAbilitySaveParam) {
+    public ResponseEntity<?> addCaseAbility(@RequestBody CaseAbilitySaveParam caseAbilitySaveParam,
+                                            HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(caseAbilitySaveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
-
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskCaseAbilityRecord record = new RiskCaseAbilityRecord();
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
@@ -235,17 +281,30 @@ public class CaseController {
             return new ResponseEntity(DataListReturn.error("本警员在该日期内已存在！"), HttpStatus.OK);
         }
         riskCaseAbilityRecordService.insertSelective(record);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.ADD.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110031);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(caseAbilitySaveParam.getDate()));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/ability/{id}")
     public ResponseEntity<?> updateCaseAbility(@PathVariable("id") Integer id,
-                                               @RequestBody CaseAbilitySaveParam caseAbilitySaveParam) {
+                                               @RequestBody CaseAbilitySaveParam caseAbilitySaveParam,
+                                               HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(caseAbilitySaveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
-
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskCaseAbilityRecord record = riskCaseAbilityRecordService.selectByPrimaryKey(id);
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
@@ -267,6 +326,18 @@ public class CaseController {
         if (recordId != null) {
             return new ResponseEntity(DataListReturn.error("本警员在该日期内已存在！"), HttpStatus.OK);
         }
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.UPDATE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110031);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         riskCaseAbilityRecordService.updateByPrimaryKeySelective(record);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(caseAbilitySaveParam.getDate()));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
@@ -296,8 +367,21 @@ public class CaseController {
     }
 
     @DeleteMapping("/delete/ability")
-    public ResponseEntity<?> deleteCaseAbility(@RequestParam("id") Integer id) {
+    public ResponseEntity<?> deleteCaseAbility(@RequestParam("id") Integer id,
+                                               HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskCaseAbilityRecord record = riskCaseAbilityRecordService.selectByPrimaryKey(id);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.DELETE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110031);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskCaseAbilityRecordService.deleteByPrimaryKey(id);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
@@ -352,11 +436,13 @@ public class CaseController {
     }
 
     @PostMapping("/add/law/enforcement")
-    public ResponseEntity<?> addCaseLawEnforcement(@RequestBody CaseLawEnforcementSaveParam saveParam) {
+    public ResponseEntity<?> addCaseLawEnforcement(@RequestBody CaseLawEnforcementSaveParam saveParam,
+                                                   HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
 
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskCaseLawEnforcementRecord record = new RiskCaseLawEnforcementRecord();
 
         record.setDeptName(saveParam.getDeptName());
@@ -371,17 +457,31 @@ public class CaseController {
         record.setIsEffective(1);
 
         riskCaseLawEnforcementRecordService.insert(record);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.ADD.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110032);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/law/enforcement/{id}")
     public ResponseEntity<?> updateCaseLawEnforcement(@PathVariable("id") Integer id,
-                                                      @RequestBody CaseLawEnforcementSaveParam saveParam) {
+                                                      @RequestBody CaseLawEnforcementSaveParam saveParam,
+                                                      HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
 
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskCaseLawEnforcementRecord record = riskCaseLawEnforcementRecordService.selectByPrimaryKey(id);
         record.setDeptName(saveParam.getDeptName());
         record.setCaseCode(saveParam.getCaseCode());
@@ -392,6 +492,17 @@ public class CaseController {
         record.setCreationDate(DateUtils.parseDate(saveParam.getDate(), "yyyy-MM-dd HH:mm:ss"));
         record.setUpdateDate(new Date());
         record.setImgArr(saveParam.getFileList());
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.UPDATE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110032);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(record);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
@@ -423,8 +534,21 @@ public class CaseController {
     }
 
     @DeleteMapping("/delete/law/enforcement")
-    public ResponseEntity<?> deleteCaseLawEnforcement(@RequestParam("id") Integer id) {
+    public ResponseEntity<?> deleteCaseLawEnforcement(@RequestParam("id") Integer id,
+                                                      HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskCaseLawEnforcementRecord record = riskCaseLawEnforcementRecordService.selectByPrimaryKey(id);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.DELETE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110032);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskCaseLawEnforcementRecordService.deleteByPrimaryKey(id);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
@@ -479,11 +603,13 @@ public class CaseController {
     }
 
     @PostMapping("/add/test")
-    public ResponseEntity<?> addCaseTest(@RequestBody CaseTestSaveParam saveParam) {
+    public ResponseEntity<?> addCaseTest(@RequestBody CaseTestSaveParam saveParam,
+                                         HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
 
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
         RiskCaseTestRecord record = new RiskCaseTestRecord();
@@ -500,17 +626,31 @@ public class CaseController {
 //            return new ResponseEntity(DataListReturn.error("本警员在该年度同一期内已存在！"), HttpStatus.OK);
 //        }
         riskCaseTestRecordService.insertTest(record);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.ADD.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110033);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
     }
 
     @PostMapping("/update/test/{id}")
     public ResponseEntity<?> updateCaseTest(@PathVariable("id") Integer id,
-                                            @RequestBody CaseTestSaveParam saveParam) {
+                                            @RequestBody CaseTestSaveParam saveParam,
+                                            HttpServletRequest httpServletRequest) {
         if (!userService.checkPoliceExists(saveParam.getPoliceId())){
             return new ResponseEntity(DataListReturn.error("警号不存在！"), HttpStatus.OK);
         }
 
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         RiskCaseTestRecord oldRecord = riskCaseTestRecordService.selectByPrimaryKey(id);
         oldRecord.setDeductionScore(saveParam.getScore() >= 60 ? 0d : 2d);
@@ -526,6 +666,18 @@ public class CaseController {
         if (recordId != null) {
             return new ResponseEntity(DataListReturn.error("本警员在该年度同一期内已存在！"), HttpStatus.OK);
         }*/
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.UPDATE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110033);
+        log.setDataOriginId(oldRecord.getId());
+        log.setDataOriginPoliceId(oldRecord.getPoliceId());
+        log.setDataOriginBusinessDate(oldRecord.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
+
         riskCaseTestRecordService.updateByPrimaryKey(oldRecord);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(oldRecord.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
@@ -548,8 +700,21 @@ public class CaseController {
     }
 
     @DeleteMapping("/delete/test")
-    public ResponseEntity<?> deleteCaseTest(@RequestParam("id") Integer id) {
+    public ResponseEntity<?> deleteCaseTest(@RequestParam("id") Integer id,
+                                            HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
         RiskCaseTestRecord record = riskCaseTestRecordService.selectByPrimaryKey(id);
+
+        //添加数据操作记录
+        RiskDataOperationLog log = new RiskDataOperationLog();
+        log.setOperationType(RiskDataOperationType.DELETE.getValue());
+        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setDataOriginType(110033);
+        log.setDataOriginId(record.getId());
+        log.setDataOriginPoliceId(record.getPoliceId());
+        log.setDataOriginBusinessDate(record.getCreationDate());
+        log.setCreationDate(new Date());
+        riskDataOperationLogService.insertOperationLog(log);
 
         riskCaseTestRecordService.deleteByPrimaryKey(id);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));

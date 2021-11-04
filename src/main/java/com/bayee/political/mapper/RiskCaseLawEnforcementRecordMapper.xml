@@ -30,7 +30,7 @@
     delete from risk_case_law_enforcement_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord" >
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskCaseLawEnforcementRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into risk_case_law_enforcement_record (id, police_id, type, 
       content, input_time, deduction_score, 
       dept_name, case_code, img_arr, 

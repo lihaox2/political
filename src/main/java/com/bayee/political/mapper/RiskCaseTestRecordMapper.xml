@@ -32,7 +32,7 @@
     delete from risk_case_test_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insertTest" parameterType="com.bayee.political.domain.RiskCaseTestRecord" >
+  <insert id="insertTest" parameterType="com.bayee.political.domain.RiskCaseTestRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
     insert into risk_case_test_record (id, police_id,index_num, year, 
       semester,name, score,deduction_score, creation_date, 
       update_date)

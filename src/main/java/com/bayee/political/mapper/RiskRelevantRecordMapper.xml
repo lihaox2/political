@@ -25,7 +25,7 @@
     delete from risk_relevant_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.bayee.political.domain.RiskRelevantRecord" >
+  <insert id="insert" parameterType="com.bayee.political.domain.RiskRelevantRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
     insert into risk_relevant_record (id, police_id, type_code,
       deduction_score, business_date, remark, 
       creation_date, udpate_date)

@@ -286,7 +286,7 @@ public class SystemController {
     @PostMapping("/upload/img")
     public ResponseEntity<?> uploadImg(@RequestParam("fileArr") MultipartFile[] fileArr) throws IOException {
         if (fileArr == null || fileArr.length == 0 || fileArr[0].getContentType() == null) {
-            return new ResponseEntity<>(DataListReturn.error("请添加图片"), HttpStatus.OK);
+            return new ResponseEntity<>(DataListReturn.error("请添加文件!"), HttpStatus.OK);
         }
 
         String path = "/mnt/qiantang/img/";

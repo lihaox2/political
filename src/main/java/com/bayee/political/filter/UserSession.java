@@ -1,6 +1,7 @@
 package com.bayee.political.filter;
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.bayee.political.domain.User;
 import com.bayee.political.exception.HandlerException;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -57,8 +58,17 @@ public class UserSession implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 
         //本地调试放行
-        String host = httpServletRequest.getRemoteHost();
-        if (host.contains("127.0.0.1")) {
+        String remoteAddress = httpServletRequest.getRemoteAddr();
+        String origin = httpServletRequest.getHeader("origin");
+
+        boolean ignoreFlag = false;
+        if (StrUtil.isNotBlank(remoteAddress) && (remoteAddress.contains("127.0.0.1") || remoteAddress.contains("0:0:0:0:0:0:0:1"))) {
+            ignoreFlag = true;
+        }
+        if (StrUtil.isNotBlank(origin) && (origin.contains("127.0.0.1") || origin.contains("0:0:0:0:0:0:0:1"))) {
+            ignoreFlag = true;
+        }
+        if (ignoreFlag) {
             chain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }

@@ -26,6 +26,19 @@ public class RiskRelevantPageQueryParam {
      */
     private Integer pageSize;
 
+    /**
+     * 部门编号
+     */
+    private Integer deptId;
+
+    public Integer getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
+    }
+
     public Integer getPageIndex() {
         return pageIndex;
     }

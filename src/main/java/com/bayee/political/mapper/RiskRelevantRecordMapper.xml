@@ -137,6 +137,9 @@
         left join risk_relevant_type prt1 on pr.type_code = prt1.code
         left join risk_relevant_type prt2 on prt1.p_code = prt2.code
     where 1 = 1
+        <if test="deptId != null">
+          and u.department_id = #{deptId}
+        </if>
         <if test="typeCode != null and typeCode != ''">
            and prt1.code = #{typeCode}
         </if>

@@ -65,7 +65,20 @@ public class ConductController {
      * @return
      */
     @GetMapping("/police/relevant/page")
-    public ResponseEntity<?> policeRelevantPage(RiskRelevantPageQueryParam queryParam) {
+    public ResponseEntity<?> policeRelevantPage(RiskRelevantPageQueryParam queryParam,
+                                                HttpServletRequest httpServletRequest) {
+        User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
+//        if (loginUser == null) {
+//            return new ResponseEntity(DataListReturn.error("请重新登录"), HttpStatus.OK);
+//        }
+        if (loginUser != null) {
+            queryParam.setDeptId(loginUser.getDepartmentId());
+            if (loginUser.getDepartmentId() != null && loginUser.getDepartmentId() == 1
+                    || (loginUser.getIsActive() != null && loginUser.getIsActive() == 999)) {
+                queryParam.setDeptId(null);
+            }
+        }
+
 
         Map<String, Object> result = new HashMap<>();
         result.put("pageIndex", queryParam.getPageIndex());

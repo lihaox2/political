@@ -89,7 +89,7 @@ public class RiskHonourController {
         log.setDataOriginPoliceId(honour.getPoliceId());
         log.setDataOriginBusinessDate(honour.getBusinessTime());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
@@ -141,7 +141,7 @@ public class RiskHonourController {
         log.setDataOriginPoliceId(honour.getPoliceId());
         log.setDataOriginBusinessDate(honour.getBusinessTime());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskHonourService.updateRiskHonour(honour);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -162,7 +162,7 @@ public class RiskHonourController {
         log.setDataOriginPoliceId(honour.getPoliceId());
         log.setDataOriginBusinessDate(honour.getBusinessTime());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskHonourService.deleteRiskHonour(id);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);

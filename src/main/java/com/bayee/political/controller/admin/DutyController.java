@@ -130,7 +130,7 @@ public class DutyController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -167,7 +167,7 @@ public class DutyController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskDutyDealPoliceRecordService.updateByPrimaryKeySelective(record);
         totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
@@ -214,7 +214,7 @@ public class DutyController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskDutyDealPoliceRecordService.deleteByPrimaryKey(id);
         totalRiskDetailsService.dutyRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));

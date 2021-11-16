@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.MajorAuditMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.MajorAudit" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="report_id" property="reportId" jdbcType="INTEGER" />
+    <result column="opinion" property="opinion" jdbcType="VARCHAR" />
+    <result column="audit_status" property="auditStatus" jdbcType="INTEGER" />
+    <result column="audit_result" property="auditResult" jdbcType="INTEGER" />
+    <result column="record_id" property="recordId" jdbcType="INTEGER" />
+    <result column="business_time" property="businessTime" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, report_id, opinion, audit_status, audit_result, record_id, business_time,
+    creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from major_audit
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from major_audit
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.MajorAudit" >
+    insert into major_audit (id, police_id, report_id,
+                             opinion, audit_status, audit_result,
+                             record_id, business_time, creation_date,
+                             update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{reportId,jdbcType=INTEGER},
+            #{opinion,jdbcType=VARCHAR}, #{auditStatus,jdbcType=INTEGER}, #{auditResult,jdbcType=INTEGER},
+            #{recordId,jdbcType=INTEGER}, #{businessTime,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP},
+            #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.MajorAudit" >
+    insert into major_audit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="reportId != null" >
+        report_id,
+      </if>
+      <if test="opinion != null" >
+        opinion,
+      </if>
+      <if test="auditStatus != null" >
+        audit_status,
+      </if>
+      <if test="auditResult != null" >
+        audit_result,
+      </if>
+      <if test="recordId != null" >
+        record_id,
+      </if>
+      <if test="businessTime != null" >
+        business_time,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportId != null" >
+        #{reportId,jdbcType=INTEGER},
+      </if>
+      <if test="opinion != null" >
+        #{opinion,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null" >
+        #{auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="auditResult != null" >
+        #{auditResult,jdbcType=INTEGER},
+      </if>
+      <if test="recordId != null" >
+        #{recordId,jdbcType=INTEGER},
+      </if>
+      <if test="businessTime != null" >
+        #{businessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.MajorAudit" >
+    update major_audit
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportId != null" >
+        report_id = #{reportId,jdbcType=INTEGER},
+      </if>
+      <if test="opinion != null" >
+        opinion = #{opinion,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null" >
+        audit_status = #{auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="auditResult != null" >
+        audit_result = #{auditResult,jdbcType=INTEGER},
+      </if>
+      <if test="recordId != null" >
+        record_id = #{recordId,jdbcType=INTEGER},
+      </if>
+      <if test="businessTime != null" >
+        business_time = #{businessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.MajorAudit" >
+    update major_audit
+    set police_id = #{policeId,jdbcType=VARCHAR},
+        report_id = #{reportId,jdbcType=INTEGER},
+        opinion = #{opinion,jdbcType=VARCHAR},
+        audit_status = #{auditStatus,jdbcType=INTEGER},
+        audit_result = #{auditResult,jdbcType=INTEGER},
+        record_id = #{recordId,jdbcType=INTEGER},
+        business_time = #{businessTime,jdbcType=TIMESTAMP},
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+        update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByReportIdAndStatus" resultType="com.bayee.political.json.MajorAuditDetailsResult"
+          parameterType="java.lang.Integer">
+    select
+      ma.audit_status as auditStatus, u.`name` as name, ma.audit_result as auditResult, ma.opinion as opinion,
+      DATE_FORMAT(ma.business_time,'%Y-%m-%d %H:%i') as businessTime, ma.record_id as recordId
+    from major_audit ma LEFT JOIN `user` u ON ma.police_id = u.police_id where report_id = #{reportId}
+    ORDER BY ma.creation_date DESC
+  </select>
+  <delete id="deleteByReportId" parameterType="java.lang.Integer">
+    delete from major_audit where report_id = #{id}
+  </delete>
+  <select id="majorAuditPage" resultType="com.bayee.political.pojo.MajorReportPageResultDO"
+          parameterType="com.bayee.political.json.MajorAuditPageQueryParam">
+    SELECT
+    mr.id, u.police_id AS policeId, u.`name` AS policeName, d.`name` AS departmentName,
+    p.position_name AS positionName, DATE_FORMAT(mr.business_time,'%Y-%m-%d') AS businessTime,
+    mr.report_description AS reportDescription, mr.report_status AS reportStatus, mr.dept_status AS deptStatus, mr.bureau_status AS bureauStatus
+    FROM
+    major_report mr
+    LEFT JOIN `user` u ON mr.police_id = u.police_id
+    LEFT JOIN department d ON u.department_id = d.id
+    LEFT JOIN police_position p ON u.position_id = p.id
+    WHERE 1 = 1
+    <if test="userPositionId == 1">
+      AND mr.report_status = 1 AND mr.dept_status = 1 AND mr.bureau_status = 0
+    </if>
+    <if test="userPositionId == 2">
+      AND mr.report_status = 1 AND mr.dept_status = 0
+    </if>
+    <if test="positionId != null and positionId != ''">
+          AND p.id = #{positionId}
+    </if>
+    <if test="startDate != null and startDate != ''">
+      AND mr.business_time &gt;= #{startDate}
+    </if>
+    <if test="endDate != null and endDate != ''">
+      AND mr.business_time &lt;= #{endDate}
+    </if>
+    <if test="name != null and name != ''">
+          AND u.name like CONCAT('%',#{name},'%')
+    </if>
+    <if test="deptId != null and deptId != ''">
+          AND d.id = #{deptId}
+    </if>
+    ORDER BY mr.business_time DESC
+    LIMIT #{pageIndex}, #{pageSize}
+  </select>
+
+  <select id="majorAuditPageCount" resultType="Integer" parameterType="com.bayee.political.json.MajorAuditPageQueryParam">
+    SELECT
+    COUNT(1)
+    FROM
+    major_report mr
+    LEFT JOIN `user` u ON mr.police_id = u.police_id
+    LEFT JOIN department d ON u.department_id = d.id
+    LEFT JOIN police_position p ON u.position_id = p.id
+    WHERE 1 =1
+    <if test="userPositionId == 1">
+      AND mr.report_status = 1 AND mr.dept_status = 1 AND mr.bureau_status = 0
+    </if>
+    <if test="userPositionId == 2">
+      AND mr.report_status = 1 AND mr.dept_status = 0
+    </if>
+    <if test="positionId != null and positionId != ''">
+      AND p.id = #{positionId}
+    </if>
+    <if test="startDate != null and startDate != ''">
+      AND mr.business_time &gt;= #{startDate}
+    </if>
+    <if test="endDate != null and endDate != ''">
+      AND mr.business_time &lt;= #{endDate}
+    </if>
+    <if test="name != null and name != ''">
+      AND u.name like CONCAT('%',#{name},'%')
+    </if>
+    <if test="deptId != null and deptId != ''">
+      AND d.id = #{deptId}
+    </if>
+  </select>
+
+  <select id="historyPage" resultType="com.bayee.political.pojo.MajorReportPageResultDO"
+          parameterType="com.bayee.political.json.HistoryPageQueryParam">
+    SELECT
+    mr.id, u.police_id AS policeId, u.`name` AS policeName, d.`name` AS departmentName,
+    p.position_name AS positionName, DATE_FORMAT(mr.business_time,'%Y-%m-%d') AS businessTime,
+    mr.report_description AS reportDescription, mr.report_status AS reportStatus, mr.dept_status AS deptStatus, mr.bureau_status AS bureauStatus
+    FROM
+    major_report mr
+    LEFT JOIN `user` u ON mr.police_id = u.police_id
+    LEFT JOIN department d ON u.department_id = d.id
+    LEFT JOIN police_position p ON u.position_id = p.id
+    WHERE mr.id in (select ma.report_id from major_audit ma where ma.police_id = #{policeId} GROUP BY ma.report_id)
+    <if test="userPositionId == 1">
+      AND mr.bureau_status != 0
+    </if>
+    <if test="userPositionId == 2">
+      AND mr.dept_status != 0
+    </if>
+    <if test="auditResult != null and auditResult != ''">
+      AND ma.audit_result = #{auditResult}
+    </if>
+    <if test="positionId != null and positionId != ''">
+      AND p.id = #{positionId}
+    </if>
+    <if test="startDate != null and startDate != ''">
+      AND mr.business_time &gt;= #{startDate}
+    </if>
+    <if test="endDate != null and endDate != ''">
+      AND mr.business_time &lt;= #{endDate}
+    </if>
+    <if test="name != null and name != ''">
+      AND u.name like CONCAT('%',#{name},'%')
+    </if>
+    <if test="deptId != null and deptId != ''">
+      AND d.id = #{deptId}
+    </if>
+    ORDER BY mr.business_time DESC
+    LIMIT #{pageIndex}, #{pageSize}
+  </select>
+
+  <select id="historyPageCount" resultType="Integer" parameterType="com.bayee.political.json.HistoryPageQueryParam">
+    SELECT
+    COUNT(1)
+    FROM
+    major_report mr
+    LEFT JOIN `user` u ON mr.police_id = u.police_id
+    LEFT JOIN department d ON u.department_id = d.id
+    LEFT JOIN police_position p ON u.position_id = p.id
+    WHERE mr.id in (select ma.report_id from major_audit ma where ma.police_id = #{policeId} GROUP BY ma.report_id)
+    <if test="userPositionId == 1">
+      AND mr.bureau_status != 0
+    </if>
+    <if test="userPositionId == 2">
+      AND mr.dept_status != 0
+    </if>
+    <if test="auditResult != null and auditResult != ''">
+      AND ma.audit_result = #{auditResult}
+    </if>
+    <if test="positionId != null and positionId != ''">
+      AND p.id = #{positionId}
+    </if>
+    <if test="startDate != null and startDate != ''">
+      AND mr.business_time &gt;= #{startDate}
+    </if>
+    <if test="endDate != null and endDate != ''">
+      AND mr.business_time &lt;= #{endDate}
+    </if>
+    <if test="name != null and name != ''">
+      AND u.name like CONCAT('%',#{name},'%')
+    </if>
+    <if test="deptId != null and deptId != ''">
+      AND d.id = #{deptId}
+    </if>
+  </select>
+</mapper>

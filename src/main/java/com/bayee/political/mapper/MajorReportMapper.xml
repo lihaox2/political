@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.MajorReportMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.MajorReport" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="report_description" property="reportDescription" jdbcType="VARCHAR" />
+    <result column="report_content" property="reportContent" jdbcType="VARCHAR" />
+    <result column="is_risk" property="isRisk" jdbcType="INTEGER" />
+    <result column="report_status" property="reportStatus" jdbcType="INTEGER" />
+    <result column="dept_status" property="deptStatus" jdbcType="INTEGER" />
+    <result column="bureau_status" property="bureauStatus" jdbcType="INTEGER" />
+    <result column="report_commitment" property="reportCommitment" jdbcType="INTEGER" />
+    <result column="is_again" property="isAgain" jdbcType="INTEGER" />
+    <result column="business_time" property="businessTime" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, report_description, report_content, is_risk, report_status, dept_status,
+    bureau_status, report_commitment, is_again, business_time, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from major_report
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from major_report
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.MajorReport" >
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into major_report (id, police_id, report_description,
+                              report_content, is_risk, report_status,
+                              dept_status, bureau_status, report_commitment,
+                              is_again, business_time, creation_date,
+                              update_date)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{reportDescription,jdbcType=VARCHAR},
+            #{reportContent,jdbcType=VARCHAR}, #{isRisk,jdbcType=INTEGER}, #{reportStatus,jdbcType=INTEGER},
+            #{deptStatus,jdbcType=INTEGER}, #{bureauStatus,jdbcType=INTEGER}, #{reportCommitment,jdbcType=INTEGER},
+            #{isAgain,jdbcType=INTEGER}, #{businessTime,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP},
+            #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.MajorReport" >
+    insert into major_report
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="reportDescription != null" >
+        report_description,
+      </if>
+      <if test="reportContent != null" >
+        report_content,
+      </if>
+      <if test="isRisk != null" >
+        is_risk,
+      </if>
+      <if test="reportStatus != null" >
+        report_status,
+      </if>
+      <if test="deptStatus != null" >
+        dept_status,
+      </if>
+      <if test="bureauStatus != null" >
+        bureau_status,
+      </if>
+      <if test="reportCommitment != null" >
+        report_commitment,
+      </if>
+      <if test="isAgain != null" >
+        is_again,
+      </if>
+      <if test="businessTime != null" >
+        business_time,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportDescription != null" >
+        #{reportDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="reportContent != null" >
+        #{reportContent,jdbcType=VARCHAR},
+      </if>
+      <if test="isRisk != null" >
+        #{isRisk,jdbcType=INTEGER},
+      </if>
+      <if test="reportStatus != null" >
+        #{reportStatus,jdbcType=INTEGER},
+      </if>
+      <if test="deptStatus != null" >
+        #{deptStatus,jdbcType=INTEGER},
+      </if>
+      <if test="bureauStatus != null" >
+        #{bureauStatus,jdbcType=INTEGER},
+      </if>
+      <if test="reportCommitment != null" >
+        #{reportCommitment,jdbcType=INTEGER},
+      </if>
+      <if test="isAgain != null" >
+        #{isAgain,jdbcType=INTEGER},
+      </if>
+      <if test="businessTime != null" >
+        #{businessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.MajorReport" >
+    update major_report
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportDescription != null" >
+        report_description = #{reportDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="reportContent != null" >
+        report_content = #{reportContent,jdbcType=VARCHAR},
+      </if>
+      <if test="isRisk != null" >
+        is_risk = #{isRisk,jdbcType=INTEGER},
+      </if>
+      <if test="reportStatus != null" >
+        report_status = #{reportStatus,jdbcType=INTEGER},
+      </if>
+      <if test="deptStatus != null" >
+        dept_status = #{deptStatus,jdbcType=INTEGER},
+      </if>
+      <if test="bureauStatus != null" >
+        bureau_status = #{bureauStatus,jdbcType=INTEGER},
+      </if>
+      <if test="reportCommitment != null" >
+        report_commitment = #{reportCommitment,jdbcType=INTEGER},
+      </if>
+      <if test="isAgain != null" >
+        is_again = #{isAgain,jdbcType=INTEGER},
+      </if>
+      <if test="businessTime != null" >
+        business_time = #{businessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.MajorReport" >
+    update major_report
+    set police_id = #{policeId,jdbcType=VARCHAR},
+        report_description = #{reportDescription,jdbcType=VARCHAR},
+        report_content = #{reportContent,jdbcType=VARCHAR},
+        is_risk = #{isRisk,jdbcType=INTEGER},
+        report_status = #{reportStatus,jdbcType=INTEGER},
+        dept_status = #{deptStatus,jdbcType=INTEGER},
+        bureau_status = #{bureauStatus,jdbcType=INTEGER},
+        report_commitment = #{reportCommitment,jdbcType=INTEGER},
+        is_again = #{isAgain,jdbcType=INTEGER},
+        business_time = #{businessTime,jdbcType=TIMESTAMP},
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+        update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="majorReportPage" resultType="com.bayee.political.pojo.MajorReportPageResultDO"
+          parameterType="com.bayee.political.json.MajorReportPageQueryParam">
+    SELECT
+    mr.id, u.participant_id AS policeId, u.`name` AS policeName, d.`name` AS departmentName,
+    p.position_name AS positionName, DATE_FORMAT(mr.business_time,'%Y-%m-%d') AS businessTime, mr.is_again AS isAgain,
+    mr.report_description AS reportDescription, mr.report_status AS reportStatus, mr.dept_status AS deptStatus, mr.bureau_status AS bureauStatus
+    FROM
+    major_report mr
+    LEFT JOIN `user` u ON mr.police_id = u.police_id
+    LEFT JOIN department d ON u.department_id = d.id
+    LEFT JOIN police_position p ON u.position_id = p.id
+    WHERE 1 =1
+    <if test="startDate != null and startDate != ''">
+      AND mr.business_time &gt;= #{startDate}
+    </if>
+    <if test="endDate != null and endDate != ''">
+      AND mr.business_time &lt;= #{endDate}
+    </if>
+    <if test="policeId != null and policeId != ''">
+      AND mr.police_id = #{policeId}
+    </if>
+    ORDER BY mr.creation_date DESC
+    LIMIT #{pageIndex}, #{pageSize}
+  </select>
+
+  <select id="majorReportPageCount" resultType="Integer" parameterType="com.bayee.political.json.MajorReportPageQueryParam">
+    SELECT
+      count(1)
+    FROM
+      major_report mr
+        LEFT JOIN `user` u ON mr.police_id = u.police_id
+        LEFT JOIN department d ON u.department_id = d.id
+        LEFT JOIN police_position p ON u.position_id = p.id
+    WHERE 1 =1
+    <if test="startDate != null and startDate != ''">
+      AND mr.business_time &gt;= #{startDate}
+    </if>
+    <if test="endDate != null and endDate != ''">
+      AND mr.business_time &lt;= #{endDate}
+    </if>
+    <if test="policeId != null and policeId != ''">
+      AND mr.police_id = #{policeId}
+    </if>
+  </select>
+</mapper>

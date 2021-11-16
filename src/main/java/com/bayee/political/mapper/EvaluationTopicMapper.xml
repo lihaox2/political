@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.EvaluationTopicMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.EvaluationTopic" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="topic_name" property="topicName" jdbcType="VARCHAR" />
+    <result column="is_choose" property="isChoose" jdbcType="INTEGER" />
+    <result column="activity_id" property="activityId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, topic_name, is_choose, activity_id, user_id, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from evaluation_topic
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from evaluation_topic
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.EvaluationTopic" >
+    insert into evaluation_topic (id, topic_name, is_choose,
+                                  activity_id, user_id, creation_date,
+                                  update_date)
+    values (#{id,jdbcType=INTEGER}, #{topicName,jdbcType=VARCHAR}, #{isChoose,jdbcType=INTEGER},
+            #{activityId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP},
+            #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.EvaluationTopic" >
+    insert into evaluation_topic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="topicName != null" >
+        topic_name,
+      </if>
+      <if test="isChoose != null" >
+        is_choose,
+      </if>
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="topicName != null" >
+        #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="isChoose != null" >
+        #{isChoose,jdbcType=INTEGER},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.EvaluationTopic" >
+    update evaluation_topic
+    <set >
+      <if test="topicName != null" >
+        topic_name = #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="isChoose != null" >
+        is_choose = #{isChoose,jdbcType=INTEGER},
+      </if>
+      <if test="activityId != null" >
+        activity_id = #{activityId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.EvaluationTopic" >
+    update evaluation_topic
+    set topic_name = #{topicName,jdbcType=VARCHAR},
+        is_choose = #{isChoose,jdbcType=INTEGER},
+        activity_id = #{activityId,jdbcType=INTEGER},
+        user_id = #{userId,jdbcType=INTEGER},
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+        update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="countByPrimaryKey" resultType="java.lang.Integer">
+    select count(1) from evaluation_topic where activity_id = #{id,jdbcType=INTEGER} and user_id = 0
+  </select>
+  <select id="selectByActityId" resultMap="BaseResultMap" parameterType="com.bayee.political.domain.EvaluationTopic">
+    select
+    <include refid="Base_Column_List" />
+    from evaluation_topic
+    where activity_id = #{activityId}
+      <choose>
+        <when test="userId != null">
+          and user_id = #{userId}
+        </when>
+        <otherwise>
+          and user_id = 0
+        </otherwise>
+      </choose>
+  </select>
+  <delete id="deleteByActivityId">
+    DELETE FROM evaluation_topic where activity_id = #{activityId}
+  </delete>
+</mapper>

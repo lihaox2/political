@@ -291,7 +291,7 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 			SELECT count(1) FROM ( SELECT * FROM risk_alarm a where	DATE_FORMAT(a.creation_date, '%Y-%m')=#{month} GROUP BY a.police_id) a
 	</select>
 	
-	<select id="caseLawTrends" resultType="HashMap">
+	<!--<select id="caseLawTrends" resultType="HashMap">
 		SELECT * FROM (
 			SELECT v.click_date AS name,IFNULL(b.total,0) value FROM (
 			SELECT curdate() as click_date
@@ -309,7 +309,21 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
     SELECT date_sub(curdate(), interval 6 day) as click_date) v
 		 LEFT JOIN (SELECT DATE_FORMAT(a.creation_date,'%Y-%m-%d') AS paTime,count(1) AS total FROM risk_case_law_enforcement_record a GROUP BY paTime) b
 		 ON b.paTime=v.click_date) a ORDER BY a.name ASC
-	</select>
+	</select>-->
+
+    <select id="caseLawTrends" resultType="HashMap">
+        SELECT * FROM (
+                          SELECT v.`month` AS name,IFNULL(b.total,0) value FROM (
+                              SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `month`) v
+                              LEFT JOIN
+                              (SELECT DATE_FORMAT(a.creation_date,'%Y-%m-%d') AS paTime,count(1) AS total FROM risk_case_law_enforcement_record a GROUP BY paTime) b
+                          ON b.paTime=v.`month`) a ORDER BY a.name ASC
+    </select>
 	
 	<select id="caseLawPepolNum" resultType="Integer">
 		SELECT count(1) FROM (SELECT count(1) FROM risk_case_law_enforcement_record r GROUP BY r.police_id) a;
@@ -324,7 +338,7 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 		SELECT count(1) FROM (SELECT count(1) total,r.police_id,r.type FROM risk_case_law_enforcement_record r GROUP BY r.police_id,r.type) a WHERE a.total>1
 	</select>
 
-	<select id="dutyDealTrends" resultType="HashMap">
+<!--	<select id="dutyDealTrends" resultType="HashMap">
 		SELECT * FROM (
 			SELECT v.click_date AS name,IFNULL(b.total,0) value FROM (
                 SELECT curdate() as click_date
@@ -342,7 +356,20 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
                 SELECT date_sub(curdate(), interval 6 day) as click_date) v
 		 LEFT JOIN (SELECT DATE_FORMAT(a.creation_date,'%Y-%m-%d') AS paTime,count(1) AS total FROM risk_duty_deal_police_record a GROUP BY paTime) b
 		 ON b.paTime=v.click_date) a ORDER BY a.name ASC
-	</select>
+	</select>-->
+
+    <select id="dutyDealTrends" resultType="HashMap">
+        SELECT * FROM (
+                          SELECT v.`month` AS name,IFNULL(b.total,0) value FROM (
+                              SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `month`) v
+                              LEFT JOIN (SELECT DATE_FORMAT(a.creation_date,'%Y-%m-%d') AS paTime,count(1) AS total FROM risk_duty_deal_police_record a GROUP BY paTime) b
+                          ON b.paTime=v.`month`) a ORDER BY a.name ASC
+    </select>
 	
 	<select id="dutyDealPepolNum" resultType="Integer">
 		SELECT count(1) FROM (SELECT count(1) FROM risk_duty_deal_police_record r GROUP BY r.police_id) a;

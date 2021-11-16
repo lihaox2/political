@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import com.bayee.political.domain.MajorReportRecord;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.velocity.app.VelocityEngine;
@@ -41,7 +42,7 @@ import com.bayee.political.mapper.*;
 @EnableWebMvc
 @EnableAsync
 @PropertySource({ "classpath:db.properties", "classpath:config.properties", "classpath:mail.properties",
-		"classpath:app.properties" })
+		"classpath:app.properties", "classpath:openoffice.properties"})
 @ComponentScan(basePackages = "com.bayee.political")
 @Import({ WebInitializer.class, DispatcherConfig.class, ThymeleafConfig.class })
 public class AppConfiguration {
@@ -271,14 +272,12 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskHonourTypeMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskCaseIntegralMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantTypeMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskDataOperationLogMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantRecordMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryActionTypeInfoMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryActionLevelInfoMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryActionOfficeInfoMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryRecordInfoMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceRankInfoMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(PolicePromotionRecordInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskDataOperationLogMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorReportMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorAuditMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorAccessoryMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorReportRecordMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -307,6 +306,30 @@ public class AppConfiguration {
 				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		velocityEngine.setVelocityPropertiesMap(velocityPropertiesMap);
 		return velocityEngine.createVelocityEngine();
+	}
+
+	@Bean
+	public MajorReportRecordMapper majorReportRecordMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(MajorReportRecordMapper.class);
+	}
+
+	@Bean
+	public MajorAuditMapper majorAuditMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(MajorAuditMapper.class);
+	}
+
+	@Bean
+	public MajorAccessoryMapper majorAccessoryMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(MajorAccessoryMapper.class);
+	}
+
+	@Bean
+	public MajorReportMapper majorReportMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(MajorReportMapper.class);
 	}
 
 	@Bean
@@ -1219,41 +1242,5 @@ public class AppConfiguration {
 	public RiskTrendsMapper riskTrendsMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskTrendsMapper.class);
-	}
-
-	@Bean
-	public DisciplinaryActionTypeInfoMapper disciplinaryActionTypeInfoMapper() throws Exception {
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(DisciplinaryActionTypeInfoMapper.class);
-	}
-
-	@Bean
-	public DisciplinaryActionLevelInfoMapper disciplinaryActionLevelInfoMapper() throws Exception {
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(DisciplinaryActionLevelInfoMapper.class);
-	}
-
-	@Bean
-	public DisciplinaryActionOfficeInfoMapper disciplinaryActionOfficeInfoMapper() throws Exception {
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(DisciplinaryActionOfficeInfoMapper.class);
-	}
-
-	@Bean
-	public DisciplinaryRecordInfoMapper disciplinaryRecordInfoMapper() throws Exception {
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(DisciplinaryRecordInfoMapper.class);
-	}
-
-	@Bean
-	public PoliceRankInfoMapper policeRankInfoMapper() throws Exception {
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(PoliceRankInfoMapper.class);
-	}
-
-	@Bean
-	public PolicePromotionRecordInfoMapper policePromotionRecordInfoMapper() throws Exception {
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(PolicePromotionRecordInfoMapper.class);
 	}
 }

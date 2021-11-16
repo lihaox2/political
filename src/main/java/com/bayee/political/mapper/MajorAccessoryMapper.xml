@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.MajorAccessoryMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.MajorAccessory" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="upload_path" property="uploadPath" jdbcType="VARCHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="report_id" property="reportId" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, upload_path, file_name, report_id, creation_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from major_accessory
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from major_accessory
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.MajorAccessory" >
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into major_accessory (id, upload_path, file_name,
+                                 report_id, creation_date)
+    values (#{id,jdbcType=INTEGER}, #{uploadPath,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR},
+            #{reportId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.MajorAccessory" >
+    insert into major_accessory
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uploadPath != null" >
+        upload_path,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="reportId != null" >
+        report_id,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uploadPath != null" >
+        #{uploadPath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="reportId != null" >
+        #{reportId,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.MajorAccessory" >
+    update major_accessory
+    <set >
+      <if test="uploadPath != null" >
+        upload_path = #{uploadPath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="reportId != null" >
+        report_id = #{reportId,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.MajorAccessory" >
+    update major_accessory
+    set upload_path = #{uploadPath,jdbcType=VARCHAR},
+        file_name = #{fileName,jdbcType=VARCHAR},
+        report_id = #{reportId,jdbcType=INTEGER},
+        creation_date = #{creationDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByReportId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from major_accessory where report_id = #{id}
+  </select>
+</mapper>

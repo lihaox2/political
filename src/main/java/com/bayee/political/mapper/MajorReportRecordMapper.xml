@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.MajorReportRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.MajorReportRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="report_id" property="reportId" jdbcType="INTEGER" />
+    <result column="report_date" property="reportDate" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, report_id, report_date, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from major_report_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from major_report_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.MajorReportRecord" >
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into major_report_record (id, report_id, report_date, 
+      creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{reportId,jdbcType=INTEGER}, #{reportDate,jdbcType=TIMESTAMP}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.MajorReportRecord" >
+    insert into major_report_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="reportId != null" >
+        report_id,
+      </if>
+      <if test="reportDate != null" >
+        report_date,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="reportId != null" >
+        #{reportId,jdbcType=INTEGER},
+      </if>
+      <if test="reportDate != null" >
+        #{reportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.MajorReportRecord" >
+    update major_report_record
+    <set >
+      <if test="reportId != null" >
+        report_id = #{reportId,jdbcType=INTEGER},
+      </if>
+      <if test="reportDate != null" >
+        report_date = #{reportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.MajorReportRecord" >
+    update major_report_record
+    set report_id = #{reportId,jdbcType=INTEGER},
+      report_date = #{reportDate,jdbcType=TIMESTAMP},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByMaxCreationDate" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    SELECT rr.id,rr.report_id,rr.report_date,rr.creation_date as creation_date,rr.update_date
+    from major_report_record rr where rr.report_id = #{reportId} order by creation_date desc limit 1
+  </select>
+
+  <select id="selectAll" resultType="com.bayee.political.json.ReportRecordResult" parameterType="java.lang.Integer">
+    SELECT
+    rr.id,u.`name`,DATE_FORMAT(rr.creation_date,'%Y-%m-%d %H:%i') as creationDate
+    from major_report_record rr
+           LEFT JOIN major_report mr ON rr.report_id = mr.id
+           LEFT JOIN `user` u ON mr.police_id = u.police_id
+    where rr.report_id = #{reportId}
+    order by rr.creation_date desc
+  </select>
+</mapper>

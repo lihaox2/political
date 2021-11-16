@@ -114,7 +114,7 @@ public class CaseController {
         log.setDataOriginPoliceId(integral.getPoliceId());
         log.setDataOriginBusinessDate(integral.getBusinessTime());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -142,7 +142,7 @@ public class CaseController {
         log.setDataOriginPoliceId(integral.getPoliceId());
         log.setDataOriginBusinessDate(integral.getBusinessTime());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
         riskCaseIntegralService.updateRiskCaseIntegral(integral);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
@@ -161,7 +161,7 @@ public class CaseController {
         log.setDataOriginPoliceId(integral.getPoliceId());
         log.setDataOriginBusinessDate(integral.getBusinessTime());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
         riskCaseIntegralService.deleteRiskCaseIntegral(id);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
@@ -291,7 +291,7 @@ public class CaseController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(caseAbilitySaveParam.getDate()));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
@@ -336,7 +336,7 @@ public class CaseController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskCaseAbilityRecordService.updateByPrimaryKeySelective(record);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(caseAbilitySaveParam.getDate()));
@@ -381,7 +381,7 @@ public class CaseController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskCaseAbilityRecordService.deleteByPrimaryKey(id);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
@@ -467,7 +467,7 @@ public class CaseController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
@@ -502,7 +502,7 @@ public class CaseController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskCaseLawEnforcementRecordService.updateByPrimaryKeySelective(record);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(saveParam.getDate().substring(0, 10)));
@@ -548,7 +548,7 @@ public class CaseController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskCaseLawEnforcementRecordService.deleteByPrimaryKey(id);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
@@ -636,7 +636,7 @@ public class CaseController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
         return new ResponseEntity(DataListReturn.ok(), HttpStatus.OK);
@@ -676,7 +676,7 @@ public class CaseController {
         log.setDataOriginPoliceId(oldRecord.getPoliceId());
         log.setDataOriginBusinessDate(oldRecord.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskCaseTestRecordService.updateByPrimaryKey(oldRecord);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(oldRecord.getCreationDate(), "yyyy-MM-dd")));
@@ -714,7 +714,7 @@ public class CaseController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskCaseTestRecordService.deleteByPrimaryKey(id);
         totalRiskDetailsService.caseRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));

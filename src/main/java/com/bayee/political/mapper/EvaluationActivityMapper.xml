@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.EvaluationActivityMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.EvaluationActivity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="id_num" property="idNum" jdbcType="VARCHAR" />
+    <result column="belong_month" property="belongMonth" jdbcType="TIMESTAMP" />
+    <result column="activity_status" property="activityStatus" jdbcType="INTEGER" />
+    <result column="activity_name" property="activityName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, id_num, belong_month, activity_status, activity_name, remark, user_id, creation_date,
+    update_date, creator
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from evaluation_activity
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from evaluation_activity
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.EvaluationActivity" >
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into evaluation_activity (id, id_num, belong_month,
+                                     activity_status, activity_name, remark,
+                                     user_id, creation_date, update_date,
+                                     creator)
+    values (#{id,jdbcType=INTEGER}, #{idNum,jdbcType=VARCHAR}, #{belongMonth,jdbcType=TIMESTAMP},
+            #{activityStatus,jdbcType=INTEGER}, #{activityName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+            #{userId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},
+            #{creator,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.EvaluationActivity" >
+    insert into evaluation_activity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="idNum != null" >
+        id_num,
+      </if>
+      <if test="belongMonth != null" >
+        belong_month,
+      </if>
+      <if test="activityStatus != null" >
+        activity_status,
+      </if>
+      <if test="activityName != null" >
+        activity_name,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="idNum != null" >
+        #{idNum,jdbcType=VARCHAR},
+      </if>
+      <if test="belongMonth != null" >
+        #{belongMonth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityStatus != null" >
+        #{activityStatus,jdbcType=INTEGER},
+      </if>
+      <if test="activityName != null" >
+        #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.EvaluationActivity" >
+    update evaluation_activity
+    <set >
+      <if test="idNum != null" >
+        id_num = #{idNum,jdbcType=VARCHAR},
+      </if>
+      <if test="belongMonth != null" >
+        belong_month = #{belongMonth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityStatus != null" >
+        activity_status = #{activityStatus,jdbcType=INTEGER},
+      </if>
+      <if test="activityName != null" >
+        activity_name = #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.EvaluationActivity" >
+    update evaluation_activity
+    set id_num = #{idNum,jdbcType=VARCHAR},
+        belong_month = #{belongMonth,jdbcType=TIMESTAMP},
+        activity_status = #{activityStatus,jdbcType=INTEGER},
+        activity_name = #{activityName,jdbcType=VARCHAR},
+        remark = #{remark,jdbcType=VARCHAR},
+        user_id = #{userId,jdbcType=INTEGER},
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+        creator = #{creator,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="activityPage" resultType="com.bayee.political.pojo.ActivityPageQueryResultDO"
+          parameterType="com.bayee.political.json.ActivityPageQueryParam">
+    select ea.id,ea.id_num as idNum,ea.activity_name as activityName,
+           DATE_FORMAT(ea.belong_month,'%Y-%m') as belongMonth,ea.activity_status as activityStatus,
+           DATE_FORMAT(ea.creation_date,'%Y-%m-%d %H:%i:%s') as creationDate from evaluation_activity ea
+    where 1=1
+    <if test="param.belongMonth != null and param.belongMonth != ''">
+      and (DATE_FORMAT(ea.belong_month,'%Y-%m') = #{param.belongMonth}
+       or DATE_FORMAT(ea.belong_month,'%Y-%c') = #{param.belongMonth})
+    </if>
+    <if test="param.activityStatus != null and param.activityStatus != ''">
+      and ea.activity_status = #{param.activityStatus}
+    </if>
+    <if test="param.key != null and param.key != ''">
+      and (ea.activity_name like concat('%', #{param.key}, '%')
+      or ea.id_num like concat('%', #{param.key}, '%'))
+    </if>
+    ORDER BY creation_date DESC
+  </select>
+  <update id="updateStatusById">
+    update evaluation_activity set activity_status = 2 where id = #{id}
+  </update>
+  <select id="selectStartedSatusActivity" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from evaluation_activity where activity_status = 1 ORDER BY creation_date DESC
+  </select>
+</mapper>

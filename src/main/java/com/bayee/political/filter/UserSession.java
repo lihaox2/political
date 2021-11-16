@@ -20,7 +20,7 @@ public class UserSession implements Filter {
 
     private final static String LOGIN_KEY = "police-login-info";
 
-    private final String[] ignorePath = {"/account/login/submit"};
+    private final String[] ignorePath = {"/account/login/submit", "/major", "/global", "/honour"};
 
     /**
      * 警员登录

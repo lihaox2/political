@@ -219,7 +219,7 @@ public class HealthController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         totalRiskDetailsService.healthRiskDetails(LocalDate.parse(saveParam.getYear()+LocalDate.now().format(DateTimeFormatter.ofPattern("-MM-dd"))));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -342,7 +342,7 @@ public class HealthController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         totalRiskDetailsService.healthRiskDetails(LocalDate.parse(saveParam.getYear()+LocalDate.now().format(DateTimeFormatter.ofPattern("-MM-dd"))));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -401,7 +401,7 @@ public class HealthController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskHealthRecordService.deleteByPrimaryKey(id);
         riskHealthRecordInfoService.deleteByRecordId(id);

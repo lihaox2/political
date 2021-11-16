@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.EvaluationInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.EvaluationInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="activity_id" property="activityId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="total_score" property="totalScore" jdbcType="INTEGER" />
+    <result column="business_time" property="businessTime" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, activity_id, user_id, total_score, business_time, creation_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from evaluation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from evaluation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.EvaluationInfo" >
+    insert into evaluation (id, activity_id,
+                            user_id, total_score, business_time,
+                            creation_date, update_date)
+    values (#{id,jdbcType=INTEGER}, #{activityId,jdbcType=INTEGER},
+            #{userId,jdbcType=INTEGER}, #{totalScore,jdbcType=INTEGER}, #{businessTime,jdbcType=TIMESTAMP},
+            #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.EvaluationInfo" >
+    insert into evaluation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="totalScore != null" >
+        total_score,
+      </if>
+      <if test="businessTime != null" >
+        business_time,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="totalScore != null" >
+        #{totalScore,jdbcType=INTEGER},
+      </if>
+      <if test="businessTime != null" >
+        #{businessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.EvaluationInfo" >
+    update evaluation
+    <set >
+      <if test="activityId != null" >
+        activity_id = #{activityId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="totalScore != null" >
+        total_score = #{totalScore,jdbcType=INTEGER},
+      </if>
+      <if test="businessTime != null" >
+        business_time = #{businessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.EvaluationInfo" >
+    update evaluation
+    set activity_id = #{activityId,jdbcType=INTEGER},
+        user_id = #{userId,jdbcType=INTEGER},
+        total_score = #{totalScore,jdbcType=INTEGER},
+        business_time = #{businessTime,jdbcType=TIMESTAMP},
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+        update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="evaluationPage" parameterType="com.bayee.political.json.EvaluationPageQueryParam"
+          resultType="com.bayee.political.pojo.EvaluationPageQueryResultDO">
+    select e.id, u.`name` as appraiserName, u.user_name as appraiserPhone, o.object_name as objectName,
+    e.total_score as totalScore, DATE_FORMAT(e.business_time,'%Y-%m-%d %H:%i:%s') as businessTime,
+    e.user_id as userId
+    from evaluation e LEFT JOIN evaluation_activity a ON e.activity_id = a.id
+    LEFT JOIN `user` u ON e.user_id = u.id LEFT JOIN evaluation_object o ON u.family_police_id = o.police_id
+    where e.activity_id = #{param.activityId}
+    <if test="param.key != null and param.key != ''">
+      and (u.`name` like CONCAT('%',#{param.key},'%') or o.object_name like CONCAT('%',#{param.key},'%'))
+    </if>
+  </select>
+  <select id="countHaveEvaluation" resultType="java.lang.Integer">
+    select count(1) from evaluation where activity_id = #{id}
+  </select>
+  <select id="selectByStartParam" parameterType="com.bayee.political.json.EvaluationStartParam"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from evaluation e where e.activity_id = #{param.activityId} and e.user_id = #{param.userId}
+  </select>
+  <delete id="deleteByActivityId">
+    DELETE FROM evaluation where activity_id = #{activityId}
+  </delete>
+</mapper>

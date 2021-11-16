@@ -418,67 +418,8 @@
 		<artifactId>dingtalk</artifactId>
 		<version>1.0</version>
 	</dependency>
-
-	  <dependency>
-		  <groupId>org.projectlombok</groupId>
-		  <artifactId>lombok</artifactId>
-		  <version>1.16.18</version>
-	  </dependency>
-
-	  <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
-	  <dependency>
-		  <groupId>io.springfox</groupId>
-		  <artifactId>springfox-swagger2</artifactId>
-		  <version>2.9.2</version>
-		  <exclusions>
-			  <exclusion>
-				  <groupId>io.swagger</groupId>
-				  <artifactId>swagger-models</artifactId>
-			  </exclusion>
-		  </exclusions>
-	  </dependency>
-
-	  <!-- https://mvnrepository.com/artifact/io.swagger/swagger-models -->
-	  <dependency>
-		  <groupId>io.swagger</groupId>
-		  <artifactId>swagger-models</artifactId>
-		  <version>1.5.21</version>
-	  </dependency>
-
-	  <dependency>
-		  <groupId>com.github.xiaoymin</groupId>
-		  <artifactId>swagger-bootstrap-ui</artifactId>
-		  <version>1.9.3</version>
-	  </dependency>
-	  <dependency>
-		  <groupId>io.springfox</groupId>
-		  <artifactId>springfox-swagger-ui</artifactId>
-		  <version>2.9.2</version>
-	  </dependency>
-
-	  <!-- pageHelper依赖 -->
-	  <dependency>
-		  <groupId>com.github.pagehelper</groupId>
-		  <artifactId>pagehelper</artifactId>
-		  <version>5.2.0</version>
-	  </dependency>
-
-	  <!-- pageHelper依赖 -->
-	  <dependency>
-		  <groupId>com.github.jsqlparser</groupId>
-		  <artifactId>jsqlparser</artifactId>
-		  <version>4.0</version>
-	  </dependency>
-
-	  <!-- ssm框架下 knife4j 依赖  -->
-	  <dependency>
-		  <groupId>com.github.xiaoymin</groupId>
-		  <artifactId>knife4j-spring-mvc</artifactId>
-		  <!--在引用时请在maven中央仓库搜索最新版本号，如果不存在则代表尚未发布,作者正在努力开发中-->
-		  <version>2.0.5</version>
-	  </dependency>
-
-	  <!--	<dependency>-->
+	
+<!--	<dependency>-->
 <!--		<groupId>cn.hutool</groupId>-->
 <!--		<artifactId>hutool-all</artifactId>-->
 <!--		<version>4.3.1</version>-->
@@ -524,9 +465,37 @@
 		  <artifactId>hutool-all</artifactId>
 		  <version>5.4.3</version>
 	  </dependency>
+	  <!-- https://mvnrepository.com/artifact/com.artofsolving/jodconverter -->
+	  <dependency>
+		  <groupId>com.artofsolving</groupId>
+		  <artifactId>jodconverter</artifactId>
+		  <version>2.2.1</version>
+	  </dependency>
+	  <!-- word转pdf（依赖windows本地的wps） -->
+	  <dependency>
+		  <groupId>com.jacob</groupId>
+		  <artifactId>jacob</artifactId>
+		  <version>1.20</version>
+	  </dependency>
+	  <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+	  <dependency>
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>slf4j-api</artifactId>
+		  <version>1.7.25</version>
+	  </dependency>
+	  <dependency>
+		  <groupId>org.jodconverter</groupId>
+		  <artifactId>jodconverter-core</artifactId>
+		  <version>4.0.0-RELEASE</version>
+	  </dependency>
+	  <dependency>
+		  <groupId>com.aspose</groupId>
+		  <artifactId>aspose-words</artifactId>
+		  <version>15.8.0</version>
+	  </dependency>
   </dependencies>
   <build>
-    <finalName>dataumb</finalName>
+    <finalName>ROOT</finalName>
     <resources>
 	        <resource>
 	            <directory>src/main/java</directory>

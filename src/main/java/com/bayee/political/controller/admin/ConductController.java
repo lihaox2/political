@@ -137,7 +137,7 @@ public class ConductController {
         log.setDataOriginPoliceId(relevant.getPoliceId());
         log.setDataOriginBusinessDate(relevant.getBusinessDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         policeRelevantService.updatePoliceRelevant(relevant);
 
@@ -170,7 +170,7 @@ public class ConductController {
         log.setDataOriginPoliceId(relevant.getPoliceId());
         log.setDataOriginBusinessDate(relevant.getBusinessDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
@@ -190,7 +190,7 @@ public class ConductController {
         log.setDataOriginPoliceId(relevant.getPoliceId());
         log.setDataOriginBusinessDate(relevant.getBusinessDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         policeRelevantService.deleteById(id);
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -304,7 +304,7 @@ public class ConductController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -344,7 +344,7 @@ public class ConductController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskConductBureauRuleRecordService.updateByPrimaryKey(record);
         totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
@@ -394,7 +394,7 @@ public class ConductController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskConductBureauRuleRecordService.deleteByPrimaryKey(id);
         totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));
@@ -482,7 +482,7 @@ public class ConductController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
@@ -521,7 +521,7 @@ public class ConductController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskConductVisitRecordService.updateByPrimaryKey(record);
         totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getDate()));
@@ -571,7 +571,7 @@ public class ConductController {
         log.setDataOriginPoliceId(record.getPoliceId());
         log.setDataOriginBusinessDate(record.getCreationDate());
         log.setCreationDate(new Date());
-        riskDataOperationLogService.insertOperationLog(log);
+        /*riskDataOperationLogService.insertOperationLog(log);*/;
 
         riskConductVisitRecordService.deleteByPrimaryKey(id);
         totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(record.getCreationDate(), "yyyy-MM-dd")));

@@ -271,8 +271,14 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskHonourTypeMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskCaseIntegralMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantTypeMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantRecordMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskDataOperationLogMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantRecordMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryActionTypeInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryActionLevelInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryActionOfficeInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryRecordInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceRankInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PolicePromotionRecordInfoMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -1213,5 +1219,41 @@ public class AppConfiguration {
 	public RiskTrendsMapper riskTrendsMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskTrendsMapper.class);
+	}
+
+	@Bean
+	public DisciplinaryActionTypeInfoMapper disciplinaryActionTypeInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(DisciplinaryActionTypeInfoMapper.class);
+	}
+
+	@Bean
+	public DisciplinaryActionLevelInfoMapper disciplinaryActionLevelInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(DisciplinaryActionLevelInfoMapper.class);
+	}
+
+	@Bean
+	public DisciplinaryActionOfficeInfoMapper disciplinaryActionOfficeInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(DisciplinaryActionOfficeInfoMapper.class);
+	}
+
+	@Bean
+	public DisciplinaryRecordInfoMapper disciplinaryRecordInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(DisciplinaryRecordInfoMapper.class);
+	}
+
+	@Bean
+	public PoliceRankInfoMapper policeRankInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PoliceRankInfoMapper.class);
+	}
+
+	@Bean
+	public PolicePromotionRecordInfoMapper policePromotionRecordInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PolicePromotionRecordInfoMapper.class);
 	}
 }

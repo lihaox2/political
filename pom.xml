@@ -470,6 +470,14 @@
 		  <version>4.0</version>
 	  </dependency>
 
+	  <!-- ssm框架下 knife4j 依赖  -->
+	  <dependency>
+		  <groupId>com.github.xiaoymin</groupId>
+		  <artifactId>knife4j-spring-mvc</artifactId>
+		  <!--在引用时请在maven中央仓库搜索最新版本号，如果不存在则代表尚未发布,作者正在努力开发中-->
+		  <version>2.0.5</version>
+	  </dependency>
+
 	  <!--	<dependency>-->
 <!--		<groupId>cn.hutool</groupId>-->
 <!--		<artifactId>hutool-all</artifactId>-->

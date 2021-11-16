@@ -7,7 +7,6 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import com.bayee.political.domain.MajorReportRecord;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.velocity.app.VelocityEngine;
@@ -42,7 +41,7 @@ import com.bayee.political.mapper.*;
 @EnableWebMvc
 @EnableAsync
 @PropertySource({ "classpath:db.properties", "classpath:config.properties", "classpath:mail.properties",
-		"classpath:app.properties", "classpath:openoffice.properties"})
+		"classpath:app.properties" })
 @ComponentScan(basePackages = "com.bayee.political")
 @Import({ WebInitializer.class, DispatcherConfig.class, ThymeleafConfig.class })
 public class AppConfiguration {
@@ -272,12 +271,14 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskHonourTypeMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskCaseIntegralMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantTypeMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantRecordMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskDataOperationLogMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorReportMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorAuditMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorAccessoryMapper.class);
-		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorReportRecordMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantRecordMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryActionTypeInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryActionLevelInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryActionOfficeInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryRecordInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceRankInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PolicePromotionRecordInfoMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -306,30 +307,6 @@ public class AppConfiguration {
 				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		velocityEngine.setVelocityPropertiesMap(velocityPropertiesMap);
 		return velocityEngine.createVelocityEngine();
-	}
-
-	@Bean
-	public MajorReportRecordMapper majorReportRecordMapper() throws Exception {
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(MajorReportRecordMapper.class);
-	}
-
-	@Bean
-	public MajorAuditMapper majorAuditMapper() throws Exception {
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(MajorAuditMapper.class);
-	}
-
-	@Bean
-	public MajorAccessoryMapper majorAccessoryMapper() throws Exception {
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(MajorAccessoryMapper.class);
-	}
-
-	@Bean
-	public MajorReportMapper majorReportMapper() throws Exception {
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
-		return sessionTemplate.getMapper(MajorReportMapper.class);
 	}
 
 	@Bean
@@ -865,382 +842,418 @@ public class AppConfiguration {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainPhysicalMapper.class);
 	}
-	
+
 	@Bean
 	public TrainGroupMapper trainGroupMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainGroupMapper.class);
 	}
-	
+
 	@Bean
 	public TrainFirearmAchievementMapper trainFirearmAchievementMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainFirearmAchievementMapper.class);
 	}
-	
+
 	@Bean
 	public TrainFirearmMapper trainFirearmMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainFirearmMapper.class);
 	}
-	
+
 	@Bean
 	public TrainMatchMapper trainMatchMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainMatchMapper.class);
 	}
-	
+
 	@Bean
 	public TrainProjectMapper trainProjectMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainProjectMapper.class);
 	}
-	
+
 	@Bean
 	public TrainScorerMapper trainScorerMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainScorerMapper.class);
 	}
-	
+
 	@Bean
 	public TrainProjectRuleMapper trainProjectRuleMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainProjectRuleMapper.class);
 	}
-	
+
 	@Bean
 	public TrainMedalManageMapper trainMedalManageMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainMedalManageMapper.class);
 	}
-	
+
 	@Bean
 	public TrainPhysicalAchievementDetailsMapper trainPhysicalAchievementDetailsMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainPhysicalAchievementDetailsMapper.class);
 	}
-	
+
 	@Bean
 	public TrainActivityStyleMapper trainActivityStyleMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainActivityStyleMapper.class);
 	}
-	
+
 	@Bean
 	public TrainConstitutionMapper trainConstitutionMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainConstitutionMapper.class);
 	}
-	
+
 	@Bean
 	public TrainPacesetterMapper trainPacesetterMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainPacesetterMapper.class);
 	}
-	
+
 	@Bean
 	public TrainMatchTypeMapper trainMatchTypeMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainMatchTypeMapper.class);
 	}
-	
+
 	@Bean
 	public TrainUnitMapper trainUnitMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainUnitMapper.class);
 	}
-	
+
 	@Bean
 	public TrainPhysicalProjectRecordMapper trainPhysicalProjectRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainPhysicalProjectRecordMapper.class);
 	}
-	
+
 	@Bean
 	public TrainProjectURuleMapper trainProjectURuleMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainProjectURuleMapper.class);
 	}
-	
+
 	@Bean
 	public TrainLeaderMapper trainLeaderMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainLeaderMapper.class);
 	}
-	
+
 	@Bean
 	public TrainMatchProjectMapper trainMatchProjectMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainMatchProjectMapper.class);
 	}
-	
+
 	@Bean
 	public TrainMatchAchievementMapper trainMatchAchievementMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainMatchAchievementMapper.class);
 	}
-	
+
 	@Bean
 	public TrainMatchDepartmentAchievementMapper trainMatchDepartmentAchievementMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainMatchDepartmentAchievementMapper.class);
 	}
-	
+
 	@Bean
 	public TrainEvaluateRecordMapper trainEvaluateRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainEvaluateRecordMapper.class);
 	}
-	
+
 	@Bean
 	public TrainLikeRecordMapper trainLikeRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainLikeRecordMapper.class);
 	}
-	
+
 	@Bean
 	public TrainGetMedalMapper trainGetMedalMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainGetMedalMapper.class);
 	}
-	
+
 	@Bean
 	public LeavePowerObjectMapper leavePowerObjectMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(LeavePowerObjectMapper.class);
 	}
-	
+
 	@Bean
 	public TrainMatchBestAchievementMapper trainMatchBestAchievementMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(TrainMatchBestAchievementMapper.class);
 	}
-	
+
 	@Bean
 	public DrinkRecordMapper drinkRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(DrinkRecordMapper.class);
 	}
-	
+
 	@Bean
 	public CalculationAlarmMapper calculationAlarmMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(CalculationAlarmMapper.class);
 	}
-	
+
 	@Bean
 	public CalculationFactorMapper calculationFactorMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(CalculationFactorMapper.class);
 	}
-	
+
 	@Bean
 	public AlarmEntryAndExitRecordMapper alarmEntryAndExitRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(AlarmEntryAndExitRecordMapper.class);
 	}
-	
+
 	@Bean
 	public LeaveCompensatoryReadRecordMapper leaveCompensatoryReadRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(LeaveCompensatoryReadRecordMapper.class);
 	}
-	
+
 	@Bean
 	public AlarmUrgeRecordMapper alarmUrgeRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(AlarmUrgeRecordMapper.class);
 	}
-	
+
 	@Bean
 	public HomePageMapper homePageMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(HomePageMapper.class);
 	}
-	
+
 	@Bean
 	public RiskHealthRecordMapper riskHealthRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskHealthRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskHealthBmiStandardMapper riskHealthBmiStandardMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskHealthBmiStandardMapper.class);
 	}
-	
+
 	@Bean
 	public RiskHealthMapper riskHealthMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskHealthMapper.class);
 	}
-	
+
 	@Bean
 	public RiskAlarmTypeMapper riskAlarmTypeMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskAlarmTypeMapper.class);
 	}
-	
+
 	@Bean
 	public RiskAlarmMapper riskAlarmMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskAlarmMapper.class);
 	}
-	
+
 	@Bean
 	public RiskReportRecordMapper riskReportRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskReportRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskTrainMapper riskTrainMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskTrainMapper.class);
 	}
-	
+
 	@Bean
 	public RiskDutyMapper riskDutyMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskDutyMapper.class);
 	}
-	
+
 	@Bean
 	public RiskDutyDealPoliceRecordMapper riskDutyDealPoliceRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskDutyDealPoliceRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskCaseMapper riskCaseMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskCaseMapper.class);
 	}
-	
+
 	@Bean
 	public RiskCaseAbilityRecordMapper riskCaseAbilityRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskCaseAbilityRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskCaseLawEnforcementRecordMapper riskCaseLawEnforcementRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskCaseLawEnforcementRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskCaseLawEnforcementTypeMapper riskCaseLawEnforcementTypeMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskCaseLawEnforcementTypeMapper.class);
 	}
-	
+
 	@Bean
 	public RiskCaseTestRecordMapper riskCaseTestRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskCaseTestRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskCaseLawEnforcementMapper riskCaseLawEnforcementMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskCaseLawEnforcementMapper.class);
 	}
-	
+
 	@Bean
 	public RiskCaseAbilityMapper riskCaseAbilityMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskCaseAbilityMapper.class);
 	}
-	
+
 	@Bean
 	public RiskFamilyEvaluationMapper riskFamilyEvaluationMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskFamilyEvaluationMapper.class);
 	}
-	
+
 	@Bean
 	public RiskFamilyEvaluationRankMapper riskFamilyEvaluationRankMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskFamilyEvaluationRankMapper.class);
 	}
-	
+
 	@Bean
 	public RiskFamilyEvaluationRecordMapper riskFamilyEvaluationRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskFamilyEvaluationRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskConductBureauRuleRecordMapper riskConductBureauRuleRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskConductBureauRuleRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskConductTrafficViolationMapper riskConductTrafficViolationMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskConductTrafficViolationMapper.class);
 	}
-	
+
 	@Bean
 	public RiskConductTrafficViolationRecordMapper riskConductTrafficViolationRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskConductTrafficViolationRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskSocialContactMapper riskSocialContactMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskSocialContactMapper.class);
 	}
-	
+
 	@Bean
 	public RiskSocialContactRecordMapper riskSocialContactRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskSocialContactRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskConductVisitMapper riskConductVisitMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskConductVisitMapper.class);
 	}
-	
+
 	@Bean
 	public RiskConductVisitRecordMapper riskConductVisitRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskConductVisitRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskDrinkRecordMapper riskDrinkRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskDrinkRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskStutyUnitTrainRecordMapper riskStutyUnitTrainRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskStutyUnitTrainRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskStutyActivitiesPartyRecordMapper riskStutyActivitiesPartyRecordMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskStutyActivitiesPartyRecordMapper.class);
 	}
-	
+
 	@Bean
 	public RiskConductVisitTypeMapper riskConductVisitTypeMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskConductVisitTypeMapper.class);
 	}
-	
+
 	@Bean
 	public RiskTrendsMapper riskTrendsMapper() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 		return sessionTemplate.getMapper(RiskTrendsMapper.class);
+	}
+
+	@Bean
+	public DisciplinaryActionTypeInfoMapper disciplinaryActionTypeInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(DisciplinaryActionTypeInfoMapper.class);
+	}
+
+	@Bean
+	public DisciplinaryActionLevelInfoMapper disciplinaryActionLevelInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(DisciplinaryActionLevelInfoMapper.class);
+	}
+
+	@Bean
+	public DisciplinaryActionOfficeInfoMapper disciplinaryActionOfficeInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(DisciplinaryActionOfficeInfoMapper.class);
+	}
+
+	@Bean
+	public DisciplinaryRecordInfoMapper disciplinaryRecordInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(DisciplinaryRecordInfoMapper.class);
+	}
+
+	@Bean
+	public PoliceRankInfoMapper policeRankInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PoliceRankInfoMapper.class);
+	}
+
+	@Bean
+	public PolicePromotionRecordInfoMapper policePromotionRecordInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PolicePromotionRecordInfoMapper.class);
 	}
 }

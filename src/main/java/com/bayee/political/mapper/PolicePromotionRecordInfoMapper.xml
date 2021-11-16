@@ -414,4 +414,64 @@
       modify_user_id = #{modifyUserId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--晋升分页-->
+<!--  <select id="selectPageList" resultMap="BaseResultMap">-->
+<!--    select * from police_promotion_record_info where now_time between #{param.beginTime} and #{param.endTime} and type=#{param.type}-->
+<!--    <if test="param.depId != null">-->
+<!--      <if test="param.nowPoliceLevelId != null">-->
+<!--        <if test="param.postId != null">-->
+<!--          <if test="param.keyword != null and param.keyword != ''">-->
+<!--            and (dep_id=#{param.depId} or now_police_level_id=#{param.nowPoliceLevelId} or post_id=#{param.postId} or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))-->
+<!--          </if>-->
+<!--        </if>-->
+<!--        <if test="param.postId == null">-->
+<!--          <if test="param.keyword != null and param.keyword != ''">-->
+<!--            and (dep_id=#{param.depId} or now_police_level_id=#{param.nowPoliceLevelId} or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))-->
+<!--          </if>-->
+<!--          <if test="param.keyword == null and param.keyword == ''">-->
+<!--            and (dep_id=#{param.depId} or now_police_level_id=#{param.nowPoliceLevelId})-->
+<!--          </if>-->
+<!--        </if>-->
+<!--      </if>-->
+<!--      <if test="param.nowPoliceLevelId == null">-->
+<!--        <if test="param.postId != null">-->
+<!--          <if test="param.keyword != null and param.keyword != ''">-->
+<!--            and (dep_id=#{param.depId}or post_id=#{param.postId} or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))-->
+<!--          </if>-->
+<!--          <if test="param.keyword == null and param.keyword == ''">-->
+<!--            and (dep_id=#{param.depId}or post_id=#{param.postId}-->
+<!--          </if>-->
+<!--        </if>-->
+<!--        <if test="param.postId == null">-->
+<!--           <if test="param.keyword != null and param.keyword != ''">-->
+<!--             and (dep_id=#{param.depId} or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))-->
+<!--           </if>-->
+<!--           <if test="param.keyword == null and param.keyword == ''">-->
+<!--             and (dep_id=#{param.depId}-->
+<!--           </if>-->
+<!--          </if>-->
+<!--      </if>-->
+<!--    </if>-->
+
+<!--    <if test="param.depId == null">-->
+<!--      <if test="param.nowPoliceLevelId != null">-->
+<!--        <if test="param.postId != null">-->
+<!--          <if test="param.keyword != null and param.keyword != ''">-->
+<!--            and (now_police_level_id=#{param.nowPoliceLevelId} or post_id=#{param.postId} or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))-->
+<!--          </if>-->
+<!--        </if>-->
+<!--      </if>-->
+<!--    </if>-->
+
+<!--    <if test="param.depId == null">-->
+<!--      <if test="param.nowPoliceLevelId == null">-->
+<!--        <if test="param.postId != null">-->
+<!--          <if test="param.keyword != null and param.keyword != ''">-->
+<!--            and (post_id=#{param.depId} or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))-->
+<!--          </if>-->
+<!--        </if>-->
+<!--      </if>-->
+<!--    </if>-->
+<!--  </select>-->
 </mapper>

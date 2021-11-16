@@ -1,5 +1,6 @@
 package com.bayee.political.json;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Date;
  * @date 2021/11/15 14:40
  */
 @Data
+@ApiModel("纪律处分的分页查询")
 public class DAListPageParam {
 
     /**

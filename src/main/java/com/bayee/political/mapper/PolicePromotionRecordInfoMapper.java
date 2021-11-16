@@ -19,5 +19,5 @@ public interface PolicePromotionRecordInfoMapper {
 
     int updateByPrimaryKey(PolicePromotionRecordInfo record);
 
-    List<PolicePromotionRecordInfo> selectPageList();
+//    List<PolicePromotionRecordInfo> selectPageList();
 }

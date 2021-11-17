@@ -2,6 +2,8 @@ package com.bayee.political.mapper;
 
 import com.bayee.political.domain.PoliceRankInfo;
 
+import java.util.List;
+
 public interface PoliceRankInfoMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -16,4 +18,6 @@ public interface PoliceRankInfoMapper {
     int updateByPrimaryKeyWithBLOBs(PoliceRankInfo record);
 
     int updateByPrimaryKey(PoliceRankInfo record);
+
+    List<PoliceRankInfo> selectList();
 }

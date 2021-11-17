@@ -1,5 +1,6 @@
 package com.bayee.political.json;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
@@ -43,12 +44,14 @@ public class DAListPageParam {
     /**
      * 处分开始时间
      */
+    @JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
     private Date beginTime;
 
     /**
      * 处分结束时间
      */
-    private Date end;
+    @JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
+    private Date endTime;
 
     /**
      * 关键词

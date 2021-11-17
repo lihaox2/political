@@ -1,5 +1,7 @@
 package com.bayee.political.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -74,11 +76,13 @@ public class PolicePromotionRecordInfo {
     /**
      * 上一次晋升的时间
      */
+    @JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
     private Date lastTime;
 
     /**
      * 现在晋升时间
      */
+    @JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
     private Date nowTime;
 
     /**
@@ -119,11 +123,13 @@ public class PolicePromotionRecordInfo {
     /**
      * 创建时间
      */
+    @JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
 
     /**

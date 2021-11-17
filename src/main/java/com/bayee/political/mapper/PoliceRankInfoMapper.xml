@@ -169,4 +169,7 @@
       modify_user_id = #{modifyUserId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectList" resultMap="BaseResultMap">
+    select * from police_rank_info
+  </select>
 </mapper>

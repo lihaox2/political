@@ -52,7 +52,6 @@ public class DisciplinaryActionServiceImpl implements DisciplinaryActionService 
      */
     @Override
     public JsonResult<PageHandler<DisciplinaryActionInfoResult>> listPage(DAListPageParam param) {
-        param.setKeyword("%"+param.getKeyword()+"%");
         PageHelper.startPage(param.getPageIndex(),param.getPageSize());
         PageHandler<DisciplinaryActionInfoResult> pageHandler = new PageHandler<>(new PageInfo<>(mapper.listPage(param)));
         JsonResult<PageHandler<DisciplinaryActionInfoResult>> ok = JsonResult.ok(pageHandler);

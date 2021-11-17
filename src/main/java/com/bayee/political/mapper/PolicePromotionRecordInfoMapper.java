@@ -1,6 +1,8 @@
 package com.bayee.political.mapper;
 
 import com.bayee.political.domain.PolicePromotionRecordInfo;
+import com.bayee.political.json.PolicePromotionPageListParam;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,5 +21,9 @@ public interface PolicePromotionRecordInfoMapper {
 
     int updateByPrimaryKey(PolicePromotionRecordInfo record);
 
-//    List<PolicePromotionRecordInfo> selectPageList();
+    /**
+     * 晋升分页查询
+     * @return
+     */
+    List<PolicePromotionRecordInfo> selectPageList(@Param("param")PolicePromotionPageListParam param);
 }

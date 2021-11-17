@@ -41,7 +41,7 @@ import com.bayee.political.mapper.*;
 @EnableWebMvc
 @EnableAsync
 @PropertySource({ "classpath:db.properties", "classpath:config.properties", "classpath:mail.properties",
-		"classpath:app.properties" })
+		"classpath:app.properties","classpath:openoffice.properties" })
 @ComponentScan(basePackages = "com.bayee.political")
 @Import({ WebInitializer.class, DispatcherConfig.class, ThymeleafConfig.class })
 public class AppConfiguration {
@@ -279,6 +279,10 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(DisciplinaryRecordInfoMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceRankInfoMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(PolicePromotionRecordInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorReportMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorAccessoryMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorAuditMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorReportRecordMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -307,6 +311,30 @@ public class AppConfiguration {
 				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		velocityEngine.setVelocityPropertiesMap(velocityPropertiesMap);
 		return velocityEngine.createVelocityEngine();
+	}
+
+	@Bean
+	public MajorReportRecordMapper majorReportRecordMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(MajorReportRecordMapper.class);
+	}
+
+	@Bean
+	public MajorAuditMapper majorAuditMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(MajorAuditMapper.class);
+	}
+
+	@Bean
+	public MajorAccessoryMapper majorAccessoryMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(MajorAccessoryMapper.class);
+	}
+
+	@Bean
+	public MajorReportMapper majorReportMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(MajorReportMapper.class);
 	}
 
 	@Bean

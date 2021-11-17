@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.mapper.DisciplinaryRecordInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.domain.DisciplinaryRecordInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="punish_type_id" property="punishTypeId" jdbcType="INTEGER" />
+    <result column="punish_punish" property="punishPunish" jdbcType="VARCHAR" />
+    <result column="punish_office_id" property="punishOfficeId" jdbcType="INTEGER" />
+    <result column="punish_level_id" property="punishLevelId" jdbcType="INTEGER" />
+    <result column="promotion_influence_period" property="promotionInfluencePeriod" jdbcType="INTEGER" />
+    <result column="punish_time" property="punishTime" jdbcType="TIMESTAMP" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="modify_user" property="modifyUser" jdbcType="VARCHAR" />
+    <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.bayee.political.domain.DisciplinaryRecordInfo" extends="BaseResultMap" >
+    <result column="remarks" property="remarks" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, name, punish_type_id, punish_punish, punish_office_id, punish_level_id, 
+    promotion_influence_period, punish_time, sort, create_time, modify_time, create_user, 
+    create_user_id, modify_user, modify_user_id
+  </sql>
+  <sql id="Blob_Column_List" >
+    remarks
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from disciplinary_record_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from disciplinary_record_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.domain.DisciplinaryRecordInfo" >
+    insert into disciplinary_record_info (id, police_id, name, 
+      punish_type_id, punish_punish, punish_office_id, 
+      punish_level_id, promotion_influence_period, 
+      punish_time, sort, create_time, 
+      modify_time, create_user, create_user_id, 
+      modify_user, modify_user_id, remarks
+      )
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{punishTypeId,jdbcType=INTEGER}, #{punishPunish,jdbcType=VARCHAR}, #{punishOfficeId,jdbcType=INTEGER}, 
+      #{punishLevelId,jdbcType=INTEGER}, #{promotionInfluencePeriod,jdbcType=VARCHAR}, 
+      #{punishTime,jdbcType=TIMESTAMP}, #{sort,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
+      #{modifyUser,jdbcType=VARCHAR}, #{modifyUserId,jdbcType=INTEGER}, #{remarks,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayee.political.domain.DisciplinaryRecordInfo" >
+    insert into disciplinary_record_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="policeId != null" >
+        police_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="punishTypeId != null" >
+        punish_type_id,
+      </if>
+      <if test="punishPunish != null" >
+        punish_punish,
+      </if>
+      <if test="punishOfficeId != null" >
+        punish_office_id,
+      </if>
+      <if test="punishLevelId != null" >
+        punish_level_id,
+      </if>
+      <if test="promotionInfluencePeriod != null" >
+        promotion_influence_period,
+      </if>
+      <if test="punishTime != null" >
+        punish_time,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="modifyUser != null" >
+        modify_user,
+      </if>
+      <if test="modifyUserId != null" >
+        modify_user_id,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="punishTypeId != null" >
+        #{punishTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="punishPunish != null" >
+        #{punishPunish,jdbcType=VARCHAR},
+      </if>
+      <if test="punishOfficeId != null" >
+        #{punishOfficeId,jdbcType=INTEGER},
+      </if>
+      <if test="punishLevelId != null" >
+        #{punishLevelId,jdbcType=INTEGER},
+      </if>
+      <if test="promotionInfluencePeriod != null" >
+        #{promotionInfluencePeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="punishTime != null" >
+        #{punishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="modifyUser != null" >
+        #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyUserId != null" >
+        #{modifyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.DisciplinaryRecordInfo" >
+    update disciplinary_record_info
+    <set >
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="punishTypeId != null" >
+        punish_type_id = #{punishTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="punishPunish != null" >
+        punish_punish = #{punishPunish,jdbcType=VARCHAR},
+      </if>
+      <if test="punishOfficeId != null" >
+        punish_office_id = #{punishOfficeId,jdbcType=INTEGER},
+      </if>
+      <if test="punishLevelId != null" >
+        punish_level_id = #{punishLevelId,jdbcType=INTEGER},
+      </if>
+      <if test="promotionInfluencePeriod != null" >
+        promotion_influence_period = #{promotionInfluencePeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="punishTime != null" >
+        punish_time = #{punishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="modifyUser != null" >
+        modify_user = #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyUserId != null" >
+        modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bayee.political.domain.DisciplinaryRecordInfo" >
+    update disciplinary_record_info
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      punish_type_id = #{punishTypeId,jdbcType=INTEGER},
+      punish_punish = #{punishPunish,jdbcType=VARCHAR},
+      punish_office_id = #{punishOfficeId,jdbcType=INTEGER},
+      punish_level_id = #{punishLevelId,jdbcType=INTEGER},
+      promotion_influence_period = #{promotionInfluencePeriod,jdbcType=VARCHAR},
+      punish_time = #{punishTime,jdbcType=TIMESTAMP},
+      sort = #{sort,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      modify_user = #{modifyUser,jdbcType=VARCHAR},
+      modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+      remarks = #{remarks,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.DisciplinaryRecordInfo" >
+    update disciplinary_record_info
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      punish_type_id = #{punishTypeId,jdbcType=INTEGER},
+      punish_punish = #{punishPunish,jdbcType=VARCHAR},
+      punish_office_id = #{punishOfficeId,jdbcType=INTEGER},
+      punish_level_id = #{punishLevelId,jdbcType=INTEGER},
+      promotion_influence_period = #{promotionInfluencePeriod,jdbcType=VARCHAR},
+      punish_time = #{punishTime,jdbcType=TIMESTAMP},
+      sort = #{sort,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      modify_user = #{modifyUser,jdbcType=VARCHAR},
+      modify_user_id = #{modifyUserId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--纪律分页查询-->
+  <select id="listPage" resultType="com.bayee.political.json.DisciplinaryActionInfoResult">
+    select
+    r.id as id, r.police_id as policeId, r.`name` `name`, r.punish_type_id punishTypeId, r.punish_punish punishPunish, r.punish_office_id punishOfficeId, r.punish_level_id punishLevelId,
+    promotion_influence_period promotionInfluencePeriod, punish_time punishTime, r.sort sort, r.create_time createTime, r.modify_time modifyTime, r.create_user createUser,
+    r.create_user_id createUserId, r.modify_user modifyUser, r.modify_user_id modifyUserId
+    , t.title as punishTypeName,l.title as punishLevelName,o.title as punishOfficeName from disciplinary_record_info r left join disciplinary_action_type_info t on r.punish_type_id=t.id left join disciplinary_action_level_info l on r.punish_level_id=l.id
+    left join disciplinary_action_office_info o on r.punish_office_id=o.id
+<!--    <if test="param.punishTypeId == null and param.punishLevelId == null and param.punishOfficeId == null-->
+<!--    and param.beginTime ==null and param.endTime == null and param.keyword == null">-->
+<!--      1=1-->
+<!--    </if>-->
+    <if test="param.punishTypeId != null">
+      <if test="param.punishLevelId != null">
+        <if test="param.punishOfficeId != null">
+          <if test="param.beginTime != null and param.endTime != null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where  t.id=#{param.punishtypeId} or l.id=#{param.punishLevelId} or o.id=#{param.punishOfficeId} or r.punish_time between #{param.beginTime} and #{param.endTime} or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where   t.id=#{param.punishtypeId} or l.id=#{param.punishLevelId} or o.id=#{param.punishOfficeId} or r.punish_time between #{param.beginTime} and #{param.endTime}
+            </if>
+          </if>
+          <if test="param.beginTime == null or param.endTime == null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where  t.id=#{param.punishtypeId} or l.id=#{param.punishLevelId} or o.id=#{param.punishOfficeId}or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where   t.id=#{param.punishtypeId} or l.id=#{param.punishLevelId} or o.id=#{param.punishOfficeId}
+            </if>
+          </if>
+        </if>
+        <if test="param.punishOfficeId == null">
+
+          <if test="param.beginTime != null and param.endTime != null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where  t.id=#{param.punishtypeId} or l.id=#{param.punishLevelId} or r.punish_time between #{param.beginTime} and #{param.endTime} or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where   t.id=#{param.punishtypeId} or l.id=#{param.punishLevelId} or r.punish_time between #{param.beginTime} and #{param.endTime}
+            </if>
+          </if>
+          <if test="param.beginTime == null or param.endTime == null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where  t.id=#{param.punishtypeId} or l.id=#{param.punishLevelId} or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where   t.id=#{param.punishtypeId} or l.id=#{param.punishLevelId}
+            </if>
+          </if>
+        </if>
+      </if>
+      <if test="param.punishLevelId == null">
+        <if test="param.punishOfficeId != null">
+          <if test="param.beginTime != null and param.endTime != null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where  t.id=#{param.punishtypeId} or o.id=#{param.punishOfficeId} or r.punish_time between #{param.beginTime} and #{param.endTime} or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where   t.id=#{param.punishtypeId} or o.id=#{param.punishOfficeId} or r.punish_time between #{param.beginTime} and #{param.endTime}
+            </if>
+          </if>
+          <if test="param.beginTime == null or param.endTime == null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where  t.id=#{param.punishtypeId} oror o.id=#{param.punishOfficeId}or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where   t.id=#{param.punishtypeId}  or o.id=#{param.punishOfficeId}
+            </if>
+          </if>
+        </if>
+        <if test="param.punishOfficeId == null">
+
+          <if test="param.beginTime != null and param.endTime != null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where  t.id=#{param.punishtypeId} or r.punish_time between #{param.beginTime} and #{param.endTime} or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where   t.id=#{param.punishtypeId} or r.punish_time between #{param.beginTime} and #{param.endTime}
+            </if>
+          </if>
+          <if test="param.beginTime == null or param.endTime == null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where  t.id=#{param.punishtypeId} or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where   t.id=#{param.punishtypeId}
+            </if>
+          </if>
+        </if>
+      </if>
+    </if>
+
+    <if test="param.punishTypeId == null">
+      <if test="param.punishLevelId != null">
+        <if test="param.punishOfficeId != null">
+          <if test="param.beginTime != null and param.endTime != null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where l.id=#{param.punishLevelId} or o.id=#{param.punishOfficeId} or r.punish_time between #{param.beginTime} and #{param.endTime} or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where  l.id=#{param.punishLevelId} or o.id=#{param.punishOfficeId} or r.punish_time between #{param.beginTime} and #{param.endTime}
+            </if>
+          </if>
+          <if test="param.beginTime == null or param.endTime == null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where  l.id=#{param.punishLevelId} or o.id=#{param.punishOfficeId}or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where l.id=#{param.punishLevelId} or o.id=#{param.punishOfficeId}
+            </if>
+          </if>
+        </if>
+        <if test="param.punishOfficeId == null">
+
+          <if test="param.beginTime != null and param.endTime != null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where l.id=#{param.punishLevelId} or r.punish_time between #{param.beginTime} and #{param.endTime} or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where  l.id=#{param.punishLevelId} or r.punish_time between #{param.beginTime} and #{param.endTime}
+            </if>
+          </if>
+          <if test="param.beginTime == null or param.endTime == null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where  l.id=#{param.punishLevelId} or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where  l.id=#{param.punishLevelId}
+            </if>
+          </if>
+        </if>
+      </if>
+    </if>
+
+    <if test="param.punishTypeId == null">
+      <if test="param.punishLevelId == null">
+        <if test="param.punishOfficeId != null">
+          <if test="param.beginTime != null and param.endTime != null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where o.id=#{param.punishOfficeId} or r.punish_time between #{param.beginTime} and #{param.endTime} or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where   o.id=#{param.punishOfficeId} or r.punish_time between #{param.beginTime} and #{param.endTime}
+            </if>
+          </if>
+          <if test="param.beginTime == null or param.endTime == null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where  o.id=#{param.punishOfficeId}or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where o.id=#{param.punishOfficeId}
+            </if>
+          </if>
+        </if>
+      </if>
+    </if>
+
+    <if test="param.punishTypeId == null">
+      <if test="param.punishLevelId == null">
+        <if test="param.punishOfficeId == null">
+          <if test="param.beginTime != null and param.endTime != null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where r.punish_time between #{param.beginTime} and #{param.endTime} or ( r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%') )
+            </if>
+            <if test="param.keyword == null or param.keyword == ''">
+              where r.punish_time between #{param.beginTime} and #{param.endTime}
+            </if>
+          </if>
+        </if>
+      </if>
+    </if>
+
+    <if test="param.punishTypeId == null">
+      <if test="param.punishLevelId == null">
+        <if test="param.punishOfficeId == null">
+          <if test="param.beginTime == null and param.endTime == null">
+            <if test="param.keyword != null and param.keyword != ''">
+              where r.name like concat('%', #{param.keyword}, '%') or o.title concat('%', #{param.keyword}, '%')  or r.punish_punish like concat('%', #{param.keyword}, '%')
+            </if>
+          </if>
+        </if>
+      </if>
+    </if>
+    order by r.modify_time desc
+
+  </select>
+  <!--根据id纪律处分记录-->
+  <select id="info" resultType="com.bayee.political.json.DisciplinaryActionInfoResult">
+     select
+    r.id as id, r.police_id as policeId, r.`name` `name`, r.punish_type_id punishTypeId, r.punish_punish punishPunish, r.punish_office_id punishOfficeId, r.punish_level_id punishLevelId,
+    promotion_influence_period promotionInfluencePeriod, punish_time punishTime, r.sort sort, r.create_time createTime, r.modify_time modifyTime, r.create_user createUser,
+    r.create_user_id createUserId, r.modify_user modifyUser, r.modify_user_id modifyUserId
+     , t.title as punishTypeName,l.title as punishLevelName,o.title as punishOfficeName from disciplinary_record_info r left join disciplinary_action_type_info t on r.punish_type_id=t.id left join disciplinary_action_level_info l on r.punish_level_id=l.id
+    left join disciplinary_action_office_info o on r.punish_office_id=o.id where r.id=#{id}
+  </select>
+</mapper>

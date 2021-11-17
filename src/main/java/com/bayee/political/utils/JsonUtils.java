@@ -1,12 +1,12 @@
 package com.bayee.political.utils;
 
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author shentuqiwei

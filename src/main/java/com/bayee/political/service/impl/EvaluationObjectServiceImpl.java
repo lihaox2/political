@@ -1,20 +1,17 @@
-/*
 package com.bayee.political.service.impl;
 
-import com.bayee.evaluation.domain.EvaluationObject;
-import com.bayee.evaluation.mapper.EvaluationObjectMapper;
-import com.bayee.evaluation.service.EvaluationObjectService;
+import com.bayee.political.domain.EvaluationObject;
+import com.bayee.political.mapper.EvaluationObjectMapper;
+import com.bayee.political.service.EvaluationObjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-*/
 /**
  * @author tlt
  * @date 2021/10/25
- *//*
-
+ */
 @Service
 public class EvaluationObjectServiceImpl implements EvaluationObjectService {
 
@@ -36,4 +33,3 @@ public class EvaluationObjectServiceImpl implements EvaluationObjectService {
         return evaluationObjectMapper.selectByPoliceId(policeId);
     }
 }
-*/

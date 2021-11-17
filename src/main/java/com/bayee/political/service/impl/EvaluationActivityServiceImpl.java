@@ -1,18 +1,17 @@
-/*
 package com.bayee.political.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.bayee.political.domain.EvaluationActivity;
 import com.bayee.political.domain.EvaluationInfo;
+import com.bayee.political.domain.EvaluationInfoUser;
 import com.bayee.political.json.*;
-import com.bayee.political.mapper.EvaluationActivityMapper;
-import com.bayee.political.mapper.EvaluationInfoMapper;
-import com.bayee.political.mapper.EvaluationObjectMapper;
-import com.bayee.political.mapper.EvaluationTopicMapper;
+import com.bayee.political.mapper.*;
 import com.bayee.political.pojo.ActivityPageQueryResultDO;
 import com.bayee.political.service.EvaluationActivityService;
+import com.bayee.political.service.UserService;
 import com.bayee.political.utils.DateUtils;
+import com.bayee.political.utils.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +20,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-*/
 /**
  * @author tlt
  * @date 2021/10/22
- *//*
+ */
 
 @Service
 public class EvaluationActivityServiceImpl implements EvaluationActivityService {
@@ -41,6 +39,12 @@ public class EvaluationActivityServiceImpl implements EvaluationActivityService 
 
     @Autowired
     private EvaluationObjectMapper evaluationObjectMapper;
+
+    @Autowired
+    private EvaluationInfoUserMapper EvaluationInfoUserMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public void addEvaluationActivity(EvaluationActivity evaluationActivity) {
@@ -87,7 +91,7 @@ public class EvaluationActivityServiceImpl implements EvaluationActivityService 
 
     @Override
     public Integer activityPageCount(ActivityPageQueryParam queryParam) {
-        return null;
+        return evaluationActivityMapper.activityPageCount(queryParam);
     }
 
     @Override
@@ -113,9 +117,7 @@ public class EvaluationActivityServiceImpl implements EvaluationActivityService 
         map.put("creationDate", "创建时间");
 
         JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(dataList));
-        */
-/*ExcelUtil.exportData(response, fileName, map, jsonArray);*//*
-
+        ExcelUtil.exportData(response, fileName, map, jsonArray);
     }
 
     @Override
@@ -125,10 +127,10 @@ public class EvaluationActivityServiceImpl implements EvaluationActivityService 
         List<ActivityStart> havaParticipationActivityList = new ArrayList<>();
         List<ActivityStart> noParticipationActivityList = new ArrayList<>();
         for (EvaluationActivity activity : activityList) {
-            User user = userMapper.selectByPrimaryKey(userId);
+            EvaluationInfoUser user = EvaluationInfoUserMapper.selectByPrimaryKey(userId);
             ActivityStartResult startResult = new ActivityStartResult();
             startResult.setActivityName(activity.getActivityName());
-            startResult.setObjectName(evaluationObjectMapper.selectByPoliceId(user.getFamilyPoliceId()).getObjectName());
+            startResult.setObjectName(userMapper.getUserNameByPoliceIds(user.getFamilyPoliceId()));
             startResult.setId(activity.getId());
             startResult.setCreationYear(DateUtils.formatDate(activity.getCreationDate(), "yyyy"));
             startResult.setTopicCount(evaluationTopicMapper.countByPrimaryKey(activity.getId()));
@@ -197,4 +199,3 @@ public class EvaluationActivityServiceImpl implements EvaluationActivityService 
         return result;
     }
 }
-*/

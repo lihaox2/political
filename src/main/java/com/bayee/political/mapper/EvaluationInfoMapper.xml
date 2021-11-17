@@ -16,23 +16,23 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
-    from evaluation
+    from evaluation_info
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from evaluation
+    delete from evaluation_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.EvaluationInfo" >
-    insert into evaluation (id, activity_id,
-                            user_id, total_score, business_time,
-                            creation_date, update_date)
-    values (#{id,jdbcType=INTEGER}, #{activityId,jdbcType=INTEGER},
-            #{userId,jdbcType=INTEGER}, #{totalScore,jdbcType=INTEGER}, #{businessTime,jdbcType=TIMESTAMP},
-            #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+    insert into evaluation_info (id, activity_id, user_id,
+                                 total_score, business_time, creation_date,
+                                 update_date)
+    values (#{id,jdbcType=INTEGER}, #{activityId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+            #{totalScore,jdbcType=INTEGER}, #{businessTime,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP},
+            #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.EvaluationInfo" >
-    insert into evaluation
+    insert into evaluation_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -81,7 +81,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.EvaluationInfo" >
-    update evaluation
+    update evaluation_info
     <set >
       <if test="activityId != null" >
         activity_id = #{activityId,jdbcType=INTEGER},
@@ -105,7 +105,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.EvaluationInfo" >
-    update evaluation
+    update evaluation_info
     set activity_id = #{activityId,jdbcType=INTEGER},
         user_id = #{userId,jdbcType=INTEGER},
         total_score = #{totalScore,jdbcType=INTEGER},
@@ -119,7 +119,7 @@
     select e.id, u.`name` as appraiserName, u.user_name as appraiserPhone, o.object_name as objectName,
     e.total_score as totalScore, DATE_FORMAT(e.business_time,'%Y-%m-%d %H:%i:%s') as businessTime,
     e.user_id as userId
-    from evaluation e LEFT JOIN evaluation_activity a ON e.activity_id = a.id
+    from evaluation_info e LEFT JOIN evaluation_activity a ON e.activity_id = a.id
     LEFT JOIN `user` u ON e.user_id = u.id LEFT JOIN evaluation_object o ON u.family_police_id = o.police_id
     where e.activity_id = #{param.activityId}
     <if test="param.key != null and param.key != ''">
@@ -127,15 +127,15 @@
     </if>
   </select>
   <select id="countHaveEvaluation" resultType="java.lang.Integer">
-    select count(1) from evaluation where activity_id = #{id}
+    select count(1) from evaluation_info where activity_id = #{id}
   </select>
   <select id="selectByStartParam" parameterType="com.bayee.political.json.EvaluationStartParam"
           resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from evaluation e where e.activity_id = #{param.activityId} and e.user_id = #{param.userId}
+    from evaluation_info e where e.activity_id = #{param.activityId} and e.user_id = #{param.userId}
   </select>
   <delete id="deleteByActivityId">
-    DELETE FROM evaluation where activity_id = #{activityId}
+    DELETE FROM evaluation_info where activity_id = #{activityId}
   </delete>
 </mapper>

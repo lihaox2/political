@@ -34,9 +34,9 @@ public class EvaluationActivity {
     private String remark;
 
     /**
-     * 创建人id
+     * 创建人警号
      */
-    private Integer userId;
+    private String policeId;
 
     /**
      * 创建时间
@@ -101,12 +101,12 @@ public class EvaluationActivity {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getUserId() {
-        return userId;
+    public String getPoliceId() {
+        return policeId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setPoliceId(String policeId) {
+        this.policeId = policeId == null ? null : policeId.trim();
     }
 
     public Date getCreationDate() {

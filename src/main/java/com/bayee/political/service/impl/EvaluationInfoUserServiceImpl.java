@@ -1,4 +1,3 @@
-/*
 package com.bayee.political.service.impl;
 
 import com.bayee.political.domain.EvaluationInfoUser;
@@ -16,12 +15,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-*/
 /**
  * @author tlt
  * @date 2021/10/26
- *//*
-
+ */
 @Service
 public class EvaluationInfoUserServiceImpl implements EvaluationInfoUserService {
 
@@ -144,4 +141,3 @@ public class EvaluationInfoUserServiceImpl implements EvaluationInfoUserService 
         }
     }
 }
-*/

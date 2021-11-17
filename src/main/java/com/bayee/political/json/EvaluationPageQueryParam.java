@@ -16,6 +16,16 @@ public class EvaluationPageQueryParam {
      */
     private String key;
 
+    /**
+     * 当前页码
+     */
+    private Integer pageIndex;
+
+    /**
+     * 数据条数
+     */
+    private Integer pageSize;
+
     public Integer getActivityId() {
         return activityId;
     }
@@ -30,5 +40,21 @@ public class EvaluationPageQueryParam {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

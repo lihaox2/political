@@ -8,13 +8,13 @@
     <result column="activity_status" property="activityStatus" jdbcType="INTEGER" />
     <result column="activity_name" property="activityName" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="creator" property="creator" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, id_num, belong_month, activity_status, activity_name, remark, user_id, creation_date,
+    id, id_num, belong_month, activity_status, activity_name, remark, police_id, creation_date,
     update_date, creator
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -28,16 +28,13 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.EvaluationActivity" >
-    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into evaluation_activity (id, id_num, belong_month,
                                      activity_status, activity_name, remark,
-                                     user_id, creation_date, update_date,
+                                     police_id, creation_date, update_date,
                                      creator)
     values (#{id,jdbcType=INTEGER}, #{idNum,jdbcType=VARCHAR}, #{belongMonth,jdbcType=TIMESTAMP},
             #{activityStatus,jdbcType=INTEGER}, #{activityName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
-            #{userId,jdbcType=INTEGER}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},
+            #{policeId,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},
             #{creator,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.EvaluationActivity" >
@@ -61,8 +58,8 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="userId != null" >
-        user_id,
+      <if test="policeId != null" >
+        police_id,
       </if>
       <if test="creationDate != null" >
         creation_date,
@@ -93,8 +90,8 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
+      <if test="policeId != null" >
+        #{policeId,jdbcType=VARCHAR},
       </if>
       <if test="creationDate != null" >
         #{creationDate,jdbcType=TIMESTAMP},
@@ -125,8 +122,8 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
+      <if test="policeId != null" >
+        police_id = #{policeId,jdbcType=VARCHAR},
       </if>
       <if test="creationDate != null" >
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -147,7 +144,7 @@
         activity_status = #{activityStatus,jdbcType=INTEGER},
         activity_name = #{activityName,jdbcType=VARCHAR},
         remark = #{remark,jdbcType=VARCHAR},
-        user_id = #{userId,jdbcType=INTEGER},
+        police_id = #{policeId,jdbcType=VARCHAR},
         creation_date = #{creationDate,jdbcType=TIMESTAMP},
         update_date = #{updateDate,jdbcType=TIMESTAMP},
         creator = #{creator,jdbcType=INTEGER}
@@ -171,6 +168,25 @@
       or ea.id_num like concat('%', #{param.key}, '%'))
     </if>
     ORDER BY creation_date DESC
+    LIMIT #{param.pageIndex}, #{param.pageSize}
+  </select>
+  <select id="activityPageCount" resultType="Integer"
+          parameterType="com.bayee.political.json.ActivityPageQueryParam">
+    select
+    COUNT(1)
+    from evaluation_activity ea
+    where 1=1
+    <if test="param.belongMonth != null and param.belongMonth != ''">
+      and (DATE_FORMAT(ea.belong_month,'%Y-%m') = #{param.belongMonth}
+      or DATE_FORMAT(ea.belong_month,'%Y-%c') = #{param.belongMonth})
+    </if>
+    <if test="param.activityStatus != null and param.activityStatus != ''">
+      and ea.activity_status = #{param.activityStatus}
+    </if>
+    <if test="param.key != null and param.key != ''">
+      and (ea.activity_name like concat('%', #{param.key}, '%')
+      or ea.id_num like concat('%', #{param.key}, '%'))
+    </if>
   </select>
   <update id="updateStatusById">
     update evaluation_activity set activity_status = 2 where id = #{id}

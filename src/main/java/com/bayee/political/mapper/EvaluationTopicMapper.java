@@ -1,4 +1,3 @@
-/*
 package com.bayee.political.mapper;
 
 import com.bayee.political.domain.EvaluationTopic;
@@ -19,29 +18,21 @@ public interface EvaluationTopicMapper {
 
     int updateByPrimaryKey(EvaluationTopic record);
 
-    */
-/**
+    /**
      * 查询题目数
-     * @param id
      * @return
-     *//*
-
+     */
     int countByPrimaryKey(@Param("id") Integer id);
 
-    */
-/**
+    /**
      * 查询题目
-     * @param evaluationTopic
      * @return
-     *//*
-
+     */
     List<EvaluationTopic> selectByActityId(EvaluationTopic evaluationTopic);
 
-    */
-/**
-     *按活动id删除题目
-     * @param activityId
-     *//*
-
+    /**
+     * 按活动id删除题目
+     * @return
+     */
     void deleteByActivityId(@Param("activityId") Integer activityId);
-}*/
+}

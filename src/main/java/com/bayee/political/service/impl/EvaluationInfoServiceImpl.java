@@ -1,24 +1,15 @@
-/*
 package com.bayee.political.service.impl;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
-import com.bayee.evaluation.common.web.JsonResult;
-import com.bayee.evaluation.common.web.PageHandler;
-import com.bayee.evaluation.common.web.PageParam;
-import com.bayee.evaluation.domain.*;
-import com.bayee.evaluation.json.*;
-import com.bayee.evaluation.mapper.*;
-import com.bayee.evaluation.pojo.EvaluationPageQueryResultDO;
-import com.bayee.evaluation.service.EvaluationInfoService;
-import com.bayee.evaluation.utils.DateUtils;
-import com.bayee.political.domain.EvaluationInfo;
-import com.bayee.political.json.EvaluationSaveParam;
-import com.bayee.political.json.EvaluationTopicSaveParam;
+import com.bayee.political.domain.*;
+import com.bayee.political.json.*;
 import com.bayee.political.mapper.*;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.bayee.political.pojo.EvaluationPageQueryResultDO;
+import com.bayee.political.service.EvaluationInfoService;
+import com.bayee.political.utils.DataListReturn;
+import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +21,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-*/
 /**
  * @author tlt
  * @date 2021/10/25
- *//*
+ */
 
 @Service
 public class EvaluationInfoServiceImpl implements EvaluationInfoService {
@@ -85,10 +75,14 @@ public class EvaluationInfoServiceImpl implements EvaluationInfoService {
     }
 
     @Override
-    public PageHandler<EvaluationPageQueryResultDO> evaluationPage(PageParam pageParam, EvaluationPageQueryParam queryParam) {
-        PageHelper.startPage(pageParam.getPageIndex(), pageParam.getPageSize());
+    public List<EvaluationPageQueryResultDO> evaluationPage(EvaluationPageQueryParam queryParam) {
 
-        return new PageHandler<>(new PageInfo<>(evaluationMapper.evaluationPage(queryParam)));
+        return evaluationMapper.evaluationPage(queryParam);
+    }
+
+    @Override
+    public Integer evaluationPageCount(EvaluationPageQueryParam queryParam) {
+        return null;
     }
 
     @Override
@@ -106,7 +100,7 @@ public class EvaluationInfoServiceImpl implements EvaluationInfoService {
     }
 
     @Override
-    public Evaluation findById(Integer id) {
+    public EvaluationInfo findById(Integer id) {
         return evaluationMapper.selectByPrimaryKey(id);
     }
 
@@ -116,22 +110,22 @@ public class EvaluationInfoServiceImpl implements EvaluationInfoService {
     }
 
     @Override
-    public Evaluation selectByStartParam(EvaluationStartParam startParam) {
+    public EvaluationInfo selectByStartParam(EvaluationStartParam startParam) {
         return evaluationMapper.selectByStartParam(startParam);
     }
 
     @Override
-    public JsonResult<EvaluationStartResult> startEvaluation(EvaluationStartParam startParam) {
+    public DataListReturn startEvaluation(EvaluationStartParam startParam) {
         EvaluationActivity activity = evaluationActivityMapper.selectByPrimaryKey(startParam.getActivityId());
         if (activity != null && activity.getActivityStatus() == 1) {
-            Evaluation evaluation = evaluationMapper.selectByStartParam(startParam);
+            EvaluationInfo evaluation = evaluationMapper.selectByStartParam(startParam);
             if (evaluation != null) {
-                return JsonResult.error("您已参与本次评价活动！");
+                return DataListReturn.error("您已参与本次评价活动！");
             } else {
                 EvaluationTopic evaluationTopic = new EvaluationTopic();
                 evaluationTopic.setActivityId(startParam.getActivityId());
                 List<EvaluationTopic> evaluationTopicList = evaluationTopicMapper.selectByActityId(evaluationTopic);
-                User user = userMapper.selectByPrimaryKey(startParam.getUserId());
+                EvaluationInfoUser user = userMapper.selectByPrimaryKey(startParam.getUserId());
                 EvaluationObject object = evaluationObjectMapper.selectByPoliceId(user.getFamilyPoliceId());
                 EvaluationStartResult startResult = new EvaluationStartResult();
                 startResult.setActivityId(activity.getId());
@@ -139,10 +133,10 @@ public class EvaluationInfoServiceImpl implements EvaluationInfoService {
                 startResult.setObjectName(object.getObjectName());
                 startResult.setTopicCount(evaluationTopicList.size());
                 startResult.setTopicList(evaluationTopicList);
-                return JsonResult.ok(startResult);
+                return DataListReturn.ok(startResult);
             }
         } else {
-            return JsonResult.error("本次评价活动未开始！");
+            return DataListReturn.error("本次评价活动未开始！");
         }
     }
 
@@ -159,7 +153,7 @@ public class EvaluationInfoServiceImpl implements EvaluationInfoService {
             exportResults.setObjectName(dataList.get(i).getObjectName());
             exportResults.setTotalScore(dataList.get(i).getTotalScore());
             exportResults.setBusinessTime(dataList.get(i).getBusinessTime());
-            User user = userMapper.selectByPrimaryKey(dataList.get(i).getUserId());
+            EvaluationInfoUser user = userMapper.selectByPrimaryKey(dataList.get(i).getUserId());
             exportResults.setPoliceId(user.getFamilyPoliceId());
             exportResults.setBelongMonth(DateUtils.formatDate(activity.getBelongMonth(),"yyyy-MM"));
             exportResultsList.add(exportResults);
@@ -190,9 +184,7 @@ public class EvaluationInfoServiceImpl implements EvaluationInfoService {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        */
-/* response.setHeader("Content-Disposition", "attachment;filename=" + name + ".xls");*//*
-
+        /* response.setHeader("Content-Disposition", "attachment;filename=" + name + ".xls");*/
 
         ServletOutputStream out = null;
         try {
@@ -207,10 +199,8 @@ public class EvaluationInfoServiceImpl implements EvaluationInfoService {
         //此处记得关闭输出Servlet流
         IoUtil.close(out);
 
-        */
-/*JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(dataList));
-        ExcelUtil.exportData(response, fileName, map, jsonArray);*//*
+        /*JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(dataList));
+        ExcelUtil.exportData(response, fileName, map, jsonArray);*/
 
     }
 }
-*/

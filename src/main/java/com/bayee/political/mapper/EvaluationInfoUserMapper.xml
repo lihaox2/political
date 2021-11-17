@@ -15,33 +15,31 @@
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, serial_number, user_name, name, password, family_police_id, is_disable,
-    role_id, business_time, creation_date, update_date
+    id, serial_number, user_name, name, password, family_police_id, is_disable, role_id,
+    business_time, creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
-    from user
+    from evaluation_info_user
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from user
+    delete from evaluation_info_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.EvaluationInfoUser" >
-    insert into user (id, serial_number, user_name,
-                      name, password, family_police_id,
-                      is_disable, role_id,
-                      business_time, creation_date, update_date
-    )
+    insert into evaluation_info_user (id, serial_number, user_name,
+                                      name, password, family_police_id,
+                                      is_disable, role_id, business_time,
+                                      creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{serialNumber,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR},
             #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{familyPoliceId,jdbcType=VARCHAR},
-            #{isDisable,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER},
-            #{businessTime,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
-           )
+            #{isDisable,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{businessTime,jdbcType=TIMESTAMP},
+            #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.EvaluationInfoUser" >
-    insert into user
+    insert into evaluation_info_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -114,7 +112,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.EvaluationInfoUser" >
-    update user
+    update evaluation_info_user
     <set >
       <if test="serialNumber != null" >
         serial_number = #{serialNumber,jdbcType=INTEGER},
@@ -150,7 +148,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.EvaluationInfoUser" >
-    update user
+    update evaluation_info_user
     set serial_number = #{serialNumber,jdbcType=INTEGER},
         user_name = #{userName,jdbcType=VARCHAR},
         name = #{name,jdbcType=VARCHAR},
@@ -179,19 +177,19 @@
   <select id="queryByUserName" parameterType="com.bayee.political.json.UserLoginParam" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from user
+    from evaluation_info_user
     where user_name = #{userName}
   </select>
   <update id="disable">
-    update `user` set is_disable = 2 where id = #{id}
+    update `evaluation_info_user` set is_disable = 2 where id = #{id}
   </update>
   <update id="enabled">
-    update `user` set is_disable = 1 where id = #{id}
+    update `evaluation_info_user` set is_disable = 1 where id = #{id}
   </update>
   <select id="selectByPoliceId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from user
+    from evaluation_info_user
     where family_police_id = #{policeId}
   </select>
 </mapper>

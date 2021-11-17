@@ -278,6 +278,11 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorAuditMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorAccessoryMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(MajorReportRecordMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(EvaluationActivityMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(EvaluationInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(EvaluationInfoUserMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(EvaluationObjectMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(EvaluationTopicMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -306,6 +311,36 @@ public class AppConfiguration {
 				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		velocityEngine.setVelocityPropertiesMap(velocityPropertiesMap);
 		return velocityEngine.createVelocityEngine();
+	}
+
+	@Bean
+	public EvaluationTopicMapper evaluationTopicMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(EvaluationTopicMapper.class);
+	}
+
+	@Bean
+	public EvaluationObjectMapper evaluationObjectMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(EvaluationObjectMapper.class);
+	}
+
+	@Bean
+	public EvaluationInfoUserMapper evaluationInfoUserMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(EvaluationInfoUserMapper.class);
+	}
+
+	@Bean
+	public EvaluationInfoMapper evaluationInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(EvaluationInfoMapper.class);
+	}
+
+	@Bean
+	public EvaluationActivityMapper evaluationActivityMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(EvaluationActivityMapper.class);
 	}
 
 	@Bean

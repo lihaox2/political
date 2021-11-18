@@ -82,6 +82,7 @@ public interface RiskConductBureauRuleRecordMapper {
      */
     List<ScreenChart> getConductBureauChart();
 
+
     /**
      * 根据年份和月份进行查询
      * @param conductBureauRuleRecordYear

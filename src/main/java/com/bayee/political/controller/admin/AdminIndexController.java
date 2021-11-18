@@ -77,7 +77,8 @@ public class AdminIndexController {
         result.setCaseManageNum(riskCaseLawEnforcementRecordService.countAll());
         result.setDutyNum(riskDutyDealPoliceRecordService.countAll());
         result.setHealthNum(riskHealthRecordService.countAll());
-        result.setConductNum(riskConductVisitRecordService.countAll() + riskConductBureauRuleRecordService.countAll());
+//        result.setConductNum(riskConductVisitRecordService.countAll() + riskConductBureauRuleRecordService.countAll());
+        result.setConductNum(riskConductBureauRuleRecordService.countAll());
         result.setTrainNum(trainFirearmService.countAll() + trainPhysicalService.countAll());
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);

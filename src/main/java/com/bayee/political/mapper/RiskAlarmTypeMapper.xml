@@ -81,7 +81,7 @@
   </update>
     <!-- 警员预警类型查询 -->
 <select id="riskAlarmTypeList" parameterType="com.bayee.political.domain.RiskAlarmType" resultMap="BaseResultMap">
-select * from risk_alarm_type where 1=1
+    select * from risk_alarm_type where parent_id = 0 and creation_date is not null
     <if test="id != null and id !=''">
 	    and id = #{id,jdbcType=INTEGER}
 	</if>

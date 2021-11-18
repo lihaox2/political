@@ -48,30 +48,6 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
 
     @Override
     public JsonResult<T> pageList(PolicePromotionPageListParam param) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy");
-        if(param.getQuarter()==1){
-            String beginTime=sdf1.format(param.getParticularYear())+"-01-01";
-            String endTime=sdf1.format(param.getParticularYear())+"-03-31";
-            param.setBeginTime(beginTime);
-            param.setEndTime(endTime);
-        }
-        if(param.getQuarter()==2){
-            String beginTime=sdf1.format(param.getParticularYear())+"-04-01";
-            String endTime=sdf1.format(param.getParticularYear())+"-06-31";
-            param.setBeginTime(beginTime);
-            param.setEndTime(endTime);
-        } if(param.getQuarter()==3){
-            String beginTime=sdf1.format(param.getParticularYear())+"-07-01";
-            String endTime=sdf1.format(param.getParticularYear())+"-09-31";
-            param.setBeginTime(beginTime);
-            param.setEndTime(endTime);
-        } if(param.getQuarter()==4){
-            String beginTime=sdf1.format(param.getParticularYear())+"-10-01";
-            String endTime=sdf1.format(param.getParticularYear())+"-12-31";
-            param.setBeginTime(beginTime);
-            param.setEndTime(endTime);
-        }
         PageHelper.startPage(param.getPageIndex(),param.getPageSize());
         if(param.getType()==0){
             List<GeneralPromotionResult> list=new ArrayList<>();
@@ -160,5 +136,11 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
         JsonResult<List<LinkageResult>> ok = JsonResult.ok(list);
         ok.setDesc("查询成功");
         return ok;
+    }
+
+    @Override
+    public JsonResult<T> export() {
+
+        return null;
     }
 }

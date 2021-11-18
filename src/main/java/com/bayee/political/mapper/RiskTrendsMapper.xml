@@ -321,7 +321,8 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
                               UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `month`
                               UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `month`) v
                               LEFT JOIN
-                              (SELECT DATE_FORMAT(a.creation_date,'%Y-%m-%d') AS paTime,count(1) AS total FROM risk_case_law_enforcement_record a GROUP BY paTime) b
+                              <!--DATE_FORMAT(a.creation_date,'%Y-%m-%d')修改前-->
+                              (SELECT DATE_FORMAT(a.creation_date,'%Y-%m') AS paTime,count(1) AS total FROM risk_case_law_enforcement_record a GROUP BY paTime) b
                           ON b.paTime=v.`month`) a ORDER BY a.name ASC
     </select>
 	
@@ -367,7 +368,8 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
                               UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `month`
                               UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `month`
                               UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `month`) v
-                              LEFT JOIN (SELECT DATE_FORMAT(a.creation_date,'%Y-%m-%d') AS paTime,count(1) AS total FROM risk_duty_deal_police_record a GROUP BY paTime) b
+                              <!--DATE_FORMAT(a.creation_date,'%Y-%m-%d'修改前的-->
+                              LEFT JOIN (SELECT DATE_FORMAT(a.creation_date,'%Y-%m') AS paTime,count(1) AS total FROM risk_duty_deal_police_record a GROUP BY paTime) b
                           ON b.paTime=v.`month`) a ORDER BY a.name ASC
     </select>
 	
@@ -483,7 +485,8 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
             select
                 u.department_id,COUNT(er.police_id) as `count`
             from risk_case_law_enforcement_record er, user u
-            where er.police_id = u.police_id and DATE_FORMAT(er.creation_date,'%Y-%m-%d') = #{date}
+            <!--修改前的sql DATE_FORMAT(er.creation_date,'%Y-%m-%d')-->
+            where er.police_id = u.police_id and DATE_FORMAT(er.creation_date,'%Y-%m') = #{date}
             group by u.department_id) ra on d.id = ra.department_id
         order by ra.count desc, d.id desc
         limit 5
@@ -496,7 +499,8 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
             select
             u.department_id,COUNT(er.police_id) as `count`
             from risk_duty_deal_police_record er, user u
-            where er.police_id = u.police_id and DATE_FORMAT(er.creation_date,'%Y-%m-%d') = #{date}
+            <!--DATE_FORMAT(er.creation_date,'%Y-%m-%d') -->
+            where er.police_id = u.police_id and DATE_FORMAT(er.creation_date,'%Y-%m') = #{date}
             group by u.department_id) ra on d.id = ra.department_id
         order by ra.count desc, d.id desc
         limit 5

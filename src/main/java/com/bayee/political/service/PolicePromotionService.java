@@ -26,4 +26,6 @@ public interface PolicePromotionService {
     JsonResult<List<LinkageResult>>postList();
 
     JsonResult<List<LinkageResult>> depList();
+
+    JsonResult<T> export();
 }

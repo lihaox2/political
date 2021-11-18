@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -51,5 +52,34 @@ public class PolicePromotionPageListParam {
 //    @JsonFormat( pattern="yyyy-MM-dd")
     private String endTime;
 
+    public Integer getQuarter() {
+        return quarter;
+    }
 
+    public void setQuarter(Integer quarter) {
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy");
+        if(quarter==1){
+            String beginTime=sdf1.format(getParticularYear())+"-01-01";
+            String endTime=sdf1.format(getParticularYear())+"-03-31";
+            setBeginTime(beginTime);
+            setEndTime(endTime);
+        }
+        if(quarter==2){
+            String beginTime=sdf1.format(getParticularYear())+"-04-01";
+            String endTime=sdf1.format(getParticularYear())+"-06-31";
+            setBeginTime(beginTime);
+            setEndTime(endTime);
+        } if(quarter==3){
+            String beginTime=sdf1.format(getParticularYear())+"-07-01";
+            String endTime=sdf1.format(getParticularYear())+"-09-31";
+            setBeginTime(beginTime);
+            setEndTime(endTime);
+        } if(quarter==4){
+            String beginTime=sdf1.format(getParticularYear())+"-10-01";
+            String endTime=sdf1.format(getParticularYear())+"-12-31";
+            setBeginTime(beginTime);
+            setEndTime(endTime);
+        }
+        this.quarter = quarter;
+    }
 }

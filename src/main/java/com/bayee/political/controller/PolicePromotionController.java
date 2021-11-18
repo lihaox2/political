@@ -48,7 +48,7 @@ public class PolicePromotionController {
         return service.depList();
     }
 
-    @ApiOperation("查询部门")
+    @ApiOperation("职位部门")
     @GetMapping("/post/list")
     private JsonResult<List<LinkageResult>> postList(){
         return service.postList();
@@ -59,5 +59,11 @@ public class PolicePromotionController {
     @GetMapping("info")
     public JsonResult<PolicePromotionRecordInfo> info(Integer id){
         return service.info(id);
+    }
+
+    @ApiOperation("导出的接口")
+    @GetMapping("/export")
+    public  JsonResult<T> export(){
+        return service.export();
     }
 }

@@ -55,6 +55,8 @@ public interface RiskAlarmMapper {
 	List<Map<String,Object>> findByPoliceIdRiskAlarm(String policeId);
 	
 	List<Map<String,Object>> continuityAlarm();
+
+	List<Map<String,Object>> continuityAlarmDataList(@Param("beginTime")String beginTime,@Param("endTime")String endTime);
 	
 	List<Map<String,Object>> continuityAlarmDetails(String policeId);
 

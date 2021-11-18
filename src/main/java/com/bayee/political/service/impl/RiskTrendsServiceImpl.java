@@ -1,5 +1,7 @@
 package com.bayee.political.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,6 +20,9 @@ import com.bayee.political.domain.RiskTrends;
 import com.bayee.political.mapper.RiskAlarmMapper;
 import com.bayee.political.mapper.RiskTrendsMapper;
 import com.bayee.political.service.RiskTrendsService;
+
+import javax.xml.crypto.Data;
+
 @Service
 public class RiskTrendsServiceImpl implements RiskTrendsService{
 	
@@ -203,7 +208,11 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 	@Override
 	public List<Map<String, Object>> continuityAlarm() {
 		// TODO Auto-generated method stub
-		return riskAlarmMapper.continuityAlarm();
+//		return riskAlarmMapper.continuityAlarm();
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+		String format = sdf.format(date);
+		return riskAlarmMapper.continuityAlarmDataList(format+"-01-01",format+"-12-31");
 	}
 
 	@Override

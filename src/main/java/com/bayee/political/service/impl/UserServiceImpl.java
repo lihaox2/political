@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
 	private Logger log= LoggerFactory.getLogger(UserServiceImpl.class);
 
-	private final String HOST = "http://8.136.146.186:8099/static";
+	private final String HOST = "http://8.136.146.186:9097/static";
 //	private final static String HOST = "http://41.190.128.250:8080/static";
 
 	@Autowired

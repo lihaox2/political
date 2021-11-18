@@ -217,6 +217,10 @@ ORDER BY consequtive) a WHERE a.consequtive>0) a ,`user` u WHERE a.policeId=u.po
     order by DATE_FORMAT(r1.creation_date, '%Y-%m')) a,risk_alarm_type t,`user` u WHERE a.police_id=u.police_id AND a.alarm_type=t.id ;
 </select>
 
+  <select id="continuityAlarmDataList" resultType="HashMap">
+select a.police_id,u.`name`,count(a.creation_date) `value` from risk_alarm  a left join risk_alarm_type t on a.alarm_type=t.id left join `user` u on u.police_id=a.police_id WHERE a.creation_date BETWEEN #{beginTime} and #{endTime} GROUP BY a.police_id ORDER BY `value` desc
+  </select>
+
   <select id="countRiskAlarmByPolice" resultType="Integer">
     select
         count(1)

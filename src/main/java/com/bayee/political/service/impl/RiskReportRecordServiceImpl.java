@@ -657,7 +657,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 
 	@Override
 	public void policeRiskDetailsV2(List<User> userList, LocalDate localDate) {
-		health(localDate);
+//		health(localDate);
 
 		family(localDate);
 

@@ -26,4 +26,11 @@ public class HealthRiskTask {
         riskReportRecordService.health(localDate);
     }
 
+    @Scheduled(cron="0 1 1 1 1 * 2021-2999")
+    public void healthRiskTask(){
+        LocalDate localDate = LocalDate.now();
+
+        riskReportRecordService.health(localDate);
+    }
+
 }

@@ -134,8 +134,8 @@ public class AdminTrainController {
             pageResult.setDeptName(e.getDepartmentName());
             pageResult.setEligibleCount(trainPhysicalAchievementService.countPhysicalByAchievementGrade(e.getId(), e.getPoliceId(), 2));
             pageResult.setNotEligibleCount(trainPhysicalAchievementService.countPhysicalByAchievementGrade(e.getId(), e.getPoliceId(), 1));
-            pageResult.setEligibleFlag(e.getIsTestFree() == 1 ? "免测" : e.getAchievementGrade() == null ? "--" : e.getAchievementGrade() == 1 ? "不合格"
-                    : e.getAchievementGrade() == 2 ? "合格" : "");
+            pageResult.setEligibleFlag(e.getIsTestFree() == null ? "" : e.getIsTestFree() == 1 ? "免测" :
+                    e.getAchievementGrade() == null ? "--" : e.getAchievementGrade() == 1 ? "不合格" : e.getAchievementGrade() == 2 ? "合格" : "");
             pageResult.setDate(DateUtils.formatDate(e.getCreationDate(), "yyyy/MM/dd HH:mm:ss"));
             return pageResult;
         }).collect(Collectors.toList());

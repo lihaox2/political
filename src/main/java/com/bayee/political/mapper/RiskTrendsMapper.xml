@@ -451,8 +451,8 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 	<!-- 柱状图 -->
 	<select id="qualifiedRateEcharts" resultType="HashMap">
         select
-            TRUNCATE(((select COUNT(distinct(police_id)) from train_physical_achievement where achievement_grade = 2 and train_physical_id = a.id) /
-                      (select COUNT(distinct(police_id)) from train_physical_achievement where is_test_free = 2 and train_physical_id = a.id) * 100), 2) as rate,
+            ifnull(TRUNCATE(((select COUNT(distinct(police_id)) from train_physical_achievement where achievement_grade = 2 and train_physical_id = a.id) /
+                             (select COUNT(distinct(police_id)) from train_physical_achievement where is_test_free = 2 and train_physical_id = a.id) * 100), 2), 0) as rate,
             a.name, 1 as type, a.id
         from train_physical a
         union all

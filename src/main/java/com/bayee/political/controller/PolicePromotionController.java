@@ -42,6 +42,18 @@ public class PolicePromotionController {
         return service.rankList();
     }
 
+    @ApiOperation("查询部门")
+    @GetMapping("/dep/list")
+    private JsonResult<List<LinkageResult>> depList(){
+        return service.depList();
+    }
+
+    @ApiOperation("查询部门")
+    @GetMapping("/post/list")
+    private JsonResult<List<LinkageResult>> postList(){
+        return service.postList();
+    }
+
     @ApiOperation("查询详情")
     @ApiImplicitParam(name = "id",value = "id",dataType = "Integer",required = true)
     @GetMapping("info")

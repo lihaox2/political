@@ -22,4 +22,8 @@ public interface PolicePromotionService {
     JsonResult<List<LinkageResult>> rankList();
 
     JsonResult<PolicePromotionRecordInfo> info(Integer id);
+
+    JsonResult<List<LinkageResult>>postList();
+
+    JsonResult<List<LinkageResult>> depList();
 }

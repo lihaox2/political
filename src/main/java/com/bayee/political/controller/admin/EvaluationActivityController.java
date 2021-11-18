@@ -15,6 +15,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +45,9 @@ public class EvaluationActivityController {
 
     @Autowired
     private EvaluationInfoService evaluationService;
+
+    @Autowired
+    private EvaluationInfoUserService evaluationInfoUserService;
 
     @Autowired
     private UserService userService;
@@ -237,7 +241,7 @@ public class EvaluationActivityController {
      * @param activityId
      * @return
      */
-    @GetMapping("/evaluation/pageCount")
+    @GetMapping("/evaluation/pageData")
     public ResponseEntity<?> evaluationCount(@RequestParam("activityId") Integer activityId){
         return new ResponseEntity<>(DataListReturn.ok(evaluationService.evaluationCount(activityId)), HttpStatus.OK);
     }
@@ -250,8 +254,8 @@ public class EvaluationActivityController {
     @GetMapping("/evaluation/details")
     public ResponseEntity<?> evaluationDetails(@RequestParam("id") Integer id){
         EvaluationInfo evaluation = evaluationService.findById(id);
-       /* EvaluationInfoUser user = userService.findById(evaluation.getUserId());
-        EvaluationObject evaluationObject = evaluationObjectService.findByPoliceId(user.getFamilyPoliceId());*/
+        EvaluationInfoUser evaluationInfoUser = evaluationInfoUserService.findById(evaluation.getUserId());
+        User user = userService.findByPoliceId(evaluationInfoUser.getFamilyPoliceId());
         EvaluationTopic evaluationTopic = new EvaluationTopic();
         evaluationTopic.setActivityId(evaluation.getActivityId());
         evaluationTopic.setUserId(evaluation.getUserId());
@@ -260,10 +264,10 @@ public class EvaluationActivityController {
                 evaluationTopicService.findEvaluationTopicList(evaluationTopic);
 
         EvaluationDetailsResult result = new EvaluationDetailsResult();
-        /*result.setName(user.getName());*/
+        result.setName(evaluationInfoUser.getName());
         result.setActivityName(evaluationActivityService.findById(evaluation.getActivityId()).getActivityName());
-        /*result.setObjectName(evaluationObject.getObjectName());
-        result.setPoliceId(evaluationObject.getPoliceId());*/
+        result.setObjectName(user.getName());
+        result.setPoliceId(user.getPoliceId());
         result.setTotalScore(evaluation.getTotalScore());
         result.setBusinessTime(DateUtils.formatDate(evaluation.getCreationDate(), "yyyy-MM-dd HH:mm:ss"));
         result.setTopicList(evaluationTopicList);
@@ -283,7 +287,7 @@ public class EvaluationActivityController {
      */
     @PostMapping("/evaluation/start")
     public ResponseEntity<?> startEvaluation(@RequestBody EvaluationStartParam startParam){
-        return new ResponseEntity<>(DataListReturn.ok(evaluationService.startEvaluation(startParam)), HttpStatus.OK);
+        return new ResponseEntity<>(evaluationService.startEvaluation(startParam), HttpStatus.OK);
     }
 
     /**
@@ -294,5 +298,25 @@ public class EvaluationActivityController {
     @GetMapping("/evaluation/exportExcel")
     public void exportExcel(HttpServletResponse response, EvaluationPageQueryParam queryParam){
         evaluationService.exportExcel(response, queryParam);
+    }
+
+    /**
+     * 评价活动-注册评价用户
+     * @param saveParam
+     * @return
+     */
+    @PostMapping("/evaluationUser/register")
+    public ResponseEntity<?> register(@RequestBody UserSaveParam saveParam){
+        return new ResponseEntity<>(evaluationInfoUserService.register(saveParam), HttpStatus.OK);
+    }
+
+    /**
+     * 评价活动-登录用户
+     * @param userInfo
+     * @return
+     */
+    @PostMapping("/evaluationUser/logon")
+    public ResponseEntity<?> logon(@Validated @RequestBody UserLoginParam userInfo){
+        return new ResponseEntity<>(evaluationInfoUserService.logon(userInfo), HttpStatus.OK);
     }
 }

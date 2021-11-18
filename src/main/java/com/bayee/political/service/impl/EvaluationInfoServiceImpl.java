@@ -42,7 +42,10 @@ public class EvaluationInfoServiceImpl implements EvaluationInfoService {
     private EvaluationObjectMapper evaluationObjectMapper;
 
     @Autowired
-    private EvaluationInfoUserMapper userMapper;
+    private EvaluationInfoUserMapper evaluationInfoUserMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public void addEvaluation(EvaluationSaveParam saveParam) {
@@ -76,19 +79,26 @@ public class EvaluationInfoServiceImpl implements EvaluationInfoService {
 
     @Override
     public List<EvaluationPageQueryResultDO> evaluationPage(EvaluationPageQueryParam queryParam) {
+        if (queryParam.getPageIndex() == null || queryParam.getPageIndex() < 1) {
+            queryParam.setPageIndex(1);
+        }
+        if (queryParam.getPageSize() == null) {
+            queryParam.setPageSize(10);
+        }
+        queryParam.setPageIndex((queryParam.getPageIndex() - 1) * queryParam.getPageSize());
 
         return evaluationMapper.evaluationPage(queryParam);
     }
 
     @Override
     public Integer evaluationPageCount(EvaluationPageQueryParam queryParam) {
-        return null;
+        return evaluationMapper.evaluationPageCount(queryParam);
     }
 
     @Override
     public EvaluationPageCountResult evaluationCount(Integer activityId) {
         EvaluationActivity activity = evaluationActivityMapper.selectByPrimaryKey(activityId);
-        Integer objectCount = evaluationObjectMapper.countAllObject();
+        Integer objectCount = userMapper.countAllPolice();
         Integer haveEvaluationCount = evaluationMapper.countHaveEvaluation(activityId);
         Integer noEvaluationCount = objectCount - haveEvaluationCount;
         EvaluationPageCountResult result = new EvaluationPageCountResult();
@@ -125,12 +135,12 @@ public class EvaluationInfoServiceImpl implements EvaluationInfoService {
                 EvaluationTopic evaluationTopic = new EvaluationTopic();
                 evaluationTopic.setActivityId(startParam.getActivityId());
                 List<EvaluationTopic> evaluationTopicList = evaluationTopicMapper.selectByActityId(evaluationTopic);
-                EvaluationInfoUser user = userMapper.selectByPrimaryKey(startParam.getUserId());
-                EvaluationObject object = evaluationObjectMapper.selectByPoliceId(user.getFamilyPoliceId());
+                EvaluationInfoUser evaluationInfoUser = evaluationInfoUserMapper.selectByPrimaryKey(startParam.getUserId());
+                User user = userMapper.findByPoliceId(evaluationInfoUser.getFamilyPoliceId());
                 EvaluationStartResult startResult = new EvaluationStartResult();
                 startResult.setActivityId(activity.getId());
                 startResult.setActivityName(activity.getActivityName());
-                startResult.setObjectName(object.getObjectName());
+                startResult.setObjectName(user.getName());
                 startResult.setTopicCount(evaluationTopicList.size());
                 startResult.setTopicList(evaluationTopicList);
                 return DataListReturn.ok(startResult);
@@ -153,7 +163,7 @@ public class EvaluationInfoServiceImpl implements EvaluationInfoService {
             exportResults.setObjectName(dataList.get(i).getObjectName());
             exportResults.setTotalScore(dataList.get(i).getTotalScore());
             exportResults.setBusinessTime(dataList.get(i).getBusinessTime());
-            EvaluationInfoUser user = userMapper.selectByPrimaryKey(dataList.get(i).getUserId());
+            EvaluationInfoUser user = evaluationInfoUserMapper.selectByPrimaryKey(dataList.get(i).getUserId());
             exportResults.setPoliceId(user.getFamilyPoliceId());
             exportResults.setBelongMonth(DateUtils.formatDate(activity.getBelongMonth(),"yyyy-MM"));
             exportResultsList.add(exportResults);

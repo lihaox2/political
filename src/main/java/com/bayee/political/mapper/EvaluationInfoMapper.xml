@@ -116,14 +116,29 @@
   </update>
   <select id="evaluationPage" parameterType="com.bayee.political.json.EvaluationPageQueryParam"
           resultType="com.bayee.political.pojo.EvaluationPageQueryResultDO">
-    select e.id, u.`name` as appraiserName, u.user_name as appraiserPhone, o.object_name as objectName,
+    select e.id, eu.`name` as appraiserName, eu.user_name as appraiserPhone, u.name as objectName,
     e.total_score as totalScore, DATE_FORMAT(e.business_time,'%Y-%m-%d %H:%i:%s') as businessTime,
     e.user_id as userId
     from evaluation_info e LEFT JOIN evaluation_activity a ON e.activity_id = a.id
-    LEFT JOIN `user` u ON e.user_id = u.id LEFT JOIN evaluation_object o ON u.family_police_id = o.police_id
+    LEFT JOIN `evaluation_info_user` eu ON e.user_id = eu.id
+    LEFT JOIN `user` u ON eu.family_police_id = u.police_id
     where e.activity_id = #{param.activityId}
     <if test="param.key != null and param.key != ''">
-      and (u.`name` like CONCAT('%',#{param.key},'%') or o.object_name like CONCAT('%',#{param.key},'%'))
+      and (eu.`name` like CONCAT('%',#{param.key},'%') or u.name like CONCAT('%',#{param.key},'%'))
+    </if>
+    ORDER BY e.creation_date DESC
+    LIMIT #{param.pageIndex}, #{param.pageSize}
+  </select>
+  <select id="evaluationPageCount" parameterType="com.bayee.political.json.EvaluationPageQueryParam"
+          resultType="Integer">
+    select
+    COUNT(1)
+    from evaluation_info e LEFT JOIN evaluation_activity a ON e.activity_id = a.id
+    LEFT JOIN `evaluation_info_user` eu ON e.user_id = eu.id
+    LEFT JOIN `user` u ON eu.family_police_id = u.police_id
+    where e.activity_id = #{param.activityId}
+    <if test="param.key != null and param.key != ''">
+      and (eu.`name` like CONCAT('%',#{param.key},'%') or u.name like CONCAT('%',#{param.key},'%'))
     </if>
   </select>
   <select id="countHaveEvaluation" resultType="java.lang.Integer">

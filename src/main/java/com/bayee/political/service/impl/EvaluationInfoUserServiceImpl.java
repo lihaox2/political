@@ -1,12 +1,12 @@
 package com.bayee.political.service.impl;
 
 import com.bayee.political.domain.EvaluationInfoUser;
-import com.bayee.political.domain.EvaluationObject;
+import com.bayee.political.domain.User;
 import com.bayee.political.json.UserLoginParam;
 import com.bayee.political.json.UserLoginResult;
 import com.bayee.political.json.UserSaveParam;
 import com.bayee.political.mapper.EvaluationInfoUserMapper;
-import com.bayee.political.mapper.EvaluationObjectMapper;
+import com.bayee.political.mapper.UserMapper;
 import com.bayee.political.service.EvaluationInfoUserService;
 import com.bayee.political.utils.DataListReturn;
 import org.springframework.beans.BeanUtils;
@@ -23,35 +23,35 @@ import java.util.Date;
 public class EvaluationInfoUserServiceImpl implements EvaluationInfoUserService {
 
     @Autowired
-    private EvaluationInfoUserMapper userMapper;
+    private EvaluationInfoUserMapper evaluationInfoUserMapper;
 
     @Autowired
-    private EvaluationObjectMapper evaluationObjectMapper;
+    private UserMapper userMapper;
 
     @Override
     public void addUser(EvaluationInfoUser user) {
-        userMapper.insert(user);
+        evaluationInfoUserMapper.insert(user);
     }
 
     @Override
     public void updateUser(EvaluationInfoUser user) {
-        userMapper.updateByPrimaryKey(user);
+        evaluationInfoUserMapper.updateByPrimaryKey(user);
     }
 
     @Override
     public void deleteUser(Integer id) {
-        userMapper.deleteByPrimaryKey(id);
+        evaluationInfoUserMapper.deleteByPrimaryKey(id);
     }
 
     @Override
     public EvaluationInfoUser findById(Integer id) {
-        return userMapper.selectByPrimaryKey(id);
+        return evaluationInfoUserMapper.selectByPrimaryKey(id);
     }
 
     @Override
     public DataListReturn logon(UserLoginParam info) {
         UserLoginResult userLogin = new UserLoginResult();
-        EvaluationInfoUser userInfo = userMapper.queryByUserName(info.getUserName());
+        EvaluationInfoUser userInfo = evaluationInfoUserMapper.queryByUserName(info.getUserName());
         if (userInfo != null) {
             if (userInfo.getPassword().equals(info.getPassword())) {
                 if (userInfo.getIsDisable() == 2) {
@@ -74,15 +74,15 @@ public class EvaluationInfoUserServiceImpl implements EvaluationInfoUserService 
 
     @Override
     public DataListReturn register(UserSaveParam saveParam) {
-        EvaluationInfoUser userInfo = userMapper.queryByUserName(saveParam.getUserName());
-        EvaluationObject object = evaluationObjectMapper.selectByPoliceId(saveParam.getFamilyPoliceId());
+        EvaluationInfoUser evaluationInfoUser = evaluationInfoUserMapper.queryByUserName(saveParam.getUserName());
 
-        if (userInfo != null) {
+        if (evaluationInfoUser != null) {
             return DataListReturn.error("用户名已存在!");
         } else {
-            if (object != null) {
-                if (object.getObjectName().equals(saveParam.getFamilyName())) {
-                    EvaluationInfoUser user = userMapper.selectByPoliceId(saveParam.getFamilyPoliceId());
+            User userInfo = userMapper.findByPoliceId(saveParam.getFamilyPoliceId());
+            if (userInfo != null) {
+                if (userInfo.getName().equals(saveParam.getFamilyName())) {
+                    EvaluationInfoUser user = evaluationInfoUserMapper.selectByPoliceId(saveParam.getFamilyPoliceId());
                     if (user == null) {
                     EvaluationInfoUser userSave = new EvaluationInfoUser();
                     userSave.setUserName(saveParam.getUserName());
@@ -93,7 +93,7 @@ public class EvaluationInfoUserServiceImpl implements EvaluationInfoUserService 
                     userSave.setBusinessTime(new Date());
                     userSave.setRoleId(1);
                     userSave.setIsDisable(1);
-                    userMapper.insert(userSave);
+                    evaluationInfoUserMapper.insert(userSave);
                     return  DataListReturn.ok("注册成功！");
                     } else {
                     return DataListReturn.error("该警员已经绑定家属！");
@@ -109,18 +109,18 @@ public class EvaluationInfoUserServiceImpl implements EvaluationInfoUserService 
 
     @Override
     public void disable(Integer id) {
-        userMapper.disable(id);
+        evaluationInfoUserMapper.disable(id);
     }
 
     @Override
     public void enabled(Integer id) {
-        userMapper.enabled(id);
+        evaluationInfoUserMapper.enabled(id);
     }
 
     @Override
     public DataListReturn sysLogon(UserLoginParam info) {
         UserLoginResult userLogin = new UserLoginResult();
-        EvaluationInfoUser userInfo = userMapper.queryByUserName(info.getUserName());
+        EvaluationInfoUser userInfo = evaluationInfoUserMapper.queryByUserName(info.getUserName());
         if (userInfo != null) {
             if (userInfo.getPassword().equals(info.getPassword())) {
                 if (userInfo.getRoleId() == 2) {

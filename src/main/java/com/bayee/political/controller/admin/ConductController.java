@@ -788,10 +788,13 @@ public class ConductController {
                                                                   List<PoliceRelevantTypeListResult> relevantTypeList) {
         for (PoliceRelevantTypeListResult node : relevantTypeList) {
             if (relevantType.getCode().equals(node.getpCode())) {
+                // 2021.11.17 tlt改
+                if (!"表彰奖励".equals(node.getName())){
                 if (relevantType.getChildList() == null) {
                     relevantType.setChildList(new ArrayList<>());
                 }
                 relevantType.getChildList().add(relevantTypeChildDetails(node, relevantTypeList));
+              }
             }
         }
         return relevantType;

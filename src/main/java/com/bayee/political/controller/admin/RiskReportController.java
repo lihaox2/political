@@ -79,9 +79,11 @@ public class RiskReportController {
 
     SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
     static Map<String, String> colorMap = new HashMap<>();
-
-    final String HOST = "http://8.136.146.186:8099";
+    // 2021.11.17 tlt改
+      final String HOST = "http://8.136.146.186:9097";
+//    final String HOST = "http://8.136.146.186:8099";
 //    final String HOST = "http://41.190.128.250:8080";
+
 
     static {
         //红色：#C72928，橙色：#F59A23，绿色：#42B72A

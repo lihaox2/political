@@ -26,16 +26,20 @@ public interface EvaluationInfoMapper {
      * @param queryParam
      * @return
      */
-
     List<EvaluationPageQueryResultDO> evaluationPage(@Param("param") EvaluationPageQueryParam queryParam);
 
+    /**
+     * 评价信息-分页统计
+     * @param queryParam
+     * @return
+     */
+    Integer evaluationPageCount(@Param("param") EvaluationPageQueryParam queryParam);
 
      /**
      * 评价信息-查询已评价人数
      * @param id
      * @return
      */
-
     int countHaveEvaluation(@Param("id") Integer id);
 
 
@@ -44,7 +48,6 @@ public interface EvaluationInfoMapper {
      * @param startParam
      * @return
      */
-
     EvaluationInfo selectByStartParam(@Param("param") EvaluationStartParam startParam);
 
 
@@ -52,6 +55,5 @@ public interface EvaluationInfoMapper {
      *按活动id删除评价
      * @param activityId
      */
-
     void deleteByActivityId(@Param("activityId") Integer activityId);
 }

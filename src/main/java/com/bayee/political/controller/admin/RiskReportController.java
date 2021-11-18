@@ -81,7 +81,6 @@ public class RiskReportController {
     static Map<String, String> colorMap = new HashMap<>();
     // 2021.11.17 tlt改
       final String HOST = "http://8.136.146.186:9097";
-//    final String HOST = "http://8.136.146.186:8099";
 //    final String HOST = "http://41.190.128.250:8080";
 
 

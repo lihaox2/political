@@ -371,4 +371,19 @@
     GROUP BY it.id
   </select>
 
+  <select id="caseLawTrends" resultType="HashMap">
+        SELECT * FROM (
+                          SELECT v.`month` AS name,IFNULL(b.total,0) value FROM (
+                              SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `month`
+                              UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `month`) v
+                              LEFT JOIN
+                              (SELECT DATE_FORMAT(a.input_time,'%Y-%m') AS paTime,count(1) AS total FROM risk_duty_deal_police_record a GROUP BY paTime) b
+                          ON b.paTime=v.`month`) a ORDER BY a.name ASC
+
+  </select>
+
 </mapper>

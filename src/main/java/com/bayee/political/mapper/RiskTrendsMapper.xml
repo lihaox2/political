@@ -405,27 +405,40 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 		 (SELECT count(1) AS isHypertension FROM risk_health_record r WHERE r.is_hypertension=1) c,
 		 (SELECT count(1) AS isHyperglycemia FROM risk_health_record r WHERE r.is_hyperglycemia=1) d,
 		 (SELECT count(1) AS isHyperuricemia FROM risk_health_record r WHERE r.is_hyperuricemia=1) e,
-		 (SELECT count(1) AS isProstate FROM risk_health_record r WHERE r.is_prostate!=1) f,
+		 <!-- (SELECT count(1) AS isProstate FROM risk_health_record r WHERE r.is_prostate!=1) f,-->
+		 (SELECT count(1) AS isProstate FROM risk_health_record r WHERE r.is_prostate=1) f,
 		 (SELECT count(1) AS isMajorDiseases FROM risk_health_record r WHERE r.is_major_diseases=1) g,
 		 (SELECT count(1) AS isHeart FROM risk_health_record r WHERE r.is_heart=1) h,
 		 (SELECT count(1) AS isTumorAntigen FROM risk_health_record r WHERE r.is_tumor_antigen=1) i,
 		 (SELECT count(1) AS isOrthopaedics FROM risk_health_record r WHERE r.is_orthopaedics=1) j;
 	</select>
-	
-	<select id="inspectNum" resultType="Integer">
-		SELECT count(1) FROM (SELECT r.`year` FROM risk_health_record r ORDER BY r.creation_date LIMIT 1) a ,risk_health_record r WHERE a.`year`=r.`year`
-	</select>
-	
-	<select id="healthNum" resultType="Integer">
-		SELECT count(1) FROM (SELECT r.`year` FROM risk_health_record r ORDER BY r.creation_date LIMIT 1) a ,risk_health_record r WHERE a.`year`=r.`year`
+	<!--改前的-->
+<!--	<select id="inspectNum" resultType="Integer">-->
+<!--		SELECT count(1) FROM (SELECT r.`year` FROM risk_health_record r ORDER BY r.creation_date LIMIT 1) a ,risk_health_record r WHERE a.`year`=r.`year`-->
+<!--	</select>-->
+    <select id="inspectNum" resultType="Integer">
+        SELECT count(1) FROM (SELECT r.`year` FROM risk_health_record r GROUP BY r.`year`) a ,risk_health_record r WHERE a.`year`=r.`year`
+    </select>
+    <!--改前的-->
+<!--	<select id="healthNum" resultType="Integer">-->
+<!--		SELECT count(1) FROM (SELECT r.`year` FROM risk_health_record r ORDER BY r.creation_date LIMIT 1) a ,risk_health_record r WHERE a.`year`=r.`year`-->
+<!--		 AND r.bmi!=2 AND r.is_overweight!=1 AND r.is_hyperlipidemia!=1 AND r.is_hypertension!=1 AND r.is_hyperglycemia!=1 AND r.is_hyperuricemia!=1 AND r.is_prostate!=1-->
+<!--		 AND r.is_major_diseases!=1 AND r.is_heart!=1 AND r.is_tumor_antigen!=1 AND r.is_orthopaedics!=1-->
+<!--	</select>-->
+
+    <select id="healthNum" resultType="Integer">
+        SELECT count(1) FROM (SELECT r.`year` FROM risk_health_record r GROUP BY r.`year`) a ,risk_health_record r WHERE a.`year`=r.`year`
 		 AND r.bmi!=2 AND r.is_overweight!=1 AND r.is_hyperlipidemia!=1 AND r.is_hypertension!=1 AND r.is_hyperglycemia!=1 AND r.is_hyperuricemia!=1 AND r.is_prostate!=1
 		 AND r.is_major_diseases!=1 AND r.is_heart!=1 AND r.is_tumor_antigen!=1 AND r.is_orthopaedics!=1
-	</select>
-	
-	<select id="healthRiskNum" resultType="Integer">
-		SELECT count(1) FROM (SELECT r.`year` FROM risk_health r ORDER BY r.creation_date desc LIMIT 1) a ,risk_health r WHERE a.`year`=r.`year` AND r.index_num>=3;
-	</select>
-	
+    </select>
+
+	<!--改i前的-->
+<!--	<select id="healthRiskNum" resultType="Integer">-->
+<!--		SELECT count(1) FROM (SELECT r.`year` FROM risk_health r ORDER BY r.creation_date desc LIMIT 1) a ,risk_health r WHERE a.`year`=r.`year` AND r.index_num>=3;-->
+<!--	</select>-->
+    <select id="healthRiskNum" resultType="Integer">
+        elect * from risk_health;
+    </select>
 	<!-- 总合格数 -->
 	<select id="qualifiedNum" resultType="Integer">
 		SELECT a.count+b.count FROM (select count(distinct(a.police_id)) as count from train_firearm_achievement a ,train_firearm t

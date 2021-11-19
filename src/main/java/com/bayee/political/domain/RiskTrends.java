@@ -9,6 +9,26 @@ public class RiskTrends {
 
     private Date creationDate;
 
+    private String month;
+
+    private String name;
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }

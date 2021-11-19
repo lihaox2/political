@@ -1,6 +1,7 @@
 package com.bayee.political.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.bayee.political.domain.RiskConductVisitRecord;
 import com.bayee.political.pojo.RiskReportTypeStatisticsDO;
@@ -125,4 +126,9 @@ public interface RiskDutyDealPoliceRecordMapper {
 														   @Param("dateTime") String dateTime,
 														   @Param("lastMonthTime") String lastMonthTime,
 														   @Param("timeType") Integer timeType);
+
+	/**
+	 * 查询人文系统首页的接警执勤统计图数据
+	 */
+	List<Map<String,Object>> caseLawTrends();
 }

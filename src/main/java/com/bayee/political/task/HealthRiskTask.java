@@ -20,17 +20,17 @@ public class HealthRiskTask {
     RiskReportRecordService riskReportRecordService;
 
 //    @Scheduled(cron = "0 0/10 * * * ?") // 每10分钟
-    public void healthRiskTaskDetails() {
-        LocalDate localDate = LocalDate.now();
-
-        riskReportRecordService.health(localDate);
-    }
-
-    @Scheduled(cron="0 1 1 1 1 * 2021-2999")
+//    public void healthRiskTaskDetails() {
+//        LocalDate localDate = LocalDate.now();
+//
+//        riskReportRecordService.health(localDate);
+//    }
+//    @Scheduled(cron="0 1 1 1 1 * 2021-2999")
+    @Scheduled( cron="0 0 7 * * SUN")
     public void healthRiskTask(){
-        LocalDate localDate = LocalDate.now();
+            LocalDate localDate = LocalDate.now();
 
-        riskReportRecordService.health(localDate);
+            riskReportRecordService.health(localDate);
     }
 
 }

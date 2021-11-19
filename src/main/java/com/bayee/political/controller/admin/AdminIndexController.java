@@ -210,7 +210,7 @@ public class AdminIndexController {
         
         result.setExistsErrorPeopleNum(dutyDealPepolNum);
         result.setThisMonthNewRatio(Double.valueOf(dutyDealThisMonthNum)/Double.valueOf(policeTotal)*100);
-        result.setReplaceErrorNum(riskTrendsService.caseLawRepeatNum());
+        result.setReplaceErrorNum(riskTrendsService.dutyDealRepeatNum());
         result.setChartList(chartList);
 
         return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);

@@ -437,7 +437,7 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 <!--		SELECT count(1) FROM (SELECT r.`year` FROM risk_health r ORDER BY r.creation_date desc LIMIT 1) a ,risk_health r WHERE a.`year`=r.`year` AND r.index_num>=3;-->
 <!--	</select>-->
     <select id="healthRiskNum" resultType="Integer">
-        elect * from risk_health;
+        select count(*) from risk_health;
     </select>
 	<!-- 总合格数 -->
 	<select id="qualifiedNum" resultType="Integer">

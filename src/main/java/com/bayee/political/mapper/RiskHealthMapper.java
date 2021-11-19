@@ -48,4 +48,6 @@ public interface RiskHealthMapper {
 	 * @return
 	 */
 	GlobalIndexNumResultDO findGlobalIndexNum(@Param("date") String date);
+
+	GlobalIndexNumResultDO findGlobalIndexNumNew(@Param("year")String year);
 }

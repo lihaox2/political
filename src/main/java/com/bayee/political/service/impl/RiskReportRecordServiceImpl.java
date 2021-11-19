@@ -10,6 +10,7 @@ import com.bayee.political.algorithm.RiskCompute;
 import com.bayee.political.domain.*;
 import com.bayee.political.enums.AlarmTypeEnum;
 import com.bayee.political.json.ChartResult;
+import com.bayee.political.mapper.*;
 import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import com.bayee.political.pojo.dto.RiskReportRecordDO;
 import com.bayee.political.service.*;
@@ -24,11 +25,9 @@ import com.bayee.political.domain.RiskHealth;
 import com.bayee.political.domain.RiskHealthRecord;
 import com.bayee.political.domain.RiskReportRecord;
 import com.bayee.political.domain.User;
-import com.bayee.political.mapper.RiskFamilyEvaluationMapper;
-import com.bayee.political.mapper.RiskFamilyEvaluationRecordMapper;
-import com.bayee.political.mapper.RiskHealthRecordMapper;
-import com.bayee.political.mapper.RiskReportRecordMapper;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 /**
  * @author xxl
@@ -81,6 +80,10 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 
 	@Autowired
 	RiskSocialContactService riskSocialContactService;
+
+	@Resource
+	private RiskHealthMapper riskHealthMapper;
+
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -244,13 +247,13 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 		String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		String yearStr = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
 		String monthStr = localDate.format(DateTimeFormatter.ofPattern("MM"));
-		
+		//查询今年的健康风险记录
 		List<RiskHealthRecord> riskHealthRecordList=riskHealthRecordMapper.selectYearAll(yearStr);
 		
 		for(RiskHealthRecord r:riskHealthRecordList) {
-			
+			//查询每个警员现年的健康风险id
 			Integer id=riskService.getByIdAndYear(r.getPoliceId(), yearStr);
-
+			//查询今年的指标记录
 			RiskReportRecord riskReportRecord= riskHealthRecordService.getByPoliceIdMonth(yearStr, monthStr, r.getPoliceId());
 
 			if(riskReportRecord==null) {
@@ -277,7 +280,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			riskHealth.setBlood(r.getBlood());
 			
 			double indexNum=0;
-
+///
 			if(r.getBmiId() != null && (r.getBmiId()==3 ||  r.getBmiId()==4)) {
 				riskHealth.setOverweightNum(0.5);
 				indexNum+=0.5;
@@ -302,8 +305,8 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				riskHealth.setHyperuricemiaNum(0.75);
 				indexNum+=0.75;
 			}
-			
-			if(r.getIsProstate()==1) {
+
+		if(r.getIsProstate()==1) {
 				riskHealth.setProstateNum(0.5);
 				indexNum+=0.5;
 			}
@@ -331,8 +334,9 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 			riskHealth.setIndexNum(indexNum);
 			riskHealth.setTotalNum(indexNum);
 
-
-			GlobalIndexNumResultDO resultDO = riskService.findRiskHealthGlobalIndexNum(date);
+			//取得全局扣分 的最高分 - 最低分分值
+//			GlobalIndexNumResultDO resultDO = riskService.findRiskHealthGlobalIndexNum(date);
+			GlobalIndexNumResultDO resultDO = riskHealthMapper.findGlobalIndexNumNew(yearStr);
 			riskHealth.setIndexNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), riskHealth.getIndexNum()));
 
 			if(id!=null) {
@@ -341,6 +345,7 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 				riskService.riskHealthUpdate(riskHealth);
 			}else {
 				riskHealth.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
+				//
 				riskService.insertSelective(riskHealth);
 			}
 

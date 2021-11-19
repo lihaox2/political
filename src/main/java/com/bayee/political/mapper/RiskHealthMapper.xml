@@ -335,6 +335,7 @@ risk_health WHERE id=#{id}
       (select count(1) from risk_health_record where is_hyperuricemia = 1 and police_id = #{policeId}) as hyperuricemia
   </select>
 
+  <!--修改前的-->
   <select id="findGlobalIndexNum" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
     SELECT
       ifnull(MAX(index_num), 0) as maxNum, ifnull(min(index_num), 0) as minNum
@@ -342,4 +343,10 @@ risk_health WHERE id=#{id}
     where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
   </select>
 
+  <select id="findGlobalIndexNumNew" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
+    SELECT
+      ifnull(MAX(index_num), 0) as maxNum, ifnull(min(index_num), 0) as minNum
+    FROM risk_health
+    where `year`=#{year}
+  </select>
 </mapper>

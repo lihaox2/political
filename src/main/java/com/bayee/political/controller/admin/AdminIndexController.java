@@ -204,9 +204,9 @@ public class AdminIndexController {
         //警员总数
   		Integer policeTotal=userService.policeForceOnlineCount();
         //问题人数
-        Integer dutyDealPepolNum= riskTrendsService.caseLawPepolNum();
+        Integer dutyDealPepolNum= riskTrendsService.dutyDealPepolNum();
         
-        Integer dutyDealThisMonthNum=riskTrendsService.caseLawThisMonthNum();
+        Integer dutyDealThisMonthNum=riskTrendsService.dutyDealThisMonthNum();
         
         result.setExistsErrorPeopleNum(dutyDealPepolNum);
         result.setThisMonthNewRatio(Double.valueOf(dutyDealThisMonthNum)/Double.valueOf(policeTotal)*100);
@@ -308,8 +308,8 @@ public class AdminIndexController {
         IndexHealthChart indexHealthChart=new IndexHealthChart();
         result.setHealthTotalCount(riskTrendsService.inspectNums());
         result.setHealthyCount(riskTrendsService.healthNum());
-        result.setAlarmCount(riskTrendsService.healthRiskNum());
-        
+//        result.setAlarmCount(riskTrendsService.healthRiskNum());
+        result.setAlarmCount(result.getHealthTotalCount()-result.getHealthyCount());
         Map<String,Object> ishealth=riskTrendsService.ishealth();
         
         Map<String,Object> nohealth=riskTrendsService.nohealth();

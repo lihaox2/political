@@ -386,4 +386,11 @@
 
   </select>
 
+  <select id="dutyNum" resultType="integer">
+		SELECT count(1) FROM (SELECT count(1) total,r.police_id,r.type FROM risk_duty_deal_police_record r GROUP BY r.police_id,r.type) a WHERE a.total>1
+  </select>
+
+  <select id="dutySum" resultType="integer">
+		SELECT count(1) FROM (SELECT count(1) FROM risk_duty_deal_police_record r GROUP BY r.police_id) a;
+  </select>
 </mapper>

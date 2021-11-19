@@ -131,4 +131,14 @@ public interface RiskDutyDealPoliceRecordMapper {
 	 * 查询人文系统首页的接警执勤统计图数据
 	 */
 	List<Map<String,Object>> caseLawTrends();
+
+	/**
+	 * 查询首页接警执勤统计图重复问题的人数
+ 	 */
+	Integer dutyNum();
+
+	/**
+	 * 查询首页接警执勤统计图存在问题的人数
+	 */
+	Integer dutySum();
 }

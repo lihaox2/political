@@ -50,7 +50,7 @@ public class SkillRiskTask {
         for (User user : userList) {
             RiskReportRecord reportRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
             //警务技能
-            RiskTrain riskTrain = riskSkillService.riskSkillDetails(user, date);
+            RiskTrain riskTrain = riskSkillService.riskSkillDetailsV2(user, date);
             if (riskTrain == null || riskTrain.getIndexNum() == null) {
                 continue;
             }

@@ -7,6 +7,7 @@
     <result column="index_num" jdbcType="DOUBLE" property="indexNum" />
     <result column="bureau_rule_score" jdbcType="DOUBLE" property="bureauRuleScore" />
     <result column="visit_score" jdbcType="DOUBLE" property="visitScore" />
+    <result column="relevant_score" jdbcType="DOUBLE" property="relevantScore" />
     <result column="traffic_violation_score" jdbcType="DOUBLE" property="trafficViolationScore" />
     <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -18,7 +19,7 @@
     <result column="value" property="value" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, police_id, index_num, bureau_rule_score, visit_score, traffic_violation_score, 
+    id, police_id, index_num, bureau_rule_score, visit_score, relevant_score, traffic_violation_score,
     creation_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -33,11 +34,12 @@
   </delete>
   <insert id="insert" parameterType="com.bayee.political.domain.RiskConduct">
     insert into risk_conduct (id, police_id, index_num, 
-      bureau_rule_score, visit_score, traffic_violation_score,
+      bureau_rule_score, visit_score, relevant_score, traffic_violation_score,
       total_num, creation_date, update_date)
     values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{indexNum,jdbcType=DOUBLE}, 
-      #{bureauRuleScore,jdbcType=DOUBLE}, #{visitScore,jdbcType=DOUBLE}, #{trafficViolationScore,jdbcType=DOUBLE},
-      #{totalNum}, #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+      #{bureauRuleScore,jdbcType=DOUBLE}, #{visitScore,jdbcType=DOUBLE}, #{relevantScore},
+      #{trafficViolationScore,jdbcType=DOUBLE}, #{totalNum},
+      #{creationDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bayee.political.domain.RiskConduct">
     insert into risk_conduct
@@ -136,6 +138,7 @@
       index_num = #{indexNum,jdbcType=DOUBLE},
       bureau_rule_score = #{bureauRuleScore,jdbcType=DOUBLE},
       visit_score = #{visitScore,jdbcType=DOUBLE},
+      relevant_score = #{relevantScore,jdbcType=DOUBLE},
       traffic_violation_score = #{trafficViolationScore,jdbcType=DOUBLE},
       total_num = #{totalNum},
       creation_date = #{creationDate,jdbcType=TIMESTAMP},
@@ -177,12 +180,13 @@ order by id desc
 	</select>
 
   <insert id="insertRiskConductList" parameterType="List">
-    insert into  risk_conduct (id, police_id, index_num, bureau_rule_score,
+    insert into  risk_conduct (id, police_id, index_num, bureau_rule_score, relevant_score,
                                visit_score, traffic_violation_score, total_num, creation_date, update_date)
     values
     <foreach collection="list" item="item" separator=",">
-      (null, #{item.policeId,jdbcType=VARCHAR}, #{item.indexNum,jdbcType=DOUBLE},
-      #{item.bureauRuleScore,jdbcType=DOUBLE}, #{item.visitScore,jdbcType=DOUBLE}, #{item.trafficViolationScore,jdbcType=DOUBLE},
+      (null, #{item.policeId,jdbcType=VARCHAR}, #{item.indexNum,jdbcType=DOUBLE}, #{item.bureauRuleScore,jdbcType=DOUBLE},
+       #{item.relevantScore,jdbcType=DOUBLE},
+       #{item.visitScore,jdbcType=DOUBLE}, #{item.trafficViolationScore,jdbcType=DOUBLE},
       #{item.totalNum}, #{item.creationDate,jdbcType=TIMESTAMP}, #{item.updateDate,jdbcType=TIMESTAMP})
     </foreach>
   </insert>

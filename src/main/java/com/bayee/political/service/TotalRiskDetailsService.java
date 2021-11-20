@@ -41,10 +41,4 @@ public interface TotalRiskDetailsService {
      */
     void skillRiskDetails(LocalDate localDate);
 
-    /**
-     * 动态排摸处理
-     * @param localDate
-     */
-    void relevantRiskDetails(LocalDate localDate);
-
 }

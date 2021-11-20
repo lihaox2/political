@@ -204,18 +204,7 @@ public class HandlingCasesRiskServiceImpl implements HandlingCasesRiskService {
 
 		//数据归一化计算
 		GlobalIndexNumResultDO resultDO = riskCaseMapper.findGlobalIndexNum(date);
-		double globalScore = resultDO.getMaxNum() - resultDO.getMinNum();
-		double indexNum = riskCase.getIndexNum() - resultDO.getMinNum();
-		if (indexNum > globalScore) {
-			globalScore = riskCase.getIndexNum();
-		}
-		if (globalScore > 0) {
-			double divValue = indexNum / globalScore;
-			if (divValue > 1) {
-				divValue = 1;
-			}
-			riskCase.setIndexNum(RiskCompute.parserDecimal(divValue * 10));
-		}
+		riskCase.setIndexNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), riskCase.getIndexNum()));
 
 		RiskCase olsRiskCase = riskCaseMapper.findPoliceRiskCase(user.getPoliceId(), date);
 		if (olsRiskCase != null && olsRiskCase.getId() != null) {

@@ -7,6 +7,7 @@ import com.bayee.political.mapper.*;
 import com.bayee.political.pojo.GlobalIndexNumResultDO;
 import com.bayee.political.service.RiskAlarmService;
 import com.bayee.political.service.RiskConductBureauRuleService;
+import com.bayee.political.service.RiskRelevantService;
 import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,9 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
 
     @Autowired
     RiskConductTrafficViolationMapper riskConductTrafficViolationMapper;
+
+    @Autowired
+    RiskRelevantService riskRelevantService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -129,28 +133,21 @@ public class RiskConductBureauRuleServiceImpl implements RiskConductBureauRuleSe
         //信访投诉
         RiskConductVisit riskConductVisit = riskConductVisitDetailsV2(user.getPoliceId(), date);
 
+        //动态排摸
+        RiskRelevant riskRelevant = riskRelevantService.relevantRiskDetails(user, date);
+
         //处理总行为规范数据
         riskConduct.setPoliceId(user.getPoliceId());
         riskConduct.setBureauRuleScore(riskConductBureauRule.getIndexNum());
         riskConduct.setVisitScore(riskConductVisit.getIndexNum());
-        riskConduct.setIndexNum(riskConduct.getVisitScore() + riskConduct.getBureauRuleScore());
-        riskConduct.setTotalNum(riskConduct.getVisitScore() + riskConduct.getBureauRuleScore());
+        riskConduct.setRelevantScore(riskRelevant.getIndexNum());
+        riskConduct.setIndexNum(riskConduct.getVisitScore() + riskConduct.getBureauRuleScore() + riskRelevant.getIndexNum());
+        riskConduct.setTotalNum(riskConduct.getVisitScore() + riskConduct.getBureauRuleScore() + riskRelevant.getIndexNum());
         riskConduct.setCreationDate(DateUtils.parseDate(date, "yyyy-MM-dd"));
 
         //数据归一化计算
         GlobalIndexNumResultDO resultDO = riskConductMapper.findGlobalIndexNum(date);
-        double globalScore = resultDO.getMaxNum() - resultDO.getMinNum();
-        double indexNum = riskConduct.getIndexNum() - resultDO.getMinNum();
-        if (indexNum > globalScore) {
-            globalScore = riskConduct.getIndexNum();
-        }
-        if (globalScore > 0) {
-            double divValue = indexNum / globalScore;
-            if (divValue > 1) {
-                divValue = 1;
-            }
-            riskConduct.setIndexNum(RiskCompute.parserDecimal(divValue * 10));
-        }
+        riskConduct.setIndexNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), riskConduct.getIndexNum()));
 
         //处理旧的总行为规范数据
         RiskConduct oldRiskConduct = riskConductMapper.findRiskConductByPoliceIdAndDate(user.getPoliceId(), date);

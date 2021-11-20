@@ -50,13 +50,12 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
     @Override
     @Async
     public void caseRiskDetails(LocalDate localDate) {
+        String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
+        String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
+
         List<User> userList = userService.userAllList();
-
         for (User user : userList) {
-            String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
-            String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
-
             RiskReportRecord reportRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
             //执法办案
             RiskCase riskCase = handlingCasesRiskService.handlingCasesRiskDetailsV2(user, date);
@@ -89,13 +88,12 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
     @Override
     @Async
     public void conductRiskDetails(LocalDate localDate) {
+        String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
+        String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
+
         List<User> userList = userService.userAllList();
-
         for (User user : userList) {
-            String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
-            String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
-
             RiskReportRecord reportRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
             //行为规范
             RiskConduct riskConduct = riskConductBureauRuleService.riskConductDetailsV2(user, date);
@@ -127,13 +125,12 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
     @Override
     @Async
     public void dutyRiskDetails(LocalDate localDate) {
+        String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
+        String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
+
         List<User> userList = userService.userAllList();
-
         for (User user : userList) {
-            String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
-            String month = localDate.format(DateTimeFormatter.ofPattern("MM"));
-
             RiskReportRecord reportRecord = riskReportRecordService.findRiskReportRecord(user.getPoliceId(), year, month);
             //接警执勤
             RiskDuty riskDuty = dutyRiskService.dutyRiskDetailsV2(user, date);
@@ -223,11 +220,6 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
                 riskReportRecordService.insert(reportRecord);
             }
         }
-    }
-
-    @Override
-    public void relevantRiskDetails(LocalDate localDate) {
-
     }
 
 }

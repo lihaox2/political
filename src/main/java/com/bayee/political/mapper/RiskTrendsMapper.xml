@@ -25,6 +25,7 @@
     <result column="drink_num" property="drinkNum" jdbcType="DOUBLE" />
     <result column="study_num" property="studyNum" jdbcType="DOUBLE" />
     <result column="work_num" property="workNum" jdbcType="DOUBLE" />
+    <result column="relevant_num" property="relevantNum" jdbcType="DOUBLE" />
     <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="age" property="age"  />
@@ -138,26 +139,30 @@
   <!-- top10 -->
   <select id="selectPoliceRiskTopTen" resultMap="BaseResultMapTwo">
   	select a.*,b.name,b.head_image as headImage,TIMESTAMPDIFF(YEAR,b.birthday,CURDATE()) AS age,
-c.name as departmentName,d.position_name as positionName
-from (select police_id,
-sum(total_num) as total_num,
-sum(conduct_num) as conduct_num,
-round(sum(handling_case_num),2) as handling_case_num,
- sum(duty_num) as duty_num,
-sum(train_num) as train_num,
-sum(social_contact_num) as social_contact_num,
-sum(amily_evaluation_num) as amily_evaluation_num,
-sum(drink_num) as drink_num,
-sum(study_num) as study_num,
-sum(health_num) as health_num,
-sum(work_num) as work_num
-from risk_report_record where DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime}
-and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
-GROUP BY police_id order by ${orderName} desc limit 10) a
-left join user b on b.police_id=a.police_id
-left join department c on c.id=b.department_id
-left join police_position d on d.id=b.position_id WHERE b.`name` IS NOT NULL
-order by ${sortName} desc limit 10
+        c.name as departmentName,d.position_name as positionName
+        from (select a.police_id,
+                SUM(rr.index_num) as relevant_num,
+                sum(total_num) as total_num,
+                sum(conduct_num) as conduct_num,
+                round(sum(handling_case_num),2) as handling_case_num,
+                 sum(duty_num) as duty_num,
+                sum(train_num) as train_num,
+                sum(social_contact_num) as social_contact_num,
+                sum(amily_evaluation_num) as amily_evaluation_num,
+                sum(drink_num) as drink_num,
+                sum(study_num) as study_num,
+                sum(health_num) as health_num,
+                sum(work_num) as work_num
+            from risk_report_record a
+                left join risk_relevant rr on rr.police_id = a.police_id
+                        and DATE_FORMAT(rr.creation_date, '%Y-%m') = DATE_FORMAT(a.creation_date, '%Y-%m')
+            where DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime}
+                and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}
+            GROUP BY a.police_id order by ${orderName} desc limit 10) a
+                left join user b on b.police_id=a.police_id
+                left join department c on c.id=b.department_id
+                left join police_position d on d.id=b.position_id WHERE b.`name` IS NOT NULL
+            order by ${sortName} desc limit 10
   </select>
   
   

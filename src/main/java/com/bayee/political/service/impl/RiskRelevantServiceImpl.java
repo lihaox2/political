@@ -58,7 +58,7 @@ public class RiskRelevantServiceImpl implements RiskRelevantService {
         //旧数据处理
         RiskRelevant oldRiskRelevant = riskRelevantMapper.findByPoliceIdAndDate(user.getPoliceId(), date);
         if (oldRiskRelevant != null && oldRiskRelevant.getId() != null) {
-            riskRelevant.setId(oldRiskRelevant.getId());  
+            riskRelevant.setId(oldRiskRelevant.getId());
             riskRelevantMapper.updateByPrimaryKey(riskRelevant);
         } else {
             riskRelevantMapper.insert(riskRelevant);

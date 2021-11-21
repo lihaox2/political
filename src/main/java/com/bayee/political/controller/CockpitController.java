@@ -131,6 +131,9 @@ public class CockpitController {
 		} else if (sortType == 11008) {
 			sortName = "a.health_num";
 			orderName = "health_num";
+		} else if (sortType == 11010) {
+			sortName = "a.relevant_num";
+			orderName = "rr.index_num";
 		}
 		Date currdate = new Date();
 		Calendar calendar = Calendar.getInstance();

@@ -96,7 +96,7 @@ public class PolicePromotionRecordInfo {
     private Double resumeScore;
 
     /**
-     * 入职分
+     * 任职分
      */
     private Double holdOfficeScore;
 

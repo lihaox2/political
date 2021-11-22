@@ -26,4 +26,11 @@ public interface PolicePromotionRecordInfoMapper {
      * @return
      */
     List<PolicePromotionRecordInfo> selectPageList(@Param("param")PolicePromotionPageListParam param);
+
+    /**
+     * 导出警员晋升信息
+     * @param type
+     * @return
+     */
+    List<PolicePromotionRecordInfo> SelectExport(@Param("type")Integer type);
 }

@@ -63,7 +63,7 @@ public class PolicePromotionController {
 
     @ApiOperation("导出的接口")
     @GetMapping("/export")
-    public  JsonResult<T> export(){
-        return service.export();
+    public  JsonResult<T> export(Integer type){
+        return service.export(type);
     }
 }

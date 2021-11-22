@@ -504,4 +504,8 @@
     </if>
     order by total_score desc
   </select>
+  <!--警员导出的接口-->
+  <select id="SelectExport" resultMap="BaseResultMap">
+    select * from police_promotion_record_info where type=#{type}
+  </select>
 </mapper>

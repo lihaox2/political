@@ -14,6 +14,11 @@ public class RiskConduct {
 
     private Double visitScore;
 
+    /**
+     * 动态排摸分值
+     */
+    private Double relevantScore;
+
     private Double trafficViolationScore;
 
     private Date creationDate;
@@ -23,6 +28,14 @@ public class RiskConduct {
     private Double totalNum;
     
     List<ScreenDoubeChart> list;
+
+    public Double getRelevantScore() {
+        return relevantScore;
+    }
+
+    public void setRelevantScore(Double relevantScore) {
+        this.relevantScore = relevantScore;
+    }
 
     public Double getTotalNum() {
         return totalNum;

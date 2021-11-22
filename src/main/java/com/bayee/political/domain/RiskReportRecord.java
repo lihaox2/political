@@ -49,6 +49,11 @@ public class RiskReportRecord {
     private Double workNum;
 
     private Double totalSumNum;
+
+	/**
+	 * 动态排摸
+	 */
+	private Double relevantNum;
     
     private List<ScreenDoubeChart> chartList;
 
@@ -62,6 +67,14 @@ public class RiskReportRecord {
 	 * 是否允许全局查看，1.允许，2.不允许
 	 */
 	private Integer healthShowFlag;
+
+	public Double getRelevantNum() {
+		return relevantNum;
+	}
+
+	public void setRelevantNum(Double relevantNum) {
+		this.relevantNum = relevantNum;
+	}
 
 	public Integer getHealthShowFlag() {
 		return healthShowFlag;

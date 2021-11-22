@@ -98,6 +98,9 @@ public class RiskController extends BaseController {
 			} else if (sortType == 11008) {
 				sortName = "a.health_num";
 				orderName = "health_num";
+			} else if (sortType == 11010) {
+				sortName = "a.relevant_num";
+				orderName = "rr.index_num";
 			}
 			if (dateTime == null) {
 				dateTime = sd.format(new Date());

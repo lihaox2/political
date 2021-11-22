@@ -285,6 +285,7 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
                  left join (select count(police_id) as count, alarm_type from risk_alarm r
                             where DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT(CURDATE(), '%Y-%m') group by alarm_type) ra
                            on ra.alarm_type = rat.id
+        where rat.creation_date is not null
         order by rat.id
     </select>
 
@@ -341,28 +342,12 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 	</select>
 	
 	<select id="caseLawRepeatNum"  resultType="Integer">
-		SELECT count(1) FROM (SELECT count(1) total,r.police_id,r.type FROM risk_case_law_enforcement_record r GROUP BY r.police_id,r.type) a WHERE a.total>1
+        select COUNT(1) from
+            (select COUNT(1) total,r.police_id,r.type from risk_case_law_enforcement_record r
+                where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+            group by r.police_id,r.type) a
+        where a.total>1
 	</select>
-
-<!--	<select id="dutyDealTrends" resultType="HashMap">
-		SELECT * FROM (
-			SELECT v.click_date AS name,IFNULL(b.total,0) value FROM (
-                SELECT curdate() as click_date
-                union all
-                SELECT date_sub(curdate(), interval 1 day) as click_date
-                union all
-                SELECT date_sub(curdate(), interval 2 day) as click_date
-                union all
-                SELECT date_sub(curdate(), interval 3 day) as click_date
-                union all
-                SELECT date_sub(curdate(), interval 4 day) as click_date
-                union all
-                SELECT date_sub(curdate(), interval 5 day) as click_date
-                union all
-                SELECT date_sub(curdate(), interval 6 day) as click_date) v
-		 LEFT JOIN (SELECT DATE_FORMAT(a.creation_date,'%Y-%m-%d') AS paTime,count(1) AS total FROM risk_duty_deal_police_record a GROUP BY paTime) b
-		 ON b.paTime=v.click_date) a ORDER BY a.name ASC
-	</select>-->
 
     <select id="dutyDealTrends" resultType="HashMap">
         SELECT * FROM (
@@ -388,7 +373,11 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 	</select>
 	
 	<select id="dutyDealRepeatNum"  resultType="Integer">
-		SELECT count(1) FROM (SELECT count(1) total,r.police_id,r.type FROM risk_duty_deal_police_record r GROUP BY r.police_id,r.type) a WHERE a.total>1
+        select COUNT(1) from
+            (select COUNT(1) total,r.police_id,r.type from risk_duty_deal_police_record r
+                where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+            group by r.police_id,r.type) a
+        where a.total>1
 	</select>
 	
 	<select id="ishealth" resultType="HashMap">
@@ -422,7 +411,7 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 <!--		SELECT count(1) FROM (SELECT r.`year` FROM risk_health_record r ORDER BY r.creation_date LIMIT 1) a ,risk_health_record r WHERE a.`year`=r.`year`-->
 <!--	</select>-->
     <select id="inspectNum" resultType="Integer">
-        SELECT count(1) FROM (SELECT r.`year` FROM risk_health_record r GROUP BY r.`year`) a ,risk_health_record r WHERE a.`year`=r.`year`
+        select COUNT(1) from risk_health_record where year = YEAR(NOW())
     </select>
     <!--改前的-->
 <!--	<select id="healthNum" resultType="Integer">-->
@@ -432,9 +421,20 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 <!--	</select>-->
 
     <select id="healthNum" resultType="Integer">
-        SELECT count(1) FROM (SELECT r.`year` FROM risk_health_record r GROUP BY r.`year`) a ,risk_health_record r WHERE a.`year`=r.`year`
-		 AND r.bmi!=2 AND r.is_overweight!=1 AND r.is_hyperlipidemia!=1 AND r.is_hypertension!=1 AND r.is_hyperglycemia!=1 AND r.is_hyperuricemia!=1 AND r.is_prostate!=1
-		 AND r.is_major_diseases!=1 AND r.is_heart!=1 AND r.is_tumor_antigen!=1 AND r.is_orthopaedics!=1
+        select
+            COUNT(1)
+        from risk_health_record r
+        where year = YEAR(NOW())
+            and r.bmi!=2 and r.is_overweight!=1
+            and r.is_hyperlipidemia!=1
+            and r.is_hypertension!=1
+            and r.is_hyperglycemia!=1
+            and r.is_hyperuricemia!=1
+            and r.is_prostate!=1
+            and r.is_major_diseases!=1
+            and r.is_heart!=1
+            and r.is_tumor_antigen!=1
+            and r.is_orthopaedics!=1
     </select>
 
 	<!--改i前的-->
@@ -449,21 +449,27 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 		SELECT a.count+b.count FROM (select count(distinct(a.police_id)) as count from train_firearm_achievement a ,train_firearm t
 		where a.train_firearm_id =t.id
 		and a.is_sign = 2
-		and a.achievement_grade = 2) a,(select count(distinct(police_id)) as count from train_physical_achievement a,train_physical t
+		and a.achievement_grade = 2
+        and date_format(a.sign_date, '%Y-%m') = date_format(now(), '%Y-%m')) a,(select count(distinct(police_id)) as count from train_physical_achievement a,train_physical t
 		where a.train_physical_id = t.id
 		and a.is_sign = 2
-		and a.achievement_grade = 2) b;
+		and a.achievement_grade = 2
+		and date_format(a.sign_date, '%Y-%m') = date_format(now(), '%Y-%m')) b;
 	</select>
 	
 	<!-- 合格率 -->
 	<select id="qualifiedRate" resultType="Double">
         select truncate (
        (
-           ((select COUNT(distinct(police_id)) from train_physical_achievement where achievement_grade = 2)
-                + (select COUNT(distinct(police_id)) from train_firearm_achievement where achievement_grade = 2))
+           ((select COUNT(distinct(police_id)) from train_physical_achievement
+           where achievement_grade = 2 and date_format(sign_date, '%Y-%m') = date_format(now(), '%Y-%m'))
+                + (select COUNT(distinct(police_id)) from train_firearm_achievement
+                where achievement_grade = 2 and date_format(sign_date, '%Y-%m') = date_format(now(), '%Y-%m')))
            /
-           ((select COUNT(distinct(police_id)) from train_physical_achievement where is_test_free = 2)
-                + (select COUNT(distinct(police_id)) from train_firearm_achievement))
+           ((select COUNT(distinct(police_id)) from train_physical_achievement
+           where is_test_free = 2 and date_format(sign_date, '%Y-%m') = date_format(now(), '%Y-%m'))
+                + (select COUNT(distinct(police_id)) from train_firearm_achievement
+                where date_format(sign_date, '%Y-%m') = date_format(now(), '%Y-%m')))
        )* 100, 2) as rate
 	</select>
 	

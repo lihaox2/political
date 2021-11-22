@@ -24,6 +24,11 @@ public class TrainPhysicalServiceImpl implements TrainPhysicalService {
     }
 
     @Override
+    public Integer countByDate(String date) {
+        return trainPhysicalMapper.countByDate(date);
+    }
+
+    @Override
     public List<TrainPhysical> findTrainPhysicalPage(Integer pageIndex, Integer pageSize, String trainBeginDate,
                                                      String trainEndDate, String trainName, Integer position) {
         if (pageIndex < 1) {

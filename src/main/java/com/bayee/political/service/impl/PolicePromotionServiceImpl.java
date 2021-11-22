@@ -153,9 +153,11 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
     public JsonResult<T> export(Integer type) {
         List<PolicePromotionRecordInfo> infos = mapper.SelectExport(type);
         List<Map<String,Object>> list=new ArrayList<>();
+        System.out.println("================"+infos.size());
         if(infos!=null && infos.size()>0){
             infos.stream().forEach(e->{
                 Map<String,Object> map=new HashMap<>();
+                System.out.println("----------------"+e.getName());
                 map.put("id",e.getId());
                 map.put("name",e.getName());
                 map.put("policeId",e.getPoliceId());
@@ -176,13 +178,12 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
                 }
                 list.add(map);
             });
-            list.remove(0);
+//            list.remove(0);
             try {
                 File file = new File("/mnt/qiantang/policeInfo/警员晋升花名册.xlsx");
                 file.delete();
                 //通过工具类创建writer
                 ExcelWriter writer = ExcelUtil.getWriter("/mnt/qiantang/policeInfo/警员晋升花名册.xlsx");
-
                 //跳过当前行，既第一行，非必须，在此演示用
                 writer.passCurrentRow();
                 writer.addHeaderAlias("id","序列");
@@ -204,7 +205,7 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
                     writer.addHeaderAlias("isDisciplinaryAction","是否被纪律处分");
                 }
                 //合并单元格后的标题行，使用默认标题样式
-                writer.merge(13, "警员花名册");
+                writer.merge(13, "警员晋升花名册");
                 //一次性写出内容，强制输出标题
                 ExcelWriter write = writer.write(list,true);
 

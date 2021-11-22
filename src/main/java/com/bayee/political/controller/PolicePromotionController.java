@@ -63,6 +63,7 @@ public class PolicePromotionController {
 
     @ApiOperation("导出的接口")
     @GetMapping("/export")
+    @ApiImplicitParam(name = "type",value = "type(0一般晋升，1量化晋升)",dataType = "Integer",required = true)
     public  JsonResult<T> export(Integer type){
         return service.export(type);
     }

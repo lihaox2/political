@@ -4,11 +4,20 @@ import java.util.List;
 import java.util.Map;
 
 public class RiskTrendResult {
-	
+
+	/**
+	 * 在线警员数
+	 */
 	private Integer policeTotal;
-	
+
+	/**
+	 * 当前风险人数
+	 */
 	private Integer risktotal ;
-	
+
+	/**
+	 * 风险比例
+	 */
 	private Double proportion;
 	
 	private List<Map<String,Object>>  riskTrends;

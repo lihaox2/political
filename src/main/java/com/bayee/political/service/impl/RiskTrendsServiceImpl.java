@@ -77,6 +77,16 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 		return riskTrendsMapper.selectRiskTotal(startTime, endTime);
 	}
 
+	/**
+	 * 查询本年度存在风险的人数
+	 * @param year 年份
+	 * @return
+	 */
+	@Override
+	public Integer selectRiskTotals(String year) {
+		return riskTrendsMapper.selectRiskTotals(year);
+	}
+
 	@Override
 	public List<Map<String,Object>>  selectRiskTrends() {
 		// TODO Auto-generated method stub
@@ -127,6 +137,13 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 		return riskTrendsMapper.comprehensiveIndex(dateTime, lastMonthTime);
 	}
 
+
+	@Override
+	public Integer comprehensiveIndexs() {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.comprehensiveIndexs();
+	}
+
 	@Override
 	public Integer drinkIndex(String dateTime, String lastMonthTime) {
 		// TODO Auto-generated method stub
@@ -169,6 +186,12 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 		return riskTrendsMapper.healthIndex(dateTime, lastMonthTime);
 	}
 
+
+	@Override
+	public Integer VariousRisks(Integer type) {
+		// TODO Auto-generated method stub
+		return riskTrendsMapper.VariousRisks(type);
+	}
 	@Override
 	public List<Map<String,Object>> avgNum(String sortName) {
 		// TODO Auto-generated method stub
@@ -372,6 +395,24 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 	@Override
 	public List<ChartResult> healthAlarmDeptChart(String key) {
 		return riskTrendsMapper.healthAlarmDeptChart(key);
+	}
+
+	/**
+	 * 新本月新增预警人数
+	 * @return
+	 */
+	@Override
+	public Integer newTheMonthAlamTotal() {
+		return riskTrendsMapper.newTheMonthAlamTotal();
+	}
+
+	/**
+	 * 较上月新增预警人数
+	 * @return
+	 */
+	@Override
+	public Integer comparedWithLastMonthAlamTotal() {
+		return riskTrendsMapper.comparedWithLastMonthAlamTotal();
 	}
 
 }

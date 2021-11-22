@@ -102,7 +102,12 @@
 	  		  AND DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{endTime}
 	  	GROUP BY police_id) a
   </select>
-  
+
+    <!--查询本年度存在风险的人数-->
+    <select id="selectRiskTotals" resultType="java.lang.Integer">
+	select count(1) from(
+	select police_id,count(1) from risk_report_record  r inner join `user` u on r.police_id=u.police_id  where r.total_num>=5 and  DATE_FORMAT(r.creation_date, '%Y-%m') = #{year} and u.is_disable=0 group by r.police_id ) a
+	</select>
   <select id="selectRiskTrends" resultType="HashMap">
   	SELECT * FROM (SELECT v.month,IFNULL(b.total,0) value FROM (
 		    SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `month` 
@@ -127,9 +132,12 @@
                     r.police_id, u.department_id
                 FROM risk_report_record r
                     LEFT JOIN `user` u ON  r.police_id = u.police_id
-                WHERE r.total_num > 5
-                  and DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{startTime}
-                  AND DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{endTime}
+--                 WHERE r.total_num > 5
+--                   and DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{startTime}
+--                   AND DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{endTime}
+                  WHERE r.total_num >= 5
+                  and DATE_FORMAT(r.creation_date, '%Y-%m-%d')&gt;=#{startTime}
+                  AND DATE_FORMAT(r.creation_date, '%Y-%m-%d')&lt;=#{endTime}
                 GROUP BY r.police_id) a GROUP BY a.department_id ORDER BY num DESC LIMIT 5) a
        LEFT JOIN ( SELECT department_id, COUNT(1) AS num FROM `user` GROUP BY department_id) b ON a.department_id = b.department_id
        LEFT JOIN department result ON a.department_id = result.id
@@ -176,8 +184,11 @@
   		 </if>
   </select>
   
-  
-  
+  <!--新综合指数风险-->
+  <select id="comprehensiveIndexs" resultType="java.lang.Integer">
+    select * from risk_report_record r where  r.`year`=DATE_FORMAT(CURRENT_DATE(),'%Y')  and r.`month`=DATE_FORMAT(CURRENT_DATE(),'%m')  and r.conduct_num >= 5 and  r.handling_case_num >= 5 and r.duty_num >= 5
+    and r.train_num >= 5 and  r.drink_num >= 5 and r.study_num >= 5 and r.amily_evaluation_num >= 5 and r.work_num >=5
+  </select>
   
   <!-- 综合指数风险 -->
 <select id="comprehensiveIndex" parameterType="com.bayee.political.domain.RiskIndexMonitorChild" resultType="Integer">
@@ -235,6 +246,10 @@ SELECT count(1) FROM (SELECT * FROM risk_alarm r WHERE r.alarm_type=11008
  AND DATE_FORMAT(r.creation_date, '%Y-%m')&lt;=#{dateTime}
  AND DATE_FORMAT(r.creation_date, '%Y-%m')&gt;=#{lastMonthTime} GROUP BY r.police_id) a
 </select>
+    <!--查询各项风险人数-->
+    <select id="VariousRisks" resultType="java.lang.Integer">
+ select count(*) from risk_alarm r where DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT(CURRENT_DATE(),'%Y-%m') and r.alarm_type=#{type} and r.alarm_score>=5;
+    </select>
 
 <!-- 各项风险指标平均数 -->
 <select id="avgNum" resultType="HashMap">
@@ -271,13 +286,28 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 	SELECT *,(a.toMonth-b.upMonth)/b.upMonth AS tongbi
  FROM (SELECT count(1) AS toMonth FROM (SELECT count(1) AS value,r.police_id FROM risk_alarm r WHERE DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT(CURDATE(), '%Y-%m')
  GROUP BY r.police_id) a) a,
- 
- 
 (SELECT count(1) upMonth FROM (SELECT count(1) AS value,r.police_id FROM risk_alarm r WHERE
  DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m')
  GROUP BY r.police_id) a) b
 </select>
+    <!--新本月新增预警人数-->
+    <select id="newTheMonthAlamTotal" resultType="java.lang.Integer">
+        select count(1) from (SELECT count(1) AS value,r.police_id,DATE_FORMAT(r.creation_date,'%Y-%m') as data_time FROM risk_alarm r WHERE
+         DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT(CURDATE(), '%Y-%m') and r.police_id not in(SELECT ra.police_id FROM risk_alarm ra WHERE
+         DATE_FORMAT(ra.creation_date,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m')
+         GROUP BY ra.police_id)
+         GROUP BY r.police_id) rm;
+    </select>
 
+    <!--较上月新增预警人数-->
+    <select id="comparedWithLastMonthAlamTotal" resultType="java.lang.Integer">
+        select count(1) from (SELECT count(1) AS value,r.police_id,DATE_FORMAT(r.creation_date,'%Y-%m') as data_time FROM risk_alarm r WHERE
+         DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') and r.police_id not in(SELECT ra.police_id FROM risk_alarm ra WHERE
+         DATE_FORMAT(ra.creation_date,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m')
+         GROUP BY ra.police_id)
+         GROUP BY r.police_id) am
+    </select>
+    
     <select id="getRiskAlarmType" resultType="com.bayee.political.pojo.dto.RiskAlarmTypeDO">
         select
             rat.id as typeId, rat.alarm_name as typeName, ifnull(ra.count, 0) as typeCount

@@ -25,6 +25,13 @@ public interface RiskTrendsService {
     int updateByPrimaryKey(RiskTrends record);
     
     Integer selectRiskTotal(String startTime,String endTime);
+
+	/**
+	 * 查询本年度存在风险的人数
+	 * @param year 年份
+	 * @return
+	 */
+	Integer selectRiskTotals(String year);
     
     List<Map<String,Object>> selectRiskTrends();
     
@@ -38,6 +45,9 @@ public interface RiskTrendsService {
     
     // 综合指数风险
   	Integer comprehensiveIndex( String dateTime, String lastMonthTime);
+
+	//新综合指数风险
+	public Integer comprehensiveIndexs();
 
   	// 行为规范风险
   	Integer drinkIndex( String dateTime, String lastMonthTime);
@@ -59,7 +69,9 @@ public interface RiskTrendsService {
 
   	// 健康风险
   	Integer healthIndex( String dateTime, String lastMonthTime);
-  	
+
+  	//各项风险指标风险数
+	Integer VariousRisks(Integer type);
   	//各项风险指标平均数
   	List<Map<String,Object>> avgNum(String sortName);
   	
@@ -175,4 +187,15 @@ public interface RiskTrendsService {
 	 */
 	List<ChartResult> healthAlarmDeptChart(String key);
 
+	/**
+	 * 新本月新增预警人数
+	 * @return
+	 */
+	Integer newTheMonthAlamTotal();
+
+	/**
+	 * 较上月新增预警人数
+	 * @return
+	 */
+	Integer comparedWithLastMonthAlamTotal();
 }

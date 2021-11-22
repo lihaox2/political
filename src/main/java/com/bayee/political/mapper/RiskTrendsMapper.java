@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.bayee.political.json.ChartResult;
 import com.bayee.political.pojo.dto.RiskAlarmTypeDO;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 
 import com.bayee.political.domain.RiskReportRecord;
@@ -24,6 +25,13 @@ public interface RiskTrendsMapper {
     int updateByPrimaryKey(RiskTrends record);
     
     Integer selectRiskTotal(@Param("startTime") String startTime,@Param("endTime") String endTime);
+
+	/**
+	 * 查询本年度存在风险的人数
+	 * @param year
+	 * @return
+	 */
+	Integer selectRiskTotals(@Param("year")String year);
     
     List<Map<String,Object>> selectRiskTrends();
     
@@ -35,8 +43,9 @@ public interface RiskTrendsMapper {
     
     
     List<Map<String,Object>> selectPolice(@Param("content")String content);
-    
-    
+
+    //新综合指数风险
+    Integer comprehensiveIndexs();
     
     // 综合指数风险
  	Integer comprehensiveIndex(@Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime);
@@ -61,7 +70,9 @@ public interface RiskTrendsMapper {
 
  	// 健康风险
  	Integer healthIndex(@Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime);
- 	
+
+ 	//各项风险人数
+	Integer VariousRisks(@Param("type")Integer type);
  	//各项风险指标平均数
  	List<Map<String,Object>> avgNum(@Param(value="sortName")String sortName);
  	
@@ -69,6 +80,18 @@ public interface RiskTrendsMapper {
  	List<Map<String,Object>> riskPersonnelTrend(@Param(value="alamType")Integer alamType);
  	
  	Map<String,Object> theMonthAlamTotal();
+
+	/**
+	 * 新本月新增预警人数
+	 * @return
+	 */
+ 	Integer newTheMonthAlamTotal();
+
+	/**
+	 * 较上月新增预警人数
+	 * @return
+	 */
+	Integer comparedWithLastMonthAlamTotal();
 
 	/**
 	 * 获取预警类型

@@ -6,6 +6,7 @@ import java.util.*;
 
 import cn.hutool.core.util.StrUtil;
 import com.bayee.political.json.*;
+import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -115,8 +116,8 @@ public class AdminIndexController {
   		
   		Integer thMonthTotal=riskTrendsService.selectTheMonthRiskTotal(month);
         
-        result.setAlarmNum(selectIndexRiskTotal);
-        result.setGlobalRatio(Double.valueOf(selectIndexRiskTotal)/Double.valueOf(policeTotal)*100);
+        result.setAlarmNum(thMonthTotal);
+        result.setGlobalRatio(Double.valueOf(thMonthTotal)/Double.valueOf(policeTotal)*100);
         result.setThisMonthNewRatio(Double.valueOf(thMonthTotal)/Double.valueOf(policeTotal)*100);
         result.setChartList(chartList);
 
@@ -161,7 +162,7 @@ public class AdminIndexController {
         
         Integer caseLawThisMonthNum=riskTrendsService.caseLawThisMonthNum();
         
-        result.setExistsErrorPeopleNum(caseLawPepolNum);
+        result.setExistsErrorPeopleNum(caseLawThisMonthNum);
         result.setThisMonthNewRatio(Double.valueOf(caseLawThisMonthNum)/Double.valueOf(policeTotal)*100);
         result.setReplaceErrorNum(riskTrendsService.caseLawRepeatNum());
         result.setChartList(chartList);
@@ -208,7 +209,7 @@ public class AdminIndexController {
         
         Integer dutyDealThisMonthNum=riskTrendsService.dutyDealThisMonthNum();
         
-        result.setExistsErrorPeopleNum(dutyDealPepolNum);
+        result.setExistsErrorPeopleNum(dutyDealThisMonthNum);
         result.setThisMonthNewRatio(Double.valueOf(dutyDealThisMonthNum)/Double.valueOf(policeTotal)*100);
         result.setReplaceErrorNum(riskTrendsService.dutyDealRepeatNum());
         result.setChartList(chartList);
@@ -234,7 +235,9 @@ public class AdminIndexController {
     @GetMapping("/train/chart")
     public ResponseEntity<?> trainChart()  {
         IndexTrainChartResult result = new IndexTrainChartResult();
-        result.setTrainCount(trainFirearmService.countAll() + trainPhysicalService.countAll());
+        String date = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
+
+        result.setTrainCount(trainFirearmService.countByDate(date) + trainPhysicalService.countByDate(date));
         result.setEligibleCount(riskTrendsService.qualifiedNum());
         result.setEligibleRatio(riskTrendsService.qualifiedRate());
         

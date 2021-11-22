@@ -1977,6 +1977,10 @@ order by ifnull(b.bnum/a.anum,0) desc limit 5
 		select count(1) from train_physical
 	</select>
 
+	<select id="countByDate" resultType="Integer">
+		select count(1) from train_physical where date_format(train_start_date, '%Y-%m') = date_format(#{date}, '%Y-%m')
+	</select>
+
 	<select id="findTrainPhysicalPage" resultMap="BaseResultMap">
 		select
 			*

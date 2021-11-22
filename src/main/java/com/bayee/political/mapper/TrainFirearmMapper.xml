@@ -357,6 +357,10 @@ select * from train_firearm where train_firearm_type = (select project_id from t
     select count(1) from train_firearm
   </select>
 
+  <select id="countByDate" resultType="Integer">
+    select count(1) from train_firearm where date_format(train_start_date, '%Y-%m') = date_format(#{date}, '%Y-%m')
+  </select>
+
   <select id="findTrainFirearmPage" resultMap="BaseResultMap">
     select
         a.*,b.name as train_firearm_type_name

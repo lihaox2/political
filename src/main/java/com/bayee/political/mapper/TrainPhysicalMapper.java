@@ -343,6 +343,13 @@ public interface TrainPhysicalMapper {
 	Integer countAll();
 
 	/**
+	 * 统计所有综合训练数据
+	 * @param date yyyy-MM-dd
+	 * @return
+	 */
+	Integer countByDate(String date);
+
+	/**
 	 * 分页查询综合训练
 	 * @param pageIndex
 	 * @param pageSize

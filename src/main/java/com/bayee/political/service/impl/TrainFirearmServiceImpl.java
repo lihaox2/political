@@ -24,6 +24,11 @@ public class TrainFirearmServiceImpl implements TrainFirearmService {
     }
 
     @Override
+    public Integer countByDate(String date) {
+        return trainFirearmMapper.countByDate(date);
+    }
+
+    @Override
     public List<TrainFirearm> findTrainFirearmPage(Integer pageIndex, Integer pageSize, String trainBeginDate,
                                                    String trainEndDate, String trainName, Integer position) {
         if (pageIndex < 1) {

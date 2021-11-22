@@ -17,6 +17,13 @@ public interface TrainFirearmService {
     Integer countAll();
 
     /**
+     * 统计所有枪械训练数据
+     * @param date yyyy-MM-dd
+     * @return
+     */
+    Integer countByDate(String date);
+
+    /**
      * 分页查询枪械训练数据
      * @param pageIndex
      * @param pageSize

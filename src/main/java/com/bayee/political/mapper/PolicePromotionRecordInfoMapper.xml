@@ -424,7 +424,7 @@
           <if test="param.keyword != null and param.keyword != ''">
             and (dep_id=#{param.depId} or now_police_level_id=#{param.nowPoliceLevelId} or post_id=#{param.postId} or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))
           </if>
-          <if test="param.keyword == null and param.keyword == ''">
+          <if test="param.keyword == null or param.keyword == ''">
             and (dep_id=#{param.depId} or now_police_level_id=#{param.nowPoliceLevelId} or post_id=#{param.postId})
           </if>
         </if>
@@ -432,7 +432,7 @@
           <if test="param.keyword != null and param.keyword != ''">
             and (dep_id=#{param.depId} or now_police_level_id=#{param.nowPoliceLevelId}  or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))
           </if>
-          <if test="param.keyword == null and param.keyword == ''">
+          <if test="param.keyword == null or param.keyword == ''">
             and (dep_id=#{param.depId} or now_police_level_id=#{param.nowPoliceLevelId}
           </if>
         </if>
@@ -442,7 +442,7 @@
           <if test="param.keyword != null and param.keyword != ''">
             and (dep_id=#{param.depId} or post_id=#{param.postId} or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))
           </if>
-          <if test="param.keyword == null and param.keyword == ''">
+          <if test="param.keyword == null or param.keyword == ''">
             and (dep_id=#{param.depId} or post_id=#{param.postId})
           </if>
         </if>
@@ -450,8 +450,8 @@
           <if test="param.keyword != null and param.keyword != ''">
             and (dep_id=#{param.depId} or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))
           </if>
-          <if test="param.keyword == null and param.keyword == ''">
-            and (dep_id=#{param.depId}
+          <if test="param.keyword == null or param.keyword == ''">
+            and dep_id=#{param.depId}
           </if>
         </if>
       </if>
@@ -463,7 +463,7 @@
           <if test="param.keyword != null and param.keyword != ''">
             and (now_police_level_id=#{param.nowPoliceLevelId} or post_id=#{param.postId} or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))
           </if>
-          <if test="param.keyword == null and param.keyword == ''">
+          <if test="param.keyword == null or param.keyword == ''">
             and (now_police_level_id=#{param.nowPoliceLevelId} or post_id=#{param.postId})
           </if>
         </if>
@@ -471,8 +471,8 @@
           <if test="param.keyword != null and param.keyword != ''">
             and (now_police_level_id=#{param.nowPoliceLevelId}  or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))
           </if>
-          <if test="param.keyword == null and param.keyword == ''">
-            and (now_police_level_id=#{param.nowPoliceLevelId}
+          <if test="param.keyword == null or param.keyword == ''">
+            and now_police_level_id=#{param.nowPoliceLevelId}
           </if>
         </if>
       </if>
@@ -485,7 +485,7 @@
           <if test="param.keyword != null and param.keyword != ''">
             and (post_id=#{param.postId} or `name` like concat('%', #{param.keyword}, '%') or police_id like concat('%', #{param.keyword}, '%'))
           </if>
-          <if test="param.keyword == null and param.keyword == ''">
+          <if test="param.keyword == null or param.keyword == ''">
             and post_id=#{param.postId}
           </if>
         </if>

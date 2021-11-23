@@ -154,12 +154,15 @@ public interface RiskReportRecordMapper {
 	 * @return
 	 */
 	GlobalIndexNumResultDO findRiskReportRecordGlobalTotalNum(@Param("date") String date);
-	
+
 	/**
 	 * 取得全局扣分 的最高分 & 最低分分值
+	 * @param lastDateTime
 	 * @param date
+	 * @param column
 	 * @return
 	 */
-	GlobalIndexNumResultDO findGlobalIndexNumByYear(@Param("lastDateTime") String lastDateTime, @Param("date") String date,
+	GlobalIndexNumResultDO findGlobalIndexNumByYear(@Param("lastDateTime") String lastDateTime,
+													@Param("date") String date,
 											  		@Param("column") String column);
 }

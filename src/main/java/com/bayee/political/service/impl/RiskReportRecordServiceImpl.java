@@ -584,14 +584,27 @@ public class RiskReportRecordServiceImpl implements RiskReportRecordService {
 		}
     }
 
+	/**
+	 * 把空值转成 0
+	 * @param v
+	 * @return
+	 */
+	private Double nullToZero(Double v) {
+		return v == null ? 0 : v;
+	}
+
+	private Integer nullToZero(Integer v) {
+		return v == null ? 0 : v;
+	}
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateRiskReportRecord(RiskReportRecord riskReportRecord) {
 		riskReportRecord.setUpdateDate(new Date());
-		riskReportRecord.setTotalSumNum(riskReportRecord.getConductNum() + riskReportRecord.getHandlingCaseNum() +
-				riskReportRecord.getDutyNum() + riskReportRecord.getTrainNum() + riskReportRecord.getStudyNum() +
-				riskReportRecord.getSocialContactNum() + riskReportRecord.getAmilyEvaluationNum() +
-				riskReportRecord.getHealthNum() + riskReportRecord.getDrinkNum());
+		riskReportRecord.setTotalSumNum(nullToZero(riskReportRecord.getConductNum()) + nullToZero(riskReportRecord.getHandlingCaseNum()) +
+				nullToZero(riskReportRecord.getDutyNum()) + nullToZero(riskReportRecord.getTrainNum()) + nullToZero(riskReportRecord.getStudyNum()) +
+				nullToZero(riskReportRecord.getSocialContactNum()) + nullToZero(riskReportRecord.getAmilyEvaluationNum()) +
+				nullToZero(riskReportRecord.getHealthNum()) + nullToZero(riskReportRecord.getDrinkNum()));
 		GlobalIndexNumResultDO resultDO = riskReportRecordMapper.findRiskReportRecordGlobalIndexNum(DateUtils.formatDate(riskReportRecord.getCreationDate(), "yyyy-MM-dd"));
 		riskReportRecord.setTotalNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), riskReportRecord.getTotalSumNum()));
 		riskReportRecordMapper.updateByPrimaryKey(riskReportRecord);

@@ -113,7 +113,7 @@
 select id, police_id, sum(index_num) as index_num, sum(num) as num from risk_social_contact
 where police_id=#{policeId,jdbcType=VARCHAR} 
     <if test="timeType == 1">
-	    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+      and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
 	</if>
     <if test="timeType == 2">
 	    and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}

@@ -474,7 +474,7 @@ when a.achievement_grade=4 then '优秀' else '不合格' end) as achievementGra
 left join train_physical b on b.id=a.train_physical_id
 where a.police_id=#{policeId}
 	 <if test="timeType == 1">
-	    and DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}
+	    and DATE_FORMAT(a.creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
 	</if>
     <if test="timeType == 2">
 	    and DATE_FORMAT(a.creation_date, '%Y-%m')=#{dateTime}

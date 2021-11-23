@@ -150,7 +150,7 @@ order by a.year_month
     sum(total_deduction_score) as total_deduction_score, sum(total_deduction_count) as total_deduction_count from risk_case_law_enforcement
     where police_id=#{policeId,jdbcType=VARCHAR}
     <if test="timeType == 1">
-      and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+      and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
     </if>
     <if test="timeType == 2">
       and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
@@ -171,7 +171,7 @@ order by a.year_month
           select type from risk_case_law_enforcement_record a
           where police_id=#{policeId}
           <if test="timeType == 1">
-            and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+            and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
           </if>
           <if test="timeType == 2">
             and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
@@ -181,7 +181,7 @@ order by a.year_month
     from risk_case_law_enforcement_record a
     where is_effective = 1 and police_id=#{policeId}
       <if test="timeType == 1">
-        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+        and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
       </if>
       <if test="timeType == 2">
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}

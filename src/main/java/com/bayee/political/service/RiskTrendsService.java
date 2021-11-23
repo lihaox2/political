@@ -86,8 +86,24 @@ public interface RiskTrendsService {
   	List<Map<String,Object>>findByPoliceIdRiskAlarm(String policeId);
   	
   	List<Map<String,Object>> continuityAlarm();
+
+	/**
+	 * 当前的连续预警
+	 * @return
+	 */
+	List<Map<String, Object>> newContinuityAlarmDateList();
   	
   	List<Map<String,Object>> continuityAlarmDetails(String policeId);
+
+	List<Map<String, Object>> newContinuityAlarmDetails(String policeId);
+
+	/**
+	 *
+	 * @param policeId
+	 * @param value
+	 * @return
+	 */
+	Integer selectPoliceIdCount(String policeId,Integer value);
 
 	/**
 	 * 查询近12个月的风险人数总和，按警号去重

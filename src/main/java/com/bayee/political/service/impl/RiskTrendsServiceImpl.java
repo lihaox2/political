@@ -96,7 +96,8 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 	@Override
 	public List<Map<String,Object>> selectDeptTopFive(String startTime, String endTime) {
 		// TODO Auto-generated method stub
-		return riskTrendsMapper.selectDeptTopFive(startTime, endTime);
+		System.out.println(startTime+"=========="+endTime);
+		return riskTrendsMapper.selectDeptTopFive();
 	}
 
 	@Override
@@ -238,10 +239,31 @@ public class RiskTrendsServiceImpl implements RiskTrendsService{
 		return riskAlarmMapper.continuityAlarmDataList(format+"-01-01",format+"-12-31");
 	}
 
+	/**
+	 * 当前的连续预警
+	 * @return
+	 */
+	@Override
+	public List<Map<String, Object>> newContinuityAlarmDateList() {
+		// TODO Auto-generated method stub
+		return riskAlarmMapper.newContinuityAlarmDateList();
+	}
+
 	@Override
 	public List<Map<String, Object>> continuityAlarmDetails(String policeId) {
 		// TODO Auto-generated method stub
 		return riskAlarmMapper.continuityAlarmDetails(policeId);
+	}
+
+	@Override
+	public List<Map<String, Object>> newContinuityAlarmDetails(String policeId) {
+		// TODO Auto-generated method stub
+		return riskAlarmMapper.newContinuityAlarmDetails(policeId);
+	}
+	@Override
+	public Integer selectPoliceIdCount(String policeId,Integer value) {
+		// TODO Auto-generated method stub
+		return riskAlarmMapper.selectPoliceIdCount(policeId,value);
 	}
 
 	@Override

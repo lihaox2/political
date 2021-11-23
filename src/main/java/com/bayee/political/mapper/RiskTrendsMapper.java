@@ -35,8 +35,9 @@ public interface RiskTrendsMapper {
     
     List<Map<String,Object>> selectRiskTrends();
     
-    List<Map<String,Object>> selectDeptTopFive(@Param("startTime") String startTime,@Param("endTime") String endTime);
-    
+//    List<Map<String,Object>> selectDeptTopFive(@Param("startTime") String startTime,@Param("endTime") String endTime);
+
+	List<Map<String,Object>> selectDeptTopFive();
     List<RiskReportRecord> selectPoliceRiskTopTen(
 			@Param("sortName") String sortName, @Param("dateTime") String dateTime, @Param("lastMonthTime") String lastMonthTime,
 			@Param("orderName") String orderName);

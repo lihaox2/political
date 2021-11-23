@@ -57,8 +57,14 @@ public interface RiskAlarmMapper {
 	List<Map<String,Object>> continuityAlarm();
 
 	List<Map<String,Object>> continuityAlarmDataList(@Param("beginTime")String beginTime,@Param("endTime")String endTime);
+	//当前的预警
+	List<Map<String,Object>> newContinuityAlarmDateList();
 	
-	List<Map<String,Object>> continuityAlarmDetails(String policeId);
+	List<Map<String,Object>> continuityAlarmDetails(@Param("policeId") String policeId);
+
+	List<Map<String,Object>> newContinuityAlarmDetails(@Param("policeId")String policeId);
+
+	Integer selectPoliceIdCount(@Param("policeId")String policeId,@Param("value")Integer value);
 
 	/**
 	 * 查询近12个月的风险人数总和，按警号去重

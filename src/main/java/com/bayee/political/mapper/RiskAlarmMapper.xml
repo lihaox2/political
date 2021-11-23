@@ -204,21 +204,33 @@ ORDER BY consequtive) a WHERE a.consequtive>0) a ,`user` u WHERE a.policeId=u.po
 </select>
 
 <select id="continuityAlarmDetails" resultType="HashMap">
-	SELECT u.`name`,t.alarm_name AS alarmName,a.creation_date AS alarmTime FROM (select distinct r1.*
+	SELECT u.`name`,t.alarm_name AS alarmName,a.creation_date AS alarmTime,DATE_FORMAT(a.creation_date,'%m') as` month` FROM (select distinct r1.*
     from
       (select * from risk_alarm where police_id = #{policeId} order by creation_date) r1,
       (select * from risk_alarm where police_id = #{policeId} order by creation_date) r2
    where (
    (DATE_FORMAT(DATE_SUB(r1.creation_date,interval 1 month), '%Y-%m') = DATE_FORMAT(r2.creation_date, '%Y-%m'))
-   or 
+   or
    (DATE_FORMAT(DATE_SUB(r2.creation_date,interval 1 month), '%Y-%m') = DATE_FORMAT(r1.creation_date, '%Y-%m'))
    )
    group by DATE_FORMAT(r1.creation_date, '%Y-%m')
-    order by DATE_FORMAT(r1.creation_date, '%Y-%m')) a,risk_alarm_type t,`user` u WHERE a.police_id=u.police_id AND a.alarm_type=t.id ;
+    order by DATE_FORMAT(r1.creation_date, '%Y-%m')) a,risk_alarm_type t,`user` u WHERE a.police_id=u.police_id AND a.alarm_type=t.id order by alarmTime desc;
 </select>
+  <select id="newContinuityAlarmDetails" resultType="HashMap">
+    select u.`name`,t.alarm_name AS alarmName,r.creation_date AS alarmTime,DATE_FORMAT(r.creation_date,'%m') as` month`
+    from risk_alarm r inner join risk_alarm_type t on r.alarm_type=t.id inner join `user` u on u.police_id=r.police_id
+	where r.police_id = #{policeId} order by alarmTime desc;
+  </select>
+
+  <select id="selectPoliceIdCount" resultType="java.lang.Integer">
+    select count(*) from risk_alarm where police_id=#{policeId} and DATE_FORMAT(creation_date,'%Y-%m')= DATE_FORMAT(DATE_SUB(curdate(), INTERVAL #{value} MONTH),'%Y-%m')
+  </select>
 
   <select id="continuityAlarmDataList" resultType="HashMap">
-select a.police_id policeId,u.`name`,count(a.creation_date) `value` from risk_alarm  a left join risk_alarm_type t on a.alarm_type=t.id left join `user` u on u.police_id=a.police_id WHERE a.creation_date BETWEEN #{beginTime} and #{endTime} GROUP BY a.police_id ORDER BY `value` desc
+    select a.police_id policeId,u.`name`,count(a.creation_date) `value` from risk_alarm  a left join risk_alarm_type t on a.alarm_type=t.id left join `user` u on u.police_id=a.police_id WHERE a.creation_date BETWEEN #{beginTime} and #{endTime} GROUP BY a.police_id ORDER BY `value` desc
+  </select>
+  <select id="newContinuityAlarmDateList" resultType="HashMap">
+    select am.policeId,am.`name`,am.`value`+ma.`value` as `value` from (select a.police_id policeId,u.`name`,count(a.creation_date) `value` from risk_alarm  a left join risk_alarm_type t on a.alarm_type=t.id left join `user` u on u.police_id=a.police_id WHERE DATE_FORMAT(a.creation_date,'%Y-%m')=DATE_FORMAT(CURRENT_DATE(),'%Y-%m') GROUP BY a.creation_date, a.police_id ORDER BY `value` desc) am inner join (select a.police_id policeId,u.`name`,count(a.creation_date) `value` from risk_alarm  a left join risk_alarm_type t on a.alarm_type=t.id left join `user` u on u.police_id=a.police_id WHERE DATE_FORMAT(a.creation_date,'%Y-%m')=DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m') GROUP BY a.creation_date, a.police_id ORDER BY `value` desc) ma on am.policeId=ma.policeId GROUP BY am.policeId order by `value` desc
   </select>
 
   <select id="countRiskAlarmByPolice" resultType="Integer">

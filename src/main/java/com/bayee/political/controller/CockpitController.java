@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.bayee.political.json.RiskTopAlamResult;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -192,9 +193,12 @@ public class CockpitController {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		cal.set(Calendar.DAY_OF_MONTH, 1);
-		System.out.println (new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime()));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String beginTime = sdf.format(cal.getTime());
 		cal.roll(Calendar.DAY_OF_MONTH, -1);
-		System.out.println (new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime()));
+		String endTime = sdf.format(cal.getTime());
+		System.out.println(beginTime);
+		System.out.println(endTime);
 	}
 	
 	@GetMapping("/cockpit/risk/proportion")
@@ -207,54 +211,112 @@ public class CockpitController {
 		String lastMonthTime = DateUtils.lastMonthTime();
 		
 		List<RiskProportionResult> list=new ArrayList<RiskProportionResult>();
-		
-		Integer comprehensiveIndex=riskTrendsService.comprehensiveIndex(dateTime+"-30", lastMonthTime);
+//
+//		Integer comprehensiveIndex=riskTrendsService.comprehensiveIndex(dateTime+"-30", lastMonthTime);
+//		RiskProportionResult item1=new RiskProportionResult();
+//		item1.setName("综合");
+//		item1.setValue(comprehensiveIndex);
+//
+//
+//		Integer drinkIndex=riskTrendsService.drinkIndex(dateTime+"-30", lastMonthTime);
+//
+//		RiskProportionResult item2=new RiskProportionResult();
+//		item2.setName("行为风险");
+//		item2.setValue(drinkIndex);
+//
+//		Integer conductIndex=riskTrendsService.conductIndex(dateTime+"-30", lastMonthTime);
+//
+//		RiskProportionResult item3=new RiskProportionResult();
+//		item3.setName("执法风险");
+//		item3.setValue(conductIndex);
+//
+//		Integer caseIndex=riskTrendsService.caseIndex(dateTime+"-30", lastMonthTime);
+//
+//		RiskProportionResult item4=new RiskProportionResult();
+//		item4.setName("接处警风险");
+//		item4.setValue(caseIndex);
+//
+//		Integer dutyIndex=riskTrendsService.dutyIndex(dateTime+"-30", lastMonthTime);
+//
+//		RiskProportionResult item5=new RiskProportionResult();
+//		item5.setName("训练风险");
+//		item5.setValue(dutyIndex);
+//
+//		Integer trainIndex=riskTrendsService.trainIndex(dateTime, lastMonthTime);
+//
+//		RiskProportionResult item6=new RiskProportionResult();
+//		item6.setName("社交风险");
+//		item6.setValue(trainIndex);
+//
+//		Integer studyIndex=riskTrendsService.studyIndex(dateTime+"-30", lastMonthTime);
+//		RiskProportionResult item7=new RiskProportionResult();
+//		item7.setName("评价风险 ");
+//		item7.setValue(studyIndex);
+//
+//		Integer healthIndex=riskTrendsService.healthIndex(dateTime+"-30", lastMonthTime);
+//
+//		RiskProportionResult item8=new RiskProportionResult();
+//		item8.setName("健康");
+//		item8.setValue(healthIndex);
+		Integer comprehensiveIndex=riskTrendsService.VariousRisks(11001);
 		RiskProportionResult item1=new RiskProportionResult();
 		item1.setName("综合");
 		item1.setValue(comprehensiveIndex);
-		
-		
-		Integer drinkIndex=riskTrendsService.drinkIndex(dateTime+"-30", lastMonthTime);
-		
+
+
+		Integer drinkIndex=riskTrendsService.VariousRisks(11002);
+
 		RiskProportionResult item2=new RiskProportionResult();
 		item2.setName("行为风险");
 		item2.setValue(drinkIndex);
-		
-		Integer conductIndex=riskTrendsService.conductIndex(dateTime+"-30", lastMonthTime);
-		
+
+		Integer conductIndex=riskTrendsService.VariousRisks(11003);
+
 		RiskProportionResult item3=new RiskProportionResult();
 		item3.setName("执法风险");
 		item3.setValue(conductIndex);
-		
-		Integer caseIndex=riskTrendsService.caseIndex(dateTime+"-30", lastMonthTime);
+
+		Integer caseIndex=riskTrendsService.VariousRisks(11004);
 
 		RiskProportionResult item4=new RiskProportionResult();
 		item4.setName("接处警风险");
 		item4.setValue(caseIndex);
-		
-		Integer dutyIndex=riskTrendsService.dutyIndex(dateTime+"-30", lastMonthTime);
+
+		Integer dutyIndex=riskTrendsService.VariousRisks(11005);
 
 		RiskProportionResult item5=new RiskProportionResult();
 		item5.setName("训练风险");
 		item5.setValue(dutyIndex);
-		
-		Integer trainIndex=riskTrendsService.trainIndex(dateTime, lastMonthTime);
+
+		Integer trainIndex=riskTrendsService.VariousRisks(11006);
 
 		RiskProportionResult item6=new RiskProportionResult();
 		item6.setName("社交风险");
 		item6.setValue(trainIndex);
-		
-		Integer studyIndex=riskTrendsService.studyIndex(dateTime+"-30", lastMonthTime);
+
+		Integer studyIndex=riskTrendsService.VariousRisks(11007);
 		RiskProportionResult item7=new RiskProportionResult();
 		item7.setName("评价风险 ");
 		item7.setValue(studyIndex);
-		
-		Integer healthIndex=riskTrendsService.healthIndex(dateTime+"-30", lastMonthTime);
+
+		Integer healthIndex=riskTrendsService.VariousRisks(11008);
 
 		RiskProportionResult item8=new RiskProportionResult();
 		item8.setName("健康");
 		item8.setValue(healthIndex);
-		
+
+		Integer total=comprehensiveIndex+drinkIndex+conductIndex+caseIndex+dutyIndex+trainIndex+studyIndex+healthIndex;
+		int userNum=userService.countTotal();
+		System.out.println(total);
+		item1.setAlarmPoliceRate(Double.valueOf(df.format(((double)comprehensiveIndex/total)*100)));
+		item2.setAlarmPoliceRate(Double.valueOf(df.format(((double)drinkIndex/total)*100)));
+		item3.setAlarmPoliceRate(Double.valueOf(df.format(((double)conductIndex/total)*100)));
+		item4.setAlarmPoliceRate(Double.valueOf(df.format(((double)caseIndex/total)*100)));
+		item5.setAlarmPoliceRate(Double.valueOf(df.format(((double)dutyIndex/total)*100)));
+		item6.setAlarmPoliceRate(Double.valueOf(df.format(((double)trainIndex/total)*100)));
+		item7.setAlarmPoliceRate(Double.valueOf(df.format(((double)studyIndex/total)*100)));
+		item8.setAlarmPoliceRate(Double.valueOf(df.format(((double)healthIndex/total)*100)));
+
 		list.add(item1);
 		list.add(item2);
 		list.add(item3);
@@ -263,6 +325,7 @@ public class CockpitController {
 		list.add(item6);
 		list.add(item7);
 		list.add(item8);
+
 		
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
@@ -540,16 +603,56 @@ public class CockpitController {
 	
 	@GetMapping("/cockpit/risk/continuity/alarm")
 	public ResponseEntity<?> continuityAlarm(){
-		List<Map<String,Object>> continuityAlarm=riskTrendsService.continuityAlarm();
-
+//		List<Map<String,Object>> continuityAlarm=riskTrendsService.continuityAlarm();
+		List<Map<String,Object>> continuityAlarm=riskTrendsService.newContinuityAlarmDateList();
+		if(continuityAlarm!=null && continuityAlarm.size()>0){
+			continuityAlarm.stream().forEach(e->{
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(new Date());
+				cal.set(Calendar.DAY_OF_MONTH, 1);
+				for(int i=2;i<12;i++){
+					Integer count = riskTrendsService.selectPoliceIdCount(e.get("policeId").toString(), i);
+					if(count==0){
+						break;
+					}else {
+						e.put("value",Integer.valueOf(e.get("value").toString())+count);
+					}
+				}
+			});
+		}
 		return new ResponseEntity<>(continuityAlarm, HttpStatus.OK);
 	}
 	
 	@GetMapping("/cockpit/risk/continuity/alarm/details")
 	public ResponseEntity<?> continuityAlarmDetails(String policeId){
-		List<Map<String,Object>> continuityAlarmDetails=riskTrendsService.continuityAlarmDetails(policeId);
+		List<Map<String,Object>> continuityAlarmDetails=riskTrendsService.newContinuityAlarmDetails(policeId);
+		List<Map<String,Object>> list=new ArrayList<>();
+		if(continuityAlarmDetails!=null && continuityAlarmDetails.size()>0){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			SimpleDateFormat sdf = new SimpleDateFormat("MM");
+			String format = sdf.format(cal.getTime());
+			Integer num=Integer.valueOf(format);
+			Integer sum=num;
+			for(int i=0;i<num;i++){
+				Integer count = riskTrendsService.selectPoliceIdCount(policeId, i);
+				if(count==0){
+					break;
+				}else {
+					for( Map<String,Object> e:continuityAlarmDetails){
+						Integer month = Integer.valueOf(e.get("month").toString());
+						if(sum==month){
+							list.add(e);
+						}
+					}
+					sum-=1;
+				}
+			}
 
-		return new ResponseEntity<>(continuityAlarmDetails, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
 	@GetMapping("/cockpit/risk/type")

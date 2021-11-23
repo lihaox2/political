@@ -61,10 +61,12 @@ public class RiskConductServiceImpl implements RiskConductService{
 			GlobalIndexNumResultDO indexResultDO = riskConductMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "index_num");
 			GlobalIndexNumResultDO bureauRuleResultDO = riskConductMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "bureau_rule_score");
 			GlobalIndexNumResultDO visitResultDO = riskConductMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "visit_score");
+			GlobalIndexNumResultDO relevantResultDO = riskConductMapper.findGlobalIndexNumByYear(lastMonthTime, dateTime, "relevant_score");
 
 			conduct.setIndexNum(RiskCompute.normalizationCompute(indexResultDO.getMaxNum(), indexResultDO.getMinNum(), conduct.getIndexNum()));
 			conduct.setBureauRuleScore(RiskCompute.normalizationCompute(bureauRuleResultDO.getMaxNum(), bureauRuleResultDO.getMinNum(), conduct.getBureauRuleScore()));
 			conduct.setVisitScore(RiskCompute.normalizationCompute(visitResultDO.getMaxNum(), visitResultDO.getMinNum(), conduct.getVisitScore()));
+			conduct.setRelevantScore(RiskCompute.normalizationCompute(relevantResultDO.getMaxNum(), relevantResultDO.getMinNum(), conduct.getRelevantScore()));
 		}
 		return conduct;
 	}

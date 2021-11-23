@@ -496,7 +496,7 @@ public class CockpitController {
 				int num = (int)Math.ceil(total * radio);
 				e.setValue(num);
 //				e.setAlarmPoliceRate(Double.valueOf(df.format(((double)num/userNum)*100)));
-				e.setAlarmPoliceRate(Double.valueOf(df.format(3*100)));
+				e.setAlarmPoliceRate(Double.valueOf(df.format(0.03*100)));
 
 			}
 			return e;

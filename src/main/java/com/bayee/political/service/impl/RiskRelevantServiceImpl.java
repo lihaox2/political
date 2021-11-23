@@ -4,6 +4,7 @@ import com.bayee.political.algorithm.RiskCompute;
 import com.bayee.political.domain.RiskRelevant;
 import com.bayee.political.domain.RiskRelevantRecord;
 import com.bayee.political.domain.User;
+import com.bayee.political.json.ChartResult;
 import com.bayee.political.mapper.RiskRelevantMapper;
 import com.bayee.political.mapper.RiskRelevantRecordMapper;
 import com.bayee.political.pojo.GlobalIndexNumResultDO;
@@ -50,7 +51,7 @@ public class RiskRelevantServiceImpl implements RiskRelevantService {
             deductionScore += record.getDeductionScore();
         }
 
-        GlobalIndexNumResultDO resultDO = riskRelevantMapper.findGlobalIndexNum(date);
+        GlobalIndexNumResultDO resultDO = riskRelevantMapper.findGlobalIndexNum(date, "deduction_score", 2);
         riskRelevant.setIndexNum(RiskCompute.normalizationCompute(resultDO.getMaxNum(), resultDO.getMinNum(), deductionScore));
         riskRelevant.setDeductionScore(deductionScore);
         riskRelevant.setDeductionCount(deductionCount);
@@ -65,5 +66,21 @@ public class RiskRelevantServiceImpl implements RiskRelevantService {
         }
 
         return riskRelevant;
+    }
+
+    @Override
+    public RiskRelevant riskRelevantItem(String policeId, String dateTime, Integer timeType) {
+        RiskRelevant relevant = riskRelevantMapper.riskRelevantItem(policeId, dateTime, timeType);
+        if (timeType == 1) {
+            GlobalIndexNumResultDO indexResultDO = riskRelevantMapper.findGlobalIndexNum(dateTime+"-01", "index_num", 1);
+
+            relevant.setIndexNum(RiskCompute.normalizationCompute(indexResultDO.getMaxNum(), indexResultDO.getMinNum(), relevant.getIndexNum()));
+        }
+        return relevant;
+    }
+
+    @Override
+    public List<ChartResult> riskNearSixMonthChart(String policeId) {
+        return riskRelevantMapper.riskNearSixMonthChart(policeId);
     }
 }

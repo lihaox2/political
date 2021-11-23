@@ -137,10 +137,11 @@ public class ConductController {
         log.setDataOriginPoliceId(relevant.getPoliceId());
         log.setDataOriginBusinessDate(relevant.getBusinessDate());
         log.setCreationDate(new Date());
-        /*riskDataOperationLogService.insertOperationLog(log);*/;
+        riskDataOperationLogService.insertOperationLog(log);;
 
         policeRelevantService.updatePoliceRelevant(relevant);
 
+        totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getBusinessDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -170,8 +171,9 @@ public class ConductController {
         log.setDataOriginPoliceId(relevant.getPoliceId());
         log.setDataOriginBusinessDate(relevant.getBusinessDate());
         log.setCreationDate(new Date());
-        /*riskDataOperationLogService.insertOperationLog(log);*/;
+        riskDataOperationLogService.insertOperationLog(log);;
 
+        totalRiskDetailsService.conductRiskDetails(LocalDate.parse(saveParam.getBusinessDate()));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -184,15 +186,17 @@ public class ConductController {
         //添加数据操作记录
         RiskDataOperationLog log = new RiskDataOperationLog();
         log.setOperationType(RiskDataOperationType.DELETE.getValue());
-        log.setOperationPoliceId(loginUser == null ? null : loginUser.getPoliceId());
+        log.setOperationPoliceId(loginUser == null ? "" : loginUser.getPoliceId());
         log.setDataOriginType(110023);
         log.setDataOriginId(relevant.getId());
         log.setDataOriginPoliceId(relevant.getPoliceId());
         log.setDataOriginBusinessDate(relevant.getBusinessDate());
         log.setCreationDate(new Date());
-        /*riskDataOperationLogService.insertOperationLog(log);*/;
+        riskDataOperationLogService.insertOperationLog(log);;
 
         policeRelevantService.deleteById(id);
+
+        totalRiskDetailsService.conductRiskDetails(LocalDate.parse(DateUtils.formatDate(relevant.getBusinessDate(), "yyyy-MM-dd")));
         return new ResponseEntity<>(DataListReturn.ok(), HttpStatus.OK);
     }
 
@@ -415,9 +419,6 @@ public class ConductController {
                                               @RequestParam("deptId") Integer deptId,
                                               HttpServletRequest httpServletRequest) {
         User loginUser = UserSession.getCurrentLoginPolice(httpServletRequest);
-//        if (loginUser == null) {
-//            return new ResponseEntity(DataListReturn.error("请重新登录"), HttpStatus.OK);
-//        }
         if (deptId != null && deptId == 1 || (loginUser != null && loginUser.getIsActive() != null
                 && loginUser.getIsActive() == 999)) {
             deptId = null;

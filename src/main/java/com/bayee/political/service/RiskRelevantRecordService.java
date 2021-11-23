@@ -2,6 +2,7 @@ package com.bayee.political.service;
 
 import com.bayee.political.domain.RiskRelevantRecord;
 import com.bayee.political.json.RiskRelevantPageQueryParam;
+import com.bayee.political.pojo.RiskRelevantItemRecordResultDO;
 import com.bayee.political.pojo.RiskRelevantPageResultDO;
 
 import java.util.List;
@@ -50,5 +51,14 @@ public interface RiskRelevantRecordService {
      * @return
      */
     RiskRelevantRecord findById(Integer id);
+
+    /**
+     * 警员风险查询
+     * @param policeId
+     * @param date yyyy-MM
+     * @param timeType
+     * @return
+     */
+    RiskRelevantItemRecordResultDO riskRelevantItemRecord(String policeId, String date, Integer timeType);
 
 }

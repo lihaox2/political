@@ -174,4 +174,24 @@
       and date_format(business_date, '%Y-%m') = date_format(#{date}, '%Y-%m')
   </select>
 
+  <select id="riskRelevantItemRecord" resultType="com.bayee.political.pojo.RiskRelevantItemRecordResultDO">
+    select police_id,
+           SUM((case rt.p_code when 'AQ0000' then deduction_score else 0 end)) as potentialRisk,
+           SUM((case rt.p_code when 'QZ0000' then deduction_score else 0 end)) as politicalAction,
+           SUM((case rt.p_code when 'SX0000' then deduction_score else 0 end)) as ideologicalDynamicsNum,
+           SUM((case rt.p_code when 'ZD0000' then deduction_score else 0 end))as majorEventsNum
+    from (select
+            rr.police_id, SUM(rr.deduction_score) as deduction_score, rt.p_code
+          from risk_relevant_record rr, risk_relevant_type rt
+          where rr.type_code = rt.code and police_id = #{policeId}
+            <if test="timeType == 1">
+              and DATE_FORMAT(business_date, '%Y') = SUBSTR(#{date}, 1, 4)
+            </if>
+            <if test="timeType == 2">
+              and DATE_FORMAT(business_date, '%Y-%m')=#{date}
+            </if>
+          group by rt.p_code) rt
+    group by police_id
+  </select>
+
 </mapper>

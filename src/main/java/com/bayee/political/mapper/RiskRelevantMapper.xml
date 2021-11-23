@@ -122,9 +122,41 @@
 
   <select id="findGlobalIndexNum" resultType="com.bayee.political.pojo.GlobalIndexNumResultDO">
     SELECT
-      ifnull(MAX(deduction_score), 0) as maxNum, ifnull(min(deduction_score), 0) as minNum
+      ifnull(MAX(${column}), 0) as maxNum, ifnull(min(${column}), 0) as minNum
     FROM risk_relevant
-    where DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+    where 1 = 1
+    <if test="timeType == 1">
+      and DATE_FORMAT(creation_date, '%Y') = DATE_FORMAT(#{date}, '%Y')
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(creation_date, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+    </if>
+  </select>
+
+  <select id="riskRelevantItem" resultMap="BaseResultMap">
+    select
+        police_id, ifnull(sum(index_num), 0) as index_num
+    from risk_relevant where police_id = #{policeId}
+    <if test="timeType == 1">
+      and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
+    </if>
+    <if test="timeType == 2">
+      and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
+    </if>
+  </select>
+
+  <select id="riskNearSixMonthChart" resultType="com.bayee.political.json.ChartResult">
+    select IFNULL(b.value,0) as value,CONCAT(c.id,'月') as name
+    from(select DATE_FORMAT(CURDATE(), '%Y-%m') as `year_month`
+      union select DATE_FORMAT((CURDATE() - interval 1 month), '%Y-%m') as `year_month`
+      union select DATE_FORMAT((CURDATE() - interval 2 month), '%Y-%m') as `year_month`
+      union select DATE_FORMAT((CURDATE() - interval 3 month), '%Y-%m') as `year_month`
+      union select DATE_FORMAT((CURDATE() - interval 4 month), '%Y-%m') as `year_month`
+      union select DATE_FORMAT((CURDATE() - interval 5 month), '%Y-%m') as `year_month` ) a
+      left join(select SUM(index_num) as value,DATE_FORMAT(creation_date, '%Y-%m') as name from risk_relevant
+      where police_id = #{policeId} group by DATE_FORMAT(creation_date, '%Y-%m')) b on b.name=a.year_month
+      left join month c on c.num_name=RIGHT(a.year_month,2)
+    order by a.year_month
   </select>
 
 </mapper>

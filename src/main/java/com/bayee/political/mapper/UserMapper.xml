@@ -451,7 +451,7 @@ where 1=1
   <select id="userAllList" parameterType="com.bayee.political.domain.User" resultMap="userResult" >
 select a.*,b.name as department_name,c.position_name from user a
 left join department b on b.id=a.department_id
-left join police_position c on c.id=a.position_id where dd_user_id is not null
+left join police_position c on c.id=a.position_id
 order by id
   </select>
   <!-- 根据groupId查询用户数量 -->

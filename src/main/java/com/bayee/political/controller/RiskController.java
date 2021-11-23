@@ -3,17 +3,16 @@ package com.bayee.political.controller;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.bayee.political.algorithm.RiskCompute;
 import com.bayee.political.domain.*;
+import com.bayee.political.json.ChartResult;
 import com.bayee.political.json.RiskHealthIndexItemResult;
+import com.bayee.political.json.RiskRelevantItemResult;
 import com.bayee.political.pojo.GlobalIndexNumResultDO;
+import com.bayee.political.pojo.RiskRelevantItemRecordResultDO;
 import com.bayee.political.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,6 +49,12 @@ public class RiskController extends BaseController {
 	
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	RiskRelevantService riskRelevantService;
+
+	@Autowired
+	RiskRelevantRecordService riskRelevantRecordService;
 
 	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
 
@@ -376,6 +381,50 @@ public class RiskController extends BaseController {
 			dlr.setPageNext(0);
 		}
 		return new ResponseEntity<DataListPage>(dlr, HttpStatus.OK);
+	}
+
+	@GetMapping("/risk/relevant/item")
+	public ResponseEntity<?> riskRelevantItem(@RequestParam(value = "policeId", required = false) String policeId,
+											  @RequestParam(value = "dateTime", required = false) String dateTime,
+											  @RequestParam(value = "timeType", required = false) Integer timeType) {
+		if (timeType == null) {
+			timeType = 1;
+		}
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
+
+		RiskRelevant riskRelevant = riskRelevantService.riskRelevantItem(policeId, dateTime, timeType);
+		RiskRelevant thisMonth = riskRelevantService.riskRelevantItem(policeId, DateUtils.formatDate(new Date(), "yyyy-MM"), 2);
+		RiskRelevant lastMonth = riskRelevantService.riskRelevantItem(policeId, DateUtils.formatDate(calendar.getTime(), "yyyy-MM"), 2);
+		RiskRelevantItemRecordResultDO recordResultDO = riskRelevantRecordService.riskRelevantItemRecord(policeId, dateTime, timeType);
+
+		ChartResult thisMonthChart = new ChartResult();
+		thisMonthChart.setId(1);
+		thisMonthChart.setName("本月");
+		thisMonthChart.setValue(thisMonth.getIndexNum());
+
+		ChartResult lastMonthChart = new ChartResult();
+		lastMonthChart.setId(2);
+		lastMonthChart.setName("上月");
+		lastMonthChart.setValue(lastMonth.getIndexNum());
+
+		RiskRelevantItemResult result = new RiskRelevantItemResult();
+		result.setMajorEventsNum(0d);
+		result.setPoliticalAction(0d);
+		result.setIdeologicalDynamicsNum(0d);
+		result.setPotentialRisk(0d);
+		if (recordResultDO != null) {
+			result.setMajorEventsNum(recordResultDO.getMajorEventsNum());
+			result.setPoliticalAction(recordResultDO.getPoliticalAction());
+			result.setIdeologicalDynamicsNum(recordResultDO.getIdeologicalDynamicsNum());
+			result.setPotentialRisk(recordResultDO.getPotentialRisk());
+		}
+		result.setIndexNum(riskRelevant.getIndexNum());
+		result.setThisMonthChart(Arrays.asList(thisMonthChart, lastMonthChart));
+		result.setNearSixMonthChart(riskRelevantService.riskNearSixMonthChart(policeId));
+
+		return new ResponseEntity<>(DataListReturn.ok(result), HttpStatus.OK);
 	}
 
 	// 警员执法办案风险查询

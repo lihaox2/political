@@ -2,6 +2,7 @@ package com.bayee.political.mapper;
 
 import com.bayee.political.domain.RiskRelevantRecord;
 import com.bayee.political.json.RiskRelevantPageQueryParam;
+import com.bayee.political.pojo.RiskRelevantItemRecordResultDO;
 import com.bayee.political.pojo.RiskRelevantPageResultDO;
 import org.apache.ibatis.annotations.Param;
 
@@ -41,4 +42,15 @@ public interface RiskRelevantRecordMapper {
      * @return
      */
     List<RiskRelevantRecord> findPoliceRelevantRecord(@Param("policeId") String policeId, @Param("date") String date);
+
+    /**
+     * 警员风险查询
+     * @param policeId
+     * @param date yyyy-MM
+     * @param timeType
+     * @return
+     */
+    RiskRelevantItemRecordResultDO riskRelevantItemRecord(@Param("policeId") String policeId, @Param("date") String date,
+                                                          @Param("timeType") Integer timeType);
+
 }

@@ -3,6 +3,7 @@ package com.bayee.political.service.impl;
 import com.bayee.political.domain.RiskRelevantRecord;
 import com.bayee.political.json.RiskRelevantPageQueryParam;
 import com.bayee.political.mapper.RiskRelevantRecordMapper;
+import com.bayee.political.pojo.RiskRelevantItemRecordResultDO;
 import com.bayee.political.pojo.RiskRelevantPageResultDO;
 import com.bayee.political.service.RiskRelevantRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +57,10 @@ public class RiskRelevantRecordServiceImpl implements RiskRelevantRecordService 
     @Override
     public RiskRelevantRecord findById(Integer id) {
         return policeRelevantMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public RiskRelevantItemRecordResultDO riskRelevantItemRecord(String policeId, String date, Integer timeType) {
+        return policeRelevantMapper.riskRelevantItemRecord(policeId, date, timeType);
     }
 }

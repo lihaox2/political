@@ -551,7 +551,7 @@ public class CockpitController {
 		Integer upMonth=riskTrendsService.comparedWithLastMonthAlamTotal();
 		RiskTopAlamResult result = new RiskTopAlamResult();
 		result.setToMonth(toMonth);
-		result.setUpMonth(toMonth-upMonth);
+		result.setUpMonth(upMonth);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	

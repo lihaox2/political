@@ -86,7 +86,7 @@ public class TotalRiskDetailsServiceImpl implements TotalRiskDetailsService {
     }
 
     @Override
-//    @Async
+    @Async
     public void conductRiskDetails(LocalDate localDate) {
         String date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));

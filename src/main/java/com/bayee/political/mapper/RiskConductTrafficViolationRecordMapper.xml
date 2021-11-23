@@ -153,7 +153,7 @@
       count(1) as totalCount, max(deduction_score) as maxDeductionScore
     from risk_conduct_traffic_violation_record where police_id = #{policeId}
     <if test="timeType == 1">
-      and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+      and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
     </if>
     <if test="timeType == 2">
       and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}

@@ -144,7 +144,7 @@
   sum(law_enforcement_num) as law_enforcement_num, sum(test_num) as test_num from risk_case
   where police_id=#{policeId,jdbcType=VARCHAR}
   <if test="timeType == 1">
-    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+    and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
   </if>
   <if test="timeType == 2">
     and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
@@ -194,8 +194,7 @@ order by a.year_month
     SELECT
       ifnull(MAX(a.sumNum), 0) as maxNum, ifnull(MIN(a.sumNum), 0) as minNum
     FROM (SELECT SUM(${column}) AS sumNum FROM risk_case
-          WHERE DATE_FORMAT(creation_date, '%Y-%m')>=#{lastDateTime}
-            AND DATE_FORMAT(creation_date, '%Y-%m') &lt;= #{date}
+          WHERE DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{date}, 1, 4)
           GROUP BY police_id) a
   </select>
 

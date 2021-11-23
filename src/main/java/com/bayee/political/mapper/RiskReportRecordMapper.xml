@@ -355,7 +355,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
     select '行为风险' as name,(case when round(sum(conduct_num),2) >= 25 then 25 else round(sum(conduct_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
-        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+        and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
       </if>
       <if test="timeType == 2">
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
@@ -364,7 +364,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
     select '执法风险' as name,(case when round(sum(handling_case_num),2) >= 20 then 20 else round(sum(handling_case_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
-        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+        and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
       </if>
       <if test="timeType == 2">
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
@@ -373,7 +373,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
     select '接处警风险' as name,(case when round(sum(duty_num),2) >= 20 then 20 else round(sum(duty_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
-        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+        and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
       </if>
       <if test="timeType == 2">
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
@@ -382,7 +382,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
     select '训练风险' as name,(case when round(sum(train_num),2) >= 10 then 10 else round(sum(train_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
-        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+        and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
       </if>
       <if test="timeType == 2">
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
@@ -391,7 +391,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
     select '社交风险' as name,(case when round(sum(social_contact_num),2) >= 15 then 15 else round(sum(social_contact_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
-        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+        and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
       </if>
       <if test="timeType == 2">
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
@@ -400,7 +400,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
     select '评价风险' as name,(case when round(sum(amily_evaluation_num),2) >= 5 then 5 else round(sum(amily_evaluation_num),2) end) as value from risk_report_record
     where police_id=#{policeId}
       <if test="timeType == 1">
-        and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+        and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
       </if>
       <if test="timeType == 2">
         and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
@@ -426,7 +426,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
     sum(work_num) as work_num, sum(total_num) as total_num,creation_date
   from risk_report_record where 1=1 and police_id = #{policeId}
   <if test="timeType == 1">
-    and DATE_FORMAT(creation_date, '%Y-%m')&gt;=#{lastMonthTime} and DATE_FORMAT(creation_date, '%Y-%m')&lt;=#{dateTime}
+    and DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
   </if>
   <if test="timeType == 2">
     and DATE_FORMAT(creation_date, '%Y-%m')=#{dateTime}
@@ -762,7 +762,7 @@ GROUP BY DATE_FORMAT(creation_date, '%Y') order by DATE_FORMAT(creation_date, '%
         ifnull(MAX(a.sumNum), 0) as maxNum, ifnull(MIN(a.sumNum), 0) as minNum
     FROM (SELECT SUM(${column}) AS sumNum
         FROM risk_report_record
-        WHERE DATE_FORMAT(creation_date, '%Y-%m')>=#{lastDateTime} AND DATE_FORMAT(creation_date, '%Y-%m') &lt;= #{date}
+        WHERE DATE_FORMAT(creation_date, '%Y') = SUBSTR(#{date}, 1, 4)
         GROUP BY police_id) a
   </select>
 

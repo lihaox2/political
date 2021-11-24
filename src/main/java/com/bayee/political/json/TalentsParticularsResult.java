@@ -39,7 +39,7 @@ public class TalentsParticularsResult {
     /**
      * 学历（1、中专 2、大专 3、本科 4、研究生）
      */
-    private Integer degree;
+    private String degree;
 
     /**
      * 公安工作年限
@@ -210,11 +210,11 @@ public class TalentsParticularsResult {
         this.policeDeptName = policeDeptName;
     }
 
-    public Integer getDegree() {
+    public String getDegree() {
         return degree;
     }
 
-    public void setDegree(Integer degree) {
+    public void setDegree(String degree) {
         this.degree = degree;
     }
 

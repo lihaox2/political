@@ -87,7 +87,7 @@
         id,
       </if>
       <if test="name != null" >
-        name,
+        `name`,
       </if>
       <if test="policeId != null" >
         police_id,
@@ -120,7 +120,7 @@
         next_police_level_name,
       </if>
       <if test="type != null" >
-        type,
+        `type`,
       </if>
       <if test="lastTime != null" >
         last_time,
@@ -129,7 +129,7 @@
         now_time,
       </if>
       <if test="interval != null" >
-        interval,
+        `interval`,
       </if>
       <if test="resumeScore != null" >
         resume_score,
@@ -265,7 +265,7 @@
     update police_promotion_record_info
     <set >
       <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
       <if test="policeId != null" >
         police_id = #{policeId,jdbcType=VARCHAR},
@@ -298,7 +298,7 @@
         next_police_level_name = #{nextPoliceLevelName,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
-        type = #{type,jdbcType=INTEGER},
+        `type` = #{type,jdbcType=INTEGER},
       </if>
       <if test="lastTime != null" >
         last_time = #{lastTime,jdbcType=TIMESTAMP},
@@ -307,7 +307,7 @@
         now_time = #{nowTime,jdbcType=TIMESTAMP},
       </if>
       <if test="interval != null" >
-        interval = #{interval,jdbcType=INTEGER},
+        `interval` = #{interval,jdbcType=INTEGER},
       </if>
       <if test="resumeScore != null" >
         resume_score = #{resumeScore,jdbcType=DOUBLE},
@@ -353,7 +353,7 @@
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bayee.political.domain.PolicePromotionRecordInfo" >
     update police_promotion_record_info
-    set name = #{name,jdbcType=VARCHAR},
+    set `name` = #{name,jdbcType=VARCHAR},
       police_id = #{policeId,jdbcType=VARCHAR},
       head_image = #{headImage,jdbcType=VARCHAR},
       dep_id = #{depId,jdbcType=INTEGER},
@@ -364,10 +364,10 @@
       now_police_level_name = #{nowPoliceLevelName,jdbcType=VARCHAR},
       next_police_level_id = #{nextPoliceLevelId,jdbcType=INTEGER},
       next_police_level_name = #{nextPoliceLevelName,jdbcType=VARCHAR},
-      type = #{type,jdbcType=INTEGER},
+      `type` = #{type,jdbcType=INTEGER},
       last_time = #{lastTime,jdbcType=TIMESTAMP},
       now_time = #{nowTime,jdbcType=TIMESTAMP},
-      interval = #{interval,jdbcType=INTEGER},
+      `interval` = #{interval,jdbcType=INTEGER},
       resume_score = #{resumeScore,jdbcType=DOUBLE},
       hold_office_score = #{holdOfficeScore,jdbcType=DOUBLE},
       total_score = #{totalScore,jdbcType=DOUBLE},
@@ -385,7 +385,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bayee.political.domain.PolicePromotionRecordInfo" >
     update police_promotion_record_info
-    set name = #{name,jdbcType=VARCHAR},
+    set `name` = #{name,jdbcType=VARCHAR},
       police_id = #{policeId,jdbcType=VARCHAR},
       head_image = #{headImage,jdbcType=VARCHAR},
       dep_id = #{depId,jdbcType=INTEGER},
@@ -396,10 +396,10 @@
       now_police_level_name = #{nowPoliceLevelName,jdbcType=VARCHAR},
       next_police_level_id = #{nextPoliceLevelId,jdbcType=INTEGER},
       next_police_level_name = #{nextPoliceLevelName,jdbcType=VARCHAR},
-      type = #{type,jdbcType=INTEGER},
+      `type` = #{type,jdbcType=INTEGER},
       last_time = #{lastTime,jdbcType=TIMESTAMP},
       now_time = #{nowTime,jdbcType=TIMESTAMP},
-      interval = #{interval,jdbcType=INTEGER},
+      `interval` = #{interval,jdbcType=INTEGER},
       resume_score = #{resumeScore,jdbcType=DOUBLE},
       hold_office_score = #{holdOfficeScore,jdbcType=DOUBLE},
       total_score = #{totalScore,jdbcType=DOUBLE},
@@ -508,4 +508,15 @@
   <select id="SelectExport" resultMap="BaseResultMap">
     select * from police_promotion_record_info where type=#{type}
   </select>
+
+  <!--查询是否晋升的接口-->
+  <select id="selectPromotionList" resultType="com.bayee.political.domain.PolicePromotionRecordInfo">
+     select u.police_id as policeId,u.`name` as `name`,u.head_image as headImage,d.id as depId,d.`name` as depName,pp.id
+     as postId,pp.position_name as postName,p.id as nowPoliceLevelId,p.position_name nowPoliceLevelName,u.police_position_assign_date
+     as nowTime,p.p_id as nextPoliceLevelId from `user` u inner join department d on u.department_id=d.id inner join police_position pp
+     on pp.id=u.position_level inner join position p on p.id=u.police_position;
+  </select>
+
+  <!--查询本次晋升等级-->
+<!--  <select id=""-->
 </mapper>

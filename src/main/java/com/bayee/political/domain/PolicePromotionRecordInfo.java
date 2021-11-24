@@ -76,13 +76,13 @@ public class PolicePromotionRecordInfo {
     /**
      * 上一次晋升的时间
      */
-    @JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat( pattern="yyyy-MM")
     private Date lastTime;
 
     /**
      * 现在晋升时间
      */
-    @JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat( pattern="yyyy-MM")
     private Date nowTime;
 
     /**

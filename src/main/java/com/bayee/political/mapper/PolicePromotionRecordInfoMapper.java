@@ -33,4 +33,6 @@ public interface PolicePromotionRecordInfoMapper {
      * @return
      */
     List<PolicePromotionRecordInfo> SelectExport(@Param("type")Integer type);
+
+    List<PolicePromotionRecordInfo> selectPromotionList();
 }

@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import com.github.pagehelper.PageInterceptor;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.velocity.app.VelocityEngine;
@@ -67,6 +68,20 @@ public class AppConfiguration {
 		executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 		executor.initialize();
 		return executor;
+	}
+
+	@Bean
+	public PageInterceptor pageInterceptor() {
+		Properties properties = new Properties();
+		properties.setProperty("helperDialect", "mysql");
+		properties.setProperty("reasonable", "true");
+		properties.setProperty("supportMethodsArguments", "true");
+		properties.setProperty("params", "count=countSql");
+		properties.setProperty("autoRuntimeDialect", "true");
+
+		PageInterceptor pageInterceptor = new PageInterceptor();
+		pageInterceptor.setProperties(properties);
+		return pageInterceptor;
 	}
 
 	/*@Bean
@@ -289,6 +304,7 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(EvaluationObjectMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(EvaluationTopicMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PositionMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -317,6 +333,12 @@ public class AppConfiguration {
 				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		velocityEngine.setVelocityPropertiesMap(velocityPropertiesMap);
 		return velocityEngine.createVelocityEngine();
+	}
+
+	@Bean
+	public PositionMapper positionMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PositionMapper.class);
 	}
 
 	@Bean

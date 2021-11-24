@@ -93,14 +93,14 @@ public class GeneralPromotionResult {
      * 上一次晋升的时间
      */
     @ApiModelProperty("上一次晋升的时间")
-    @JsonFormat( pattern="yyyy-MM")
+    @JsonFormat( pattern="yyyy-MM-dd")
     private Date lastTime;
 
     /**
      * 现在晋升时间
      */
     @ApiModelProperty("当前晋升时间")
-    @JsonFormat( pattern="yyyy-MM")
+    @JsonFormat( pattern="yyyy-MM-dd")
     private Date nowTime;
 
     /**

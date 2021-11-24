@@ -67,4 +67,10 @@ public class PolicePromotionController {
     public  JsonResult<T> export(Integer type){
         return service.export(type);
     }
+
+    @GetMapping("add")
+    public JsonResult<T> add() throws ParseException {
+        return service.add();
+    }
+
 }

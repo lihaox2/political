@@ -28,4 +28,6 @@ public interface PolicePromotionService {
     JsonResult<List<LinkageResult>> depList();
 
     JsonResult<T> export(Integer type);
+
+    JsonResult<T> add() throws ParseException;
 }

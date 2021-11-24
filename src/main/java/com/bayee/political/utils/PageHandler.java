@@ -18,6 +18,7 @@ public class PageHandler<T> {
      */
     @ApiModelProperty(value = "当前页码数", example = "1")
     @Getter
+    @Setter
     private Integer pageIndex;
 
     /**
@@ -25,6 +26,7 @@ public class PageHandler<T> {
      */
     @ApiModelProperty(value = "显示数据条数", example = "10")
     @Getter
+    @Setter
     private Integer pageSize;
 
     /**

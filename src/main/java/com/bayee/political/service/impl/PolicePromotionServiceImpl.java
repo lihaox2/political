@@ -7,14 +7,12 @@ import com.bayee.political.json.GeneralPromotionResult;
 import com.bayee.political.json.LinkageResult;
 import com.bayee.political.json.PolicePromotionPageListParam;
 import com.bayee.political.json.QuantitativePromotionResult;
-import com.bayee.political.mapper.DepartmentMapper;
-import com.bayee.political.mapper.PolicePositionMapper;
-import com.bayee.political.mapper.PolicePromotionRecordInfoMapper;
-import com.bayee.political.mapper.PoliceRankInfoMapper;
+import com.bayee.political.mapper.*;
 import com.bayee.political.service.PolicePromotionService;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.JsonResult;
 import com.bayee.political.utils.PageHandler;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.ss.formula.functions.T;
@@ -28,10 +26,7 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author lichenghu
@@ -54,24 +49,53 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
     @Resource
     private PolicePositionMapper policePositionMapper;
 
+    @Resource
+    private PositionMapper positionMapper;
+
     private final String HOST = "http://8.136.146.186:9097/static";
 //	private final static String HOST = "http://41.190.128.250:8080/static";
 
     @Override
     public JsonResult<T> pageList(PolicePromotionPageListParam param) throws ParseException {
-        PageHelper.startPage(param.getPageIndex(),param.getPageSize());
         if(param.getType()==0){
             List<GeneralPromotionResult> list=new ArrayList<>();
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+//            String format = sdf.format(param.getParticularYear());
+//            Integer year = Integer.valueOf(format);
+//            year-=2;
+//            param.setParticularYear(sdf.parse(year.toString()));
+            System.out.println(param.getEndTime()+"======================="+param.getBeginTime());
             List<PolicePromotionRecordInfo> pageList = mapper.selectPageList(param);
-            System.out.println("=========================================="+pageList.size());
             if(pageList!=null && pageList.size()>0){
                 for(int i=0;i<pageList.size();i++){
                     GeneralPromotionResult result = new GeneralPromotionResult();
                     BeanUtils.copyProperties(pageList.get(i),result);
+                    System.out.println(pageList.get(i).getNowTime()+"================"+pageList.get(i).getLastTime());
+                    result.setLastTime(pageList.get(i).getLastTime());
+                    result.setNowTime(pageList.get(i).getNowTime());
+//                    result.setNowPoliceLevelId(result.getNextPoliceLevelId());
+//                    result.setNowPoliceLevelName(result.getNextPoliceLevelName());
+//                    Position position = positionMapper.selectByPrimaryKey(result.getNextPoliceLevelId());
+//                    Position position1 = positionMapper.selectByPrimaryKey(position.getpId());
+//                    result.setNextPoliceLevelId(position1.getId());
+//                    result.setNextPoliceLevelName(position1.getPositionName());
+//                    result.setInterval(24);
+//                    result.setLastTime(result.getNowTime());
+//                    result.setIsCivilServant(0);
+//                    result.setIsDisciplinaryAction(0);
                     list.add(result);
                 }
             }
+
             PageHandler<GeneralPromotionResult> pageHandler = new PageHandler<>(new PageInfo<>(list));
+            pageHandler.setTotalCount(list.size());
+            pageHandler.setPageIndex(param.getPageIndex());
+            pageHandler.setPageSize(param.getPageSize());
+            List<GeneralPromotionResult> list1=new ArrayList<>();
+            for(int i=((param.getPageIndex()-1)*param.getPageSize());i<list.size();i++){
+                list1.add(list.get(i));
+            }
+            pageHandler.setData(list1);
             JsonResult ok = JsonResult.ok(pageHandler);
             return ok;
         }else {
@@ -81,11 +105,33 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
                 for(int i=0;i<pageList.size();i++){
                     QuantitativePromotionResult result = new QuantitativePromotionResult();
                     BeanUtils.copyProperties(pageList.get(i),result);
-                    result.setRanking(i+1);
+//                    result.setRanking(i+1);
+//                    result.setNowPoliceLevelId(result.getNextPoliceLevelId());
+//                    result.setNowPoliceLevelName(result.getNextPoliceLevelName());
+//                    Position position = positionMapper.selectByPrimaryKey(result.getNextPoliceLevelId());
+//                    Position position1 = positionMapper.selectByPrimaryKey(position.getpId());
+//                    result.setNextPoliceLevelId(position1.getId());
+//                    result.setNextPoliceLevelName(position1.getPositionName());
+//                    result.setInterval(24);
+//                    result.setLastTime(result.getNowTime());
+//                    result.setResumeScore(0.00);
+//                    result.setHoldOfficeScore(0.00);
+//                    result.setTotalScore(0.00);
+//                    result.setIsCivilServant(0);
+//                    result.setIsDisciplinaryAction(0);
                     list.add(result);
                 }
             }
+
             PageHandler<QuantitativePromotionResult> pageHandler = new PageHandler<>(new PageInfo<>(list));
+            pageHandler.setTotalCount(list.size());
+            pageHandler.setPageIndex(param.getPageIndex());
+            pageHandler.setPageSize(param.getPageSize());
+            List<QuantitativePromotionResult> list1=new ArrayList<>();
+            for(int i=((param.getPageIndex()-1)*param.getPageSize());i<list.size();i++){
+                list1.add(list.get(i));
+            }
+            pageHandler.setData(list1);
             JsonResult ok = JsonResult.ok(pageHandler);
             return ok;
         }
@@ -94,11 +140,11 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
     @Override
     public JsonResult<List<LinkageResult>> rankList() {
         List<LinkageResult> list=new ArrayList<>();
-        List<PoliceRankInfo> infos = rankInfoMapper.selectList();
+        List<Position> infos = positionMapper.selectList();
         if(infos!=null && infos.size()>0){
             infos.stream().forEach(e->{
                 LinkageResult result = new LinkageResult();
-                result.setLabel(e.getName());
+                result.setLabel(e.getPositionName());
                 result.setValue(e.getId());
                 list.add(result);
             });
@@ -219,5 +265,39 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
         }
         JsonResult ok = JsonResult.ok(HOST + "/policeInfo/警员晋升花名册.xlsx");
         return ok;
+    }
+
+    @Override
+    public JsonResult<T> add() throws ParseException {
+        List<PolicePromotionRecordInfo> infos = mapper.selectPromotionList();
+        if(infos!=null && infos.size()>0){
+           for(PolicePromotionRecordInfo pp:infos){
+               Position position = positionMapper.selectByPrimaryKey(pp.getNextPoliceLevelId());
+               pp.setNextPoliceLevelName(position.getPositionName());
+               pp.setInterval(24);
+               SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+               SimpleDateFormat sdf1 = new SimpleDateFormat("MM-dd");
+               SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+               String format = sdf.format(pp.getNowTime());
+               Integer year = Integer.valueOf(format);
+               year-=2;
+               String format1 = sdf1.format(pp.getNowTime());
+               System.out.println("================"+year.toString()+"-"+format1);
+               Date parse = sdf2.parse(year.toString() + "-" + format1);
+               pp.setLastTime(parse);
+               System.out.println(format1+"==============="+sdf2.format(pp.getLastTime())+"================="+format);
+               System.out.println(format1+"==============="+pp.getLastTime()+"================="+format);
+               pp.setResumeScore(0.00);
+               pp.setHoldOfficeScore(0.00);
+               pp.setTotalScore(0.00);
+               pp.setIsCivilServant(0);
+               pp.setIsDisciplinaryAction(0);
+               pp.setType(1);
+               pp.setCreateTime(new Date());
+               pp.setModifyTime(new Date());
+               mapper.insertSelective(pp);
+           }
+        }
+        return JsonResult.ok();
     }
 }

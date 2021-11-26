@@ -1,6 +1,7 @@
 package com.bayee.political.mapper;
 
 import com.bayee.political.domain.Position;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface PositionMapper {
     int updateByPrimaryKey(Position record);
 
     List<Position> selectList();
+
+    Position findByPrimary ( @Param("id") Integer id);
 }

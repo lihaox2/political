@@ -3,6 +3,7 @@
  */
 package com.bayee.political.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class User {
 	private Integer gender;// 1: 男，2：女
 	private String idCard;// 身份证号
 	private String birthday;// 生日(yyyyMMdd)
+	private Integer positionLevel;
 	private Integer departmentId;// 部门id
 	private String departmentName;// 部门名
 	private Integer departmentType;// 部门类型
@@ -74,12 +76,16 @@ public class User {
 	private String politicalStatus;// 政治面貌
 	@JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
 	private Date joiningPartyTime;// 参加组织时间
+	private Integer policePosition;//职务序列任职id
+	@JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
+	private Date policePositionAssignDate;//职务序列任职时间
 	@Transient
 	private String residentId; // 居民身份证
 	private String policeRank;// 警衔
 	private String degree;// 学历
 	private String major;// 学位
 	private String title;// 身份或职务
+	private Date joinTheCompanyTime;//入职本单位时间
 	@JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
 	private Date creationDate;// 创建时间
 	@JsonFormat( pattern="yyyy-MM-dd HH:mm:ss")
@@ -89,12 +95,113 @@ public class User {
 
 	List<UserEvaluation> evaluations;
 
+	/**
+	 * 入党时间
+	 */
+	private Date joiningPartyDate;
+
+
+	/**
+	 * 授衔时间
+	 */
+	private Date policeRankAssignDate;
+
+
+	/**
+	 * 职务缩写
+	 */
+	private String titleShort;
+
+
+	/**
+	 * 警种id
+	 */
+	private Integer kindId;
+
+	/**
+	 * 婚姻状况（1、未婚 2、已婚、3.离婚，4.丧偶、5.再婚）
+	 */
+	private Integer marriageStatus;
+
+
+	public Integer getPositionLevel() {
+		return positionLevel;
+	}
+
+	public void setPositionLevel(Integer positionLevel) {
+		this.positionLevel = positionLevel;
+	}
+
+	public Date getJoiningPartyDate() {
+		return joiningPartyDate;
+	}
+
+	public void setJoiningPartyDate(Date joiningPartyDate) {
+		this.joiningPartyDate = joiningPartyDate;
+	}
+
+	public Date getPoliceRankAssignDate() {
+		return policeRankAssignDate;
+	}
+
+	public void setPoliceRankAssignDate(Date policeRankAssignDate) {
+		this.policeRankAssignDate = policeRankAssignDate;
+	}
+
+	public String getTitleShort() {
+		return titleShort;
+	}
+
+	public void setTitleShort(String titleShort) {
+		this.titleShort = titleShort;
+	}
+
+	public Integer getKindId() {
+		return kindId;
+	}
+
+	public void setKindId(Integer kindId) {
+		this.kindId = kindId;
+	}
+
+	public Integer getMarriageStatus() {
+		return marriageStatus;
+	}
+
+	public void setMarriageStatus(Integer marriageStatus) {
+		this.marriageStatus = marriageStatus;
+	}
+
 	public Integer getRiskHealthShowFlag() {
 		return riskHealthShowFlag;
 	}
 
 	public void setRiskHealthShowFlag(Integer riskHealthShowFlag) {
 		this.riskHealthShowFlag = riskHealthShowFlag;
+	}
+
+	public Integer getPolicePosition() {
+		return policePosition;
+	}
+
+	public void setPolicePosition(Integer policePosition) {
+		this.policePosition = policePosition;
+	}
+
+	public Date getPolicePositionAssignDate() {
+		return policePositionAssignDate;
+	}
+
+	public void setPolicePositionAssignDate(Date policePositionAssignDate) {
+		this.policePositionAssignDate = policePositionAssignDate;
+	}
+
+	public Date getJoinTheCompanyTime() {
+		return joinTheCompanyTime;
+	}
+
+	public void setJoinTheCompanyTime(Date joinTheCompanyTime) {
+		this.joinTheCompanyTime = joinTheCompanyTime;
 	}
 
 	/**

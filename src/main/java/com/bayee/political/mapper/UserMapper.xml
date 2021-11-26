@@ -5,57 +5,64 @@
 
 <mapper namespace="com.bayee.political.mapper.UserMapper">
 	<resultMap id="userResult" type="com.bayee.political.domain.User">
-	<id column="id" property="id" />
-    <result column="head_image" property="headImage" />
-    <result column="police_id" property="policeId" />
-    <result column="name" property="name" />
-    <result column="phone" property="phone" />
-    <result column="gender" property="gender" />
-    <result column="id_card" property="idCard" />
-    <result column="birthday" property="birthday" />
-    <result column="department_id" property="departmentId" />
-    <result column="department_name" property="departmentName" />
-    <result column="department_type" property="departmentType" />
-    <result column="position_id" property="positionId" />
-    <result column="position_name" property="positionName" />
-    <result column="is_unit_leader" property="isUnitLeader" />
-    <result column="is_cadre" property="isCadre" />
-    <result column="password" property="password" />
-    <result column="dd_user_id" property="ddUserId" />
-    <result column="police_type" property="policeType" />
-    <result column="station_post_id" property="stationPostId" />
-    <result column="participant_id" property="participantId" />
-    <result column="role_id" property="roleId" />
-    <result column="group_id" property="groupId" />
-    <result column="last_login_time" property="lastLoginTime" />
-    <result column="login_times" property="loginTimes" />
-    <result column="is_active" property="isActive" />
-    <result column="is_disable" property="isDisable" />
-    <result column="is_block" property="isBlock" />
-    <result column="alarm_department_ids" property="alarmDepartmentIds" />
-    <result column="scorer" property="scorer" />
-    <result column="police_label" property="policeLabel" />
-    <result column="police_height" property="policeHeight" />
-    <result column="police_weight" property="policeWeight" />
-    <result column="credit_points" property="creditPoints" />
-    <result column="nation" property="nation" />
-    <result column="native_place" property="nativePlace" />
-    <result column="birth_place" property="birthPlace" />
-    <result column="blood_type" property="bloodType" />
-    <result column="work_company" property="workCompany" />
-    <result column="working_start_date" property="workingStartDate" />
-    <result column="employment_date" property="employmentDate" />
-    <result column="political_status" property="politicalStatus" />
-    <result column="joining_party_time" property="joiningPartyTime" />
-    <result column="resident_id" property="residentId" />
-    <result column="police_rank" property="policeRank" />
-    <result column="degree" property="degree" />
-    <result column="major" property="major" />
-    <result column="title" property="title" />
-    <result column="train_scorer" property="trainScorer" />
-    <result column="creation_date" property="creationDate" />
-    <result column="update_date" property="updateDate" />
-        <result column="risk_health_show_flag" property="riskHealthShowFlag" />
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="head_image" property="headImage" jdbcType="VARCHAR" />
+        <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="position_level" property="positionLevel" jdbcType="INTEGER" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="gender" property="gender" jdbcType="INTEGER" />
+        <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+        <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+        <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+        <result column="department_type" property="departmentType" jdbcType="INTEGER" />
+        <result column="position_id" property="positionId" jdbcType="INTEGER" />
+        <result column="is_unit_leader" property="isUnitLeader" jdbcType="INTEGER" />
+        <result column="is_cadre" property="isCadre" jdbcType="INTEGER" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="dd_user_id" property="ddUserId" jdbcType="VARCHAR" />
+        <result column="police_type" property="policeType" jdbcType="INTEGER" />
+        <result column="station_post_id" property="stationPostId" jdbcType="INTEGER" />
+        <result column="participant_id" property="participantId" jdbcType="INTEGER" />
+        <result column="role_id" property="roleId" jdbcType="INTEGER" />
+        <result column="group_id" property="groupId" jdbcType="INTEGER" />
+        <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+        <result column="login_times" property="loginTimes" jdbcType="INTEGER" />
+        <result column="is_active" property="isActive" jdbcType="INTEGER" />
+        <result column="is_disable" property="isDisable" jdbcType="INTEGER" />
+        <result column="is_block" property="isBlock" jdbcType="INTEGER" />
+        <result column="police_height" property="policeHeight" jdbcType="DOUBLE" />
+        <result column="police_weight" property="policeWeight" jdbcType="DOUBLE" />
+        <result column="alarm_department_ids" property="alarmDepartmentIds" jdbcType="VARCHAR" />
+        <result column="police_label" property="policeLabel" jdbcType="VARCHAR" />
+        <result column="credit_points" property="creditPoints" jdbcType="DECIMAL" />
+        <result column="nation" property="nation" jdbcType="VARCHAR" />
+        <result column="native_place" property="nativePlace" jdbcType="VARCHAR" />
+        <result column="birth_place" property="birthPlace" jdbcType="VARCHAR" />
+        <result column="blood_type" property="bloodType" jdbcType="VARCHAR" />
+        <result column="work_company" property="workCompany" jdbcType="VARCHAR" />
+        <result column="working_start_date" property="workingStartDate" jdbcType="DATE" />
+        <result column="employment_date" property="employmentDate" jdbcType="DATE" />
+        <result column="political_status" property="politicalStatus" jdbcType="VARCHAR" />
+        <result column="joining_party_date" property="joiningPartyDate" jdbcType="DATE" />
+        <result column="joining_party_time" property="joiningPartyTime" jdbcType="DATE" />
+        <result column="resident_id" property="residentId" jdbcType="VARCHAR" />
+        <result column="police_position" property="policePosition" jdbcType="INTEGER" />
+        <result column="police_position_assign_date" property="policePositionAssignDate" jdbcType="DATE" />
+        <result column="police_rank" property="policeRank" jdbcType="INTEGER" />
+        <result column="police_rank_assign_date" property="policeRankAssignDate" jdbcType="DATE" />
+        <result column="degree" property="degree" jdbcType="VARCHAR" />
+        <result column="major" property="major" jdbcType="VARCHAR" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="title_short" property="titleShort" jdbcType="VARCHAR" />
+        <result column="scorer" property="scorer" jdbcType="INTEGER" />
+        <result column="train_scorer" property="trainScorer" jdbcType="INTEGER" />
+        <result column="kind_id" property="kindId" jdbcType="INTEGER" />
+        <result column="marriage_status" property="marriageStatus" jdbcType="INTEGER" />
+        <result column="risk_health_show_flag" property="riskHealthShowFlag" jdbcType="INTEGER" />
+        <result column="join_the_company_time" property="joinTheCompanyTime" jdbcType="TIMESTAMP" />
+        <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
 	</resultMap>
 
 	<select id="findByDDUserId" resultMap="userResult">
@@ -63,6 +70,10 @@
 		dd_user_id = #{ddUserId}
 	</select>
 
+    <!--根据警号查询用户信息-->
+   <select id="findByPoliceIds" resultMap="userResult">
+       select * from `user` where police_id=#{policeId}
+   </select>
 	<select id="findAll" resultMap="userResult">
 		select * from user where police_id not in (000001)
 	</select>
@@ -278,6 +289,186 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.bayee.political.domain.User" >
+        update user
+        <set >
+            <if test="headImage != null" >
+                head_image = #{headImage,jdbcType=VARCHAR},
+            </if>
+            <if test="policeId != null" >
+                police_id = #{policeId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="positionLevel != null" >
+                position_level = #{positionLevel,jdbcType=INTEGER},
+            </if>
+            <if test="phone != null" >
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null" >
+                gender = #{gender,jdbcType=INTEGER},
+            </if>
+            <if test="idCard != null" >
+                id_card = #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null" >
+                birthday = #{birthday,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentId != null" >
+                department_id = #{departmentId,jdbcType=INTEGER},
+            </if>
+            <if test="departmentType != null" >
+                department_type = #{departmentType,jdbcType=INTEGER},
+            </if>
+            <if test="positionId != null" >
+                position_id = #{positionId,jdbcType=INTEGER},
+            </if>
+            <if test="isUnitLeader != null" >
+                is_unit_leader = #{isUnitLeader,jdbcType=INTEGER},
+            </if>
+            <if test="isCadre != null" >
+                is_cadre = #{isCadre,jdbcType=INTEGER},
+            </if>
+            <if test="password != null" >
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="ddUserId != null" >
+                dd_user_id = #{ddUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="policeType != null" >
+                police_type = #{policeType,jdbcType=INTEGER},
+            </if>
+            <if test="stationPostId != null" >
+                station_post_id = #{stationPostId,jdbcType=INTEGER},
+            </if>
+            <if test="participantId != null" >
+                participant_id = #{participantId,jdbcType=INTEGER},
+            </if>
+            <if test="roleId != null" >
+                role_id = #{roleId,jdbcType=INTEGER},
+            </if>
+            <if test="groupId != null" >
+                group_id = #{groupId,jdbcType=INTEGER},
+            </if>
+            <if test="lastLoginTime != null" >
+                last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="loginTimes != null" >
+                login_times = #{loginTimes,jdbcType=INTEGER},
+            </if>
+            <if test="isActive != null" >
+                is_active = #{isActive,jdbcType=INTEGER},
+            </if>
+            <if test="isDisable != null" >
+                is_disable = #{isDisable,jdbcType=INTEGER},
+            </if>
+            <if test="isBlock != null" >
+                is_block = #{isBlock,jdbcType=INTEGER},
+            </if>
+            <if test="policeHeight != null" >
+                police_height = #{policeHeight,jdbcType=DOUBLE},
+            </if>
+            <if test="policeWeight != null" >
+                police_weight = #{policeWeight,jdbcType=DOUBLE},
+            </if>
+            <if test="alarmDepartmentIds != null" >
+                alarm_department_ids = #{alarmDepartmentIds,jdbcType=VARCHAR},
+            </if>
+            <if test="policeLabel != null" >
+                police_label = #{policeLabel,jdbcType=VARCHAR},
+            </if>
+            <if test="creditPoints != null" >
+                credit_points = #{creditPoints,jdbcType=DECIMAL},
+            </if>
+            <if test="nation != null" >
+                nation = #{nation,jdbcType=VARCHAR},
+            </if>
+            <if test="nativePlace != null" >
+                native_place = #{nativePlace,jdbcType=VARCHAR},
+            </if>
+            <if test="birthPlace != null" >
+                birth_place = #{birthPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="bloodType != null" >
+                blood_type = #{bloodType,jdbcType=VARCHAR},
+            </if>
+            <if test="workCompany != null" >
+                work_company = #{workCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="workingStartDate != null" >
+                working_start_date = #{workingStartDate,jdbcType=DATE},
+            </if>
+            <if test="employmentDate != null" >
+                employment_date = #{employmentDate,jdbcType=DATE},
+            </if>
+            <if test="politicalStatus != null" >
+                political_status = #{politicalStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="joiningPartyDate != null" >
+                joining_party_date = #{joiningPartyDate,jdbcType=DATE},
+            </if>
+            <if test="joiningPartyTime != null" >
+                joining_party_time = #{joiningPartyTime,jdbcType=DATE},
+            </if>
+            <if test="residentId != null" >
+                resident_id = #{residentId,jdbcType=VARCHAR},
+            </if>
+            <if test="policePosition != null" >
+                police_position = #{policePosition,jdbcType=INTEGER},
+            </if>
+            <if test="policePositionAssignDate != null" >
+                police_position_assign_date = #{policePositionAssignDate,jdbcType=DATE},
+            </if>
+            <if test="policeRank != null" >
+                police_rank = #{policeRank,jdbcType=INTEGER},
+            </if>
+            <if test="policeRankAssignDate != null" >
+                police_rank_assign_date = #{policeRankAssignDate,jdbcType=DATE},
+            </if>
+            <if test="degree != null" >
+                degree = #{degree,jdbcType=VARCHAR},
+            </if>
+            <if test="major != null" >
+                major = #{major,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null" >
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="titleShort != null" >
+                title_short = #{titleShort,jdbcType=VARCHAR},
+            </if>
+            <if test="scorer != null" >
+                scorer = #{scorer,jdbcType=INTEGER},
+            </if>
+            <if test="trainScorer != null" >
+                train_scorer = #{trainScorer,jdbcType=INTEGER},
+            </if>
+            <if test="kindId != null" >
+                kind_id = #{kindId,jdbcType=INTEGER},
+            </if>
+            <if test="marriageStatus != null" >
+                marriage_status = #{marriageStatus,jdbcType=INTEGER},
+            </if>
+            <if test="riskHealthShowFlag != null" >
+                risk_health_show_flag = #{riskHealthShowFlag,jdbcType=INTEGER},
+            </if>
+            <if test="joinTheCompanyTime != null" >
+                join_the_company_time = #{joinTheCompanyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creationDate != null" >
+                creation_date = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateDate != null" >
+                update_date = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
   <!-- 根据警员人员数据修改 -->
   <update id="userPoliceUpdate" parameterType="com.bayee.political.domain.User" >
     update user
@@ -489,9 +680,9 @@ where a.id=#{templateId}) a
 left join department b on b.parent_id=a.type) t order by a.id
   </select>
   
-  <select id="queryAccountById" resultMap="userResult">
-  	
-  </select>
+<!--  <select id="queryAccountById" resultMap="userResult">-->
+<!--  	-->
+<!--  </select>-->
   
   <select id="getUserByGroupId" resultMap="userResult">
   	select a.*,b.name as department_name,c.position_name from user a

@@ -2,6 +2,7 @@ package com.bayee.political.controller;
 
 import com.bayee.political.domain.PolicePromotionRecordInfo;
 import com.bayee.political.json.LinkageResult;
+import com.bayee.political.json.PolicePromotionInfoResult;
 import com.bayee.political.json.PolicePromotionPageListParam;
 import com.bayee.political.service.PolicePromotionService;
 import com.bayee.political.utils.JsonResult;
@@ -55,22 +56,35 @@ public class PolicePromotionController {
     }
 
     @ApiOperation("查询详情")
-    @ApiImplicitParam(name = "id",value = "id",dataType = "Integer",required = true)
+    @ApiImplicitParam(name = "policeId",value = "警号",dataType = "Integer",required = true)
     @GetMapping("info")
-    public JsonResult<PolicePromotionRecordInfo> info(Integer id){
-        return service.info(id);
+    public JsonResult<PolicePromotionInfoResult> info(String policeId){
+        return service.info(policeId);
     }
 
     @ApiOperation("导出的接口")
-    @GetMapping("/export")
+    @PostMapping("/export")
     @ApiImplicitParam(name = "type",value = "type(0一般晋升，1量化晋升)",dataType = "Integer",required = true)
-    public  JsonResult<T> export(Integer type){
-        return service.export(type);
+    public  JsonResult<T> export(@RequestBody PolicePromotionPageListParam param){
+        return service.export(param);
     }
 
     @GetMapping("add")
-    public JsonResult<T> add() throws ParseException {
-        return service.add();
+    public JsonResult<T> add(String policeId,Integer type) throws ParseException {
+        return service.add(policeId,type);
     }
+
+    @GetMapping("adds")
+    public JsonResult<T> adds() throws ParseException {
+        return service.adds();
+    }
+
+//    /**
+//     * 晋升详情
+//     */
+//    @GetMapping("info")
+//    public JsonResult<T> info(String policeId){
+//        return service.info(policeId);
+//    }
 
 }

@@ -2,6 +2,7 @@ package com.bayee.political.service;
 
 import com.bayee.political.domain.PolicePromotionRecordInfo;
 import com.bayee.political.json.LinkageResult;
+import com.bayee.political.json.PolicePromotionInfoResult;
 import com.bayee.political.json.PolicePromotionPageListParam;
 import com.bayee.political.utils.JsonResult;
 import org.apache.poi.ss.formula.functions.T;
@@ -21,13 +22,16 @@ public interface PolicePromotionService {
 
     JsonResult<List<LinkageResult>> rankList();
 
-    JsonResult<PolicePromotionRecordInfo> info(Integer id);
+    JsonResult<PolicePromotionInfoResult> info(String policeId);
 
     JsonResult<List<LinkageResult>>postList();
 
     JsonResult<List<LinkageResult>> depList();
 
-    JsonResult<T> export(Integer type);
+    JsonResult<T> export(PolicePromotionPageListParam param);
 
-    JsonResult<T> add() throws ParseException;
+    JsonResult<T> add(String policeId,Integer type) throws ParseException;
+
+    JsonResult<T> adds() throws ParseException;
+
 }

@@ -18,6 +18,11 @@ import java.util.Date;
 public class GeneralPromotionResult {
 
     /**
+     * 是否已经晋升
+     */
+    private Integer isPromotion;
+
+    /**
      * 表序列
      */
     @ApiModelProperty("表序列")

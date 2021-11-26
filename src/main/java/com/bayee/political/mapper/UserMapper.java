@@ -23,6 +23,8 @@ public interface UserMapper {
 	// 查询全部警员数据
 	List<User> userAllList();
 
+	int updateByPrimaryKeySelective(User record);
+
 	/**
 	 * 查询所有警员/仅名字和警号
 	 * 
@@ -60,6 +62,13 @@ public interface UserMapper {
 	 * @return
 	 */
 	User findByPoliceId(@Param("policeId") String policeId);
+
+	/**
+	 * 根据警员编号查询警员
+	 * @param policeId
+	 * @return
+	 */
+	User findByPoliceIds(@Param("policeId") String policeId);
 
 	// 人员列表查询
 	List<User> userList(@Param("departmentId") Integer departmentId, @Param("positionId") Integer positionId,

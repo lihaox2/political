@@ -505,8 +505,7 @@
     order by total_score desc
   </select>
   <!--警员导出的接口-->
-  <select id="SelectExport" resultMap="BaseResultMap">
-    select * from police_promotion_record_info where type=#{type}
+  <select id="SelectExport" resultMap="BaseResultMap">select * from police_promotion_record_info where  DATE_FORMAT(now_time,'%Y')=#{param.particularYear}  and type=#{param.type};
   </select>
 
   <!--查询是否晋升的接口-->
@@ -517,6 +516,69 @@
      on pp.id=u.position_level inner join position p on p.id=u.police_position;
   </select>
 
-  <!--查询本次晋升等级-->
-<!--  <select id=""-->
+
+  <!--查询是否晋升的接口-->
+  <select id="selectPromotionInfos" resultType="com.bayee.political.domain.PolicePromotionRecordInfo">
+     select u.police_id as policeId,u.`name` as `name`,u.head_image as headImage,d.id as depId,d.`name` as depName,pp.id
+     as postId,pp.position_name as postName,p.id as nowPoliceLevelId,p.position_name nowPoliceLevelName,u.police_position_assign_date
+     as nowTime,p.p_id as nextPoliceLevelId from `user` u inner join department d on u.department_id=d.id inner join police_position pp
+     on pp.id=u.position_level inner join position p on p.id=u.police_position where u.police_id=#{policeId};
+  </select>
+
+  <!--查询警员参加工作时间-->
+    <select id="selectUserWorkingHours" resultType="com.bayee.political.json.UserWorkingHoursResult">
+		 select police_id as policeId,working_start_date as workingStartDate ,position_id as positionId from `user` where police_id=#{policeId};
+    </select>
+
+  <!--查询警员的所有纪律处分-->
+  <select id="selectPoliceDisciplinaryActions" resultType="com.bayee.political.json.PolicePromotionsResult">
+		 select DATE_FORMAT(punish_time,'%Y') as punishTime,sum(promotion_influence_period) as `sum` from disciplinary_record_info  where police_id=#{policeId} group by DATE_FORMAT(punish_time,'%Y');
+  </select>
+  
+  <!--查询是否为公务员-->
+  <select id="selectIsCivilServant" resultType="com.bayee.political.domain.RiskHonour">
+		 select * from risk_honour where police_id =#{policeId} and honour_type_code='H00006' and DATE_FORMAT(business_time,'%Y') in(#{list})
+  </select>
+  
+  <!--查询是否被处分-->
+  <select id="selectDisciplinaryActions" resultType="com.bayee.political.domain.DisciplinaryRecordInfo">
+		 select * from  disciplinary_record_info where police_id=#{policeId} and DATE_FORMAT(punish_time,'%Y') in(#{list})
+  </select>
+
+  <!--查询要晋升的警员-->
+  <select id="selectListPage" resultType="com.bayee.political.json.PolicePromotionRecordResult">
+    select sum(dr.promotion_influence_period) as sum,ppr.id as id,ppr.`name` as `name`,ppr.police_id as policeId,ppr.head_image as headImage
+    ,ppr.dep_id as depId,ppr.dep_name as depName, ppr.post_id as postId,ppr.post_name as postName,ppr.now_police_level_id as nowPoliceLevelId
+    ,ppr.now_police_level_name as nowPoliceLevelName,ppr.next_police_level_id as nextPoliceLevelId,ppr.next_police_level_name as nextPoliceLevelName
+    ,ppr.type as `type`, ppr.last_time as lastTime,	ppr.now_time as nowTime,ppr.`interval` as `interval`,ppr.resume_score as resumeScore
+    ,ppr.hold_office_score as holdOfficeScore,ppr.total_score as totalScore,ppr.is_civil_servant as isCivilServant,ppr.is_disciplinary_action as isDisciplinaryAction
+    from police_promotion_record_info ppr
+    left join disciplinary_record_info dr on ppr.police_id=dr.police_id where
+    DATE_FORMAT(now_time,'%Y') &lt;&gt; #{year} GROUP BY ppr.police_id order by now_time desc
+
+  </select>
+
+  <!--警员晋升详情-->
+  <select id="selectPolicePromotionInfo" resultType="com.bayee.political.json.PolicePromotionBasicUserInfoResult">
+		 select u.id as id,u.head_image as headImage, u.police_id as policeId,u.`name` as `name`,
+		 u.position_level as positionLevel,pp.position_name as positionName,u.gender as gender,
+		 u.native_place as nativePlace,u.nation as nation,u.political_status as politicalStatus,
+		 u.working_start_date as workingStartDate,u.employment_date as employmentDate,u.department_id as depId,
+		 d.`name` as depName,u.police_position as policePosition,p.position_name as positionName,
+		 u.joining_party_time as joiningPartyTime,u.kind_id as kindId,pk.police_king_name as policeKingName,
+		 u.police_position_assign_date as policePositionAssignDate,u.station_post_id  as stationPostId,
+		 u.marriage_status as marriageStatus,psp.post_name as postName
+		 from `user` u inner join department d on u.department_id=d.id inner join police_position pp
+     on pp.id=u.position_level inner join position p on p.id=u.police_position left join police_kind pk
+		 on pk.id=u.kind_id left join police_station_post psp on  psp.id=u.station_post_id where u.police_id=#{policeId};
+  </select>
+
+  <select id="findByis" resultMap="BaseResultMap">
+	select * from police_promotion_record_info where police_id=#{policeId} and DATE_FORMAT(now_time,'%Y')=#{nowTime};
+  </select>
+
+  <!--查询历任职级信息-->
+  <select id="selectSuccessivePosts" resultType="com.bayee.political.json.PolicePromotionSuccessivePostsResult">
+		 select dep_id as depId,dep_name as depName,now_time as nowTime,now_police_level_name as nowPoliceLevelName from police_promotion_record_info where police_id=#{policeId} group by now_time;
+  </select>
 </mapper>

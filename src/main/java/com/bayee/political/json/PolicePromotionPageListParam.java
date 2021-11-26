@@ -52,12 +52,25 @@ public class PolicePromotionPageListParam {
 //    @JsonFormat( pattern="yyyy-MM-dd")
     private String endTime;
 
+    public Date getParticularYear() {
+        return particularYear;
+    }
+
+    public void setParticularYear(Date particularYear) {
+        this.particularYear = particularYear;
+    }
+    public void setParticularYear(Date particularYear,Integer quarter) {
+        setQuarter(quarter,particularYear);
+        this.particularYear = particularYear;
+    }
+
     public Integer getQuarter() {
         return quarter;
     }
 
     public void setQuarter(Integer quarter) {
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy");
+
         if(quarter==1){
             String beginTime=sdf1.format(getParticularYear())+"-01-01";
             String endTime=sdf1.format(getParticularYear())+"-03-31";
@@ -82,4 +95,32 @@ public class PolicePromotionPageListParam {
         }
         this.quarter = quarter;
     }
+
+    public void setQuarter(Integer quarter,Date year) {
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy");
+        if(quarter==1){
+            String beginTime=sdf1.format(year)+"-01-01";
+            String endTime=sdf1.format(year)+"-03-31";
+            setBeginTime(beginTime);
+            setEndTime(endTime);
+        }
+        if(quarter==2){
+            String beginTime=sdf1.format(year)+"-04-01";
+            String endTime=sdf1.format(year)+"-06-31";
+            setBeginTime(beginTime);
+            setEndTime(endTime);
+        } if(quarter==3){
+            String beginTime=sdf1.format(year)+"-07-01";
+            String endTime=sdf1.format(year)+"-09-31";
+            setBeginTime(beginTime);
+            setEndTime(endTime);
+        } if(quarter==4){
+            String beginTime=sdf1.format(year)+"-10-01";
+            String endTime=sdf1.format(year)+"-12-31";
+            setBeginTime(beginTime);
+            setEndTime(endTime);
+        }
+        this.quarter = quarter;
+    }
+
 }

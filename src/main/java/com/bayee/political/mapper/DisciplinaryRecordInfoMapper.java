@@ -5,6 +5,8 @@ import com.bayee.political.json.DAListPageParam;
 import com.bayee.political.json.DisciplinaryActionInfoResult;
 import org.apache.ibatis.annotations.Param;
 
+import javax.xml.crypto.Data;
+import java.util.Date;
 import java.util.List;
 
 public interface DisciplinaryRecordInfoMapper {
@@ -33,4 +35,9 @@ public interface DisciplinaryRecordInfoMapper {
      * 根据id 查询分页详情
      */
     DisciplinaryActionInfoResult info(@Param("id")Integer id);
+
+    /**
+     * 根据警号和年份查询纪律处分记录
+     */
+    List<DisciplinaryRecordInfo> selectPoliceId(@Param("policeId")String policeId, @Param("year")Date year);
 }

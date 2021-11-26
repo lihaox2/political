@@ -15,6 +15,7 @@ import org.apache.velocity.exception.VelocityException;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -305,6 +307,7 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(EvaluationTopicMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(PositionMapper.class);
+//		sqlSessionFactory.getObject().getConfiguration().addMapper(JobUpdateRecordInfoMapper.class);
 		return sqlSessionFactory.getObject();
 	}
 
@@ -334,6 +337,12 @@ public class AppConfiguration {
 		velocityEngine.setVelocityPropertiesMap(velocityPropertiesMap);
 		return velocityEngine.createVelocityEngine();
 	}
+
+//	@Bean
+//	public JobUpdateRecordInfoMapper jobUpdateRecordInfoMapper() throws Exception {
+//		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+//		return sessionTemplate.getMapper(JobUpdateRecordInfoMapper.class);
+//	}
 
 	@Bean
 	public PositionMapper positionMapper() throws Exception {

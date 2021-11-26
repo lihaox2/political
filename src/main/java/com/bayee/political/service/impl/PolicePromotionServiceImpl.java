@@ -145,7 +145,9 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
             pageHandler.setPageIndex(param.getPageIndex());
             pageHandler.setPageSize(param.getPageSize());
             List<QuantitativePromotionResult> list1=new ArrayList<>();
-            for(int i=((param.getPageIndex()-1)*param.getPageSize());i<param.getPageSize();i++){
+            System.out.println("==============="+(param.getPageIndex()-1)*param.getPageSize());
+            System.out.println("==============="+list.size());
+            for(int i=((param.getPageIndex()-1)*param.getPageSize());i<param.getPageIndex()*param.getPageSize();i++){
                 System.out.println("==============="+(param.getPageIndex()-1)*param.getPageSize());
                 System.out.println("==============="+list.size());
                 if(i<list.size()){
@@ -238,7 +240,7 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
             pageHandler.setPageIndex(param.getPageIndex());
             pageHandler.setPageSize(param.getPageSize());
             List<GeneralPromotionResult> list1=new ArrayList<>();
-            for(int i=((param.getPageIndex()-1)*param.getPageSize());i<param.getPageSize();i++){
+            for(int i=((param.getPageIndex()-1)*param.getPageSize());i<param.getPageIndex()*param.getPageSize();i++){
                 if(i<list.size()){
                     list1.add(list.get(i));
                 }

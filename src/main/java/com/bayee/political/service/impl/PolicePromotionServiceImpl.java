@@ -146,7 +146,10 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
             pageHandler.setPageSize(param.getPageSize());
             List<QuantitativePromotionResult> list1=new ArrayList<>();
             for(int i=((param.getPageIndex()-1)*param.getPageSize());i<param.getPageSize();i++){
+                System.out.println("==============="+(param.getPageIndex()-1)*param.getPageSize());
+                System.out.println("==============="+list.size());
                 if(i<list.size()){
+                    System.out.println("================"+list.get(i).getName());
                     QuantitativePromotionResult result = list.get(i);
                     result.setRanking(i+1);
                     list1.add(result);
@@ -315,9 +318,11 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
 
     @Override
     public JsonResult<T> export(PolicePromotionPageListParam param) {
-        List<PolicePromotionRecordInfo> infos = mapper.SelectExports(param.getParticularYear(),param.getType());
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy");
+        String year = sdf1.format(param.getParticularYear());
+        List<PolicePromotionRecordInfo> infos = mapper.SelectExports(year,param.getType());
         System.out.println("==========="+param.getType());
-        System.out.println("======================"+param.getParticularYear());
+        System.out.println("======================"+year);
         List<Map<String,Object>> list=new ArrayList<>();
         System.out.println("================"+infos.size());
         if(infos!=null && infos.size()>0){
@@ -346,12 +351,12 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
             });
 //            list.remove(0);
             try {
-//                File file = new File("/mnt/qiantang/policeInfo/警员晋升花名册.xlsx");
-                File file = new File("D:\\警员晋升花名册.xlsx");
+                File file = new File("/mnt/qiantang/policeInfo/警员晋升花名册.xlsx");
+//                File file = new File("D:\\警员晋升花名册.xlsx");
                 file.delete();
                 //通过工具类创建writer
-//                ExcelWriter writer = ExcelUtil.getWriter("/mnt/qiantang/policeInfo/警员晋升花名册.xlsx");
-                ExcelWriter writer = ExcelUtil.getWriter("D:\\警员晋升花名册.xlsx");
+                ExcelWriter writer = ExcelUtil.getWriter("/mnt/qiantang/policeInfo/警员晋升花名册.xlsx");
+//                ExcelWriter writer = ExcelUtil.getWriter("D:\\警员晋升花名册.xlsx");
                 //跳过当前行，既第一行，非必须，在此演示用
                 writer.passCurrentRow();
                 writer.addHeaderAlias("id","序列");

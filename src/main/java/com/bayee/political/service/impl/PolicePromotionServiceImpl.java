@@ -146,9 +146,11 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
             pageHandler.setPageSize(param.getPageSize());
             List<QuantitativePromotionResult> list1=new ArrayList<>();
             for(int i=((param.getPageIndex()-1)*param.getPageSize());i<param.getPageSize();i++){
-                QuantitativePromotionResult result = list.get(i);
-                result.setRanking(i+1);
-                list1.add(result);
+                if(i<list.size()){
+                    QuantitativePromotionResult result = list.get(i);
+                    result.setRanking(i+1);
+                    list1.add(result);
+                }
             }
             pageHandler.setData(list1);
             JsonResult ok = JsonResult.ok(pageHandler);
@@ -234,7 +236,9 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
             pageHandler.setPageSize(param.getPageSize());
             List<GeneralPromotionResult> list1=new ArrayList<>();
             for(int i=((param.getPageIndex()-1)*param.getPageSize());i<param.getPageSize();i++){
-                list1.add(list.get(i));
+                if(i<list.size()){
+                    list1.add(list.get(i));
+                }
             }
             pageHandler.setData(list1);
             JsonResult ok = JsonResult.ok(pageHandler);

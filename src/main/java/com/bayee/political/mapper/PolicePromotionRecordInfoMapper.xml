@@ -505,7 +505,8 @@
     order by total_score desc
   </select>
   <!--警员导出的接口-->
-  <select id="SelectExport" resultMap="BaseResultMap">select * from police_promotion_record_info where  DATE_FORMAT(now_time,'%Y')=#{param.particularYear}  and type=#{param.type};
+  <select id="SelectExport" resultMap="BaseResultMap">
+    select * from police_promotion_record_info where  DATE_FORMAT(now_time,'%Y')=#{param.particularYear}  and type=#{param.type};
   </select>
 
   <!--查询是否晋升的接口-->

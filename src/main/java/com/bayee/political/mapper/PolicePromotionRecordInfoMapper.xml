@@ -35,9 +35,9 @@
     <result column="remarks" property="remarks" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, `name`, police_id, head_image, dep_id, dep_name, post_id, post_name, now_police_level_id,
-    now_police_level_name, next_police_level_id, next_police_level_name, `type`, last_time,
-    now_time, `interval`, resume_score, hold_office_score, total_score, is_civil_servant,
+    id, name, police_id, head_image, dep_id, dep_name, post_id, post_name, now_police_level_id,
+    now_police_level_name, next_police_level_id, next_police_level_name, type, last_time,
+    now_time, interval, resume_score, hold_office_score, total_score, is_civil_servant,
     is_disciplinary_action, sort, create_time, modify_time, create_user, create_user_id, 
     modify_user, modify_user_id
   </sql>
@@ -506,7 +506,12 @@
   </select>
   <!--警员导出的接口-->
   <select id="SelectExport" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List" /> from police_promotion_record_info where  DATE_FORMAT(now_time,'%Y')=#{year}  and `type`=#{type};
+    select * from police_promotion_record_info where type=#{type}
+  </select>
+
+
+  <select id="SelectExports" resultMap="BaseResultMap">
+    select * from police_promotion_record_info where  DATE_FORMAT(now_time,'%Y')=#{year}  and `type`=#{type};
   </select>
 
   <!--查询是否晋升的接口-->

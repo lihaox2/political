@@ -315,7 +315,7 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
 
     @Override
     public JsonResult<T> export(PolicePromotionPageListParam param) {
-        List<PolicePromotionRecordInfo> infos = mapper.SelectExport(param.getParticularYear(),param.getType());
+        List<PolicePromotionRecordInfo> infos = mapper.SelectExports(param.getParticularYear(),param.getType());
         System.out.println("==========="+param.getType());
         System.out.println("======================"+param.getParticularYear());
         List<Map<String,Object>> list=new ArrayList<>();

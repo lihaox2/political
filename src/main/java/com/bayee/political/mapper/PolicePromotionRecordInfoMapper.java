@@ -32,9 +32,17 @@ public interface PolicePromotionRecordInfoMapper {
 
     /**
      * 导出警员晋升信息
+     * @param type
      * @return
      */
-    List<PolicePromotionRecordInfo> SelectExport(@Param("year") Date year,@Param("type") Integer type);
+    List<PolicePromotionRecordInfo> SelectExport(@Param("type")Integer type);
+
+
+    /**
+     * 导出警员晋升信息
+     * @return
+     */
+    List<PolicePromotionRecordInfo> SelectExports(@Param("year") Date year,@Param("type") Integer type);
 
     /**
      * 警员晋升

@@ -315,7 +315,9 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
 
     @Override
     public JsonResult<T> export(PolicePromotionPageListParam param) {
-        List<PolicePromotionRecordInfo> infos = mapper.SelectExport(param);
+        List<PolicePromotionRecordInfo> infos = mapper.SelectExport(param.getParticularYear(),param.getType());
+        System.out.println("==========="+param.getType());
+        System.out.println("======================"+param.getParticularYear());
         List<Map<String,Object>> list=new ArrayList<>();
         System.out.println("================"+infos.size());
         if(infos!=null && infos.size()>0){
@@ -344,10 +346,12 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
             });
 //            list.remove(0);
             try {
-                File file = new File("/mnt/qiantang/policeInfo/警员晋升花名册.xlsx");
+//                File file = new File("/mnt/qiantang/policeInfo/警员晋升花名册.xlsx");
+                File file = new File("D:\\警员晋升花名册.xlsx");
                 file.delete();
                 //通过工具类创建writer
-                ExcelWriter writer = ExcelUtil.getWriter("/mnt/qiantang/policeInfo/警员晋升花名册.xlsx");
+//                ExcelWriter writer = ExcelUtil.getWriter("/mnt/qiantang/policeInfo/警员晋升花名册.xlsx");
+                ExcelWriter writer = ExcelUtil.getWriter("D:\\警员晋升花名册.xlsx");
                 //跳过当前行，既第一行，非必须，在此演示用
                 writer.passCurrentRow();
                 writer.addHeaderAlias("id","序列");

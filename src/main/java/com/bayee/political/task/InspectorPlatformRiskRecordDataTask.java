@@ -5,6 +5,7 @@ import com.bayee.political.service.*;
 import com.bayee.political.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,6 +54,7 @@ public class InspectorPlatformRiskRecordDataTask {
      * 局规记分
      */
     @GetMapping("/inspector/conduct/record")
+//    @Scheduled(cron = "0 0 1 * * ?")
     public void riskConductBureauRecord() {
         List<ConductBureauRecordViews> recordViewList = conductBureauRecordViewsService.findAll();
 //        System.out.println("\nrecordViewList：" + recordViewList.size());
@@ -94,7 +96,8 @@ public class InspectorPlatformRiskRecordDataTask {
                 bureauRuleRecord.setDataOriginFlag(1);
                 bureauRuleRecord.setAppealState(0);
                 bureauRuleRecord.setIsEffective(1);
-                bureauRuleRecord.setScoringLevel(bureauRecord.getMarkType());
+                bureauRuleRecord.setScoringLevel(bureauRecord.getMarkType() == null ? 1 :
+                        bureauRecord.getMarkType() == 0 ? 1 : bureauRecord.getMarkType() == 1 ? 2 : 1);
                 bureauRuleRecord.setScoringDept(department.getId());
                 bureauRuleRecord.setMeasures(bureauRecord.getCqcs());
                 bureauRuleRecord.setPoliceId(bureauRecord.getPoliceNo());

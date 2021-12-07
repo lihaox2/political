@@ -555,6 +555,12 @@
 		  <!--在引用时请在maven中央仓库搜索最新版本号，如果不存在则代表尚未发布,作者正在努力开发中-->
 		  <version>2.0.5</version>
 	  </dependency>
+
+	  <!--警种平台的依赖-->
+<!--	  <dependency>-->
+<!--		  <groupId>com.jingzong</groupId>-->
+<!--		  <artifactId>lib</artifactId>-->
+<!--	  </dependency>-->
   </dependencies>
   <build>
     <finalName>ROOT</finalName>

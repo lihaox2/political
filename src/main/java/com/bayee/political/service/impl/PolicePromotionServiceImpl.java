@@ -145,13 +145,8 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
             pageHandler.setPageIndex(param.getPageIndex());
             pageHandler.setPageSize(param.getPageSize());
             List<QuantitativePromotionResult> list1=new ArrayList<>();
-            System.out.println("==============="+(param.getPageIndex()-1)*param.getPageSize());
-            System.out.println("==============="+list.size());
             for(int i=((param.getPageIndex()-1)*param.getPageSize());i<param.getPageIndex()*param.getPageSize();i++){
-                System.out.println("==============="+(param.getPageIndex()-1)*param.getPageSize());
-                System.out.println("==============="+list.size());
                 if(i<list.size()){
-                    System.out.println("================"+list.get(i).getName());
                     QuantitativePromotionResult result = list.get(i);
                     result.setRanking(i+1);
                     list1.add(result);

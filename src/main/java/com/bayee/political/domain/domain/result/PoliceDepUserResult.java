@@ -1,4 +1,4 @@
-package com.bayee.police_comprehensive.domain.result;
+package com.bayee.political.domain.domain.result;
 
 import lombok.Data;
 

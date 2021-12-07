@@ -1,7 +1,7 @@
-package com.bayee.police_comprehensive.service;
+package com.bayee.political.domain.service;
 
-import com.bayee.police_comprehensive.domain.param.PoliceDepartmentParam;
-import com.bayee.police_comprehensive.domain.result.PoliceDepartmentResult;
+import com.bayee.political.domain.domain.param.PoliceDepartmentParam;
+import com.bayee.political.domain.domain.result.PoliceDepartmentResult;
 
 /**
  * @author lichenghu

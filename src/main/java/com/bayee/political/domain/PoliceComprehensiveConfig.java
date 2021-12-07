@@ -1,4 +1,4 @@
-package com.bayee.police_comprehensive.config;
+package com.bayee.political.domain;
 
 /**
  * @author lichenghu

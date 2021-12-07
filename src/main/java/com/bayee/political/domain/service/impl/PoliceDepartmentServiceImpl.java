@@ -1,8 +1,8 @@
-package com.bayee.police_comprehensive.service.impl;
+package com.bayee.political.domain.service.impl;
 
-import com.bayee.police_comprehensive.domain.param.PoliceDepartmentParam;
-import com.bayee.police_comprehensive.domain.result.PoliceDepartmentResult;
-import com.bayee.police_comprehensive.service.PoliceDepartmentService;
+import com.bayee.political.domain.domain.param.PoliceDepartmentParam;
+import com.bayee.political.domain.domain.result.PoliceDepartmentResult;
+import com.bayee.political.domain.service.PoliceDepartmentService;
 import org.springframework.stereotype.Service;
 
 /**

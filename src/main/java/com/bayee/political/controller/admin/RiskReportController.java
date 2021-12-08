@@ -8,6 +8,7 @@ import com.bayee.political.pojo.dto.*;
 import com.bayee.political.service.*;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
+import com.bayee.political.utils.HttpIPUtil;
 import com.itextpdf.text.pdf.BaseFont;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -80,7 +81,7 @@ public class RiskReportController {
     SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM");
     static Map<String, String> colorMap = new HashMap<>();
     // 2021.11.17 tlt改
-      final String HOST = "http://8.136.146.186:9097";
+//      final String HOST = "http://8.136.146.186:9097";
 //    final String HOST = "http://41.190.128.250:8080";
 
 
@@ -242,7 +243,7 @@ public class RiskReportController {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("riskTitle", user.getName()+"-风险报告");
         map.put("dateType", dateUnit);
-        map.put("policeImg", HOST + "/static"+ user.getHeadImage());
+        map.put("policeImg", HttpIPUtil.HOST + "/static"+ user.getHeadImage());
         map.put("totalScore", "风险总值："+totalNum);
         map.put("policeName", user.getName());
         map.put("policeId", user.getPoliceId());
@@ -493,7 +494,7 @@ public class RiskReportController {
         out.flush();
         out.close();
 
-        return HOST + "/static/policeRiskReport/"+fileName+".pdf";
+        return HttpIPUtil.HOST + "/static/policeRiskReport/"+fileName+".pdf";
     }
 
     public String getTemplateContent(String filePath, String template, Map<String, Object> variables) throws Exception {
@@ -600,7 +601,8 @@ public class RiskReportController {
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("dateType", "年");
-        map.put("policeImg", controller.HOST+"/static/police/1000966e8cb38-a554-48a9-9ef8-b638ce982132.png");
+//        map.put("policeImg", controller.HOST+"/static/police/1000966e8cb38-a554-48a9-9ef8-b638ce982132.png");
+        map.put("policeImg", HttpIPUtil.HOST+"/static/police/1000966e8cb38-a554-48a9-9ef8-b638ce982132.png");
         map.put("totalScore", "风险总值：12.23");
         map.put("policeName", "李亦靓");
         map.put("policeId", "052415");

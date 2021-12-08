@@ -19,6 +19,7 @@ import com.bayee.political.service.RiskReportRecordService;
 import com.bayee.political.service.RiskService;
 import com.bayee.political.utils.DataListReturn;
 import com.bayee.political.utils.DateUtils;
+import com.bayee.political.utils.HttpIPUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,8 @@ import com.bayee.political.service.UserService;
 public class UserServiceImpl implements UserService {
 
 	private Logger log= LoggerFactory.getLogger(UserServiceImpl.class);
-
-	private final String HOST = "http://8.136.146.186:9097/static";
+//
+//	private final String HOST = "http://8.136.146.186:9097/static";
 //	private final static String HOST = "http://41.190.128.250:8080/static";
 
 	@Autowired
@@ -461,12 +462,12 @@ public class UserServiceImpl implements UserService {
 				//关闭writer，释放内存
 				writer.close();
 
-				return new ResponseEntity<DataListReturn>(DataListReturn.ok(HOST+"/policeInfo/警员花名册.xlsx"), HttpStatus.OK);
+				return new ResponseEntity<DataListReturn>(DataListReturn.ok(HttpIPUtil.HOST +"/policeInfo/警员花名册.xlsx"), HttpStatus.OK);
 			}catch (Exception e){
 				return new ResponseEntity<DataListReturn>(DataListReturn.error("异常报错"), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-		return  new ResponseEntity<DataListReturn>(DataListReturn.ok(HOST+"/policeInfo/警员花名册.xlsx"), HttpStatus.OK);
+		return  new ResponseEntity<DataListReturn>(DataListReturn.ok(HttpIPUtil.HOST+"/policeInfo/警员花名册.xlsx"), HttpStatus.OK);
 	}
 
 }

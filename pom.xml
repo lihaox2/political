@@ -555,6 +555,46 @@
 		  <!--在引用时请在maven中央仓库搜索最新版本号，如果不存在则代表尚未发布,作者正在努力开发中-->
 		  <version>2.0.5</version>
 	  </dependency>
+	  <!-- https://mvnrepository.com/artifact/oauth.signpost/signpost-core -->
+	  <dependency>
+		  <groupId>oauth.signpost</groupId>
+		  <artifactId>signpost-core</artifactId>
+		  <version>1.2.1.2</version>
+	  </dependency>
+	  <!-- https://mvnrepository.com/artifact/org.sonatype.plexus/plexus-sec-dispatcher -->
+	  <dependency>
+		  <groupId>org.sonatype.plexus</groupId>
+		  <artifactId>plexus-sec-dispatcher</artifactId>
+		  <version>1.4</version>
+	  </dependency>
+	  <!-- https://mvnrepository.com/artifact/org.apache.struts/struts2-core -->
+<!--	  <dependency>-->
+<!--		  <groupId>org.apache.struts</groupId>-->
+<!--		  <artifactId>struts2-core</artifactId>-->
+<!--		  <version>2.5.16</version>-->
+<!--	  </dependency>-->
+	  <!-- https://mvnrepository.com/artifact/com.alibaba.csb.sdk/http-client -->
+	  <dependency>
+		  <groupId>com.alibaba.csb.sdk</groupId>
+		  <artifactId>http-client</artifactId>
+		  <version>1.1.5.8</version>
+	  </dependency>
+	  <!-- https://mvnrepository.com/artifact/com.alibaba.csb.sdk/ws-client -->
+	  <dependency>
+		  <groupId>com.alibaba.csb.sdk</groupId>
+		  <artifactId>ws-client</artifactId>
+		  <version>1.1.5.8</version>
+	  </dependency>
+
+	  <!-- https://mvnrepository.com/artifact/org.dom4j/dom4j -->
+	  <dependency>
+		  <groupId>org.dom4j</groupId>
+		  <artifactId>dom4j</artifactId>
+		  <version>2.1.1</version>
+	  </dependency>
+
+
+
 
 	  <!--警种平台的依赖-->
 <!--	  <dependency>-->

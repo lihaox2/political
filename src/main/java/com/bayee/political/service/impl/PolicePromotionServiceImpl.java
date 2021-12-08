@@ -7,6 +7,7 @@ import com.bayee.political.json.*;
 import com.bayee.political.mapper.*;
 import com.bayee.political.service.PolicePromotionService;
 import com.bayee.political.utils.DataListReturn;
+import com.bayee.political.utils.HttpIPUtil;
 import com.bayee.political.utils.JsonResult;
 import com.bayee.political.utils.PageHandler;
 import com.github.pagehelper.Page;
@@ -57,8 +58,6 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
 //    @Resource
 //    private JobUpdateRecordInfoMapper jobUpdateRecordInfoMapper;
 
-    private final String HOST = "http://8.136.146.186:9097/static";
-//	private final static String HOST = "http://41.190.128.250:8080/static";
 
     @Override
     public JsonResult<T> pageList(PolicePromotionPageListParam param) throws ParseException {
@@ -381,13 +380,13 @@ public class PolicePromotionServiceImpl implements PolicePromotionService {
 
                 //关闭writer，释放内存
                 writer.close();
-                JsonResult ok = JsonResult.ok(HOST + "/policeInfo/警员晋升花名册.xlsx");
+                JsonResult ok = JsonResult.ok(HttpIPUtil.HOST + "/policeInfo/警员晋升花名册.xlsx");
                 return ok;
             }catch (Exception e){
                 return JsonResult.error("异常报错");
             }
         }
-        JsonResult ok = JsonResult.ok(HOST + "/policeInfo/警员晋升花名册.xlsx");
+        JsonResult ok = JsonResult.ok(HttpIPUtil.HOST + "/policeInfo/警员晋升花名册.xlsx");
         return ok;
     }
 

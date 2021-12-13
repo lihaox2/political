@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2021/12/8 11:36
  */
 @Data
-public class PoliceUserDepParam {
+public class PoliceUserDepResult {
 
     /**
      * ZID	日志对应	NUMBER	与警员日志的ZID对应

@@ -1,6 +1,6 @@
 package com.bayee.political.data.injection.controller;
 
-import com.bayee.political.data.injection.service.PoliceDepartmentService;
+import com.bayee.political.data.injection.service.HttpTestService;
 import com.bayee.political.utils.JsonResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +16,10 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/http/users")
-public class HttpsController {
+public class HttpTestController {
 
     @Resource
-    private PoliceDepartmentService service;
+    private HttpTestService service;
 
     /**
      * 获取部门接口 信息
@@ -36,6 +36,15 @@ public class HttpsController {
     @GetMapping("list")
     public JsonResult<?> list(){
         return service.list();
+    }
+
+
+    /**
+     * 认证接口
+     */
+    @GetMapping("authentication")
+    public String authentication(String REQUESTID,String TOKEN,String FHLX){
+        return service.authentication(REQUESTID,TOKEN,FHLX);
     }
 
 

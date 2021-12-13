@@ -12,10 +12,19 @@ import java.util.List;
  * @Description: )
  * @date 2021/11/17 10:57
  */
-public interface PoliceDepartmentService {
+public interface HttpTestService {
     public List<PoliceDepartmentResult> readDepartment(PoliceDepartmentParam param);
 
     JsonResult<?> list();
 
     JsonResult<?> deps();
+
+    /**
+     * 认证接口
+     * @param requestid 请求码
+     * @param token 动态token
+     * @param fhlx
+     * @return
+     */
+    String authentication(String requestid, String token, String fhlx);
 }

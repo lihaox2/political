@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.data.injection.mapper.TrafficViolationMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.data.injection.domain.TrafficViolation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="police_id" property="policeId" jdbcType="VARCHAR" />
+    <result column="cljgmc" property="cljgmc" jdbcType="VARCHAR" />
+    <result column="clsj" property="clsj" jdbcType="VARCHAR" />
+    <result column="dsr" property="dsr" jdbcType="VARCHAR" />
+    <result column="hphm" property="hphm" jdbcType="VARCHAR" />
+    <result column="hpzl" property="hpzl" jdbcType="VARCHAR" />
+    <result column="jszh" property="jszh" jdbcType="VARCHAR" />
+    <result column="rs_czlx" property="rsCzlx" jdbcType="VARCHAR" />
+    <result column="rs_czsj" property="rsCzsj" jdbcType="VARCHAR" />
+    <result column="wfbh" property="wfbh" jdbcType="VARCHAR" />
+    <result column="wfdz" property="wfdz" jdbcType="VARCHAR" />
+    <result column="wfsj" property="wfsj" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, police_id, cljgmc, clsj, dsr, hphm, hpzl, jszh, rs_czlx, rs_czsj, wfbh, wfdz, 
+    wfsj
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from traffic_violation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from traffic_violation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.data.injection.domain.TrafficViolation" >
+    insert into traffic_violation (id, police_id, cljgmc, 
+      clsj, dsr, hphm, hpzl, 
+      jszh, rs_czlx, rs_czsj, 
+      wfbh, wfdz, wfsj)
+    values (#{id,jdbcType=INTEGER}, #{policeId,jdbcType=VARCHAR}, #{cljgmc,jdbcType=VARCHAR}, 
+      #{clsj,jdbcType=VARCHAR}, #{dsr,jdbcType=VARCHAR}, #{hphm,jdbcType=VARCHAR}, #{hpzl,jdbcType=VARCHAR}, 
+      #{jszh,jdbcType=VARCHAR}, #{rsCzlx,jdbcType=VARCHAR}, #{rsCzsj,jdbcType=VARCHAR}, 
+      #{wfbh,jdbcType=VARCHAR}, #{wfdz,jdbcType=VARCHAR}, #{wfsj,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.bayee.political.data.injection.domain.TrafficViolation" >
+    update traffic_violation
+    set police_id = #{policeId,jdbcType=VARCHAR},
+      cljgmc = #{cljgmc,jdbcType=VARCHAR},
+      clsj = #{clsj,jdbcType=VARCHAR},
+      dsr = #{dsr,jdbcType=VARCHAR},
+      hphm = #{hphm,jdbcType=VARCHAR},
+      hpzl = #{hpzl,jdbcType=VARCHAR},
+      jszh = #{jszh,jdbcType=VARCHAR},
+      rs_czlx = #{rsCzlx,jdbcType=VARCHAR},
+      rs_czsj = #{rsCzsj,jdbcType=VARCHAR},
+      wfbh = #{wfbh,jdbcType=VARCHAR},
+      wfdz = #{wfdz,jdbcType=VARCHAR},
+      wfsj = #{wfsj,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

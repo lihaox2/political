@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayee.political.data.injection.mapper.PoliceSituationInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.bayee.political.data.injection.domain.PoliceSituationInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bjdh_pg" property="bjdhPg" jdbcType="VARCHAR" />
+    <result column="bjr_xm_pg" property="bjrXmPg" jdbcType="VARCHAR" />
+    <result column="cjsj_pg" property="cjsjPg" jdbcType="VARCHAR" />
+    <result column="cldw_bh_pg" property="cldwBhPg" jdbcType="VARCHAR" />
+    <result column="cldw_mc_pg" property="cldwMcPg" jdbcType="VARCHAR" />
+    <result column="cldw_xtbh_pg" property="cldwXtbhPg" jdbcType="VARCHAR" />
+    <result column="clr_sfzh_pg" property="clrSfzhPg" jdbcType="VARCHAR" />
+    <result column="clr_xm_pg" property="clrXmPg" jdbcType="VARCHAR" />
+    <result column="data_flag_pg" property="dataFlagPg" jdbcType="VARCHAR" />
+    <result column="dhdwjd_pg" property="dhdwjdPg" jdbcType="VARCHAR" />
+    <result column="dhdwwd_pg" property="dhdwwdPg" jdbcType="VARCHAR" />
+    <result column="dsdm_pg" property="dsdmPg" jdbcType="VARCHAR" />
+    <result column="gxqydm_pg" property="gxqydmPg" jdbcType="VARCHAR" />
+    <result column="id_pg" property="idPg" jdbcType="VARCHAR" />
+    <result column="isdel_pg" property="isdelPg" jdbcType="VARCHAR" />
+    <result column="jbsj_pg" property="jbsjPg" jdbcType="VARCHAR" />
+    <result column="jjdh_pg" property="jjdhPg" jdbcType="VARCHAR" />
+    <result column="jqbs_pg" property="jqbsPg" jdbcType="VARCHAR" />
+    <result column="jqdd_pg" property="jqddPg" jdbcType="VARCHAR" />
+    <result column="jqlb_pg" property="jqlbPg" jdbcType="VARCHAR" />
+    <result column="jqly_pg" property="jqlyPg" jdbcType="VARCHAR" />
+    <result column="jqmc_pg" property="jqmcPg" jdbcType="VARCHAR" />
+    <result column="jqzt_pg" property="jqztPg" jdbcType="VARCHAR" />
+    <result column="lrdw_bh_pg" property="lrdwBhPg" jdbcType="VARCHAR" />
+    <result column="lrdw_dsdm_pg" property="lrdwDsdmPg" jdbcType="VARCHAR" />
+    <result column="lrdw_qydm_pg" property="lrdwQydmPg" jdbcType="VARCHAR" />
+    <result column="lrdw_xtbh_pg" property="lrdwXtbhPg" jdbcType="VARCHAR" />
+    <result column="lrr_sfzh_pg" property="lrrSfzhPg" jdbcType="VARCHAR" />
+    <result column="lrsj_pg" property="lrsjPg" jdbcType="VARCHAR" />
+    <result column="scshr_sfzh_pg" property="scshrSfzhPg" jdbcType="VARCHAR" />
+    <result column="scshr_xm_pg" property="scshrXmPg" jdbcType="VARCHAR" />
+    <result column="scshsj_pg" property="scshsjPg" jdbcType="VARCHAR" />
+    <result column="sfsajq_pg" property="sfsajqPg" jdbcType="VARCHAR" />
+    <result column="sfxc_pg" property="sfxcPg" jdbcType="VARCHAR" />
+    <result column="sfycs_pg" property="sfycsPg" jdbcType="VARCHAR" />
+    <result column="sfzdgz_pg" property="sfzdgzPg" jdbcType="VARCHAR" />
+    <result column="shzt_pg" property="shztPg" jdbcType="VARCHAR" />
+    <result column="sjdwdm_pg" property="sjdwdmPg" jdbcType="VARCHAR" />
+    <result column="sjly_pg" property="sjlyPg" jdbcType="VARCHAR" />
+    <result column="sjsj_pg" property="sjsjPg" jdbcType="VARCHAR" />
+    <result column="xgr_sfzh_pg" property="xgrSfzhPg" jdbcType="VARCHAR" />
+    <result column="xgsj_pg" property="xgsjPg" jdbcType="VARCHAR" />
+    <result column="zgqk_pg" property="zgqkPg" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.bayee.political.data.injection.domain.PoliceSituationInfo" extends="BaseResultMap" >
+    <result column="bjrn_pg" property="bjrnPg" jdbcType="LONGVARCHAR" />
+    <result column="cjzzfk_pg" property="cjzzfkPg" jdbcType="LONGVARCHAR" />
+    <result column="czyj_pg" property="czyjPg" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, bjdh_pg, bjr_xm_pg, cjsj_pg, cldw_bh_pg, cldw_mc_pg, cldw_xtbh_pg, clr_sfzh_pg, 
+    clr_xm_pg, data_flag_pg, dhdwjd_pg, dhdwwd_pg, dsdm_pg, gxqydm_pg, id_pg, isdel_pg, 
+    jbsj_pg, jjdh_pg, jqbs_pg, jqdd_pg, jqlb_pg, jqly_pg, jqmc_pg, jqzt_pg, lrdw_bh_pg, 
+    lrdw_dsdm_pg, lrdw_qydm_pg, lrdw_xtbh_pg, lrr_sfzh_pg, lrsj_pg, scshr_sfzh_pg, scshr_xm_pg, 
+    scshsj_pg, sfsajq_pg, sfxc_pg, sfycs_pg, sfzdgz_pg, shzt_pg, sjdwdm_pg, sjly_pg, 
+    sjsj_pg, xgr_sfzh_pg, xgsj_pg, zgqk_pg
+  </sql>
+  <sql id="Blob_Column_List" >
+    bjrn_pg, cjzzfk_pg, czyj_pg
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from police_situation_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from police_situation_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayee.political.data.injection.domain.PoliceSituationInfo" >
+    insert into police_situation_info (id, bjdh_pg, bjr_xm_pg, 
+      cjsj_pg, cldw_bh_pg, cldw_mc_pg, 
+      cldw_xtbh_pg, clr_sfzh_pg, clr_xm_pg, 
+      data_flag_pg, dhdwjd_pg, dhdwwd_pg, 
+      dsdm_pg, gxqydm_pg, id_pg, 
+      isdel_pg, jbsj_pg, jjdh_pg, 
+      jqbs_pg, jqdd_pg, jqlb_pg, 
+      jqly_pg, jqmc_pg, jqzt_pg, 
+      lrdw_bh_pg, lrdw_dsdm_pg, lrdw_qydm_pg, 
+      lrdw_xtbh_pg, lrr_sfzh_pg, lrsj_pg, 
+      scshr_sfzh_pg, scshr_xm_pg, scshsj_pg, 
+      sfsajq_pg, sfxc_pg, sfycs_pg, 
+      sfzdgz_pg, shzt_pg, sjdwdm_pg, 
+      sjly_pg, sjsj_pg, xgr_sfzh_pg, 
+      xgsj_pg, zgqk_pg, bjrn_pg, 
+      cjzzfk_pg, czyj_pg)
+    values (#{id,jdbcType=INTEGER}, #{bjdhPg,jdbcType=VARCHAR}, #{bjrXmPg,jdbcType=VARCHAR}, 
+      #{cjsjPg,jdbcType=VARCHAR}, #{cldwBhPg,jdbcType=VARCHAR}, #{cldwMcPg,jdbcType=VARCHAR}, 
+      #{cldwXtbhPg,jdbcType=VARCHAR}, #{clrSfzhPg,jdbcType=VARCHAR}, #{clrXmPg,jdbcType=VARCHAR}, 
+      #{dataFlagPg,jdbcType=VARCHAR}, #{dhdwjdPg,jdbcType=VARCHAR}, #{dhdwwdPg,jdbcType=VARCHAR}, 
+      #{dsdmPg,jdbcType=VARCHAR}, #{gxqydmPg,jdbcType=VARCHAR}, #{idPg,jdbcType=VARCHAR}, 
+      #{isdelPg,jdbcType=VARCHAR}, #{jbsjPg,jdbcType=VARCHAR}, #{jjdhPg,jdbcType=VARCHAR}, 
+      #{jqbsPg,jdbcType=VARCHAR}, #{jqddPg,jdbcType=VARCHAR}, #{jqlbPg,jdbcType=VARCHAR}, 
+      #{jqlyPg,jdbcType=VARCHAR}, #{jqmcPg,jdbcType=VARCHAR}, #{jqztPg,jdbcType=VARCHAR}, 
+      #{lrdwBhPg,jdbcType=VARCHAR}, #{lrdwDsdmPg,jdbcType=VARCHAR}, #{lrdwQydmPg,jdbcType=VARCHAR}, 
+      #{lrdwXtbhPg,jdbcType=VARCHAR}, #{lrrSfzhPg,jdbcType=VARCHAR}, #{lrsjPg,jdbcType=VARCHAR}, 
+      #{scshrSfzhPg,jdbcType=VARCHAR}, #{scshrXmPg,jdbcType=VARCHAR}, #{scshsjPg,jdbcType=VARCHAR}, 
+      #{sfsajqPg,jdbcType=VARCHAR}, #{sfxcPg,jdbcType=VARCHAR}, #{sfycsPg,jdbcType=VARCHAR}, 
+      #{sfzdgzPg,jdbcType=VARCHAR}, #{shztPg,jdbcType=VARCHAR}, #{sjdwdmPg,jdbcType=VARCHAR}, 
+      #{sjlyPg,jdbcType=VARCHAR}, #{sjsjPg,jdbcType=VARCHAR}, #{xgrSfzhPg,jdbcType=VARCHAR}, 
+      #{xgsjPg,jdbcType=VARCHAR}, #{zgqkPg,jdbcType=VARCHAR}, #{bjrnPg,jdbcType=LONGVARCHAR}, 
+      #{cjzzfkPg,jdbcType=LONGVARCHAR}, #{czyjPg,jdbcType=LONGVARCHAR})
+  </insert>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bayee.political.data.injection.domain.PoliceSituationInfo" >
+    update police_situation_info
+    set bjdh_pg = #{bjdhPg,jdbcType=VARCHAR},
+      bjr_xm_pg = #{bjrXmPg,jdbcType=VARCHAR},
+      cjsj_pg = #{cjsjPg,jdbcType=VARCHAR},
+      cldw_bh_pg = #{cldwBhPg,jdbcType=VARCHAR},
+      cldw_mc_pg = #{cldwMcPg,jdbcType=VARCHAR},
+      cldw_xtbh_pg = #{cldwXtbhPg,jdbcType=VARCHAR},
+      clr_sfzh_pg = #{clrSfzhPg,jdbcType=VARCHAR},
+      clr_xm_pg = #{clrXmPg,jdbcType=VARCHAR},
+      data_flag_pg = #{dataFlagPg,jdbcType=VARCHAR},
+      dhdwjd_pg = #{dhdwjdPg,jdbcType=VARCHAR},
+      dhdwwd_pg = #{dhdwwdPg,jdbcType=VARCHAR},
+      dsdm_pg = #{dsdmPg,jdbcType=VARCHAR},
+      gxqydm_pg = #{gxqydmPg,jdbcType=VARCHAR},
+      id_pg = #{idPg,jdbcType=VARCHAR},
+      isdel_pg = #{isdelPg,jdbcType=VARCHAR},
+      jbsj_pg = #{jbsjPg,jdbcType=VARCHAR},
+      jjdh_pg = #{jjdhPg,jdbcType=VARCHAR},
+      jqbs_pg = #{jqbsPg,jdbcType=VARCHAR},
+      jqdd_pg = #{jqddPg,jdbcType=VARCHAR},
+      jqlb_pg = #{jqlbPg,jdbcType=VARCHAR},
+      jqly_pg = #{jqlyPg,jdbcType=VARCHAR},
+      jqmc_pg = #{jqmcPg,jdbcType=VARCHAR},
+      jqzt_pg = #{jqztPg,jdbcType=VARCHAR},
+      lrdw_bh_pg = #{lrdwBhPg,jdbcType=VARCHAR},
+      lrdw_dsdm_pg = #{lrdwDsdmPg,jdbcType=VARCHAR},
+      lrdw_qydm_pg = #{lrdwQydmPg,jdbcType=VARCHAR},
+      lrdw_xtbh_pg = #{lrdwXtbhPg,jdbcType=VARCHAR},
+      lrr_sfzh_pg = #{lrrSfzhPg,jdbcType=VARCHAR},
+      lrsj_pg = #{lrsjPg,jdbcType=VARCHAR},
+      scshr_sfzh_pg = #{scshrSfzhPg,jdbcType=VARCHAR},
+      scshr_xm_pg = #{scshrXmPg,jdbcType=VARCHAR},
+      scshsj_pg = #{scshsjPg,jdbcType=VARCHAR},
+      sfsajq_pg = #{sfsajqPg,jdbcType=VARCHAR},
+      sfxc_pg = #{sfxcPg,jdbcType=VARCHAR},
+      sfycs_pg = #{sfycsPg,jdbcType=VARCHAR},
+      sfzdgz_pg = #{sfzdgzPg,jdbcType=VARCHAR},
+      shzt_pg = #{shztPg,jdbcType=VARCHAR},
+      sjdwdm_pg = #{sjdwdmPg,jdbcType=VARCHAR},
+      sjly_pg = #{sjlyPg,jdbcType=VARCHAR},
+      sjsj_pg = #{sjsjPg,jdbcType=VARCHAR},
+      xgr_sfzh_pg = #{xgrSfzhPg,jdbcType=VARCHAR},
+      xgsj_pg = #{xgsjPg,jdbcType=VARCHAR},
+      zgqk_pg = #{zgqkPg,jdbcType=VARCHAR},
+      bjrn_pg = #{bjrnPg,jdbcType=LONGVARCHAR},
+      cjzzfk_pg = #{cjzzfkPg,jdbcType=LONGVARCHAR},
+      czyj_pg = #{czyjPg,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="checkIdPGExists" resultType="boolean">
+    select (case when count(1) > 0 then true else false end) from police_situation_info where id_pg = #{idPG}
+  </select>
+
+  <insert id="insertPoliceSituationInfoList" >
+    insert info police_situation_info (id, bjdh_pg, bjr_xm_pg,
+      cjsj_pg, cldw_bh_pg, cldw_mc_pg,
+      cldw_xtbh_pg, clr_sfzh_pg, clr_xm_pg,
+      data_flag_pg, dhdwjd_pg, dhdwwd_pg,
+      dsdm_pg, gxqydm_pg, id_pg,
+      isdel_pg, jbsj_pg, jjdh_pg,
+      jqbs_pg, jqdd_pg, jqlb_pg,
+      jqly_pg, jqmc_pg, jqzt_pg,
+      lrdw_bh_pg, lrdw_dsdm_pg, lrdw_qydm_pg,
+      lrdw_xtbh_pg, lrr_sfzh_pg, lrsj_pg,
+      scshr_sfzh_pg, scshr_xm_pg, scshsj_pg,
+      sfsajq_pg, sfxc_pg, sfycs_pg,
+      sfzdgz_pg, shzt_pg, sjdwdm_pg,
+      sjly_pg, sjsj_pg, xgr_sfzh_pg,
+      xgsj_pg, zgqk_pg, bjrn_pg,
+      cjzzfk_pg, czyj_pg, creation_date)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (null, #{item.bjdhPg,jdbcType=VARCHAR}, #{item.bjrXmPg,jdbcType=VARCHAR},
+      #{item.cjsjPg,jdbcType=VARCHAR}, #{item.cldwBhPg,jdbcType=VARCHAR}, #{item.cldwMcPg,jdbcType=VARCHAR},
+      #{item.cldwXtbhPg,jdbcType=VARCHAR}, #{item.clrSfzhPg,jdbcType=VARCHAR}, #{item.clrXmPg,jdbcType=VARCHAR},
+      #{item.dataFlagPg,jdbcType=VARCHAR}, #{item.dhdwjdPg,jdbcType=VARCHAR}, #{item.dhdwwdPg,jdbcType=VARCHAR},
+      #{item.dsdmPg,jdbcType=VARCHAR}, #{item.gxqydmPg,jdbcType=VARCHAR}, #{item.idPg,jdbcType=VARCHAR},
+      #{item.isdelPg,jdbcType=VARCHAR}, #{item.jbsjPg,jdbcType=VARCHAR}, #{item.jjdhPg,jdbcType=VARCHAR},
+      #{item.jqbsPg,jdbcType=VARCHAR}, #{item.jqddPg,jdbcType=VARCHAR}, #{item.jqlbPg,jdbcType=VARCHAR},
+      #{item.jqlyPg,jdbcType=VARCHAR}, #{item.jqmcPg,jdbcType=VARCHAR}, #{item.jqztPg,jdbcType=VARCHAR},
+      #{item.lrdwBhPg,jdbcType=VARCHAR}, #{item.lrdwDsdmPg,jdbcType=VARCHAR}, #{item.lrdwQydmPg,jdbcType=VARCHAR},
+      #{item.lrdwXtbhPg,jdbcType=VARCHAR}, #{item.lrrSfzhPg,jdbcType=VARCHAR}, #{item.lrsjPg,jdbcType=VARCHAR},
+      #{item.scshrSfzhPg,jdbcType=VARCHAR}, #{item.scshrXmPg,jdbcType=VARCHAR}, #{item.scshsjPg,jdbcType=VARCHAR},
+      #{item.sfsajqPg,jdbcType=VARCHAR}, #{item.sfxcPg,jdbcType=VARCHAR}, #{item.sfycsPg,jdbcType=VARCHAR},
+      #{item.sfzdgzPg,jdbcType=VARCHAR}, #{item.shztPg,jdbcType=VARCHAR}, #{item.sjdwdmPg,jdbcType=VARCHAR},
+      #{item.sjlyPg,jdbcType=VARCHAR}, #{item.sjsjPg,jdbcType=VARCHAR}, #{item.xgrSfzhPg,jdbcType=VARCHAR},
+      #{item.xgsjPg,jdbcType=VARCHAR}, #{item.zgqkPg,jdbcType=VARCHAR}, #{item.bjrnPg,jdbcType=LONGVARCHAR},
+      #{item.cjzzfkPg,jdbcType=LONGVARCHAR}, #{item.czyjPg,jdbcType=LONGVARCHAR}, #{item.creationDate})
+    </foreach>
+  </insert>
+
+</mapper>

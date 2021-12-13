@@ -7,6 +7,8 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import com.bayee.political.data.injection.mapper.PoliceSituationInfoMapper;
+import com.bayee.political.data.injection.mapper.TrafficViolationMapper;
 import com.github.pagehelper.PageInterceptor;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -307,6 +309,8 @@ public class AppConfiguration {
 		sqlSessionFactory.getObject().getConfiguration().addMapper(EvaluationTopicMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(RiskRelevantMapper.class);
 		sqlSessionFactory.getObject().getConfiguration().addMapper(PositionMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(PoliceSituationInfoMapper.class);
+		sqlSessionFactory.getObject().getConfiguration().addMapper(TrafficViolationMapper.class);
 //		sqlSessionFactory.getObject().getConfiguration().addMapper(JobUpdateRecordInfoMapper.class);
 		return sqlSessionFactory.getObject();
 	}
@@ -343,6 +347,18 @@ public class AppConfiguration {
 //		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
 //		return sessionTemplate.getMapper(JobUpdateRecordInfoMapper.class);
 //	}
+
+	@Bean
+	public TrafficViolationMapper trafficViolationMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(TrafficViolationMapper.class);
+	}
+
+	@Bean
+	public PoliceSituationInfoMapper policeSituationInfoMapper() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory());
+		return sessionTemplate.getMapper(PoliceSituationInfoMapper.class);
+	}
 
 	@Bean
 	public PositionMapper positionMapper() throws Exception {

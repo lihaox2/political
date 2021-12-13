@@ -199,7 +199,7 @@
   <select id="findLevelTwoObjByCode" resultMap="BaseResultMap">
     select * from risk_conduct_bureau_rule_type
       where id = (select parent_id from risk_conduct_bureau_rule_type
-          where id = (select parent_id from risk_conduct_bureau_rule_type where code = '05010102'))
+          where id = (select parent_id from risk_conduct_bureau_rule_type where code = #{code}))
   </select>
 
 </mapper>

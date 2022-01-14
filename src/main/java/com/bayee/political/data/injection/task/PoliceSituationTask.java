@@ -116,9 +116,9 @@ public class PoliceSituationTask {
     public List<JSONObject> parserXML(String[] requiredItems) {
         List<JSONObject> result = new ArrayList<>();
         RbspService service = new RbspService(SENDER_ID,SERVICE_ID);
-        service.setUserCardId("330481198701132616");
-        service.setUserDept("330499320000");
-        service.setUserName("范海华");
+        service.setUserCardId("33050119761105879X");
+        service.setUserDept("330591010000");
+        service.setUserName("朱建庄");
 
         RbspCall call = service.createCall();
         call.setUrl("http://10.118.7.51:8080/node");

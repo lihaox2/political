@@ -39,7 +39,7 @@ public class TrafficViolationTask {
     private final static String SERVICE_ID = "S10-10003348";
 
     @Transactional(rollbackFor = Exception.class)
-    @Scheduled(cron = "0 0 0/1 * * ?")
+//    @Scheduled(cron = "0 0 0/1 * * ?")
     public void dataRenew() {
         try {
             RbspService service = new RbspService(SENDER_ID, SERVICE_ID);

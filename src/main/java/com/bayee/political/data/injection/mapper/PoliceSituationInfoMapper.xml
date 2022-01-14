@@ -165,7 +165,7 @@
   </select>
 
   <insert id="insertPoliceSituationInfoList" >
-    insert info police_situation_info (id, bjdh_pg, bjr_xm_pg,
+    insert into police_situation_info (id, bjdh_pg, bjr_xm_pg,
       cjsj_pg, cldw_bh_pg, cldw_mc_pg,
       cldw_xtbh_pg, clr_sfzh_pg, clr_xm_pg,
       data_flag_pg, dhdwjd_pg, dhdwwd_pg,

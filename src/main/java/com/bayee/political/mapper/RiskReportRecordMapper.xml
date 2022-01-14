@@ -288,8 +288,7 @@ sum(study_num) as study_num,sum(health_num) as health_num,sum(work_num) as work_
 from risk_report_record a
   left join risk_relevant rr on rr.police_id = a.police_id
     and DATE_FORMAT(rr.creation_date, '%Y-%m') = DATE_FORMAT(a.creation_date, '%Y-%m')
-where DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime}
-and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}
+  where DATE_FORMAT(a.creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
 GROUP BY a.police_id order by ${orderName} desc limit #{num}) a
 left join user b on b.police_id=a.police_id
 left join department c on c.id=b.department_id
@@ -329,8 +328,7 @@ order by ${sortName} desc limit #{pageNum},#{pageSize} ) z
   from risk_report_record a
   left join risk_relevant rr on rr.police_id = a.police_id
   and DATE_FORMAT(rr.creation_date, '%Y-%m') = DATE_FORMAT(a.creation_date, '%Y-%m')
-  where DATE_FORMAT(a.creation_date, '%Y-%m')&gt;=#{lastMonthTime}
-  and DATE_FORMAT(a.creation_date, '%Y-%m')&lt;=#{dateTime}
+  where DATE_FORMAT(a.creation_date, '%Y') = SUBSTR(#{dateTime}, 1, 4)
   GROUP BY a.police_id order by ${orderName} desc limit #{num}) a
   left join user b on b.police_id=a.police_id
   left join department c on c.id=b.department_id

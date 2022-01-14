@@ -172,7 +172,9 @@ public class RiskServiceImpl implements RiskService {
 	// 警员风险分页查询
 	@Override
 	public List<RiskReportRecord> riskPageList(String keyWords, Integer alarmType, String sortName, String dateTime,
-			String lastDateTime, String lastMonthTime, Integer pageSize, Integer pageNum,Integer num,String orderName, Integer deptId) {
+											   String lastDateTime, String lastMonthTime, Integer pageSize,
+											   Integer pageNum,Integer num,String orderName, Integer deptId) {
+
 		List<RiskReportRecord> result = riskReportRecordMapper.riskPageList(keyWords, alarmType, sortName, dateTime, lastDateTime, lastMonthTime,
 				pageSize, pageNum,num,orderName,deptId);
 

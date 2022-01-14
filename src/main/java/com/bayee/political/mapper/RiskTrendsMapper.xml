@@ -124,19 +124,20 @@
   
   
   <select id="selectDeptTopFive" resultType="HashMap">
-      SELECT
-          result.name, result.id, a.num as value, ROUND((a.num / b.num) * 100, 2) AS ratio
-      FROM (SELECT
-            a.department_id, COUNT(1) AS num
-            FROM (SELECT
+      select
+          result.name, result.id, a.num as value, ROUND((a.num / b.num) * 100, 2) as ratio
+      from department result
+        left join (select
+              a.department_id, COUNT(1) as num
+          from (select
                     r.police_id, u.department_id
-                FROM risk_report_record r
-                    LEFT JOIN `user` u ON  r.police_id = u.police_id WHERE r.total_num >= 5
-                    and DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT(CURRENT_DATE(),'%Y-%m')
-                GROUP BY r.police_id) a GROUP BY a.department_id ORDER BY num DESC LIMIT 5) a
-       LEFT JOIN ( SELECT department_id, COUNT(1) AS num FROM `user` GROUP BY department_id) b ON a.department_id = b.department_id
-       LEFT JOIN department result ON a.department_id = result.id
-      ORDER BY ratio DESC
+                from risk_report_record r
+                    left join `user` u on  r.police_id = u.police_id
+                where r.total_num >= 5 and DATE_FORMAT(r.creation_date,'%Y-%m')=DATE_FORMAT(CURRENT_DATE(),'%Y-%m')
+                group by r.police_id) a group by a.department_id order by num desc limit 5) a on a.department_id = result.id
+        left join ( select department_id, COUNT(1) as num from `user` group by department_id) b on a.department_id = b.department_id
+      order by ratio desc
+      limit 5
 </select>
   
   <!-- top10 -->
@@ -484,18 +485,18 @@ GROUP BY DATE_FORMAT(a.creation_date,'%Y-%m') ORDER BY DATE_FORMAT(a.creation_da
 	
 	<!-- 合格率 -->
 	<select id="qualifiedRate" resultType="Double">
-        select truncate (
-       (
-           ((select COUNT(distinct(police_id)) from train_physical_achievement
-           where achievement_grade = 2 and date_format(sign_date, '%Y-%m') = date_format(now(), '%Y-%m'))
-                + (select COUNT(distinct(police_id)) from train_firearm_achievement
-                where achievement_grade = 2 and date_format(sign_date, '%Y-%m') = date_format(now(), '%Y-%m')))
-           /
-           ((select COUNT(distinct(police_id)) from train_physical_achievement
-           where is_test_free = 2 and date_format(sign_date, '%Y-%m') = date_format(now(), '%Y-%m'))
-                + (select COUNT(distinct(police_id)) from train_firearm_achievement
-                where date_format(sign_date, '%Y-%m') = date_format(now(), '%Y-%m')))
-       )* 100, 2) as rate
+        select IFNULL(truncate (
+      (
+              ((select COUNT(distinct(police_id)) from train_physical_achievement
+                where achievement_grade = 2 and DATE_FORMAT(sign_date, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m'))
+                  + (select COUNT(distinct(police_id)) from train_firearm_achievement
+                     where achievement_grade = 2 and DATE_FORMAT(sign_date, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')))
+              /
+              ((select COUNT(distinct(police_id)) from train_physical_achievement
+                where is_test_free = 2 and DATE_FORMAT(sign_date, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m'))
+                  + (select COUNT(distinct(police_id)) from train_firearm_achievement
+                     where DATE_FORMAT(sign_date, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')))
+          )* 100, 2), 0) as rate
 	</select>
 	
 	

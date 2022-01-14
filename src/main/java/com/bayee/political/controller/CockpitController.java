@@ -308,14 +308,14 @@ public class CockpitController {
 		Integer total=comprehensiveIndex+drinkIndex+conductIndex+caseIndex+dutyIndex+trainIndex+studyIndex+healthIndex;
 		int userNum=userService.countTotal();
 		System.out.println(total);
-		item1.setAlarmPoliceRate(Double.valueOf(df.format(((double)comprehensiveIndex/total)*100)));
-		item2.setAlarmPoliceRate(Double.valueOf(df.format(((double)drinkIndex/total)*100)));
-		item3.setAlarmPoliceRate(Double.valueOf(df.format(((double)conductIndex/total)*100)));
-		item4.setAlarmPoliceRate(Double.valueOf(df.format(((double)caseIndex/total)*100)));
-		item5.setAlarmPoliceRate(Double.valueOf(df.format(((double)dutyIndex/total)*100)));
-		item6.setAlarmPoliceRate(Double.valueOf(df.format(((double)trainIndex/total)*100)));
-		item7.setAlarmPoliceRate(Double.valueOf(df.format(((double)studyIndex/total)*100)));
-		item8.setAlarmPoliceRate(Double.valueOf(df.format(((double)healthIndex/total)*100)));
+		item1.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)comprehensiveIndex/total)*100)));
+		item2.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)drinkIndex/total)*100)));
+		item3.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)conductIndex/total)*100)));
+		item4.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)caseIndex/total)*100)));
+		item5.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)dutyIndex/total)*100)));
+		item6.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)trainIndex/total)*100)));
+		item7.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)studyIndex/total)*100)));
+		item8.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)healthIndex/total)*100)));
 
 		list.add(item1);
 		list.add(item2);
@@ -470,14 +470,14 @@ public class CockpitController {
 		Integer total=comprehensiveIndex+drinkIndex+conductIndex+caseIndex+dutyIndex+trainIndex+studyIndex+healthIndex;
 		int userNum=userService.countTotal();
 		System.out.println(total);
-		item1.setAlarmPoliceRate(Double.valueOf(df.format(((double)comprehensiveIndex/total)*100)));
-		item2.setAlarmPoliceRate(Double.valueOf(df.format(((double)drinkIndex/total)*100)));
-		item3.setAlarmPoliceRate(Double.valueOf(df.format(((double)conductIndex/total)*100)));
-		item4.setAlarmPoliceRate(Double.valueOf(df.format(((double)caseIndex/total)*100)));
-		item5.setAlarmPoliceRate(Double.valueOf(df.format(((double)dutyIndex/total)*100)));
-		item6.setAlarmPoliceRate(Double.valueOf(df.format(((double)trainIndex/total)*100)));
-		item7.setAlarmPoliceRate(Double.valueOf(df.format(((double)studyIndex/total)*100)));
-		item8.setAlarmPoliceRate(Double.valueOf(df.format(((double)healthIndex/total)*100)));
+		item1.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)comprehensiveIndex/total)*100)));
+		item2.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)drinkIndex/total)*100)));
+		item3.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)conductIndex/total)*100)));
+		item4.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)caseIndex/total)*100)));
+		item5.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)dutyIndex/total)*100)));
+		item6.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)trainIndex/total)*100)));
+		item7.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)studyIndex/total)*100)));
+		item8.setAlarmPoliceRate(total <= 0 ? 0 : Double.valueOf(df.format(((double)healthIndex/total)*100)));
 		
 		list.add(item1);
 		list.add(item2);
